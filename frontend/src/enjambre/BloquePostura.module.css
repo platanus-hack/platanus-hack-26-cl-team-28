@@ -54,7 +54,7 @@
 }
 
 .encabezado {
-  max-width: 24rem;
+  max-width: min(24rem, 22vw);
   margin-top: var(--e4);
   font: 500 clamp(1.3rem, 0.9rem + 0.9vw, 2rem) / 1.1 var(--fuente-voz);
   color: var(--favor-texto);

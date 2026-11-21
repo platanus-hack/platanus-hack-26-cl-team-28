@@ -79,6 +79,8 @@ export class EscenaEnjambre {
   private finVuelo = 0;
   private inicioRotulos = 0;
   private sucio = true;
+  /** Verdadero cuando los puntos ya volaron a sus burbujas con los estados actuales. */
+  private abierta = false;
   /** Mientras hay agentes pensando, la escena se redibuja siempre para que latan. */
   private latiendo = false;
   /** Puntos resaltados con un anillo (la persona que habla o la que se eligió). */
@@ -168,7 +170,13 @@ export class EscenaEnjambre {
 
   /** Cambia el estado de cada punto y lo manda a su nuevo lugar. */
   fijar(estados: Uint8Array, modo: ModoVuelo): void {
-    if (modo === 'aparecer') return this.encender(estados);
+    if (modo === 'aparecer') {
+      this.abierta = false;
+      return this.encender(estados);
+    }
+    // Si nada cambió no se relanza el vuelo: los datos que siguen llegando no reinician la animación.
+    if (this.abierta && estados.length === this.estados.length && estados.every((valor, i) => valor === this.estados[i])) return;
+    this.abierta = true;
     this.estados = estados;
     this.destinos(this.reducir.matches ? 'inmediato' : modo);
   }

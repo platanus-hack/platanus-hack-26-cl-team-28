@@ -54,10 +54,11 @@ export function Voces({ voces, caso, agentes, ubicar, alHablar, activo }: Props)
 
   useEffect(() => {
     if (!activo) {
-      setGlobos((g) => (g.izquierda || g.derecha ? {} : g));
+      // Las frases se desvanecen antes de que el país se abra, en vez de cortarse de golpe.
       hablando.current = {};
       alHablar([]);
-      return;
+      const fin = window.setTimeout(() => setGlobos((g) => (g.izquierda || g.derecha ? {} : g)), 450);
+      return () => window.clearTimeout(fin);
     }
     const tic = window.setInterval(() => {
       const lado = turno.current;
@@ -76,7 +77,7 @@ export function Voces({ voces, caso, agentes, ubicar, alHablar, activo }: Props)
   }, [activo, caso, voces, ubicar, alHablar]);
 
   return (
-    <div className={estilos.capa} aria-hidden="true">
+    <div className={estilos.capa} data-saliendo={!activo || undefined} aria-hidden="true">
       {(['izquierda', 'derecha'] as const).map((lado) => {
         const g = globos[lado];
         if (!g) return null;

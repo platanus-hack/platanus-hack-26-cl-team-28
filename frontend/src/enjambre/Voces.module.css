@@ -69,3 +69,8 @@
     display: none;
   }
 }
+
+.capa[data-saliendo] .globo {
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}

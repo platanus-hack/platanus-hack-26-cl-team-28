@@ -13,7 +13,6 @@ import { EscenaEnjambre, PUNTO, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { Insignia } from './Insignia';
 import { MenuOpciones } from './MenuOpciones';
-import { Pensando } from './Pensando';
 import { Redactando } from './Redactando';
 import { useAngosto } from './useAngosto';
 import { Validacion } from './Validacion';
@@ -23,15 +22,6 @@ import { Voces } from './Voces';
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
-
-/** Frases reales de quienes no apoyaron la A: lo que leyó el agente antes de reescribir. */
-function objecionesDe(a: CasoVivo): string[] {
-  const frases: string[] = [];
-  a.acuerdo.forEach((valor, i) => {
-    if (valor && valor <= 3 && a.frase[i]) frases.push(a.frase[i]);
-  });
-  return frases.slice(0, 40);
-}
 
 function textoDelta(delta: number, caso: CasoVivo): string {
   const quien = caso.iteracion ? 'con la versión del agente' : `con la variante ${caso.letra}`;
@@ -165,7 +155,7 @@ export function AppEnjambre() {
               {caso.iteracion && ` · reescrita por el agente sobre ${caso.iteracion.de}`}
             </span>
             <q className={estilos.titulo}>{caso.titulo}</q>
-            {caso.iteracion?.cambio && listo && <small>{caso.iteracion.cambio}</small>}
+            {caso.iteracion?.cambio && <small>{caso.iteracion.cambio}</small>}
           </h1>
         ) : (
           <h1 className={estilos.titular}>¿Cómo respondería Chile?</h1>
@@ -175,6 +165,11 @@ export function AppEnjambre() {
             <summary>Leer la propuesta completa</summary>
             <p>{caso.texto}</p>
           </details>
+        )}
+        {fase === 'corriendo' && caso && !listo && (
+          <div className={estilos.avance}>
+            <BloqueAvance caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
+          </div>
         )}
       </header>
       <div className={estilos.nota}>
@@ -187,14 +182,13 @@ export function AppEnjambre() {
             </span>
           </p>
         )}
-        {caso && !conexion?.demo && <Validacion casos={casos} viendo={viendo} />}
+        {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} viendo={viendo} />}
+        {caso && sim.filtrada && (
+          <p className={estilos.filtro}>
+            Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes, según los filtros
+          </p>
+        )}
       </div>
-      {fase === 'corriendo' && caso && !listo && (
-        <div className={estilos.avance}>
-          <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} objeciones={caso.iteracion ? objecionesDe(casos[0]) : undefined} />
-          {conexion && caso.desdeCache === 0 && (!caso.iteracion || caso.respondidas > 0) && <Pensando caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} />}
-        </div>
-      )}
 
       {pct && caso && (
         <>
@@ -215,8 +209,8 @@ export function AppEnjambre() {
           </div>
         </>
       )}
-      {puntos && fase === 'corriendo' && conexion && (
-        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={!listo && !oculta} />
+      {puntos && (fase === 'corriendo' || fase === 'resultados') && conexion && (
+        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
       )}
       <div className={estilos.mando} ref={mando}>
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
@@ -245,7 +239,7 @@ export function AppEnjambre() {
           </Boton>
         </div>
       )}
-      {fase === 'resultados' && !ficha && <p className={estilos.pista}>Toca un punto para conocer a esa persona · {formatear(muestra.total)} agentes</p>}
+      {fase === 'resultados' && !ficha && <p className={estilos.pista}>Toca un punto para conocer a esa persona</p>}
     </div>
   );
 }

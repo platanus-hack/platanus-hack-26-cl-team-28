@@ -157,15 +157,19 @@
 }
 
 .contra,
-.favor,
-.avance {
+.favor {
   top: 50%;
   translate: 0 -46%;
 }
 
-.contra,
-.avance {
+.contra {
   left: var(--gutter);
+}
+
+/* El contador va debajo del título, en la misma columna: nunca se pisan. */
+.avance {
+  position: static;
+  margin-top: var(--e6);
 }
 
 .favor {
@@ -254,10 +258,6 @@
 
   .favor {
     grid-area: 3 / 2;
-  }
-
-  .avance {
-    grid-area: 3 / 1 / 4 / -1;
   }
 
   .nota {
@@ -351,4 +351,15 @@
     max-height: calc(100dvh - var(--e5) * 2 - 5rem);
     overflow-y: auto;
   }
+}
+
+.filtro {
+  max-width: 17rem;
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--indecisa);
+  border-radius: var(--radio);
+  font-size: var(--texto-s);
+  line-height: 1.3;
+  color: var(--tinta);
+  text-align: right;
 }

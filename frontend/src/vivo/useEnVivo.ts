@@ -162,6 +162,33 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     [conexion, filtros],
   );
 
+  // Con una corrida en pantalla, la muestra queda fija y los filtros eligen a quiénes se mira dentro de ella.
+  const [corrida, setCorrida] = useState<MuestraVivo | null>(null);
+  const enCorrida = (fase === 'corriendo' || fase === 'resultados') && corrida !== null;
+  const vista = useMemo<MuestraVivo>(() => {
+    if (!enCorrida || !conexion || !corrida) return muestra;
+    const agentes = corrida.agentes.filter((i) => coincide(conexion.agentes[i], filtros));
+    const elegido = new Uint8Array(conexion.agentes.length);
+    for (const i of agentes) elegido[i] = 1;
+    return { agentes, elegido, disponibles: corrida.total, total: agentes.length };
+  }, [enCorrida, conexion, corrida, muestra, filtros]);
+  const filtrada = enCorrida && corrida !== null && vista.total < corrida.total;
+
+  // Los conteos de cada variante se calculan sobre quienes se están mirando.
+  useMemo(() => {
+    for (const caso of casos.current) {
+      const conteo = conteoVacio();
+      for (const i of vista.agentes) {
+        const acuerdo = caso.acuerdo[i];
+        if (!acuerdo) continue;
+        conteo[posturaDe(acuerdo)] += 1;
+        conteo.total += 1;
+      }
+      caso.conteo = conteo;
+    }
+    // `version` cambia con cada respuesta que llega.
+  }, [vista, version]);
+
   const refrescar = useCallback(() => {
     if (pintar.current) return;
     pintar.current = requestAnimationFrame(() => {
@@ -201,8 +228,6 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
             caso.frase[agente] = frase;
             caso.respondidas += 1;
             if (evento.cache) caso.desdeCache += 1;
-            caso.conteo[posturaDe(acuerdo)] += 1;
-            caso.conteo.total += 1;
             if (frase && !evento.cache) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
             else if (frase && voces.current.length < 8) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
           }
@@ -267,6 +292,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setAviso(null);
     setRedactando(null);
     setViendo(0);
+    setCorrida(muestra);
     setFase('corriendo');
     const pedido = { casos: pedidos, agentes: muestra.agentes, iteraciones: Math.min(iteraciones, MAXIMO_VARIANTES + 2 - pedidos.length) };
     try {
@@ -332,7 +358,11 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     redactando,
     terminada,
     aviso,
-    muestra,
+    /** A quiénes se mira: la muestra que se va a consultar o, con una corrida en pantalla, los de esa corrida que pasan los filtros. */
+    muestra: vista,
+    /** Agentes de la corrida en pantalla (sin filtrar). */
+    totalCorrida: corrida?.total ?? 0,
+    filtrada,
     puedePreguntar,
     preguntar,
     detener,

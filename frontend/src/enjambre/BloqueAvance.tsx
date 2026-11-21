@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { formatear } from '../dominio/textos';
 import type { Metricas, MotorInfo } from '../vivo/api';
 import type { CasoVivo } from '../vivo/useEnVivo';
@@ -10,21 +9,6 @@ interface Props {
   total: number;
   metricas: Metricas;
   motor: MotorInfo | null;
-  /** En la versión del agente: frases reales de quienes no apoyaron la A, que rotan mientras se espera. */
-  objeciones?: string[];
-}
-
-const ROTACION = 1800;
-
-/** Una objeción real a la vez, para que la espera cuente qué leyó el agente. */
-function useRotacion(frases: string[] | undefined): string | undefined {
-  const [k, setK] = useState(0);
-  useEffect(() => {
-    if (!frases?.length) return;
-    const tic = window.setInterval(() => setK((n) => n + 1), ROTACION);
-    return () => window.clearInterval(tic);
-  }, [frases]);
-  return frases?.length ? frases[k % frases.length] : undefined;
 }
 
 export function nombreModelo(modelo: string): string {
@@ -36,33 +20,16 @@ export function dinero(usd: number): string {
 }
 
 /** Mientras los agentes corren: cuántos ya respondieron y lo que costó, medido por el motor. */
-export function BloqueAvance({ caso, total, metricas, motor, objeciones }: Props) {
-  const objecion = useRotacion(caso.respondidas === 0 ? objeciones : undefined);
+export function BloqueAvance({ caso, total, metricas, motor }: Props) {
   const contado = useConteo(caso.respondidas);
   const esperando = caso.respondidas === 0;
   return (
     <section className={estilos.bloque} aria-live="off">
-      <p className={estilos.etiqueta}>{caso.iteracion ? `Preguntando la versión del agente` : `Preguntando la variante ${caso.letra}`}</p>
       <p className={estilos.cifra}>{formatear(Math.round(contado))}</p>
       <p className={estilos.nombre}>
         de {formatear(total)} agentes {esperando ? 'leyendo la propuesta' : 'ya respondieron'}
       </p>
       <progress className={estilos.barra} max={total} value={caso.respondidas} aria-label="Avance de la simulación" />
-      {motor && !motor.grabado && caso.respondidas === 0 && !caso.iteracion && (
-        <p className={estilos.detalle}>Cada agente lee la propuesta y su perfil del censo antes de responder</p>
-      )}
-      {caso.iteracion && caso.respondidas === 0 && (
-        <p className={estilos.cambio}>
-          <span>Qué cambió el agente</span>
-          {caso.iteracion.cambio}
-        </p>
-      )}
-      {objecion && (
-        <p className={estilos.objecion} key={objecion}>
-          <span>Lo que leyó el agente</span>
-          {objecion}
-        </p>
-      )}
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
         <p className={estilos.detalle}>Esta pregunta ya se hizo hoy: se muestran las respuestas que dieron los agentes en esa corrida</p>
       )}

@@ -17,6 +17,7 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
   const [abierto, setAbierto] = useState(false);
   const caja = useRef<HTMLDivElement>(null);
   const boton = useRef<HTMLDivElement>(null);
+  const enCorrida = sim.fase === 'resultados';
 
   // Se cierra con Escape o al tocar fuera, y el foco vuelve al botón.
   useEffect(() => {
@@ -39,7 +40,8 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
     <div className={estilos.menu} ref={caja}>
       {abierto && (
         <div className={estilos.panel} id="panel-opciones" role="region" aria-label="Opciones">
-          <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica rotuloTamano="Agentes a consultar (cada uno es una persona del censo)" />
+          {enCorrida && <p className={estilos.demo}>Los filtros muestran el resultado solo entre esas personas, sin volver a preguntar.</p>}
+          <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica rotuloTamano={enCorrida ? 'Agentes de la próxima pregunta' : 'Agentes a consultar (cada uno es una persona del censo)'} />
           {!sim.conexion?.demo && (
             <div className={estilos.ejemplos}>
               <p>Probar con una encuesta real</p>
