@@ -14,13 +14,19 @@ el centro de su comuna (`contexto/geo/comunas_centroides.csv`).
 De `data/agentes/` (ver `contexto/chile/agentes.md`): 1.546.322 agentes que representan a las 15.463.163
 personas de 14 años o más, uno por cada 10. Esa tabla está en el repositorio. En cada consulta, `poblacion.py`:
 
-1. Filtra la tabla con los filtros de la interfaz (región, edad, género, ingreso, educación, posición política).
-2. Sortea hasta el máximo pedido entre quienes los cumplen, en proporción a cuántas personas representa cada uno.
-3. Arma el perfil de cada elegido con la misma función del banco de pruebas (`scripts/personas_muestra.py`).
+1. Elige el nivel de clusterización (`reduccion`): un agente por cada 10, 100 o 1.000 personas. Los niveles
+   vienen marcados en la tabla y son anidados.
+2. Filtra con los filtros de la interfaz (región, edad, género, ingreso, educación, posición política).
+3. Sortea hasta el máximo pedido entre quienes los cumplen, en proporción a cuántas personas representa cada uno.
+4. Arma el perfil de cada elegido con la misma función del banco de pruebas (`scripts/personas_muestra.py`).
 
 El sorteo es fijo: los mismos filtros dan siempre las mismas personas, así que la caché de respuestas sirve, y
 la muestra de 250 está contenida en la de 2.000. Filtrar una región y pedir 2.000 entrega 2.000 personas de esa
 región, no las pocas que le tocarían en una muestra nacional.
+
+Para que cambiar un filtro se sienta inmediato: solo se leen las columnas que el perfil usa, los agentes ya
+armados se guardan (hasta 30.000) y una muestra ya pedida se devuelve sin recalcular. Un cambio de filtro
+tarda entre 30 y 300 ms la primera vez y nada si se repite.
 
 Hoy cada agente es una persona elegida al azar dentro de un grupo de 10 parecidas. Más adelante será el
 arquetipo de un cluster; eso se cambia en `scripts/reducir_poblacion.py` y el servidor no se toca, porque ya
@@ -110,8 +116,9 @@ las instrucciones invalida la caché sola. `data/` no se versiona.
 ## Rutas
 
     GET  /api/estado                  motor, modelo, población disponible y las preguntas de la encuesta
-    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea. Devuelve id, cuántos cumplen
-                                      los filtros, a cuántas personas representan y los agentes elegidos
+    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea. `filtros.reduccion` (10, 100
+                                      o 1000) es el nivel de clusterización. Devuelve id, cuántos cumplen los
+                                      filtros, a cuántas personas representan y los agentes elegidos
     GET  /api/agentes                 la muestra sin filtros, como lista (por compatibilidad)
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre
     POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones}

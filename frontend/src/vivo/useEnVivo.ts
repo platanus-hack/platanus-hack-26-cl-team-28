@@ -29,8 +29,11 @@ export type FaseVivo = 'cargando' | 'preparar' | 'corriendo' | 'resultados';
 export const TAMANOS_AGENTES = [250, 500, 1000, 2000] as const;
 const TAMANO_INICIAL = 1000;
 const FILTROS_DE_PARTIDA: Filtros = { ...FILTROS_INICIALES, tamano: TAMANO_INICIAL };
-/** Milisegundos que se espera tras el último cambio de filtros antes de pedir la muestra al motor. */
-const PAUSA_MUESTRA = 220;
+/**
+ * Milisegundos que se espera tras el último cambio de filtros antes de pedir la muestra al motor:
+ * lo justo para que arrastrar el control de edad no dispare un pedido por cada paso.
+ */
+const PAUSA_MUESTRA = 40;
 export const MAXIMO_VARIANTES = 6;
 export const MAXIMO_ITERACIONES = 3;
 /** Segundos que se queda en pantalla una variante ya respondida antes de pasar a la siguiente. */

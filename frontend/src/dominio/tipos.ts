@@ -17,6 +17,8 @@ export interface Persona {
   aspecto: number;
   /** Agente real del motor que este punto dibuja (varios puntos pueden ser el mismo agente). */
   agente?: number;
+  /** Identidad del punto entre una muestra y otra: si sigue en la muestra nueva, el mapa no lo mueve. */
+  clave?: string;
 }
 
 export interface Documento {
@@ -53,6 +55,8 @@ export interface Filtros {
   quintil: number;
   educacion: number;
   politica: number;
+  /** Clusterización: a cuántas personas representa cada agente (10, 100 o 1.000). */
+  reduccion: number;
 }
 
 export interface Respuesta {

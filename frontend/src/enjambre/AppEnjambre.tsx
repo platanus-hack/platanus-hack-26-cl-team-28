@@ -73,8 +73,11 @@ export function AppEnjambre() {
     // `version` cambia cada vez que llegan respuestas nuevas.
   }, [puntos, muestra, caso, listo, fase, version]);
 
+  // La escena se arma una sola vez. Cuando cambia la muestra (otro filtro, otro tamaño) solo se le
+  // entregan los puntos nuevos: los mueve a su lugar sin repetir la entrada.
   useEffect(() => {
     if (!puntos) return;
+    if (escena.current) return escena.current.reemplazar(puntos);
     const nueva = new EscenaEnjambre(lienzo.current!, puntos);
     nueva.alCambiarVista = (nivel) => {
       setZoom(nivel);
@@ -82,8 +85,14 @@ export function AppEnjambre() {
     };
     nueva.montar();
     escena.current = nueva;
-    return () => nueva.destruir();
   }, [puntos]);
+  useEffect(
+    () => () => {
+      escena.current?.destruir();
+      escena.current = null;
+    },
+    [],
+  );
   useEffect(() => {
     if (orden) escena.current?.fijar(orden.estados, orden.modo);
   }, [orden]);

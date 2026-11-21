@@ -24,7 +24,7 @@ from collections import OrderedDict
 from .corridas import Cache, Caso, Corrida, resumir_documento
 from .documentos import DocumentoIlegible, extraer_texto
 from .motor import elegir_motor
-from .poblacion import ArchivoFijo, Muestra, elegir_poblacion
+from .poblacion import ArchivoFijo, Muestra, elegir_poblacion, identificador, limpiar
 
 LETRAS = "ABCDEFGH"
 MAXIMO_DOCUMENTO = 25 * 1024 * 1024
@@ -33,6 +33,8 @@ CONCURRENCIA = int(os.environ.get("CONCURRENCIA", "30"))
 MAXIMO_ITERACIONES = 3
 
 TAMANO_POR_DEFECTO = 2000
+# El tamaño con que parte la interfaz (TAMANO_INICIAL en frontend/src/vivo/useEnVivo.ts).
+TAMANO_AL_ABRIR = 1000
 MAXIMO_MUESTRA = 5000
 MUESTRAS_GUARDADAS = 24
 
@@ -52,6 +54,12 @@ CERROJO_MUESTRAS = threading.Lock()
 def sacar_muestra(filtros: dict | None, tamano) -> Muestra:
     """Filtra la población y sortea; las últimas muestras se guardan para poder correrlas."""
     tamano = max(1, min(MAXIMO_MUESTRA, int(tamano or TAMANO_POR_DEFECTO)))
+    # Una muestra ya pedida se devuelve tal cual: el sorteo es fijo, así que sería la misma.
+    conocida = identificador(limpiar(filtros), tamano)
+    with CERROJO_MUESTRAS:
+        if conocida in MUESTRAS:
+            MUESTRAS.move_to_end(conocida)
+            return MUESTRAS[conocida]
     muestra = POBLACION.muestra(filtros, tamano)
     with CERROJO_MUESTRAS:
         MUESTRAS[muestra.id] = muestra
@@ -111,7 +119,7 @@ class Manejador(BaseHTTPRequestHandler):
                 return self._documento()
             if ruta == "/api/muestra":
                 pedido = json.loads(self._cuerpo() or b"{}")
-                return self._json(200, sacar_muestra(pedido.get("filtros"), pedido.get("tamano")).publica())
+                return self._json(200, None, sacar_muestra(pedido.get("filtros"), pedido.get("tamano")).cuerpo())
             if ruta == "/api/corridas":
                 return self._crear_corrida()
             partes = ruta.strip("/").split("/")
@@ -197,6 +205,8 @@ class Manejador(BaseHTTPRequestHandler):
 
 def main():
     puerto = int(os.environ.get("PUERTO", "8787"))
+    # La primera muestra que pide la interfaz (sin filtros) queda lista antes de que alguien abra el sitio.
+    threading.Thread(target=sacar_muestra, args=(None, TAMANO_AL_ABRIR), daemon=True).start()
     servidor = ThreadingHTTPServer(("127.0.0.1" if not os.environ.get("ABIERTO") else "0.0.0.0", puerto), Manejador)
     servidor.daemon_threads = True
     descripcion = MOTOR.describir()

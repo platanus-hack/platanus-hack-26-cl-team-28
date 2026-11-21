@@ -43,6 +43,7 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
   // Sin corrida, los cuadros muestran cuánto de lo pedido se va a preguntar: con filtros muy finos no alcanza.
   const base = enCorrida ? sim.totalCorrida : sim.conexion?.demo ? (sim.conexion?.agentes.length ?? 0) : filtros.tamano;
   const representadas = !enCorrida && !sim.conexion?.demo ? muestra.representadas : undefined;
+  const niveles = sim.conexion?.estado?.poblacion?.niveles ?? [];
   const llenos = base ? Math.max(muestra.total ? 1 : 0, Math.round((muestra.total / base) * CUADROS)) : 0;
   const cambiar = (parte: Partial<Filtros>) => setFiltros({ ...filtros, ...parte });
   const alternar = (clave: 'region' | 'genero' | 'quintil' | 'educacion', valor: number) =>
@@ -105,6 +106,22 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
             ))}
           </div>
         </fieldset>
+
+        {niveles.length > 1 && (
+          <fieldset className={estilos.grupo}>
+            <legend>
+              Clusterización
+              <output>1 agente representa a {formatear(filtros.reduccion)} personas</output>
+            </legend>
+            <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${niveles.length}, 1fr)` }}>
+              {niveles.map((nivel) => (
+                <button key={nivel} type="button" aria-pressed={filtros.reduccion === nivel} onClick={() => cambiar({ reduccion: nivel })}>
+                  {formatear(nivel)}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )}
 
         <fieldset className={estilos.grupo}>
           <legend>
@@ -192,7 +209,7 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
         </fieldset>
 
         {filtrando && (
-          <button type="button" className={estilos.limpiar} onClick={() => setFiltros({ ...FILTROS_INICIALES, tamano: filtros.tamano })}>
+          <button type="button" className={estilos.limpiar} onClick={() => setFiltros({ ...FILTROS_INICIALES, tamano: filtros.tamano, reduccion: filtros.reduccion })}>
             Quitar los filtros
           </button>
         )}

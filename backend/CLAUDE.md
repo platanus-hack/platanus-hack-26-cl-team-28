@@ -45,7 +45,7 @@ Además del censo hay otras fuentes:
 | `contexto/muestra/actitudes.md` | Cómo se imputaron las actitudes, sus columnas, sus límites y la comparación con la CEP. |
 | `data/chile/chile.parquet` | Población completa de 14 años o más: 15.463.163 personas del censo, una por fila, con su hogar, su vivienda, lo imputado desde Casen y, los 14,5 M de adultos, sus opiniones de la CEP. También separada en `personas`, `hogares` (todos, con la composición del hogar) y `actitudes`. Mismas columnas y llaves que la muestra. |
 | `contexto/chile/README.md` y `validacion.md` | Qué es la población completa, sus límites, y su comparación con el censo, Casen y la CEP (distribuciones y correlaciones). |
-| `data/agentes/region_NN.parquet` | Tabla de agentes: 1.546.322 personas que representan a las 15,5 M (columna `representa`, 10 por ahora). Mismas columnas que `chile.parquet`. **Sí se versiona** (unos 100 MB): es la que filtra el motor del sitio. `contexto/chile/agentes.md` la describe y la compara con la población completa. |
+| `data/agentes/region_NN.parquet` | Tabla de agentes: 1.546.322 personas que representan a las 15,5 M. Trae tres niveles anidados de clusterización: `representa` (1 agente por cada 10 personas, todas las filas), `representa_100` y `representa_1000` (no nulas solo en quienes quedan en ese nivel). Mismas columnas que `chile.parquet`. **Sí se versiona** (unos 100 MB): es la que filtra el motor del sitio. `contexto/chile/agentes.md` la describe y la compara con la población completa. |
 
 En la muestra cada fila vale por 100 personas y no hay ponderadores. Las columnas del censo son datos observados; las que vienen de Casen (decil de ingreso, previsión, etc.) son valores plausibles sorteados, no datos de esa persona. Se reconstruye con:
 
@@ -59,7 +59,7 @@ uv run python -I scripts/validar_poblacion.py data/chile data/censo2024 data/cas
 uv run python -I scripts/reducir_poblacion.py data/chile data/agentes contexto/chile
 ```
 
-La tabla de agentes es provisoria en un punto: cada agente es una persona elegida al azar dentro de un grupo de 10 vecinas en el orden comuna, zona, sexo y edad. El destino es que sea el arquetipo de un cluster de personas parecidas. Ese cambio va en `grupos()` y `representantes()` de `reducir_poblacion.py`; el resto (el motor, los filtros, el sorteo ponderado por `representa`) ya está preparado.
+La tabla de agentes es provisoria en un punto: cada agente es una persona elegida al azar dentro de un grupo de 10 vecinas en el orden comuna, zona, sexo y edad (y lo mismo, entre los elegidos, para los niveles de 100 y 1.000). El destino es que sea el arquetipo de un cluster de personas parecidas. Ese cambio va en `grupos()` y `representantes()` de `reducir_poblacion.py`; el resto (el motor, los filtros, el sorteo ponderado por `representa`) ya está preparado.
 
 La población completa usa las mismas funciones de imputación que la muestra (`imputar_casen` en `construir_muestra.py` y el emparejamiento de `imputar_cep.py`): un cambio en el método vale para ambas. `validar_poblacion.py` termina con error si algo deja de calzar; córrelo después de cualquier cambio en la imputación. La población conserva la composición del censo, que tiene menos ocupados y más independientes que Casen: no la "corrijas" hacia la encuesta.
 

@@ -16,6 +16,8 @@ export interface PoblacionInfo {
   personas: number;
   /** A cuántas personas representa cada agente, en promedio. */
   representa: number;
+  /** Niveles de clusterización que ofrece el motor: personas por agente (10, 100, 1.000). */
+  niveles?: number[];
 }
 
 export interface EstadoMotor {
@@ -41,6 +43,8 @@ export interface AgenteRemoto {
   educacion: number;
   /** Índice en POLITICA: 0 izquierda … 4 derecha, 5 sin identificación. Imputado desde la CEP. */
   politica?: number;
+  /** A cuántas personas representa en esta muestra. */
+  representa?: number;
   atributos: Record<string, string>;
 }
 

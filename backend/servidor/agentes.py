@@ -72,6 +72,8 @@ class Agente:
     educacion: int
     #: Índice en POLITICA del frontend: 0 izquierda … 4 derecha, 5 sin identificación.
     politica: int
+    #: A cuántas personas representa en la muestra en que viene (depende del nivel de reducción).
+    representa: int = 1
 
     def publico(self) -> dict:
         return {
@@ -86,6 +88,7 @@ class Agente:
             "quintil": self.quintil,
             "educacion": self.educacion,
             "politica": self.politica,
+            "representa": self.representa,
             "atributos": self.atributos,
         }
 

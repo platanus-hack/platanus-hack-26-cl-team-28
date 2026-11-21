@@ -31,6 +31,8 @@ const LON_CENTRO = -71.4;
 const LON_MINIMA = -76.5;
 const DPR_MAXIMO = 2;
 const VUELO = 1.15;
+/** Al cambiar la muestra los puntos solo se reacomodan: un vuelo corto, sin la entrada completa. */
+const VUELO_REACOMODO = 0.45;
 const DESTELLO = 0.45;
 /** Desde este ancho las cifras gigantes van a los costados del lienzo. */
 const ANCHO_CON_CIFRAS = 900;
@@ -52,20 +54,22 @@ const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) *
  */
 export class EscenaEnjambre {
   private readonly ctx: CanvasRenderingContext2D;
-  private readonly n: number;
-  private readonly casaX: Float32Array;
-  private readonly casaY: Float32Array;
-  private readonly desdeX: Float32Array;
-  private readonly desdeY: Float32Array;
-  private readonly haciaX: Float32Array;
-  private readonly haciaY: Float32Array;
-  private readonly x: Float32Array;
-  private readonly y: Float32Array;
-  private readonly sale: Float32Array;
+  private n = 0;
+  private casaX!: Float32Array;
+  private casaY!: Float32Array;
+  private desdeX!: Float32Array;
+  private desdeY!: Float32Array;
+  private haciaX!: Float32Array;
+  private haciaY!: Float32Array;
+  private x!: Float32Array;
+  private y!: Float32Array;
+  private sale!: Float32Array;
+  /** Cuánto dura el vuelo en curso de cada punto. */
+  private dura!: Float32Array;
   /** Momento en que cada punto se encendió, para el destello de llegada. */
-  private readonly llega: Float32Array;
-  private readonly color: Uint8Array;
-  private estados: Uint8Array;
+  private llega!: Float32Array;
+  private color!: Uint8Array;
+  private estados!: Uint8Array;
   private burbujas: Burbuja[] = [];
   private etiquetas: Etiqueta[] = [];
   private colores: string[] = [];
@@ -107,17 +111,73 @@ export class EscenaEnjambre {
 
   constructor(
     private readonly lienzo: HTMLCanvasElement,
-    private readonly personas: Persona[],
+    private personas: Persona[],
   ) {
     this.ctx = lienzo.getContext('2d')!;
-    this.n = personas.length;
-    const crear = () => new Float32Array(this.n);
+    this.reservar(personas.length);
+    this.observador = new ResizeObserver(() => this.medir());
+  }
+
+  private reservar(n: number): void {
+    this.n = n;
+    const crear = () => new Float32Array(n);
     [this.casaX, this.casaY, this.desdeX, this.desdeY, this.haciaX, this.haciaY, this.x, this.y, this.sale, this.llega] = [
       crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear().fill(-10),
     ];
-    this.color = new Uint8Array(this.n).fill(PUNTO.neutra);
-    this.estados = new Uint8Array(this.n).fill(PUNTO.neutra);
-    this.observador = new ResizeObserver(() => this.medir());
+    this.dura = crear().fill(VUELO);
+    this.color = new Uint8Array(n).fill(PUNTO.neutra);
+    this.estados = new Uint8Array(n).fill(PUNTO.neutra);
+  }
+
+  /**
+   * Cambia a quiénes se dibuja sin volver a armar la escena: quien sigue en la muestra se queda
+   * donde está, y los puntos que sobran se van a ocupar el lugar de los que llegan. No repite la
+   * entrada ni toca el acercamiento.
+   */
+  reemplazar(personas: Persona[]): void {
+    const antes = { n: this.n, x: this.x, y: this.y, personas: this.personas };
+    this.personas = personas;
+    this.reservar(personas.length);
+    this.burbujas = [];
+    this.etiquetas = [];
+    this.foco = [];
+    this.inicioRotulos = 0;
+    // Con todos en reposo, el próximo `fijar` con los mismos estados no relanza ningún vuelo.
+    this.abierta = true;
+    if (!this.ancho) return;
+    personas.forEach((persona, i) => {
+      [this.casaX[i], this.casaY[i]] = this.proyectar(Math.max(LON_MINIMA, persona.lon), persona.lat);
+    });
+    const clave = (lista: Persona[], i: number) => lista[i].clave ?? `#${i}`;
+    const dondeEstaba = new Map<string, number>();
+    for (let j = 0; j < antes.n; j++) dondeEstaba.set(clave(antes.personas, j), j);
+    const origen = new Int32Array(this.n).fill(-1);
+    const sigue = new Uint8Array(antes.n);
+    for (let i = 0; i < this.n; i++) {
+      const j = dondeEstaba.get(clave(personas, i));
+      if (j === undefined) continue;
+      origen[i] = j;
+      sigue[j] = 1;
+    }
+    // Los puntos que ya no están se reparten entre los nuevos, para que el cambio se vea como un traslado.
+    const libres: number[] = [];
+    for (let j = 0; j < antes.n; j++) if (!sigue[j]) libres.push(j);
+    let usados = 0;
+    const ahora = performance.now() / 1000;
+    const quieto = this.reducir.matches;
+    for (let i = 0; i < this.n; i++) {
+      const j = origen[i] >= 0 ? origen[i] : usados < libres.length ? libres[usados++] : -1;
+      const parteX = j >= 0 && !quieto ? antes.x[j] : this.casaX[i];
+      const parteY = j >= 0 && !quieto ? antes.y[j] : this.casaY[i];
+      this.x[i] = this.desdeX[i] = parteX;
+      this.y[i] = this.desdeY[i] = parteY;
+      this.haciaX[i] = this.casaX[i];
+      this.haciaY[i] = this.casaY[i];
+      this.sale[i] = ahora + Math.abs(azar(i, 4)) * 0.08;
+      this.dura[i] = VUELO_REACOMODO;
+    }
+    this.finVuelo = ahora + 0.08 + VUELO_REACOMODO;
+    this.sucio = true;
   }
 
   montar(): void {
@@ -466,7 +526,7 @@ export class EscenaEnjambre {
   private volar(i: number, x: number, y: number, modo: ModoVuelo, ahora: number): void {
     if (modo === 'inmediato') {
       // Si el punto va en vuelo, solo se corrige su destino; si no, salta.
-      if (ahora < this.sale[i] + VUELO) {
+      if (ahora < this.sale[i] + this.dura[i]) {
         this.haciaX[i] = x;
         this.haciaY[i] = y;
         return;
@@ -479,6 +539,7 @@ export class EscenaEnjambre {
     this.desdeY[i] = this.y[i];
     this.haciaX[i] = x;
     this.haciaY[i] = y;
+    this.dura[i] = VUELO;
     // En la ola, el norte responde primero.
     const norteSur = (this.casaY[i] - this.margen()) / (this.alto - this.margen() * 2);
     this.sale[i] = ahora + (modo === 'ola' ? norteSur * 1.3 : 0) + Math.abs(azar(i, 4)) * 0.4;
@@ -497,7 +558,7 @@ export class EscenaEnjambre {
 
   private mover(ahora: number): void {
     for (let i = 0; i < this.n; i++) {
-      const p = (ahora - this.sale[i]) / VUELO;
+      const p = (ahora - this.sale[i]) / this.dura[i];
       if (p <= 0) continue;
       // El punto toma su color nuevo al despegar, no antes: así la ola se ve avanzar.
       this.color[i] = this.estados[i];

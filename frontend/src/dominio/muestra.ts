@@ -12,6 +12,7 @@ export const FILTROS_INICIALES: Filtros = {
   quintil: SIN_FILTRO,
   educacion: SIN_FILTRO,
   politica: SIN_FILTRO,
+  reduccion: 10,
 };
 
 function coincide(persona: Persona, filtros: Filtros): boolean {
