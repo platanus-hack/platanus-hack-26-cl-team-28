@@ -288,10 +288,71 @@ export interface OpcionesWati {
   /** 0 a CARAS - 1. */
   cuadro: number;
   animo?: Animo;
+  /** Disfrazado de gato: orejas, cola, nariz y bigotes en vez del adorno. */
+  gato?: boolean;
+  /** Ángulo del brazo derecho, usado solo por el wati del mando. */
+  saludo?: number;
+}
+
+/** Orejas y cola de gato; van detrás del cuerpo, que tapa donde se unen. */
+function orejasYCola(ctx: CanvasRenderingContext2D, arriba: number, cuerpo: string): void {
+  const interior = mezclarColor(cuerpo, LENGUA, 0.55);
+  ctx.lineCap = 'round';
+  // Cola: un trazo grueso café con el color del cuerpo encima, que sube en curva por el costado.
+  const cola = new Path2D();
+  cola.moveTo(CX + 11, 37.5);
+  cola.bezierCurveTo(CX + 20.5, 38, CX + 21, 28, CX + 16.5, 24.5);
+  ctx.strokeStyle = BORDE;
+  ctx.lineWidth = 4.6;
+  ctx.stroke(cola);
+  ctx.strokeStyle = cuerpo;
+  ctx.lineWidth = 2.5;
+  ctx.stroke(cola);
+  ctx.lineWidth = LW;
+  ctx.strokeStyle = BORDE;
+  for (const lado of [-1, 1]) {
+    const oreja = new Path2D();
+    oreja.moveTo(CX + lado * 3.6, arriba + 1.5);
+    oreja.lineTo(CX + lado * 10.8, arriba - 8.2);
+    oreja.lineTo(CX + lado * 13, arriba + 5.5);
+    oreja.closePath();
+    ctx.fillStyle = cuerpo;
+    ctx.fill(oreja);
+    ctx.stroke(oreja);
+    const dentro = new Path2D();
+    dentro.moveTo(CX + lado * 6.2, arriba + 1.6);
+    dentro.lineTo(CX + lado * 10.4, arriba - 4.6);
+    dentro.lineTo(CX + lado * 11.6, arriba + 3);
+    dentro.closePath();
+    ctx.fillStyle = interior;
+    ctx.fill(dentro);
+  }
+}
+
+/** Nariz y bigotes sobre la cara de reposo. */
+function narizYBigotes(ctx: CanvasRenderingContext2D, y: number): void {
+  ctx.fillStyle = LENGUA;
+  ctx.beginPath();
+  ctx.moveTo(CX - 1.1, y + 0.2);
+  ctx.lineTo(CX + 1.1, y + 0.2);
+  ctx.lineTo(CX, y + 1.2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = OJO;
+  ctx.lineWidth = 0.7;
+  ctx.lineCap = 'round';
+  for (const lado of [-1, 1]) {
+    for (const dy of [-0.7, 1.1]) {
+      ctx.beginPath();
+      ctx.moveTo(CX + lado * 9.2, y + 1.9 + dy * 0.4);
+      ctx.lineTo(CX + lado * 13.6, y + 1.2 + dy * 1.6);
+      ctx.stroke();
+    }
+  }
 }
 
 /** Dibuja un wati en el origen del contexto, en unidades de celda. */
-export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, cuadro, animo = 'alegre' }: OpcionesWati): void {
+export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, cuadro, animo = 'alegre', gato = false, saludo = 0 }: OpcionesWati): void {
   const medio = 14;
   const arriba = 15;
   const abajo = 40;
@@ -309,18 +370,29 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
     ctx.stroke();
   }
   for (const lado of [-1, 1]) {
+    ctx.save();
+    if (lado === 1 && saludo) {
+      ctx.translate(CX + medio - 1, centro - 1);
+      ctx.rotate(-saludo);
+      ctx.translate(-(CX + medio - 1), -(centro - 1));
+    }
     ctx.beginPath();
     ctx.ellipse(CX + lado * (medio + 0.4), centro + 1.6, 2.3, 4.7, -lado * 0.45, 0, Math.PI * 2);
     ctx.fillStyle = cuerpo;
     ctx.fill();
     ctx.stroke();
+    ctx.restore();
   }
   ctx.save();
-  if (variante >= CABEZAS) {
-    ctx.translate(2 * CX, 0);
-    ctx.scale(-1, 1);
+  if (gato) {
+    orejasYCola(ctx, arriba, cuerpo);
+  } else {
+    if (variante >= CABEZAS) {
+      ctx.translate(2 * CX, 0);
+      ctx.scale(-1, 1);
+    }
+    adorno(ctx, variante % CABEZAS, arriba, cuerpo);
   }
-  adorno(ctx, variante % CABEZAS, arriba, cuerpo);
   ctx.restore();
   const p = new Path2D();
   p.moveTo(CX, arriba);
@@ -344,6 +416,7 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
   ctx.lineWidth = LW;
   ctx.stroke(p);
   cara(ctx, medio, arriba + 9, cuadro, animo);
+  if (gato && cuadro === 0) narizYBigotes(ctx, arriba + 9);
   ctx.restore();
 }
 

@@ -29,6 +29,8 @@
   line-height: 1.2;
   color: var(--tinta-suave);
 }
+.ficha dd:has(.unidad) { display: flex; align-items: center; gap: var(--e2); white-space: nowrap; }
+.unidad { padding: 4px 8px; border-radius: var(--radio); background: var(--relleno-suave); color: var(--tinta-suave); font-size: var(--texto-xs); font-weight: 600; }
 
 .ficha b {
   margin-right: 0.15em;
@@ -52,7 +54,7 @@
 .aviso {
   padding: var(--e1) var(--e3);
   border: 1px solid var(--indecisa);
-  border-radius: 999px;
+  border-radius: var(--radio);
   font-size: var(--texto-s);
   color: var(--tinta);
 }

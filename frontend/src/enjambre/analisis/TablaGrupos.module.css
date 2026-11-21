@@ -64,7 +64,7 @@
 
 .fila {
   border-top: 1px solid var(--linea-suave);
-  border-radius: 2px;
+  border-radius: var(--radio);
   animation: entrar 320ms var(--curva-salida) backwards;
   animation-delay: calc(var(--lugar) * 18ms);
 }
@@ -260,7 +260,7 @@
   place-items: center;
   align-self: stretch;
   margin: 2px -4px;
-  border-radius: 2px;
+  border-radius: var(--radio);
   background: color-mix(in srgb, var(--color, transparent) var(--fuerza, 0%), transparent);
   font-size: var(--texto-s);
   font-weight: 650;

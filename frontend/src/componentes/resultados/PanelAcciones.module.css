@@ -41,7 +41,7 @@
   min-width: 3px;
   height: 9px;
   border: var(--trazo) solid var(--tinta);
-  border-radius: var(--radio-fino);
+  border-radius: var(--radio);
   overflow: hidden;
   transition: width var(--medio) var(--curva-salida);
 }
@@ -82,5 +82,5 @@
   width: 9px;
   height: 9px;
   border: 1px solid var(--tinta);
-  border-radius: var(--radio-fino);
+  border-radius: 2px;
 }

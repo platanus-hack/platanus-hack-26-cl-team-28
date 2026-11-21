@@ -19,12 +19,26 @@ import { Propuesta } from './Propuesta';
 import { Redactando } from './Redactando';
 import { ResultadoEncuesta } from './ResultadoEncuesta';
 import { useAngosto } from './useAngosto';
+import { usePanelLateral } from './usePanelLateral';
 import { Validacion } from './Validacion';
 import { VistaAnalisis } from './VistaAnalisis';
 import { VistaProceso } from './VistaProceso';
 import { Voces } from './Voces';
 
 /** Puntos que se quieren dibujar; cada agente real se dibuja con varios alrededor de su comuna. */
+/** Cuántos toques seguidos al wati del mando lo vuelven gato, y cuánto puede pasar entre uno y otro. */
+const TOQUES_PARA_GATO = 7;
+const TOQUES_SEGUIDOS_MS = 700;
+const ESPERA_WATI_MS = 3000;
+
+/** Al interrumpir un gesto, el siguiente continúa desde la postura que se ve en ese instante. */
+function animarWati(figura: HTMLElement, transformaciones: Keyframe[], duracion: number) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const transformacionActual = getComputedStyle(figura).transform;
+  figura.getAnimations().forEach((animacion) => animacion.cancel());
+  figura.animate([{ transform: transformacionActual }, ...transformaciones], { duration: duracion, easing: 'ease-in-out' });
+}
+
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
@@ -53,11 +67,20 @@ export function AppEnjambre() {
   const escena = useRef<EscenaEnjambre | null>(null);
   const [editando, setEditando] = useState(0);
   const watiSaludo = useRef<HTMLSpanElement>(null);
+  const [gato, setGato] = useState(false);
+  const [watiVisible, setWatiVisible] = useState(false);
+  const [saludo, setSaludo] = useState(0);
+  const botonWati = useRef<HTMLButtonElement>(null);
+  const toques = useRef({ cuantos: 0, ultimo: 0 });
   const [oculta, setOculta] = useState(false);
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
-  const [encuestaAbierta, setEncuestaAbierta] = useState(false);
-  const cerrarEncuesta = useCallback(() => setEncuestaAbierta(false), []);
+  const { abierto: encuestaAbierta, montado: encuestaMontada, abrir: abrirEncuesta, cerrar: cerrarPanelEncuesta } = usePanelLateral();
+  const botonEncuesta = useRef<HTMLButtonElement>(null);
+  const cerrarEncuesta = useCallback(() => {
+    cerrarPanelEncuesta();
+    botonEncuesta.current?.focus();
+  }, [cerrarPanelEncuesta]);
   const angosto = useAngosto();
   const [zoom, setZoom] = useState(1);
   /** El proceso en lugar del mapa. `montado` sigue un momento más al cerrar, mientras los cuadrados vuelven. */
@@ -146,6 +169,52 @@ export function AppEnjambre() {
     escena.current?.actualizarTema();
   }, [claro]);
   useEffect(() => setFicha(null), [fase, viendo]);
+  useEffect(() => {
+    if (fase !== 'preparar') {
+      setWatiVisible(false);
+      return;
+    }
+    const reducir = matchMedia('(prefers-reduced-motion: reduce)');
+    let ciclo = 0;
+    let saludoPendiente = 0;
+    const limpiar = () => {
+      window.clearTimeout(ciclo);
+      window.clearTimeout(saludoPendiente);
+    };
+    const programarSaludo = () => {
+      saludoPendiente = window.setTimeout(() => {
+        if (!document.hidden && !botonWati.current?.matches(':hover, :focus-within')) setSaludo(performance.now());
+        programarSaludo();
+      }, 5000 + Math.random() * 4000);
+    };
+    const mostrarWati = () => {
+      setWatiVisible(true);
+      if (reducir.matches) return;
+      setSaludo(performance.now());
+      programarSaludo();
+      ciclo = window.setTimeout(ocultarWati, 12000 + Math.random() * 8000);
+    };
+    const ocultarWati = () => {
+      if (document.hidden || botonWati.current?.matches(':hover, :focus-within')) {
+        ciclo = window.setTimeout(ocultarWati, 2000);
+        return;
+      }
+      window.clearTimeout(saludoPendiente);
+      setWatiVisible(false);
+      ciclo = window.setTimeout(mostrarWati, 3000 + Math.random() * 2000);
+    };
+    const iniciar = () => {
+      limpiar();
+      if (reducir.matches) setWatiVisible(true);
+      else {
+        setWatiVisible(false);
+        ciclo = window.setTimeout(mostrarWati, ESPERA_WATI_MS);
+      }
+    };
+    iniciar();
+    reducir.addEventListener('change', iniciar);
+    return () => { limpiar(); reducir.removeEventListener('change', iniciar); };
+  }, [fase]);
 
   const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
   const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
@@ -281,21 +350,39 @@ export function AppEnjambre() {
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
           <div className={estilos.panelMando}>
-            <button type="button" className={estilos.asomo} aria-label="Saludar al wati" onClick={() => {
+            <button ref={botonWati} type="button" className={estilos.asomo} data-visible={watiVisible || undefined} disabled={!watiVisible} aria-hidden={!watiVisible} aria-label={gato ? 'Saludar al gato' : 'Saludar al wati'} onClick={() => {
               const figura = watiSaludo.current;
-              if (!figura || matchMedia('(prefers-reduced-motion: reduce)').matches || figura.getAnimations().some((animacion) => animacion.playState === 'running')) return;
-              figura.animate([
-                { transform: 'translateY(0) rotate(0)' },
-                { transform: 'translateY(-7px) rotate(-10deg)', offset: 0.25 },
-                { transform: 'translateY(-4px) rotate(10deg)', offset: 0.55 },
-                { transform: 'rotate(-5deg)', offset: 0.8 },
-                { transform: 'translateY(0) rotate(0)' },
-              ], { duration: 500, easing: 'ease-in-out' });
+              // Muchos toques seguidos lo disfrazan de gato; otros tantos lo devuelven a wati.
+              const ahora = performance.now();
+              const racha = toques.current;
+              racha.cuantos = ahora - racha.ultimo < TOQUES_SEGUIDOS_MS ? racha.cuantos + 1 : 1;
+              racha.ultimo = ahora;
+              if (racha.cuantos >= TOQUES_PARA_GATO) {
+                racha.cuantos = 0;
+                setGato((es) => !es);
+                if (figura) {
+                  animarWati(figura, [
+                    { transform: 'scale(1.25, 0.8)', offset: 0.2 },
+                    { transform: 'scale(0.85, 1.2) translateY(-8px)', offset: 0.5 },
+                    { transform: 'scale(1, 1)' },
+                  ], 450);
+                }
+                return;
+              }
+              if (!figura) return;
+              animarWati(figura, [
+                { transform: 'scale(1.24, 0.68)', offset: 0.28 },
+                { transform: 'scale(0.9, 1.12)', offset: 0.65 },
+                { transform: 'scale(1, 1)' },
+              ], 500);
             }}>
-              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} /></span></span>
+              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} gato={gato} saludo={saludo} /></span></span>
             </button>
             <div className={estilos.contenidoMando}>
-              <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+              <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={(boton) => {
+                botonEncuesta.current = boton;
+                abrirEncuesta();
+              }} />
             </div>
           </div>
         )}
@@ -331,24 +418,38 @@ export function AppEnjambre() {
         </div>
       )}
       <div className={estilos.utiles}>
-        {fase === 'corriendo' ? (
-          <Boton variante="secundario" onClick={sim.detener}>
-            Detener
-          </Boton>
-        ) : (
-          <>
-            {/* El historial lo guarda el motor: en la demostración no hay. */}
-            {conexion && !conexion.demo && (
-              <MenuHistorial
-                alUsar={(textos) => {
-                  sim.cargar(textos);
-                  sim.volver();
-                }}
-              />
-            )}
-            <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
-          </>
-        )}
+        <button type="button" role="switch" aria-label="Tema claro" aria-checked={claro} className={estilos.cambiarTema} onClick={() => setClaro((valor) => !valor)}>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.6 12.5A7 7 0 0 1 7.5 3.4a7 7 0 1 0 9.1 9.1Z" /></svg>
+          <svg viewBox="0 0 20 20" aria-hidden="true">
+            <circle cx="10" cy="10" r="3.2" />
+            <path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4m0-11.4-1.4 1.4m-8.6 8.6-1.4 1.4" />
+          </svg>
+        </button>
+        <div className={estilos.accionesVista}>
+          {fase === 'corriendo' ? (
+            <Boton variante="secundario" onClick={sim.detener}>
+              Detener
+            </Boton>
+          ) : (
+            <>
+              {/* El historial lo guarda el motor: en la demostración no hay. */}
+              {conexion && !conexion.demo && (
+                <MenuHistorial
+                  alUsar={(textos) => {
+                    sim.cargar(textos);
+                    sim.volver();
+                  }}
+                  alVer={(id) => {
+                    // La ficha abierta era de una persona de la muestra anterior.
+                    setFicha(null);
+                    return sim.reabrir(id);
+                  }}
+                />
+              )}
+              <MenuOpciones sim={sim} />
+            </>
+          )}
+        </div>
       </div>
       </div>
       {procesoMontado && conexion && caso && (
@@ -384,26 +485,29 @@ export function AppEnjambre() {
             </svg>
           </button>
         )}
-        <button type="button" data-mapa aria-label="Alejar" disabled={zoom <= 1} onClick={() => escena.current?.acercar(1 / 1.5)}>
-          <svg viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M2 6h8" />
-          </svg>
-        </button>
-        <button type="button" data-mapa aria-label="Acercar" disabled={zoom >= ZOOM_MAXIMO} onClick={() => escena.current?.acercar(1.5)}>
-          <svg viewBox="0 0 12 12" aria-hidden="true">
-            <path d="M2 6h8M6 2v8" />
-          </svg>
-        </button>
-        {zoom > 1 && (
-          <button type="button" data-mapa onClick={() => escena.current?.restablecer()}>
-            Ver todo
+        <div className={estilos.parZoom}>
+          {/* Siempre montado, sobre − y +: sube y se retira con una animación en vez de saltar. */}
+          <div className={estilos.verTodo} data-visible={zoom > 1 || undefined} data-mapa inert={zoom <= 1}>
+            <button type="button" onClick={() => escena.current?.restablecerSuave()}>
+              Ver todo
+            </button>
+          </div>
+          <button type="button" data-mapa aria-label="Alejar" disabled={zoom <= 1} onClick={() => escena.current?.acercarSuave(1 / 1.5)}>
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M2 6h8" />
+            </svg>
           </button>
-        )}
+          <button type="button" data-mapa aria-label="Acercar" disabled={zoom >= ZOOM_MAXIMO} onClick={() => escena.current?.acercarSuave(1.5)}>
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M2 6h8M6 2v8" />
+            </svg>
+          </button>
+        </div>
       </div>
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} preguntas={sim.encuesta} alCerrar={() => setFicha(null)} />
       )}
-      {encuestaAbierta && fase === 'preparar' && <CajonEncuesta alCerrar={cerrarEncuesta} />}
+      {encuestaMontada && fase === 'preparar' && <CajonEncuesta abierto={encuestaAbierta} alCerrar={cerrarEncuesta} />}
       {oculta && (
         <div className={estilos.mostrar} ref={mostrar}>
           <Boton variante="texto" onClick={() => setOculta(false)}>

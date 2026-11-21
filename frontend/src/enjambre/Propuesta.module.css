@@ -40,19 +40,12 @@
   padding: var(--e4) var(--e4) var(--e4);
   overflow-y: auto;
   border-top: 4px solid var(--tinta);
+  border-radius: var(--radio);
   background: var(--papel);
   box-shadow: 0 18px 50px rgb(0 0 0 / 0.45);
   color: var(--tinta);
-  animation: abrir 180ms var(--curva-salida) both;
   scrollbar-width: thin;
   scrollbar-color: var(--tinta-suave) transparent;
-}
-
-@keyframes abrir {
-  from {
-    opacity: 0;
-    translate: 0 -6px;
-  }
 }
 
 .rotulo {
@@ -75,8 +68,3 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hoja {
-    animation: none;
-  }
-}

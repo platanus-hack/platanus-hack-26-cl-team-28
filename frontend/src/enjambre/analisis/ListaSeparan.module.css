@@ -46,7 +46,6 @@
   padding: 0 var(--e2);
   border: 0;
   border-top: 1px dashed var(--linea-suave);
-  border-radius: 0;
   background: transparent;
   color: var(--tinta-suave);
   font-size: var(--texto-xs);
@@ -77,7 +76,7 @@
   min-height: 32px;
   padding: 0 var(--e2);
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radio);
   background: transparent;
   color: var(--tinta-suave);
   font-size: var(--texto-s);

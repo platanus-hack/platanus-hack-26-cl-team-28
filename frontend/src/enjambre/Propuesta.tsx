@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { PopupFlotante } from '../componentes/comunes/Popup';
 import estilos from './Propuesta.module.css';
 
 interface Props {
@@ -97,11 +98,11 @@ export function Propuesta({ letra, titulo, texto }: Props) {
           Leer completa
         </button>
       )}
-      {abierta && (
-        <div className={estilos.hoja} role="dialog" aria-label={`Variante ${letra}, propuesta completa`} style={{ left: lugar.x, top: lugar.y, minWidth: lugar.ancho }}>
+      {hayMas && (
+        <PopupFlotante abierto={abierta} className={estilos.hoja} role="dialog" aria-label={`Variante ${letra}, propuesta completa`} style={{ left: lugar.x, top: lugar.y, minWidth: lugar.ancho }}>
           <p className={estilos.rotulo}>Variante {letra} · lo que leyeron los agentes</p>
           <p className={estilos.texto}>{sinCorte(completo)}</p>
-        </div>
+        </PopupFlotante>
       )}
     </div>
   );

@@ -11,17 +11,19 @@ import {
   correrRemoto,
   pedirEstado,
   pedirMuestra,
+  pedirVista,
   subirDocumento,
   type AgenteRemoto,
   type CasoPedido,
   type EstadoMotor,
   type Evento,
   type Metricas,
+  type VistaGuardada,
 } from './api';
 import { agentesDeDemostracion, correrDemostracion } from './demoLocal';
 import { olvidarEncuestaGuardada, PREGUNTAS } from './encuesta';
 import { poblacionDeAgentes } from './poblacion';
-import { coincide, filtrosDePartida, retratoDelMotor, retratoLocal, type FiltrosVivo, type Retrato } from './sociedad';
+import { coincide, filtrosDePartida, retratoDelMotor, retratoLocal, sinFiltros, type FiltrosVivo, type Retrato } from './sociedad';
 import { CASOS_VALIDACION, type Referencia } from './validacion';
 
 type Anillo = number[][];
@@ -37,7 +39,7 @@ const FILTROS_DE_PARTIDA: FiltrosVivo = filtrosDePartida(TAMANO_INICIAL);
  * lo justo para que arrastrar el control de edad no dispare un pedido por cada paso.
  */
 const PAUSA_MUESTRA = 40;
-export const MAXIMO_VARIANTES = 6;
+export const MAXIMO_VARIANTES = 4;
 export const MAXIMO_ITERACIONES = 3;
 /** Segundos que se queda en pantalla una variante ya respondida antes de pasar a la siguiente. */
 const RETENCION = 5.5;
@@ -149,7 +151,7 @@ const INICIALES = [{ texto: CASOS_VALIDACION[0].texto, referencia: CASOS_VALIDAC
 /** Estado de la herramienta conectada al motor: muestra, variantes y la corrida que llega en vivo. */
 export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const [conexion, setConexion] = useState<Conexion | null>(null);
-  const edicion = useBorradores(INICIALES);
+  const edicion = useBorradores(INICIALES, MAXIMO_VARIANTES);
   const { borradores, fijar } = edicion;
   const [filtros, setFiltros] = useState<FiltrosVivo>(FILTROS_DE_PARTIDA);
   /** Los filtros de la muestra que está en pantalla, para no volver a pedirla. */
@@ -168,6 +170,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const casos = useRef<CasoVivo[]>([]);
   const voces = useRef<Voz[]>([]);
   const cancelar = useRef<(() => void) | null>(null);
+  /** Cuenta los pedidos de reabrir una simulación: uno que llega tarde no pisa lo que vino después. */
+  const turnoReabrir = useRef(0);
   const pintar = useRef(0);
 
   // Conexión con el motor; sin motor queda la demostración en el navegador, rotulada como tal.
@@ -287,18 +291,22 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     });
   }, []);
 
+  // `largo`: cuántos agentes tiene la muestra de la corrida, cuando no es la que está en pantalla.
   const nuevoCaso = useCallback(
-    (base: { id: string; letra: string; texto: string; titulo?: string; iteracion?: CasoVivo['iteracion']; referencia?: Referencia }): CasoVivo => ({
+    (
+      base: { id: string; letra: string; texto: string; titulo?: string; iteracion?: CasoVivo['iteracion']; referencia?: Referencia },
+      largo: number = conexion?.agentes.length ?? 0,
+    ): CasoVivo => ({
       id: base.id,
       letra: base.letra,
       texto: base.texto,
       titulo: base.titulo || base.texto,
       iteracion: base.iteracion ?? null,
       referencia: base.referencia,
-      acuerdo: new Int8Array(conexion?.agentes.length ?? 0),
+      acuerdo: new Int8Array(largo),
       frase: [],
       notas: [],
-      lote: new Int32Array(conexion?.agentes.length ?? 0),
+      lote: new Int32Array(largo),
       lotes: 0,
       respondidas: 0,
       desdeCache: 0,
@@ -356,7 +364,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           setMetricas(evento.metricas);
           break;
         case 'caso':
-          lista[evento.caso] = nuevoCaso({ id: evento.id, letra: evento.letra, texto: evento.texto, titulo: evento.titulo, iteracion: evento.iteracion });
+          // La variante que escribe el agente se pregunta a los mismos que las demás.
+          lista[evento.caso] = nuevoCaso({ id: evento.id, letra: evento.letra, texto: evento.texto, titulo: evento.titulo, iteracion: evento.iteracion }, lista[0]?.acuerdo.length);
           setRedactando(null);
           setMetricas(evento.metricas);
           break;
@@ -444,6 +453,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       nuevoCaso({ id: p.id, letra: p.letra, texto: p.texto, titulo: p.texto || p.documento?.titulo, referencia: listos[k].referencia }),
     );
     voces.current = [];
+    turnoReabrir.current += 1;
     vaciarCola();
     setMetricas(METRICAS_CERO);
     setTerminada(false);
@@ -457,7 +467,9 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       casos: pedidos,
       muestra: conexion.muestra?.id,
       agentes: muestra.agentes,
-      iteraciones: Math.min(iteraciones, MAXIMO_VARIANTES + 2 - pedidos.length),
+      iteraciones,
+      // Quedan guardados con la corrida: al reabrirla desde el historial vuelven a ser los filtros en pantalla.
+      filtros,
     };
     try {
       cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento);
@@ -465,7 +477,75 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       setAviso(humano(error, 'El motor de simulación no respondió. Intenta de nuevo en unos segundos.'));
       setFase('preparar');
     }
-  }, [puedePreguntar, conexion, listos, nuevoCaso, muestra.agentes, iteraciones, alEvento]);
+  }, [puedePreguntar, conexion, listos, nuevoCaso, muestra.agentes, iteraciones, alEvento, filtros]);
+
+  // Una simulación del historial vuelve a la pantalla como quedó: su muestra, sus filtros y sus
+  // respuestas. Se aplican de una vez los mismos eventos que llegaron en vivo, así el mapa, el
+  // proceso y el análisis muestran lo mismo que entonces. Devuelve el problema si no se pudo
+  // abrir (lo muestra el historial, que es quien la pidió) y null si quedó en pantalla.
+  const reabrir = useCallback(
+    async (id: string): Promise<string | null> => {
+      const turno = ++turnoReabrir.current;
+      let guardada: VistaGuardada;
+      try {
+        guardada = await pedirVista(id);
+      } catch (error) {
+        return humano(error, 'No se pudo abrir esta simulación. Intenta de nuevo en unos segundos.');
+      }
+      // Si mientras tanto se pidió otra o se lanzó una corrida, esta ya no se muestra.
+      if (turno !== turnoReabrir.current) return null;
+      const { muestra: remota, eventos } = guardada;
+      const total = remota.agentes.length;
+      const inicio = eventos.find((evento) => evento.tipo === 'inicio');
+      if (!total || inicio?.tipo !== 'inicio' || !inicio.casos.length) return 'Esta simulación quedó guardada sin respuestas que mostrar.';
+      cancelar.current?.();
+      cancelar.current = null;
+      vaciarCola();
+      casos.current = inicio.casos.map((c) =>
+        nuevoCaso(
+          // La comparación con la encuesta real vuelve si la propuesta es la de un caso de validación.
+          { id: c.id, letra: c.letra, texto: c.texto, titulo: c.texto || c.titulo, referencia: CASOS_VALIDACION.find((v) => v.texto === c.texto.trim())?.referencia },
+          total,
+        ),
+      );
+      voces.current = [];
+      setAviso(null);
+      setRedactando(null);
+      setMetricas(METRICAS_CERO);
+      setEncuesta(PREGUNTAS);
+      const lotes: number[] = [];
+      for (const evento of eventos) {
+        // Los avisos y las fallas eran de ese momento.
+        if (evento.tipo === 'aviso' || evento.tipo === 'error') continue;
+        aplicar(evento, evento.tipo === 'respuestas' ? (lotes[evento.caso] = (lotes[evento.caso] ?? 0) + 1) : undefined);
+      }
+      for (const caso of casos.current) caso.listo = true;
+      const consultados = guardada.agentes.filter((i) => i >= 0 && i < total);
+      const elegido = new Uint8Array(total);
+      for (const i of consultados) elegido[i] = 1;
+      const porAgente = Math.max(1, Math.round(puntosDeseados / total));
+      // Al volver a preparar se pide la muestra otra vez: la guardada puede no estar ya en el motor.
+      pedida.current = '';
+      setConexion(
+        (previa) =>
+          previa && {
+            ...previa,
+            agentes: remota.agentes,
+            puntos: poblacionDeAgentes(remota.agentes, porAgente, regiones, comunasCargadas() ?? {}),
+            muestra: { id: remota.id, disponibles: remota.disponibles, representadas: remota.representadas, retrato: retratoDelMotor(remota.retrato) },
+          },
+      );
+      setCorrida({ agentes: consultados, elegido, disponibles: remota.disponibles, total: consultados.length, representadas: remota.representadas });
+      // Con los filtros de entonces se ve la simulación entera; sin ellos, al menos sin filtrar.
+      setFiltros((previos) => guardada.filtros ?? sinFiltros(previos));
+      setBuscando(false);
+      setViendo(0);
+      setTerminada(true);
+      setFase('resultados');
+      return null;
+    },
+    [aplicar, nuevoCaso, vaciarCola, regiones, puntosDeseados],
+  );
 
   // Recorrido automático: cada variante respondida queda unos segundos y se pasa a la siguiente.
   const casoActual = casos.current[viendo];
@@ -538,6 +618,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     buscando,
     puedePreguntar,
     preguntar,
+    /** Vuelve a mostrar una simulación guardada en el historial. */
+    reabrir,
     detener,
     volver: () => {
       cancelar.current?.();

@@ -65,7 +65,7 @@ button[aria-pressed='true'] .parte {
   min-height: 30px;
   margin-inline: calc(-1 * var(--e2));
   padding: 0 var(--e2);
-  border-radius: var(--radio-fino);
+  border-radius: var(--radio);
 }
 
 .filas .nombre {
@@ -296,7 +296,7 @@ button[aria-pressed='true'] .parte {
   width: var(--tope);
   height: 22px;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radio);
   background: var(--tinta);
   cursor: ew-resize;
   pointer-events: auto;
@@ -306,7 +306,7 @@ button[aria-pressed='true'] .parte {
   width: var(--tope);
   height: 22px;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radio);
   background: var(--tinta);
   cursor: ew-resize;
   pointer-events: auto;

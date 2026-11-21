@@ -221,9 +221,13 @@ se dieron con el perfil completo y se reutilizan solo con `PERFIL=completo`. `da
                                       agentes elegidos, cada uno con `s`: su opción en cada parámetro
     GET  /api/agentes                 la muestra sin filtros, como lista (por compatibilidad)
     GET  /api/historial               las últimas 100 simulaciones, de la más nueva a la más antigua: hora, agentes,
-                                      modelo y, por variante, el texto y cuántos quedaron a favor, en contra y sin decidir
+                                      modelo y, por variante, el texto y cuántos quedaron a favor, en contra y sin decidir.
+                                      `vista` dice si la simulación se puede volver a ver
+    GET  /api/historial/<id>          una simulación guardada, para volver a verla: {muestra, agentes, filtros, eventos}.
+                                      Queda en data/historial/vistas/ al terminar (no si se detuvo); se conservan las últimas 200
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones}.
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones,
+                                      filtros?}. `filtros` son los de la interfaz: se guardan con la corrida y vuelven al reabrirla.
                                       El evento `inicio` devuelve las preguntas con que corre
     GET  /api/corridas/<id>/eventos   text/event-stream
     POST /api/corridas/<id>/cancelar

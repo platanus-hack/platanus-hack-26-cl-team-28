@@ -25,6 +25,8 @@ export interface EntradaHistorial {
   costo_usd: number;
   /** Falso si se detuvo antes de que respondieran todos. */
   completa: boolean;
+  /** El motor guardó la corrida entera: se puede volver a ver en el mapa. */
+  vista?: boolean;
   casos: CasoHistorial[];
 }
 

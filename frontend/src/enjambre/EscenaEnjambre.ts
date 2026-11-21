@@ -83,6 +83,9 @@ const SIN_POSTURA: number[] = [PUNTO.fuera, PUNTO.neutra, PUNTO.pendiente];
 /** Cara de cada estado (en el orden de `PUNTO`): triste en contra, seria si no se decide. */
 const ANIMOS: Animo[] = ['alegre', 'alegre', 'alegre', 'triste', 'seria', 'alegre'];
 
+/** Duración de los acercamientos de los botones, en segundos. */
+const DURA_ZOOM = 0.4;
+const salida = (p: number) => 1 - (1 - p) ** 3;
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
 
@@ -173,6 +176,8 @@ export class EscenaEnjambre {
   private agarre: [number, number] | null = null;
   private arrastro = false;
   private zoomAlPellizcar = 1;
+  /** Acercamiento animado de los botones: de dónde viene la vista y adónde va. */
+  private transicion: { inicio: number; z0: number; ox0: number; oy0: number; z1: number; ox1: number; oy1: number } | null = null;
   /** Aviso a la interfaz cuando cambia el acercamiento. */
   alCambiarVista?: (zoom: number) => void;
   /** Verdadero cuando los puntos ya volaron a sus burbujas con los estados actuales. */
@@ -377,6 +382,7 @@ export class EscenaEnjambre {
 
   /** Acerca o aleja la vista manteniendo fijo el punto (cx, cy) de la pantalla; sin punto, el centro. */
   acercar(factor: number, cx = this.ancho / 2, cy = this.alto / 2): void {
+    this.transicion = null;
     const nuevo = Math.max(1, Math.min(ZOOM_MAXIMO, this.zoom * factor));
     const razon = nuevo / this.zoom;
     this.ox = cx - (cx - this.ox) * razon;
@@ -386,7 +392,68 @@ export class EscenaEnjambre {
   }
 
   restablecer(): void {
+    this.transicion = null;
     this.zoom = 1;
+    this.acotar();
+  }
+
+  /** Como `acercar`, pero animado: la vista se desliza hasta el nuevo nivel. Varios toques seguidos se suman. */
+  acercarSuave(factor: number): void {
+    const base = this.transicion ?? { z1: this.zoom, ox1: this.ox, oy1: this.oy };
+    const nuevo = Math.max(1, Math.min(ZOOM_MAXIMO, base.z1 * factor));
+    const razon = nuevo / base.z1;
+    const cx = this.ancho / 2;
+    const cy = this.alto / 2;
+    this.irA(nuevo, cx - (cx - base.ox1) * razon, cy - (cy - base.oy1) * razon);
+  }
+
+  /** Vuelve a la vista completa con la misma animación. */
+  restablecerSuave(): void {
+    this.irA(1, 0, 0);
+  }
+
+  private irA(z1: number, ox1: number, oy1: number): void {
+    ox1 = Math.min(0, Math.max(this.ancho * (1 - z1), ox1));
+    oy1 = Math.min(0, Math.max(this.alto * (1 - z1), oy1));
+    if (this.reducir.matches) {
+      this.transicion = null;
+      this.zoom = z1;
+      this.ox = ox1;
+      this.oy = oy1;
+      this.acotar();
+      return;
+    }
+    this.transicion = { inicio: performance.now() / 1000, z0: this.zoom, ox0: this.ox, oy0: this.oy, z1, ox1, oy1 };
+    this.sucio = true;
+  }
+
+  /** Un paso de la animación: el zoom crece de forma geométrica y el punto fijo de la vista se mantiene. */
+  private avanzarZoom(ahora: number): void {
+    const t = this.transicion;
+    if (!t) return;
+    const p = Math.min(1, (ahora - t.inicio) / DURA_ZOOM);
+    const e = salida(p);
+    if (p >= 1) {
+      this.transicion = null;
+      this.zoom = t.z1;
+      this.ox = t.ox1;
+      this.oy = t.oy1;
+    } else {
+      const z = t.z0 * (t.z1 / t.z0) ** e;
+      const k = z / t.z0;
+      const r = t.z1 / t.z0;
+      if (r === 1) {
+        this.ox = t.ox0 + (t.ox1 - t.ox0) * e;
+        this.oy = t.oy0 + (t.oy1 - t.oy0) * e;
+      } else {
+        // El punto de la pantalla que no se mueve en todo el trayecto.
+        const fx = (t.ox1 - t.ox0 * r) / (1 - r);
+        const fy = (t.oy1 - t.oy0 * r) / (1 - r);
+        this.ox = fx - (fx - t.ox0) * k;
+        this.oy = fy - (fy - t.oy0) * k;
+      }
+      this.zoom = z;
+    }
     this.acotar();
   }
 
@@ -447,6 +514,7 @@ export class EscenaEnjambre {
     if (!this.arrastro && Math.hypot(dx, dy) < 4) return;
     this.arrastro = true;
     this.agarre = [e.clientX, e.clientY];
+    this.transicion = null;
     this.ox += dx;
     this.oy += dy;
     this.acotar();
@@ -557,12 +625,12 @@ export class EscenaEnjambre {
 
   /**
    * Ancho que ocupan las columnas de la interfaz a cada lado (mismo cálculo que `.izquierda` en
-   * AppEnjambre.module.css: margen más min(28vw, 26rem)). Ni burbujas ni rótulos entran ahí.
+   * AppEnjambre.module.css: margen más min(33vw, 27rem)). Ni burbujas ni rótulos entran ahí.
    */
   private lateral(): number {
     if (this.ancho < ANCHO_CON_CIFRAS) return 4;
     const margenLado = Math.max(16, Math.min(40, this.ancho * 0.026));
-    return margenLado + Math.min(this.ancho * 0.28, 416) + 14;
+    return margenLado + Math.min(this.ancho * 0.33, 432) + 14;
   }
 
   private margen(): number {
@@ -769,6 +837,7 @@ export class EscenaEnjambre {
     this.cuadro = requestAnimationFrame(this.ciclo);
     if (document.hidden || !this.ancho || this.pausada) return;
     const ahora = marca / 1000;
+    if (this.transicion) this.avanzarZoom(ahora);
     const volando = ahora < this.finVuelo + 0.6;
     const urgente = volando || this.sucio || this.latiendo || this.foco.length > 0;
     // Con watis cerca la escena nunca queda quieta: respiran.

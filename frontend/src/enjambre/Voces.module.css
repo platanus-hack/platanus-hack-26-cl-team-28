@@ -13,7 +13,7 @@
   position: absolute;
   margin: 0;
   padding: var(--e3) var(--e4) var(--e3);
-  border-radius: 16px;
+  border-radius: var(--radio);
   background: var(--color);
   color: var(--tinta-figura);
   transform-origin: 0 34px;

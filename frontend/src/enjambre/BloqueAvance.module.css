@@ -39,7 +39,7 @@
   height: 6px;
   margin-top: var(--e4);
   border: 0;
-  border-radius: var(--radio-fino);
+  border-radius: var(--radio);
   background: var(--linea-suave);
   appearance: none;
   overflow: hidden;

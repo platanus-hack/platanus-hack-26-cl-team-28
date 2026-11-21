@@ -1,5 +1,5 @@
 /** Cliente del motor de simulación (backend/servidor). En desarrollo Vite lo atiende en /api. */
-import { paraElMotor, rasgosDe, type FiltrosVivo } from './sociedad';
+import { filtrosGuardados, paraElMotor, rasgosDe, type FiltrosVivo } from './sociedad';
 import type { EntradaHistorial } from './historial';
 
 export interface MotorInfo {
@@ -143,6 +143,12 @@ export async function pedirEstado(): Promise<EstadoMotor> {
   }
 }
 
+/** Los rasgos de cada agente quedan en el orden de la interfaz, venga como venga el del motor. */
+function ordenarRasgos(remota: MuestraRemota): MuestraRemota {
+  for (const agente of remota.agentes) agente.s = rasgosDe(agente, remota.dimensiones);
+  return remota;
+}
+
 /** Pide al motor que filtre la población y sortee hasta `filtros.tamano` agentes. */
 export async function pedirMuestra(filtros: FiltrosVivo, senal?: AbortSignal): Promise<MuestraRemota> {
   const respuesta = await fetch(`${BASE}/muestra`, {
@@ -151,10 +157,36 @@ export async function pedirMuestra(filtros: FiltrosVivo, senal?: AbortSignal): P
     body: JSON.stringify({ filtros: paraElMotor(filtros), tamano: filtros.tamano }),
     signal: senal,
   });
-  const remota = await leer<MuestraRemota>(respuesta);
-  // Los rasgos quedan en el orden de la interfaz, venga como venga el del motor.
-  for (const agente of remota.agentes) agente.s = rasgosDe(agente, remota.dimensiones);
-  return remota;
+  return ordenarRasgos(await leer<MuestraRemota>(respuesta));
+}
+
+/** Una simulación guardada por el motor, con todo lo que hace falta para volver a verla. */
+export interface VistaGuardada {
+  /** La muestra con que se hizo, tal como era entonces. */
+  muestra: MuestraRemota;
+  /** Los agentes de esa muestra a los que se les preguntó. */
+  agentes: number[];
+  /** Los filtros de la interfaz con que se pidió la muestra, si quedaron guardados. */
+  filtros: FiltrosVivo | null;
+  /** Lo que publicó la corrida, en orden. */
+  eventos: Evento[];
+}
+
+/** Lo que el motor llama "falla" aquí es "error": "error" es el evento propio de EventSource al perder la conexión. */
+const eventoDe = (tipo: string, datos: object): Evento => ({ ...datos, tipo: tipo === 'falla' ? 'error' : tipo }) as Evento;
+
+/** Pide al motor una simulación del historial para volver a verla. */
+export async function pedirVista(id: string, senal?: AbortSignal): Promise<VistaGuardada> {
+  const cruda = await leer<{ muestra: MuestraRemota; agentes?: number[]; filtros?: unknown; eventos?: [string, object][] }>(
+    await fetch(`${BASE}/historial/${encodeURIComponent(id)}`, { signal: senal }),
+  );
+  const muestra = ordenarRasgos(cruda.muestra);
+  return {
+    muestra,
+    agentes: cruda.agentes ?? muestra.agentes.map((a) => a.i),
+    filtros: filtrosGuardados(cruda.filtros),
+    eventos: (cruda.eventos ?? []).map(([tipo, datos]) => eventoDe(tipo, datos)),
+  };
 }
 
 export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
@@ -168,19 +200,19 @@ export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
 
 /** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
 export async function correrRemoto(
-  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number },
+  /** `filtros`: los de la interfaz. El motor los guarda con la corrida y los devuelve al reabrirla. */
+  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; filtros?: FiltrosVivo },
   alEvento: (evento: Evento) => void,
 ): Promise<() => void> {
   const { id } = await leer<{ id: string }>(
     await fetch(`${BASE}/corridas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pedido) }),
   );
   const fuente = new EventSource(`${BASE}/corridas/${id}/eventos`);
-  // El servidor llama "falla" a su error: "error" es el evento propio de EventSource al perder la conexión.
   const tipos = ['inicio', 'respuestas', 'voces', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'falla'] as const;
   for (const tipo of tipos) {
     fuente.addEventListener(tipo, (e) => {
       const datos = JSON.parse((e as MessageEvent).data);
-      alEvento({ ...datos, tipo: tipo === 'falla' ? 'error' : tipo } as Evento);
+      alEvento(eventoDe(tipo, datos));
       if (tipo === 'fin' || tipo === 'falla') fuente.close();
     });
   }

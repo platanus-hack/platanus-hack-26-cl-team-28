@@ -7,6 +7,7 @@ import {
   conDatos,
   EDAD_TOPE,
   filtrosDePartida,
+  filtrosGuardados,
   hayFiltros,
   PARAMETROS,
   paraElMotor,
@@ -122,6 +123,18 @@ describe('retrato de una población', () => {
 });
 
 describe('lo que llega del motor', () => {
+  it('los filtros guardados con una corrida vuelven tal cual', () => {
+    const filtros = { ...filtrosDePartida(2000), reduccion: 100, edadMin: 30, elegidos: { region: [5, 6], genero: [0] } };
+    expect(filtrosGuardados(JSON.parse(JSON.stringify(filtros)))).toEqual(filtros);
+  });
+
+  it('de lo guardado solo pasan los parámetros y las opciones que existen', () => {
+    const dudosos = { ...filtrosDePartida(1000), elegidos: { region: [2, 99, 'x'], inventado: [1], genero: 'todos' } };
+    expect(filtrosGuardados(dudosos)?.elegidos).toEqual({ region: [2] });
+    expect(filtrosGuardados(null)).toBeNull();
+    expect(filtrosGuardados({ tamano: 1000 })).toBeNull();
+  });
+
   it('ordena los rasgos como la interfaz, venga como venga el orden del motor', () => {
     const agente = { region: 6, genero: 1, quintil: 4, educacion: 3, s: [1, 6, 2] };
     const s = rasgosDe(agente, ['genero', 'region', 'voto']);

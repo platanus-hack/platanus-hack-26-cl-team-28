@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--e4);
-  width: min(28vw, 26rem);
+  width: min(33vw, 27rem);
   pointer-events: none;
   transition: opacity var(--medio);
 }
@@ -101,16 +101,14 @@
   position: absolute;
   inset: auto 0 0;
   display: block;
-  animation: asomarse 900ms ease-in-out 3s both;
+  transform: translateY(100%);
+  transition: transform 900ms ease-in-out;
 }
+.asomo[data-visible] > span { transform: translateY(0); }
 .asomo canvas { display: block; width: 100% !important; height: auto !important; }
 .figuraSaludo { display: block; transform-origin: bottom center; }
-@keyframes asomarse {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
-}
 @media (prefers-reduced-motion: reduce) {
-  .asomo > span { animation: none; }
+  .asomo > span { transition: none; }
 }
 
 .bajada {
@@ -217,7 +215,7 @@
   translate: -50% 0;
   z-index: 1;
   padding: var(--e2) var(--e4);
-  border-radius: 999px;
+  border-radius: var(--radio);
   background: var(--papel-velo);
   font-size: var(--texto-s);
   color: var(--tinta-suave);
@@ -242,6 +240,86 @@
   flex: none;
   gap: var(--e2);
   margin-top: auto;
+}
+
+.utiles {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.accionesVista {
+  display: flex;
+  gap: var(--e2);
+}
+
+.accionesVista > div > button[aria-expanded] {
+  padding-inline: var(--e4);
+  border-width: 1px;
+  border-color: color-mix(in srgb, var(--tinta-suave) 22%, var(--linea-suave));
+  color: color-mix(in srgb, var(--tinta) 74%, var(--tinta-suave));
+  font-size: var(--texto-s);
+  font-weight: 600;
+}
+
+.accionesVista > div > button[aria-expanded]:hover,
+.accionesVista > div > button[aria-expanded='true'] {
+  background: var(--relleno-suave);
+  color: var(--tinta);
+  box-shadow: none;
+}
+
+.cambiarTema {
+  --lado-opcion-tema: 36px;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: repeat(2, var(--lado-opcion-tema));
+  grid-template-rows: var(--lado-opcion-tema);
+  place-items: center;
+  flex: none;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--tinta-suave) 22%, var(--linea-suave));
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta-suave);
+  transition: background var(--rapido);
+}
+
+.cambiarTema::before {
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 3px;
+  inset-inline-start: 3px;
+  width: var(--lado-opcion-tema);
+  aspect-ratio: 1;
+  border-radius: var(--radio);
+  background: var(--tinta);
+  transform: translateX(0);
+  transition: transform var(--medio) var(--curva-salida), background var(--rapido);
+  content: '';
+}
+
+.cambiarTema[aria-checked='true']::before {
+  transform: translateX(100%);
+}
+
+.cambiarTema svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  transition: color var(--rapido);
+}
+
+.cambiarTema[aria-checked='false'] svg:first-of-type,
+.cambiarTema[aria-checked='true'] svg:last-of-type {
+  color: var(--papel);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cambiarTema:hover { background: var(--relleno-suave); }
 }
 
 .contra ~ .mando,
@@ -484,6 +562,55 @@
   font: 600 var(--texto-s) / 1 var(--fuente-ui);
 }
 
+.zoom > button {
+  padding: 0;
+}
+
+/* − y + van juntos; «Ver todo» se posa sobre ellos, centrado. */
+.parZoom {
+  position: relative;
+  display: flex;
+  gap: var(--e1);
+}
+
+.parZoom > button {
+  padding: 0;
+}
+
+/*
+ * «Ver todo» sube desde los botones mientras aparece y baja al irse. Está fuera del flujo, así que
+ * el resto de los controles no se mueve.
+ */
+.verTodo {
+  position: absolute;
+  bottom: calc(100% + var(--e2));
+  left: 50%;
+  translate: -50% 10px;
+  scale: 0.9;
+  opacity: 0;
+  visibility: hidden;
+  transition: translate 320ms var(--curva-salida), scale 320ms var(--curva-salida), opacity 220ms ease, visibility 0s linear 320ms;
+}
+
+.verTodo[data-visible] {
+  translate: -50% 0;
+  scale: 1;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.zoom .verTodo button {
+  padding: 0 var(--e5);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verTodo {
+    transition: none;
+  }
+}
+
 .zoom button:disabled {
   color: var(--linea-suave);
 }
@@ -600,8 +727,9 @@
   .pregunta span { margin-bottom: var(--e1); }
   .avance { margin-top: var(--e2); }
 
-  /* Historial y Opciones van uno sobre otro: caben en la franja que el titular deja libre a la derecha. */
-  .utiles { position: absolute; top: max(var(--e3), env(safe-area-inset-top)); right: var(--e3); flex-direction: column; align-items: flex-end; }
+  /* Los controles van uno sobre otro en la franja que el titular deja libre a la derecha. */
+  .utiles { position: absolute; top: max(var(--e3), env(safe-area-inset-top)); right: var(--e3); }
+  .accionesVista { flex-direction: column; align-items: flex-end; }
   .contra, .favor {
     grid-row: 1;
     z-index: 1;
@@ -629,13 +757,17 @@
     min-height: 48px;
     margin-bottom: max(var(--e4), env(safe-area-inset-bottom));
     padding: 0 18px;
-    border-radius: 6px;
+    border-radius: var(--radio);
     background: var(--tinta);
     color: var(--papel);
     font: 650 var(--texto-s) / 1 var(--fuente-ui);
     text-decoration: none;
   }
   .irAlPanel svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .app[data-fase='preparar'] .irAlPanel {
+    justify-self: end;
+    margin-inline-end: max(var(--e4), env(safe-area-inset-right));
+  }
   .app[data-oculta] .irAlPanel { display: none; }
 }
 

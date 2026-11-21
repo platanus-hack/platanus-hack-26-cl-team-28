@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
+import { PopupFlotante } from '../componentes/comunes/Popup';
 import { formatear } from '../dominio/textos';
 import {
   activos,
@@ -15,7 +16,6 @@ import {
   type Parametro,
 } from '../vivo/sociedad';
 import { TAMANOS_AGENTES, type EnVivo } from '../vivo/useEnVivo';
-import { CASOS_VALIDACION } from '../vivo/validacion';
 import estilos from './CajonMuestra.module.css';
 import { BarraPartida, Columnas, Filas, RangoEdad } from './muestra/Controles';
 import { Seccion } from './muestra/Seccion';
@@ -24,12 +24,10 @@ import { Seccion } from './muestra/Seccion';
 export type Abiertas = Partial<Record<ClaveSeccion | 'muestra', boolean>>;
 
 interface Props {
+  abierto: boolean;
   sim: EnVivo;
-  claro: boolean;
   abiertas: Abiertas;
   alAbrir(abiertas: Abiertas): void;
-  alCambiarTema(): void;
-  alOcultar(): void;
   alCerrar(): void;
 }
 
@@ -42,13 +40,14 @@ const cuantos = (n: number) => (n === 1 ? '1 filtro' : `${n} filtros`);
  * mapa, y los filtros puestos; debajo, los parámetros de la sociedad por secciones. Cada filtro
  * es a la vez un gráfico de cuánta gente hay en cada opción.
  */
-export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alOcultar, alCerrar }: Props) {
+export function CajonMuestra({ abierto, sim, abiertas, alAbrir, alCerrar }: Props) {
   const { filtros, setFiltros, muestra, retrato } = sim;
   const caja = useRef<HTMLElement>(null);
   const enCorrida = sim.fase === 'resultados';
   // Sin corrida, los cuadros muestran cuánto de lo pedido se va a preguntar: con filtros muy finos no alcanza.
   const base = enCorrida ? sim.totalCorrida : sim.conexion?.demo ? (sim.conexion?.agentes.length ?? 0) : filtros.tamano;
-  const representadas = !enCorrida && !sim.conexion?.demo ? muestra.representadas : undefined;
+  const representadas = sim.conexion?.demo ? undefined : muestra.representadas;
+  const totalReferencia = enCorrida ? base : representadas;
   const niveles = sim.conexion?.estado?.poblacion?.niveles ?? [];
   // Con menos personas por agente hay más agentes entre los que sortear; con 10.000, un filtro deja muy pocos.
   const enNivel = !enCorrida && !sim.conexion?.demo && sim.conexion?.muestra ? muestra.disponibles : undefined;
@@ -58,9 +57,13 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
   const alternarSeccion = (clave: ClaveSeccion | 'muestra') => alAbrir({ ...abiertas, [clave]: !abiertas[clave] });
 
   useEffect(() => {
-    caja.current?.focus();
+    if (!abierto) return;
+    caja.current?.focus({ preventScroll: true });
     const tecla = (e: KeyboardEvent) => e.key === 'Escape' && alCerrar();
-    const fuera = (e: PointerEvent) => !caja.current?.contains(e.target as Node) && alCerrar();
+    const fuera = (e: PointerEvent) => {
+      const destino = e.target;
+      if (destino instanceof Element && !caja.current?.contains(destino) && !destino.closest('[aria-controls="cajon-muestra"]')) alCerrar();
+    };
     window.addEventListener('keydown', tecla);
     // En el siguiente ciclo: el clic que abrió el cajón no debe cerrarlo.
     const escucha = window.setTimeout(() => window.addEventListener('pointerdown', fuera), 0);
@@ -69,7 +72,7 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
       window.removeEventListener('keydown', tecla);
       window.removeEventListener('pointerdown', fuera);
     };
-  }, [alCerrar]);
+  }, [abierto, alCerrar]);
 
   const control = (parametro: Parametro): ReactNode => {
     const elegidas = filtros.elegidos[parametro.clave] ?? [];
@@ -85,18 +88,20 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
   };
 
   return (
-    <aside ref={caja} tabIndex={-1} className={estilos.cajon} id="cajon-muestra" aria-label="Muestra y vista">
+    <PopupFlotante as="aside" abierto={abierto} lateral ref={caja} tabIndex={-1} className={estilos.cajon} id="cajon-muestra" aria-label="Muestra y vista">
       <header className={estilos.cabeza}>
-        <p className={estilos.cuenta}>
-          <b>{formatear(muestra.total)}</b>
-          <span>
-            {enCorrida
-              ? `de ${formatear(base)} agentes, los que estás mirando`
-              : representadas
-                ? `agentes van a responder, seleccionados de una población que representa a ${formatear(representadas)} personas que cumplen los filtros`
-                : `agentes van a responder`}
-          </span>
-        </p>
+        <dl className={estilos.cuenta}>
+          <div>
+            <dt>{enCorrida ? 'Agentes visibles' : 'Agentes de la muestra'}</dt>
+            <dd className={estilos.cifraPrincipal}>{formatear(muestra.total)}</dd>
+          </div>
+          {totalReferencia !== undefined && (
+            <div>
+              <dt>{enCorrida ? 'Total de agentes' : 'Personas según filtros'}</dt>
+              <dd>{formatear(totalReferencia)}</dd>
+            </div>
+          )}
+        </dl>
         <button type="button" className={estilos.cerrar} onClick={alCerrar} aria-label="Cerrar">
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 2l8 8M10 2l-8 8" />
@@ -126,38 +131,40 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
 
       <div className={estilos.cuerpo}>
         <Seccion titulo="Muestra" resumen={abiertas.muestra ? undefined : `${formatear(filtros.tamano)} agentes`} abierta={!!abiertas.muestra} alAlternar={() => alternarSeccion('muestra')}>
-          <fieldset className={estilos.grupo}>
-            <legend>{enCorrida ? 'Cuántas preguntar la próxima vez' : 'Cuántas preguntar'}</legend>
-            <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${TAMANOS_AGENTES.length}, minmax(0, 1fr))` }}>
-              {TAMANOS_AGENTES.map((tamano) => (
-                <button key={tamano} type="button" aria-pressed={filtros.tamano === tamano} onClick={() => cambiar({ tamano })}>
-                  {formatear(tamano)}
-                </button>
-              ))}
-            </div>
-          </fieldset>
-          {niveles.length > 1 && (
+          <div className={estilos.ajustesMuestra}>
             <fieldset className={estilos.grupo}>
-              <legend>
-                Clusterización
-                <output>1 agente representa a {formatear(filtros.reduccion)} personas</output>
-              </legend>
-              <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${niveles.length}, minmax(0, 1fr))` }}>
-                {niveles.map((nivel) => (
-                  <button key={nivel} type="button" aria-pressed={filtros.reduccion === nivel} onClick={() => cambiar({ reduccion: nivel })}>
-                    {formatear(nivel)}
+              <legend>{enCorrida ? 'Cuántas preguntar la próxima vez' : 'Cuántas preguntar'}</legend>
+              <div className={`${estilos.tamanos} ${estilos.tamanosMuestra}`}>
+                {TAMANOS_AGENTES.map((tamano) => (
+                  <button key={tamano} type="button" aria-pressed={filtros.tamano === tamano} onClick={() => cambiar({ tamano })}>
+                    {formatear(tamano)}
                   </button>
                 ))}
               </div>
-              {enNivel !== undefined && (
-                <p className={estilos.nivel}>
-                  {enNivel < filtros.tamano
-                    ? `Solo ${formatear(enNivel)} agentes cumplen los filtros en este nivel: responden todos.`
-                    : `${formatear(enNivel)} agentes cumplen los filtros en este nivel.`}
-                </p>
-              )}
             </fieldset>
-          )}
+            {niveles.length > 1 && (
+              <fieldset className={estilos.grupo}>
+                <legend>
+                  Clusterización
+                  <output>1 agente representa a {formatear(filtros.reduccion)} personas</output>
+                </legend>
+                <div className={estilos.tamanos}>
+                  {niveles.map((nivel) => (
+                    <button key={nivel} type="button" aria-pressed={filtros.reduccion === nivel} onClick={() => cambiar({ reduccion: nivel })}>
+                      {formatear(nivel)}
+                    </button>
+                  ))}
+                </div>
+                {enNivel !== undefined && (
+                  <p className={estilos.nivel}>
+                    {enNivel < filtros.tamano
+                      ? `Solo ${formatear(enNivel)} agentes cumplen los filtros en este nivel: responden todos.`
+                      : `${formatear(enNivel)} agentes cumplen los filtros en este nivel.`}
+                  </p>
+                )}
+              </fieldset>
+            )}
+          </div>
         </Seccion>
 
         {SECCIONES.map((seccion) => {
@@ -188,46 +195,6 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
           );
         })}
       </div>
-
-      <footer className={estilos.pie}>
-        {!sim.conexion?.demo && sim.fase === 'preparar' && (
-          <div className={estilos.ejemplos}>
-            <p>Preguntas con encuesta real para comparar</p>
-            {CASOS_VALIDACION.map((caso) => (
-              <button
-                key={caso.corto}
-                type="button"
-                onClick={() => {
-                  sim.fijar(sim.borradores[0].id, { texto: caso.texto, referencia: caso.referencia, documento: undefined, leido: undefined });
-                  alCerrar();
-                }}
-              >
-                {caso.corto}
-              </button>
-            ))}
-          </div>
-        )}
-        <div className={estilos.vista}>
-          <div className={estilos.tema} role="group" aria-label="Fondo">
-            <button type="button" aria-pressed={!claro} onClick={() => claro && alCambiarTema()}>
-              Oscuro
-            </button>
-            <button type="button" aria-pressed={claro} onClick={() => !claro && alCambiarTema()}>
-              Claro
-            </button>
-          </div>
-          <button
-            type="button"
-            className={estilos.ocultar}
-            onClick={() => {
-              alCerrar();
-              alOcultar();
-            }}
-          >
-            Solo el mapa <kbd>H</kbd>
-          </button>
-        </div>
-      </footer>
-    </aside>
+    </PopupFlotante>
   );
 }

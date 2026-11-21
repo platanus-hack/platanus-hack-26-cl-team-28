@@ -78,10 +78,6 @@
   outline-offset: -5px;
 }
 
-.tamanos label:has(:checked:focus-visible) {
-  outline-color: var(--papel);
-}
-
 .grilla {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));

@@ -33,7 +33,9 @@ demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la e
   acuerdo, y la diferencia con la variante A. La primera pregunta decide el color de cada punto.
 - `historial.ts`: el historial de simulaciones que guarda el motor (`GET /api/historial`): hora, propuesta de cada variante y
   cuántos quedaron a favor, en contra y sin decidir. Se abre con el botón «Historial» (`enjambre/CajonHistorial.tsx`), y
-  «Volver a preguntar» deja esos textos como variantes.
+  «Volver a preguntar» deja esos textos como variantes. «Ver esta simulación» la vuelve a poner en el mapa
+  (`reabrir` en `useEnVivo.ts`): pide a `GET /api/historial/<id>` la muestra, los filtros y los eventos de entonces y
+  los aplica de una vez. Solo lo ofrecen las simulaciones que el motor guardó enteras (`vista`).
 - `validacion.ts`: políticas con encuesta Cadem publicada, para comparar en pantalla lo que dijeron los agentes
   con lo que dijo la gente.
 

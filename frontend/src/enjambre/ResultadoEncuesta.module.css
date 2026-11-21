@@ -11,6 +11,7 @@
   min-height: 0;
   padding: var(--e3) var(--e4);
   border-top: 4px solid var(--tinta);
+  border-radius: var(--radio);
   background: var(--papel);
 }
 

@@ -34,7 +34,7 @@
   --cuerpo-4: #b3c8a8;
   --cuerpo-5: #c2b6da;
   --cuerpo-6: #e3bd9f;
-  --foco: #2450d6;
+  --foco: #938067;
 
   --fuente-voz: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
   --fuente-ui: 'Hanken Grotesk Variable', system-ui, sans-serif;
@@ -58,8 +58,7 @@
   --e7: 44px;
   --gutter: clamp(16px, 2.6vw, 40px);
   --alto-barra: 56px;
-  --radio: 6px;
-  --radio-fino: 2px;
+  --radio: 10px;
   --trazo: 1.5px;
 
   --rapido: 160ms;

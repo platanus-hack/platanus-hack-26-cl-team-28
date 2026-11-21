@@ -27,7 +27,7 @@
   padding: var(--e2) var(--e3) 13px;
   overflow: hidden;
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radio);
   background: var(--relleno-suave);
   color: var(--tinta-suave);
   text-align: left;

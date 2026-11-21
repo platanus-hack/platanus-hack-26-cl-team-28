@@ -9,12 +9,15 @@ Rutas:
     POST /api/muestra                 {filtros, tamano}: filtra la población y sortea hasta `tamano` agentes
     GET  /api/agentes                 la muestra por defecto (sin filtros), como lista
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre. Devuelve texto o resumen
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones}
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones,
+                                       filtros?: los de la interfaz, que se guardan con la corrida y vuelven al reabrirla}
     GET  /api/historial               las últimas simulaciones: hora, propuestas y resultado de cada variante
+    GET  /api/historial/<id>          una simulación guardada, para volver a verla: {muestra, agentes, filtros, eventos}
     GET  /api/corridas/<id>/eventos   eventos de la corrida (text/event-stream)
     POST /api/corridas/<id>/cancelar
 """
 
+import gzip
 import json
 import os
 import threading
@@ -110,6 +113,8 @@ class Manejador(BaseHTTPRequestHandler):
                                     "nombres": metodo.NOMBRES, "escalas": metodo.ESCALAS})
         if ruta == "/api/historial":
             return self._json(200, {"corridas": HISTORIAL.ultimas()})
+        if ruta.startswith("/api/historial/"):
+            return self._vista(ruta.removeprefix("/api/historial/"))
         if ruta == "/api/agentes":
             return self._json(200, [a.publico() for a in sacar_muestra(None, TAMANO_POR_DEFECTO).agentes])
         partes = ruta.strip("/").split("/")
@@ -174,8 +179,25 @@ class Manejador(BaseHTTPRequestHandler):
         # La encuesta es fija: si el pedido trae preguntas, no se usan.
         corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS)
         CORRIDAS[corrida.id] = corrida
-        threading.Thread(target=HISTORIAL.guardar_al_terminar, args=(corrida,), daemon=True).start()
+        # La muestra y los filtros van al historial: con ellos la corrida se puede volver a ver.
+        threading.Thread(target=HISTORIAL.guardar_al_terminar, args=(corrida, muestra, pedido.get("filtros")), daemon=True).start()
         self._json(201, {"id": corrida.id, "motor": MOTOR.describir(), "agentes": len(elegidos), "preguntas": corrida.preguntas})
+
+    def _vista(self, identificador: str):
+        """Una corrida guardada. Va comprimida tal como está en el disco si quien la pide lo acepta."""
+        vista = HISTORIAL.vista(identificador)
+        if vista is None:
+            return self._json(404, {"error": "Esa simulación ya no está guardada"})
+        comprimida = "gzip" in (self.headers.get("Accept-Encoding") or "")
+        cuerpo = vista if comprimida else gzip.decompress(vista)
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        if comprimida:
+            self.send_header("Content-Encoding", "gzip")
+        self.send_header("Content-Length", str(len(cuerpo)))
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(cuerpo)
 
     def _eventos(self, identificador: str):
         corrida = CORRIDAS.get(identificador)

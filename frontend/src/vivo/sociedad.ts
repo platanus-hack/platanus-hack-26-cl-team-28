@@ -249,6 +249,26 @@ export function paraElMotor(filtros: FiltrosVivo): Record<string, number | numbe
   return { edadMin: filtros.edadMin, edadMax: filtros.edadMax, reduccion: filtros.reduccion, ...filtros.elegidos };
 }
 
+/**
+ * Los filtros que el motor guardó con una corrida, si tienen la forma que usa la interfaz:
+ * vienen de un archivo, así que se revisan antes de dejarlos como los filtros en pantalla.
+ */
+export function filtrosGuardados(dato: unknown): FiltrosVivo | null {
+  if (!dato || typeof dato !== 'object') return null;
+  const f = dato as Record<string, unknown>;
+  const numeros = [f.tamano, f.reduccion, f.edadMin, f.edadMax];
+  if (!numeros.every((n) => typeof n === 'number' && Number.isFinite(n)) || !f.elegidos || typeof f.elegidos !== 'object') return null;
+  const elegidos: Elegidos = {};
+  for (const parametro of PARAMETROS) {
+    const opciones = (f.elegidos as Record<string, unknown>)[parametro.clave];
+    if (!Array.isArray(opciones)) continue;
+    const validas = opciones.filter((o): o is number => Number.isInteger(o) && o >= 0 && o < parametro.opciones.length);
+    if (validas.length) elegidos[parametro.clave] = validas;
+  }
+  const [tamano, reduccion, edadMin, edadMax] = numeros as number[];
+  return { tamano, reduccion, edadMin, edadMax, elegidos };
+}
+
 /** Qué parte del total es cada opción, en porcentaje entero. Sin nadie, todo en cero. */
 export function partes(personas: number[]): number[] {
   const total = personas.reduce((suma, p) => suma + p, 0);

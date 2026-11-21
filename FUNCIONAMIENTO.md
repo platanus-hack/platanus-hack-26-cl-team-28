@@ -112,8 +112,10 @@ La API escucha por defecto en `127.0.0.1:8787`. Devuelve JSON y admite CORS abie
 | `POST /api/corridas` | Recibe `casos`, `muestra`, opcionalmente índices `agentes`, `iteraciones`, `lote` y `preguntas`; devuelve ID y detalles. |
 | `GET /api/corridas/<id>/eventos` | Flujo Server-Sent Events de la corrida. |
 | `POST /api/corridas/<id>/cancelar` | Solicita cancelar la corrida. |
+| `GET /api/historial` | Resumen de las últimas simulaciones terminadas; `vista` indica si se puede volver a ver. |
+| `GET /api/historial/<id>` | Simulación guardada completa (muestra, filtros de la interfaz y eventos), para volver a mostrarla. |
 
-Los eventos son `inicio`, `respuestas`, `voces`, `caso_listo`, `redactando`, `caso`, `aviso`, `fin` y `falla`. Los lotes de respuestas incluyen índice del agente, nota principal, frase y notas completas, además de métricas de llamadas, tokens, costo informado y tiempo. El cliente convierte `falla` en error de aplicación. El flujo conserva eventos en memoria para reconexión mientras exista el proceso; corridas y muestras no son persistentes.
+Los eventos son `inicio`, `respuestas`, `voces`, `caso_listo`, `redactando`, `caso`, `aviso`, `fin` y `falla`. Los lotes de respuestas incluyen índice del agente, nota principal, frase y notas completas, además de métricas de llamadas, tokens, costo informado y tiempo. El cliente convierte `falla` en error de aplicación. El flujo conserva eventos en memoria para reconexión mientras exista el proceso; corridas y muestras no son persistentes. Lo que sí queda en disco al terminar una corrida es su resumen (`backend/data/historial/corridas.jsonl`) y, si no se detuvo, una copia comprimida de su muestra, sus filtros y sus eventos (`backend/data/historial/vistas/`, las últimas 200), con la que el historial la vuelve a mostrar.
 
 La caché `backend/data/cache/respuestas.jsonl` persiste respuestas por política normalizada, identidad del agente y clave del modelo/método/preguntas/perfil. Repetir una consulta compatible reutiliza respuestas; al cambiar instrucciones, filtro o preguntas se modifica la clave. El archivo contiene datos derivados de las consultas y debe tratarse de acuerdo con el uso que se dé a la aplicación. No es una base de resultados ni un historial de corridas completo.
 

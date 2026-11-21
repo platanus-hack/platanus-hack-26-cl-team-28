@@ -19,9 +19,9 @@ export interface Borrador {
 }
 
 /** Las variantes mientras se escriben. El id es estable para que React no pierda el foco al quitar una. */
-export function useBorradores(iniciales: readonly Omit<Borrador, 'id'>[] = CASOS_INICIALES.map((texto) => ({ texto }))) {
-  const siguienteId = useRef(iniciales.length);
-  const [borradores, setBorradores] = useState<Borrador[]>(() => iniciales.map((b, id) => ({ ...b, id })));
+export function useBorradores(iniciales: readonly Omit<Borrador, 'id'>[] = CASOS_INICIALES.map((texto) => ({ texto })), maximo = Infinity) {
+  const siguienteId = useRef(Math.min(iniciales.length, maximo));
+  const [borradores, setBorradores] = useState<Borrador[]>(() => iniciales.slice(0, maximo).map((b, id) => ({ ...b, id })));
   const fijar = (id: number, parte: Partial<Borrador>) => setBorradores((lista) => lista.map((b) => (b.id === id ? { ...b, ...parte } : b)));
   return {
     borradores,
@@ -30,8 +30,8 @@ export function useBorradores(iniciales: readonly Omit<Borrador, 'id'>[] = CASOS
     cambiarTexto: (id: number, texto: string) => fijar(id, { texto, referencia: undefined }),
     adjuntar: (id: number, documento: Documento | undefined) => fijar(id, { documento, leido: undefined, errorDocumento: undefined }),
     /** Reemplaza todas las variantes por estos textos (al volver a una pregunta del historial). */
-    cargar: (textos: string[]) => setBorradores(textos.map((texto) => ({ id: siguienteId.current++, texto }))),
-    agregar: () => setBorradores((lista) => [...lista, { id: siguienteId.current++, texto: '' }]),
+    cargar: (textos: string[]) => setBorradores(textos.slice(0, maximo).map((texto) => ({ id: siguienteId.current++, texto }))),
+    agregar: () => setBorradores((lista) => lista.length < maximo ? [...lista, { id: siguienteId.current++, texto: '' }] : lista),
     quitar: (id: number) => setBorradores((lista) => lista.filter((b) => b.id !== id)),
   };
 }

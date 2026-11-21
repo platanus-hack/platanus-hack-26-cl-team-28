@@ -1,0 +1,52 @@
+.popup {
+  opacity: 0;
+  transform: translateY(10px) scale(0.97);
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.popup[data-visible] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.dialogo::backdrop {
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.dialogo[data-visible]::backdrop { opacity: 1; }
+
+.flotante {
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1), visibility 0s 220ms;
+}
+
+.flotante[data-visible] {
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 220ms ease, transform 220ms cubic-bezier(0.2, 0.75, 0.25, 1), visibility 0s;
+}
+
+.flotante.lateral {
+  transform: translateX(24px);
+  transition: opacity 160ms ease-in, transform 160ms ease-in, visibility 0s 160ms;
+}
+
+.flotante.lateral[data-visible] {
+  transform: translateX(0);
+  transition: opacity 160ms ease-out, transform 160ms var(--curva-salida), visibility 0s;
+}
+
+@starting-style {
+  .flotante[data-visible] {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  .flotante.lateral[data-visible] { transform: translateX(24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup, .flotante, .flotante[data-visible], .flotante.lateral, .flotante.lateral[data-visible], .dialogo::backdrop { transition: none; }
+}

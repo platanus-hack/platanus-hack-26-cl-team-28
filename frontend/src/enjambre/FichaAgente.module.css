@@ -1,6 +1,6 @@
 /*
  * Credencial de una persona. Arriba, una franja del color de su postura con su criatura
- * asomada; abajo, papel plano. Una esquina recortada, sin marco ni sombra de tarjeta.
+ * asomada; abajo, papel plano.
  */
 .ficha {
   --color: var(--indecisa);
@@ -8,10 +8,10 @@
   z-index: 3;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
+  overflow: clip;
+  border-radius: var(--radio);
   background: var(--papel);
   color: var(--tinta);
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
-  animation: abrir 320ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
 .ficha:focus {
@@ -216,23 +216,9 @@
   color: var(--tinta-suave);
 }
 
-@keyframes abrir {
-  from {
-    opacity: 0;
-    scale: 0.92;
-    translate: 0 8px;
-  }
-}
-
 @media (hover: hover) and (pointer: fine) {
   .cerrar:hover {
     background: rgb(0 0 0 / 0.14);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ficha {
-    animation: none;
   }
 }
 

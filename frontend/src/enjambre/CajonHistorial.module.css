@@ -10,19 +10,13 @@
   grid-template-rows: auto minmax(0, 1fr);
   width: min(100vw, 27rem);
   border-left: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
   background: var(--papel);
   color: var(--tinta);
-  animation: entrar 360ms var(--curva-salida) both;
 }
 
 .cajon:focus {
   outline: none;
-}
-
-@keyframes entrar {
-  from {
-    translate: 100% 0;
-  }
 }
 
 .cabeza {
@@ -96,7 +90,7 @@
 
 .cuando {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--e3);
   margin: 0;
@@ -106,7 +100,28 @@
   color: var(--tinta-suave);
 }
 
-.cuando span {
+/* Los botones van juntos y la hora queda a la misma distancia que el resto de la fila. */
+.hora {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-width: 0;
+}
+
+.acciones {
+  display: flex;
+  flex: none;
+  gap: var(--e1);
+}
+
+.falla {
+  margin: 0;
+  font-size: var(--texto-xs);
+  line-height: 1.35;
+  color: var(--contra-texto);
+}
+
+.cuando > span {
   font-weight: 500;
   letter-spacing: 0;
   text-transform: none;
@@ -187,16 +202,45 @@
 }
 
 .usar {
-  justify-self: start;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
   padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--tinta);
-  font: 600 var(--texto-xs) / 1.2 var(--fuente-ui);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--relleno-suave);
+  color: var(--tinta-suave);
+  transition: background var(--rapido), color var(--rapido);
 }
 
-.usar:hover {
-  color: var(--tinta-suave);
+.usar:hover,
+.usar:focus-visible { color: var(--tinta); }
+
+.usar:disabled { opacity: 0.55; }
+
+/* Mientras el motor entrega la simulación. */
+.usar[aria-busy='true'] {
+  opacity: 1;
+  color: var(--tinta);
+  animation: esperar 900ms ease-in-out infinite alternate;
+}
+
+@keyframes esperar {
+  to { opacity: 0.4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .usar[aria-busy='true'] { animation: none; }
+}
+
+.usar svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

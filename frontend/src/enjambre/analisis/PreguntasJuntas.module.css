@@ -37,7 +37,7 @@
   min-height: 26px;
   padding: 0 var(--e2);
   border: 0;
-  border-radius: 3px;
+  border-radius: var(--radio);
   background: transparent;
   color: var(--tinta-suave);
   font-size: var(--texto-s);

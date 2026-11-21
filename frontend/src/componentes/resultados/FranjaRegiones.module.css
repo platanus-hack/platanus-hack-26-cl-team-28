@@ -54,7 +54,7 @@
 .pila {
   height: 12px;
   border: var(--trazo) solid var(--tinta);
-  border-radius: var(--radio-fino);
+  border-radius: var(--radio);
   background: linear-gradient(
     to right,
     var(--favor) var(--pct-favor),

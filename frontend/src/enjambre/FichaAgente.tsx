@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { PopupFlotante } from '../componentes/comunes/Popup';
 import { REGIONES } from '../dominio/catalogos';
 import type { AgenteRemoto } from '../vivo/api';
 import { corta, midePostura } from '../vivo/encuesta';
@@ -45,9 +46,25 @@ const DATOS: { clave: string; etiqueta: string; icono: string }[] = [
  */
 export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }: Props) {
   const caja = useRef<HTMLElement>(null);
+  const cierre = useRef<number | undefined>(undefined);
+  const [abierta, setAbierta] = useState(true);
+  const cerrar = () => {
+    window.clearTimeout(cierre.current);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      alCerrar();
+    } else {
+      setAbierta(false);
+      cierre.current = window.setTimeout(alCerrar, 220);
+    }
+  };
+  useEffect(() => {
+    window.clearTimeout(cierre.current);
+    setAbierta(true);
+  }, [agente.id]);
+  useEffect(() => () => window.clearTimeout(cierre.current), []);
   useEffect(() => {
     caja.current?.focus({ preventScroll: true });
-    const tecla = (e: KeyboardEvent) => e.key === 'Escape' && alCerrar();
+    const tecla = (e: KeyboardEvent) => e.key === 'Escape' && cerrar();
     window.addEventListener('keydown', tecla);
     return () => window.removeEventListener('keydown', tecla);
   }, [alCerrar]);
@@ -66,7 +83,9 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
   const frase = caso?.frase[agente.i];
   const notas = caso?.notas[agente.i];
   return (
-    <aside
+    <PopupFlotante
+      as="aside"
+      abierto={abierta}
       ref={caja}
       tabIndex={-1}
       className={estilos.ficha}
@@ -84,7 +103,7 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
             </span>
           )}
         </p>
-        <button type="button" className={estilos.cerrar} onClick={alCerrar} aria-label="Cerrar">
+        <button type="button" className={estilos.cerrar} onClick={cerrar} aria-label="Cerrar">
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 2l8 8M10 2l-8 8" />
           </svg>
@@ -143,6 +162,6 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
         </section>
         <p className={estilos.fuente}>Persona de la muestra del Censo 2024 · datos de Casen 2024 y opiniones de la CEP 96 imputados</p>
       </div>
-    </aside>
+    </PopupFlotante>
   );
 }

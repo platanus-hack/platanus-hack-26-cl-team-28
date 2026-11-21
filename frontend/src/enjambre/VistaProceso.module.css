@@ -40,7 +40,7 @@
   width: 36px;
   height: 36px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radio);
   background: var(--relleno-suave);
   color: var(--tinta-suave);
   font: 650 var(--texto-m) / 1 var(--fuente-voz);

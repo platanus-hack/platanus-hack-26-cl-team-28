@@ -20,9 +20,9 @@ export function Insignia({ conexion, agentes, indecisas }: Props) {
   return (
     <dl className={estilos.ficha}>
       <div>
-        <dt>Muestra</dt>
+        <dt>Muestra · Censo 2024</dt>
         <dd>
-          <b>{formatear(agentes)}</b> agentes basados en el Censo 2024
+          <b>{formatear(agentes)}</b> <span className={estilos.unidad}>agentes</span>
         </dd>
       </div>
       {indecisas !== undefined && (

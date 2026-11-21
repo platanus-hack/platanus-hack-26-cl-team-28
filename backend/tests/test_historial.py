@@ -1,3 +1,5 @@
+import gzip
+import json
 import sys
 import tempfile
 import time
@@ -6,7 +8,8 @@ from pathlib import Path
 from types import SimpleNamespace
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from servidor.historial import Historial, resumen_de
+from servidor import historial as modulo
+from servidor.historial import Historial, resumen_de, vista_de
 
 
 def caso(letra, texto, notas, documento=None, iteracion=None):
@@ -67,6 +70,66 @@ class Archivo(unittest.TestCase):
             historial = Historial(Path(carpeta))
             historial.guardar_al_terminar(corrida([caso("A", "Algo", [5, 5, 2, 4])]))
             self.assertEqual(historial.ultimas()[0]["casos"][0]["favor"], 2)
+
+
+def corrida_con_eventos(identificador="0123456789ab", cancelada=False):
+    """Una corrida de dos agentes con lo que la vista necesita: sus índices y los eventos que publicó."""
+    eventos = [("inicio", {"casos": [{"letra": "A", "texto": "Algo"}]}), ("respuestas", {"caso": 0, "r": [[0, 6, "", [6]], [1, 2, "", [2]]]}), ("fin", {})]
+    base = corrida([caso("A", "Algo", [6, 2])], agentes=2, cancelada=cancelada)
+    base.id, base.eventos, base.agentes = identificador, eventos, [SimpleNamespace(indice=0), SimpleNamespace(indice=1)]
+    return base
+
+
+MUESTRA = SimpleNamespace(cuerpo=lambda: b'{"id": "m1", "agentes": [{"i": 0}, {"i": 1}]}')
+
+
+class Vista(unittest.TestCase):
+    def test_lleva_la_muestra_los_agentes_los_filtros_y_los_eventos(self):
+        vista = json.loads(vista_de(corrida_con_eventos(), MUESTRA, {"tamano": 1000, "elegidos": {"region": [5]}}))
+        self.assertEqual(vista["muestra"]["id"], "m1")
+        self.assertEqual(vista["agentes"], [0, 1])
+        self.assertEqual(vista["filtros"]["elegidos"], {"region": [5]})
+        self.assertEqual([tipo for tipo, _ in vista["eventos"]], ["inicio", "respuestas", "fin"])
+
+    def test_lo_que_no_son_filtros_no_se_guarda(self):
+        self.assertIsNone(json.loads(vista_de(corrida_con_eventos(), MUESTRA, "x" * 10))["filtros"])
+        self.assertIsNone(json.loads(vista_de(corrida_con_eventos(), MUESTRA, {"a": "x" * 5000}))["filtros"])
+
+    def test_al_terminar_queda_la_vista_y_el_historial_lo_dice(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            historial = Historial(Path(carpeta))
+            historial.guardar_al_terminar(corrida_con_eventos(), MUESTRA, {"tamano": 1000})
+            self.assertTrue(historial.ultimas()[0]["vista"])
+            self.assertEqual(json.loads(gzip.decompress(historial.vista("0123456789ab")))["agentes"], [0, 1])
+            # Al volver a partir, el motor sigue sabiendo cuáles se pueden abrir.
+            self.assertTrue(Historial(Path(carpeta)).ultimas()[0]["vista"])
+
+    def test_sin_muestra_o_detenida_solo_queda_el_resumen(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            historial = Historial(Path(carpeta))
+            historial.guardar_al_terminar(corrida_con_eventos("aaaaaaaaaaaa"))
+            historial.guardar_al_terminar(corrida_con_eventos("bbbbbbbbbbbb", cancelada=True), MUESTRA)
+            self.assertEqual([e["vista"] for e in historial.ultimas()], [False, False])
+            self.assertIsNone(historial.vista("aaaaaaaaaaaa"))
+
+    def test_solo_se_aceptan_identificadores_de_corrida(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            historial = Historial(Path(carpeta))
+            self.assertIsNone(historial.vista("../corridas"))
+            with self.assertRaises(ValueError):
+                historial.guardar_vista("../fuera", b"{}")
+
+    def test_se_botan_las_vistas_mas_antiguas(self):
+        with tempfile.TemporaryDirectory() as carpeta:
+            historial = Historial(Path(carpeta))
+            guardadas, modulo.VISTAS_GUARDADAS = modulo.VISTAS_GUARDADAS, 2
+            try:
+                for k in range(3):
+                    historial.guardar_vista(f"{k:012x}", b"{}")
+            finally:
+                modulo.VISTAS_GUARDADAS = guardadas
+            self.assertIsNone(historial.vista(f"{0:012x}"))
+            self.assertIsNotNone(historial.vista(f"{2:012x}"))
 
 
 if __name__ == "__main__":
