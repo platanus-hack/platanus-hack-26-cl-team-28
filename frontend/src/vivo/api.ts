@@ -110,14 +110,21 @@ export async function correrRemoto(
     await fetch(`${BASE}/corridas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pedido) }),
   );
   const fuente = new EventSource(`${BASE}/corridas/${id}/eventos`);
-  const tipos: Evento['tipo'][] = ['inicio', 'respuestas', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'error'];
+  // El servidor llama "falla" a su error: "error" es el evento propio de EventSource al perder la conexión.
+  const tipos = ['inicio', 'respuestas', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'falla'] as const;
   for (const tipo of tipos) {
     fuente.addEventListener(tipo, (e) => {
-      alEvento({ tipo, ...JSON.parse((e as MessageEvent).data) } as Evento);
-      if (tipo === 'fin' || tipo === 'error') fuente.close();
+      const datos = JSON.parse((e as MessageEvent).data);
+      alEvento({ ...datos, tipo: tipo === 'falla' ? 'error' : tipo } as Evento);
+      if (tipo === 'fin' || tipo === 'falla') fuente.close();
     });
   }
+  // Si el motor se cae o se reinicia, el navegador cierra el flujo: se avisa en vez de esperar para siempre.
+  fuente.onerror = () => {
+    if (fuente.readyState === EventSource.CLOSED) alEvento({ tipo: 'error', mensaje: 'Se perdió la conexión con el motor de simulación' });
+  };
   return () => {
+    fuente.onerror = null;
     fuente.close();
     void fetch(`${BASE}/corridas/${id}/cancelar`, { method: 'POST' });
   };

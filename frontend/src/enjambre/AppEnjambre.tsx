@@ -161,11 +161,13 @@ export function AppEnjambre() {
           <Redactando base={base} numero={sim.redactando!} />
         </div>
       )}
-      {pct && caso && !mostrarRedactando && (
+      {pct && caso && (
         <>
-          <div className={estilos.contra}>
-            <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
-          </div>
+          {!mostrarRedactando && (
+            <div className={estilos.contra}>
+              <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
+            </div>
+          )}
           <div className={estilos.favor}>
             <BloquePostura postura="favor" porcentaje={pct.favor} personas={caso.conteo.favor} unidad="agentes" aspecto={1} compacto={angosto} />
           </div>

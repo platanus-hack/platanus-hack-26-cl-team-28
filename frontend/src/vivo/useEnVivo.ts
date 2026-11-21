@@ -46,6 +46,8 @@ export interface CasoVivo {
   acuerdo: Int8Array;
   frase: string[];
   respondidas: number;
+  /** Cuántas respuestas vinieron de la caché del motor (ya se habían preguntado antes). */
+  desdeCache: number;
   conteo: Conteo;
   listo: boolean;
 }
@@ -170,6 +172,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       acuerdo: new Int8Array(conexion?.agentes.length ?? 0),
       frase: [],
       respondidas: 0,
+      desdeCache: 0,
       conteo: conteoVacio(),
       listo: false,
     }),
@@ -188,6 +191,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
             caso.acuerdo[agente] = acuerdo;
             caso.frase[agente] = frase;
             caso.respondidas += 1;
+            if (evento.cache) caso.desdeCache += 1;
             caso.conteo[posturaDe(acuerdo)] += 1;
             caso.conteo.total += 1;
             if (frase && !evento.cache) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
@@ -222,6 +226,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           setAviso(evento.mensaje);
           setRedactando(null);
           setTerminada(true);
+          // Lo que alcanzó a terminar se puede mirar; si no terminó nada, se vuelve a preparar.
+          setFase(lista.some((c) => c.listo) ? 'resultados' : 'preparar');
           break;
         default:
           break;

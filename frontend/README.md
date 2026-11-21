@@ -16,7 +16,7 @@ demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la e
 `src/vivo/` es todo lo que habla con el motor:
 
 - `api.ts`: `GET /api/estado`, `GET /api/agentes`, `POST /api/documentos`, `POST /api/corridas` y los eventos de
-  la corrida por `EventSource` (`inicio`, `respuestas`, `caso_listo`, `redactando`, `caso`, `aviso`, `fin`, `error`).
+  la corrida por `EventSource` (`inicio`, `respuestas`, `caso_listo`, `redactando`, `caso`, `aviso`, `fin`, `falla`).
 - `poblacion.ts`: dibuja a cada agente real con varios puntos alrededor del centro de su comuna, para que la
   densidad del país se lea. Todos los puntos de un agente responden lo mismo.
 - `useEnVivo.ts`: el estado de la herramienta (variantes, muestra, corrida). Las respuestas llegan por lotes y se

@@ -49,6 +49,9 @@ ESQUEMA_RESUMEN = {
     "additionalProperties": False,
 }
 
+# Segundos en que se reproduce lo que ya estaba en caché.
+REPRODUCCION = 6.0
+
 # Sobre este largo, el documento se resume antes de dárselo a los agentes.
 LARGO_RESUMIR = 3500
 
@@ -208,16 +211,20 @@ class Corrida:
                 pendientes.append(agente)
         tareas = []
         # Lo que ya estaba en caché llega de a poco, para que el mapa igual se vea encender.
-        for k in range(0, len(guardadas), self.lote * 4):
-            parte = guardadas[k:k + self.lote * 4]
-            tareas.append(grupo.submit(self._diferido, numero, caso, huella, parte, 0.05 * (k // (self.lote * 4))))
+        if guardadas:
+            tareas.append(grupo.submit(self._reproducir, numero, caso, huella, guardadas))
         for k in range(0, len(pendientes), self.lote):
             tareas.append(grupo.submit(self._lote, numero, caso, huella, pendientes[k:k + self.lote]))
         return tareas
 
-    def _diferido(self, numero, caso, huella, respuestas, pausa):
-        time.sleep(pausa)
-        self._entregar(numero, caso, huella, respuestas, desde_cache=True)
+    def _reproducir(self, numero, caso, huella, respuestas):
+        """Un solo hilo entrega lo guardado en tandas, sin ocupar a los que llaman al modelo."""
+        partes = [respuestas[k:k + self.lote] for k in range(0, len(respuestas), self.lote)]
+        for parte in partes:
+            if self.cancelada:
+                return
+            time.sleep(REPRODUCCION / len(partes))
+            self._entregar(numero, caso, huella, parte, desde_cache=True)
 
     def _cerrar_caso(self, numero: int) -> None:
         caso = self.casos[numero]
@@ -280,7 +287,7 @@ class Corrida:
                     self._cerrar_caso(k)
             self.publicar("fin", {"metricas": self.metricas(), "apoyos": [round(c.apoyo(), 4) for c in self.casos]})
         except Exception as error:
-            self.publicar("error", {"mensaje": str(error)[:400]})
+            self.publicar("falla", {"mensaje": str(error)[:400]})
         finally:
             with self._condicion:
                 self.terminada = True
