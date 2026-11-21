@@ -38,7 +38,7 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
     <div className={estilos.menu} ref={caja}>
       {abierto && (
         <div className={estilos.panel} id="panel-opciones" role="region" aria-label="Opciones">
-          <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica />
+          <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica rotuloTamano="Agentes a consultar (cada uno es una persona del censo)" />
           <div className={estilos.vista}>
             <Boton variante="secundario" onClick={alCambiarTema}>
               {claro ? 'Fondo oscuro' : 'Fondo claro'}

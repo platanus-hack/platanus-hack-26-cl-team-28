@@ -23,9 +23,10 @@ interface Props {
   tamanos?: readonly number[];
   /** Si los perfiles no traen orientación política, ese filtro no se muestra. */
   sinPolitica?: boolean;
+  rotuloTamano?: string;
 }
 
-export function FiltrosMuestra({ sim, tamanos = TAMANOS, sinPolitica = false }: Props) {
+export function FiltrosMuestra({ sim, tamanos = TAMANOS, sinPolitica = false, rotuloTamano = PREPARAR.tamano }: Props) {
   const { filtros, setFiltros } = sim;
   const listas = sinPolitica ? LISTAS.filter((l) => l.clave !== 'politica') : LISTAS;
   const cambiar = (parte: Partial<Filtros>) => setFiltros({ ...filtros, ...parte });
@@ -42,7 +43,7 @@ export function FiltrosMuestra({ sim, tamanos = TAMANOS, sinPolitica = false }: 
       </header>
       <div className={estilos.grilla}>
         <fieldset className={estilos.tamanos}>
-        <legend>{PREPARAR.tamano}</legend>
+        <legend>{rotuloTamano}</legend>
         <div>
           {tamanos.map((tamano) => (
             <label key={tamano}>

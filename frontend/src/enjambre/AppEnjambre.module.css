@@ -285,7 +285,7 @@
   display: grid;
   place-items: center;
   padding: var(--gutter);
-  background: rgb(8 10 14 / 0.45);
+  background: color-mix(in srgb, var(--mar) 55%, transparent);
   pointer-events: none;
   animation: velo 500ms ease-out both;
 }

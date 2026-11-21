@@ -194,7 +194,7 @@ export function AppEnjambre() {
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
           <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} />
-          {conexion && (!caso.iteracion || caso.respondidas > 0) && <Pensando caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} />}
+          {conexion && caso.desdeCache === 0 && (!caso.iteracion || caso.respondidas > 0) && <Pensando caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} />}
         </div>
       )}
       {mostrarRedactando && base && (

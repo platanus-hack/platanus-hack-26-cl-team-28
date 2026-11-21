@@ -20,26 +20,54 @@ gente, y al cambiar de variante se ve a la gente cruzar de un lado al otro.
 **Lo que se lee.** Dos cifras gigantes, una por lado, cada una con su criatura, que crece con su porcentaje. Arriba,
 la variante. Nada más compite con el mapa.
 
-**Los agentes llegan en vivo.** Al preguntar, los puntos de la muestra se apagan y cada uno se enciende con su color,
-con un destello, cuando su agente termina; un contador grande dice cuántas personas ya respondieron. Cuando
-terminan todos, la ola baja de norte a sur y el país se abre.
+**Para quién se diseñó.** Una demo de 3 minutos en proyector ante un jurado. La investigación de demos anteriores de
+Platanus mostró que un simulador de políticas con agentes (HIVE, Bogotá 2026) perdió porque el jurado no le creyó
+a la simulación y su pantalla solo mostraba agregados en letra chica. Por eso cada momento contesta "¿es real?" con
+algo que se ve: personas con nombre de comuna, frases propias, el costo medido y una encuesta real al lado.
 
-**Interfaz mínima y ocultable.** Abajo a la izquierda, el mando: variantes, texto de la propuesta, subir un documento
-(o soltarlo encima), una casilla para que un agente proponga iteraciones con más apoyo, y el botón de preguntar. Con
-resultados en pantalla el mando se reemplaza por una ficha por variante con su porcentaje a favor. Abajo a la
-derecha, un solo botón, Opciones, que despliega la muestra y sus filtros, el fondo claro u oscuro y ocultar la
-interfaz. La tecla H oculta todo y deja el país, las cifras y la pregunta; las flechas cambian de variante.
+**Momentos de la demo.**
 
-**Pantallas angostas.** Nada se superpone: título, mapa, las dos cifras, nota y mando van en una columna.
+1. *Entrada.* Titular "Sabe cómo reacciona Chile a una ley antes de aprobarla", bajada con el tamaño de la muestra y
+   "Validado contra encuestas Cadem". El mapa ya muestra a los agentes reales en su comuna. Tres casos con encuesta
+   real se cargan con un toque.
+2. *Los agentes piensan.* Los puntos de la muestra se apagan y laten en ondas que bajan por el país. A la izquierda,
+   el contador, la línea "Pensando ahora" con personas de la muestra pasando rápido y, al llegar respuestas, las
+   llamadas, segundos y dólares que mide el motor.
+3. *Responden.* Cada punto se enciende con su color cuando su agente termina. Frases reales aparecen junto al punto
+   de quien las dijo: a la derecha alguien a favor, a la izquierda alguien en contra, como vuelan después.
+4. *El país se abre.* La ola baja de norte a sur y los puntos vuelan a burbujas por región con su porcentaje; cifras
+   gigantes a cada lado.
+5. *¿Le creemos?* Si la variante tiene encuesta real, la comparación ocupa el centro unos segundos (Cadem contra
+   agentes, en cifras de 8 rem) y luego queda en la esquina.
+6. *El agente reescribe.* Con iteraciones, un agente lee las objeciones y lo que valoran quienes apoyan, y escribe una
+   versión nueva con titular corto y qué cambió. Se vuelve a preguntar a las mismas personas; bajo la cifra a favor
+   aparece "+N puntos con la versión del agente" y cuántas personas que no apoyaban la A ahora la apoyan.
+7. *Conocer a alguien.* En resultados, tocar un punto abre la ficha de esa persona: quién es según el censo, su frase y
+   cuánto apoyó cada variante.
 
-**Sistema.** Fondo oscuro y plano, sin brillos ni degradados; hay tema claro para salas con mucha luz. Los mismos
-tokens del diseño 1 con otros valores (`src/enjambre/tema.css`), así se reutilizan sus componentes y sus criaturas.
+**Honestidad en pantalla.** La esquina superior derecha dice siempre qué responde: "En vivo" con el modelo, "Corrida
+grabada" o "Demostración sin motor". Lo que viene de caché se reproduce en seis segundos y lo dice. Sin motor no se
+ofrece la comparación con Cadem.
 
-**Código.** `src/enjambre/`: `EscenaEnjambre.ts` (canvas, vuelo de los puntos), `disposicion.ts` (dónde va cada
-burbuja y cada punto; función pura con prueba), `AppEnjambre.tsx`, `BloquePostura.tsx`, `BarraMando.tsx`.
+**Interfaz mínima y ocultable.** Abajo a la izquierda, el mando: variantes, texto, casos con encuesta real, subir una
+ley (o soltarla encima), iteraciones del agente y el botón de preguntar. Con resultados, pestañas por variante con su
+porcentaje y la diferencia contra la A. Abajo a la derecha, Opciones (agentes a consultar y filtros, fondo claro u
+oscuro, ocultar). La tecla H oculta todo; las flechas cambian de variante.
 
-**Pendiente.** Las burbujas chicas que no tienen lugar para su rótulo quedan sin nombre, y no hay detalle al pasar
-el puntero por una burbuja o un punto.
+**Pantallas angostas y bajas.** En angostas todo va en una columna; en bajas (hasta 800 px de alto) las cifras bajan
+para no chocar con la tarjeta de la encuesta.
+
+**Sistema.** Fondo oscuro y plano, sin brillos ni degradados; tema claro para salas con mucha luz
+(`src/enjambre/tema.css`). Rótulos de región que crecen con la pantalla (hasta 16 px) para leerse en un proyector.
+
+**Código.** `src/enjambre/`: `EscenaEnjambre.ts` (canvas), `disposicion.ts` (burbujas, con prueba), `AppEnjambre.tsx`,
+`BloqueAvance.tsx`, `Pensando.tsx`, `Voces.tsx`, `Validacion.tsx`, `Redactando.tsx`, `FichaAgente.tsx`,
+`BarraResultado.tsx`, `BarraMando.tsx`, `Insignia.tsx`. La conexión con el motor está en `src/vivo/`.
+
+**Medido.** 60 cuadros por segundo con 10.000 puntos durante toda una corrida en 1920 por 1080 (p99 de 17 ms).
+
+**Pendiente.** En móvil el mapa queda chico y sin rótulos; la ficha solo se abre tocando un punto (no hay camino
+por teclado).
 
 # Diseño 1: Chile a pantalla completa
 
