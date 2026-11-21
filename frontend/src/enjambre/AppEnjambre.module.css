@@ -15,6 +15,8 @@
   height: 100%;
 }
 
+.irAlPanel { display: none; }
+
 /*
  * Dos columnas a los costados del país. Dentro de cada una los bloques van en fila, uno
  * debajo del otro: el título arriba, la cifra al medio y el mando abajo. Así no se pisan
@@ -67,12 +69,21 @@
 
 .titular {
   isolation: isolate;
-  font: 500 clamp(2.8rem, min(1.5rem + 5vw, 13vh), 6.5rem) / 1 var(--fuente-voz);
+  font: 500 clamp(2.4rem, min(1.2rem + 4vw, 8vh), 5rem) / 1 var(--fuente-voz);
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
 
-.panelMando { position: relative; padding-top: 110px; }
+.panelMando {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding-top: 110px;
+}
+.contenidoMando { min-height: 0; overflow-y: auto; }
 .asomo {
   position: absolute;
   left: 1.5rem;
@@ -281,7 +292,11 @@
 .app[data-fase='preparar'] .mando {
   flex: 0 1 auto;
   min-height: 0;
-  overflow-y: auto;
+}
+
+.app[data-fase='preparar'] .arriba {
+  flex: none;
+  overflow: visible;
 }
 
 /* Con la interfaz oculta queda un botón tenue para recuperarla sin saber la tecla. */
@@ -440,6 +455,8 @@
     min-height: max-content;
     overflow: visible;
   }
+
+  .contenidoMando { overflow: visible; }
 }
 
 /* Acercar, alejar y volver a la vista completa. También con la rueda; al acercar se arrastra para mover. */
@@ -547,4 +564,81 @@
 
 .app[data-proceso] .zoom [data-mapa] {
   display: none;
+}
+
+/* En móvil, la primera pantalla es el mapa; los detalles continúan debajo. */
+@media (max-width: 899px) {
+  .app {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 100dvh auto auto auto;
+    gap: 0;
+    padding: 0;
+    align-content: start;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  .lienzo {
+    grid-area: 1 / 1 / 2 / -1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .arriba {
+    grid-area: 1 / 1 / 2 / -1;
+    z-index: 1;
+    align-self: start;
+    padding: max(var(--e4), env(safe-area-inset-top)) 8rem 0 var(--e4);
+    pointer-events: none;
+  }
+
+  .titular { margin: 0; font-size: clamp(2rem, 9vw, 3rem); }
+  .pregunta { margin: 0; font-size: 1rem; }
+  .pregunta span { margin-bottom: var(--e1); }
+  .avance { margin-top: var(--e2); }
+
+  /* Historial y Opciones van uno sobre otro: caben en la franja que el titular deja libre a la derecha. */
+  .utiles { position: absolute; top: max(var(--e3), env(safe-area-inset-top)); right: var(--e3); flex-direction: column; align-items: flex-end; }
+  .contra, .favor {
+    grid-row: 1;
+    z-index: 1;
+    align-self: end;
+    margin: 0 0 calc(5.5rem + env(safe-area-inset-bottom));
+    pointer-events: none;
+  }
+  .contra { grid-column: 1; padding-left: var(--e3); }
+  .favor { grid-column: 2; padding-right: var(--e3); }
+  .nota { grid-area: 2 / 1 / 3 / -1; padding: var(--e4); }
+  .encuesta { grid-area: 3 / 1 / 4 / -1; padding: 0 var(--e3); }
+  .mando { grid-area: 4 / 1 / 5 / -1; padding: 0 var(--e3) max(var(--e4), env(safe-area-inset-bottom)); }
+  .panelMando { max-width: 32rem; margin-inline: auto; }
+  .contenidoMando { overflow: visible; }
+
+  .irAlPanel {
+    grid-area: 1 / 1 / 2 / -1;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    align-self: end;
+    justify-self: center;
+    min-height: 48px;
+    margin-bottom: max(var(--e4), env(safe-area-inset-bottom));
+    padding: 0 18px;
+    border-radius: 6px;
+    background: var(--tinta);
+    color: var(--papel);
+    font: 650 var(--texto-s) / 1 var(--fuente-ui);
+    text-decoration: none;
+  }
+  .irAlPanel svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .app[data-oculta] .irAlPanel { display: none; }
+}
+
+@media (max-width: 899px) and (prefers-reduced-motion: reduce) {
+  .app { scroll-behavior: auto; }
 }

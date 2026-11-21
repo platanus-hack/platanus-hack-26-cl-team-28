@@ -1,5 +1,6 @@
 /* Sección plegable del cajón: un filete arriba, el título como botón y el contenido debajo. */
 .seccion {
+  min-width: 0;
   border-top: 1px solid var(--linea-suave);
 }
 
@@ -52,6 +53,7 @@
 
 .contenido {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--e4);
   padding: var(--e1) var(--e5) var(--e5);
 }

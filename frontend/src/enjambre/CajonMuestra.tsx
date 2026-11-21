@@ -128,7 +128,7 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
         <Seccion titulo="Muestra" resumen={abiertas.muestra ? undefined : `${formatear(filtros.tamano)} agentes`} abierta={!!abiertas.muestra} alAlternar={() => alternarSeccion('muestra')}>
           <fieldset className={estilos.grupo}>
             <legend>{enCorrida ? 'Cuántas preguntar la próxima vez' : 'Cuántas preguntar'}</legend>
-            <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${TAMANOS_AGENTES.length}, auto)` }}>
+            <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${TAMANOS_AGENTES.length}, minmax(0, 1fr))` }}>
               {TAMANOS_AGENTES.map((tamano) => (
                 <button key={tamano} type="button" aria-pressed={filtros.tamano === tamano} onClick={() => cambiar({ tamano })}>
                   {formatear(tamano)}
@@ -142,7 +142,7 @@ export function CajonMuestra({ sim, claro, abiertas, alAbrir, alCambiarTema, alO
                 Clusterización
                 <output>1 agente representa a {formatear(filtros.reduccion)} personas</output>
               </legend>
-              <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${niveles.length}, 1fr)` }}>
+              <div className={estilos.tamanos} style={{ gridTemplateColumns: `repeat(${niveles.length}, minmax(0, 1fr))` }}>
                 {niveles.map((nivel) => (
                   <button key={nivel} type="button" aria-pressed={filtros.reduccion === nivel} onClick={() => cambiar({ reduccion: nivel })}>
                     {formatear(nivel)}

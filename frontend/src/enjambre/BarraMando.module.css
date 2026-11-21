@@ -12,6 +12,12 @@
   background: var(--relleno-suave);
 }
 
+.barra > button[type='submit'] {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
 .pestanas {
   display: flex;
   flex-wrap: wrap;
@@ -148,6 +154,8 @@
     gap: var(--e2);
     padding: var(--e3);
   }
+
+  .barra > button[type='submit'] { position: static; }
 }
 
 .referencia {

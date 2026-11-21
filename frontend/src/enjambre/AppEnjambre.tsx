@@ -215,6 +215,12 @@ export function AppEnjambre() {
         role="img"
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
+      {(fase === 'preparar' || fase === 'resultados') && (
+        <a className={estilos.irAlPanel} href={fase === 'resultados' && conEncuesta ? '#resultados-movil' : '#mando-movil'}>
+          {fase === 'preparar' ? 'Preparar consulta' : 'Ver resultados'}
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10m-4-4 4 4 4-4" /></svg>
+        </a>
+      )}
       {/* Dos columnas: en cada una, cada bloque va debajo del anterior y nada se pisa. */}
       <div ref={izquierda} className={estilos.izquierda}>
       <header className={estilos.arriba}>
@@ -242,11 +248,11 @@ export function AppEnjambre() {
         </div>
       )}
       {conEncuesta && caso && (
-        <div className={estilos.encuesta}>
+        <div className={estilos.encuesta} id="resultados-movil">
           <ResultadoEncuesta casos={casos} viendo={viendo} preguntas={sim.encuesta} agentes={muestra.agentes} version={version} />
         </div>
       )}
-      <div className={estilos.mando}>
+      <div className={estilos.mando} id="mando-movil">
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
           <div className={estilos.panelMando}>
@@ -263,7 +269,9 @@ export function AppEnjambre() {
             }}>
               <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} /></span></span>
             </button>
-            <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+            <div className={estilos.contenidoMando}>
+              <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+            </div>
           </div>
         )}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (

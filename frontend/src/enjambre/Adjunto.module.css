@@ -2,11 +2,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  width: 100%;
+  width: fit-content;
   min-height: 44px;
-  padding: 0;
-  border: 0;
-  background: transparent;
+  padding: 0 14px;
+  border: 1px solid var(--linea-suave);
+  border-radius: 6px;
+  background: var(--relleno-suave);
   color: var(--tinta);
   font: 600 var(--texto-s) / 1.2 var(--fuente-ui);
   text-align: left;
@@ -22,9 +23,24 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.subir:hover span:first-of-type { text-decoration: underline; text-underline-offset: 3px; }
-.formatos { margin-left: auto; color: var(--tinta-suave); font-size: var(--texto-xxs); font-weight: 400; text-align: right; }
-@media (max-width: 420px) { .formatos { display: none; } }
+.subir:hover { border-color: var(--tinta-suave); }
+.dialogo {
+  width: min(26rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: var(--e5);
+  border: 1px solid var(--linea-suave);
+  border-radius: 8px;
+  background: var(--papel);
+  color: var(--tinta);
+}
+.dialogo::backdrop { background: rgb(0 0 0 / 0.65); }
+.dialogo h2 { margin: 0 0 var(--e3); font: 650 1.35rem/1.15 var(--fuente-ui); }
+.dialogo p { margin: 0 0 var(--e3); font-size: var(--texto-s); line-height: 1.4; }
+.dialogo .formatos { color: var(--tinta-suave); font-size: var(--texto-xs); }
+.acciones { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--e2); margin-top: var(--e4); }
+.acciones button { min-height: 44px; padding: 0 14px; border: 1px solid var(--linea-suave); border-radius: 6px; background: var(--relleno-suave); color: var(--tinta); font: 600 var(--texto-s) / 1 var(--fuente-ui); cursor: pointer; }
+.acciones button:last-child { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
 
 .adjunto {
   min-width: 0;

@@ -7,6 +7,7 @@
   inset: 0 0 0 auto;
   z-index: 6;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto;
   width: min(100vw, 27rem);
   border-left: 1px solid var(--linea-suave);
@@ -31,6 +32,8 @@
 .cabeza {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: var(--e3);
   padding: var(--e5) var(--e5) var(--e4);
 }
@@ -38,6 +41,8 @@
 .cuenta {
   display: flex;
   align-items: baseline;
+  flex-wrap: wrap;
+  min-width: 0;
   gap: var(--e3);
   padding-right: 44px;
 }
@@ -49,6 +54,8 @@
 }
 
 .cuenta span {
+  flex: 1 1 12rem;
+  min-width: 0;
   font-size: var(--texto-s);
   line-height: 1.25;
   color: var(--tinta-suave);
@@ -78,7 +85,8 @@
 
 .cuadros {
   display: grid;
-  grid-template-columns: repeat(30, 1fr);
+  grid-template-columns: repeat(30, minmax(0, 1fr));
+  min-width: 0;
   gap: 3px;
 }
 
@@ -133,6 +141,7 @@
 
 /* Cuerpo: las secciones, una debajo de otra; es lo único que se desplaza. */
 .cuerpo {
+  min-width: 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--linea-suave) transparent;
@@ -153,6 +162,8 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--e3);
+  flex-wrap: wrap;
+  min-width: 0;
   width: 100%;
   margin-bottom: var(--e2);
   padding: 0;
@@ -209,6 +220,7 @@
 /* Pie: ejemplos para probar y cómo se ve la pantalla. */
 .pie {
   display: grid;
+  min-width: 0;
   gap: var(--e3);
   padding: var(--e3) var(--e5) var(--e4);
   border-top: 1px solid var(--linea-suave);
@@ -322,7 +334,7 @@
   }
 
   .cuadros {
-    grid-template-columns: repeat(60, 1fr);
+    grid-template-columns: repeat(60, minmax(0, 1fr));
     gap: 2px;
   }
 

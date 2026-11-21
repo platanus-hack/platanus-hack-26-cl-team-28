@@ -32,6 +32,7 @@ function estado({ leido, leyendo, error }: Props): string {
 export function Adjunto(props: Props) {
   const { documento, leyendo, error, alElegir } = props;
   const entrada = useRef<HTMLInputElement>(null);
+  const dialogo = useRef<HTMLDialogElement>(null);
   return (
     <div className={estilos.adjunto}>
       <input
@@ -59,11 +60,21 @@ export function Adjunto(props: Props) {
           </p>
         </div>
       ) : (
-        <button type="button" className={estilos.subir} onClick={() => entrada.current?.click()}>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4" /></svg>
-          <span>Subir una ley o documento</span>
-          <span className={estilos.formatos}>PDF, DOCX o texto</span>
-        </button>
+        <>
+          <button type="button" className={estilos.subir} aria-haspopup="dialog" onClick={() => dialogo.current?.showModal()}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4" /></svg>
+            Subir documento
+          </button>
+          <dialog ref={dialogo} className={estilos.dialogo} aria-labelledby="titulo-adjunto">
+            <h2 id="titulo-adjunto">Subir un documento</h2>
+            <p>Selecciona una ley o documento para usarlo en tu propuesta.</p>
+            <p className={estilos.formatos}>Formatos admitidos: PDF, DOCX, TXT, Markdown y HTML.</p>
+            <div className={estilos.acciones}>
+              <button type="button" onClick={() => dialogo.current?.close()}>Cancelar</button>
+              <button type="button" onClick={() => { dialogo.current?.close(); entrada.current?.click(); }}>Elegir archivo</button>
+            </div>
+          </dialog>
+        </>
       )}
     </div>
   );
