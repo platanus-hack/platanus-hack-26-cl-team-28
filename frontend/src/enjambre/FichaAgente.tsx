@@ -32,7 +32,9 @@ export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
     window.addEventListener('keydown', tecla);
     return () => window.removeEventListener('keydown', tecla);
   }, [alCerrar]);
-  const izquierda = Math.max(16, Math.min(window.innerWidth - ANCHO - 16, x + 24));
+  // Se abre hacia el centro de la pantalla, para no tapar las cifras de los costados.
+  const haciaIzquierda = x > window.innerWidth / 2;
+  const izquierda = Math.max(16, Math.min(window.innerWidth - ANCHO - 16, haciaIzquierda ? x - ANCHO - 28 : x + 28));
   const arriba = Math.max(16, Math.min(window.innerHeight - 460, y - 60));
   const caso = casos[viendo];
   const acuerdo = caso?.acuerdo[agente.i] ?? 0;

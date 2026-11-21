@@ -22,7 +22,7 @@ interface Props {
 /** La cifra de un lado del país: la criatura de esa postura crece con su porcentaje. */
 export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad = 'personas', compacto = false, encabezado, nota }: Props) {
   const contado = useConteo(porcentaje);
-  const alto = compacto ? 44 : Math.round(64 + contado * 1.5);
+  const alto = compacto ? 44 : Math.round(56 + contado * 0.75);
   return (
     <section className={estilos.bloque} data-postura={postura} data-compacto={compacto || undefined} aria-label={`${porcentaje} % ${POSTURA_TEXTO[postura]}`}>
       <Figura estado={postura} aspecto={aspecto} alto={alto} />

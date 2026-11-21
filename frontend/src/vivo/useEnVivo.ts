@@ -286,7 +286,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     const hayOtra = viendo + 1 < cantidad;
     if (!hayOtra && !terminada) return;
     // La primera variante con encuesta real se queda más: ahí se muestra la comparación con Cadem.
-    const segundos = viendo === 0 && casos.current[0]?.referencia ? RETENCION + 3 : RETENCION;
+    const segundos = viendo === 0 && casos.current[0]?.referencia ? RETENCION + 5 : viendo > 0 ? RETENCION + 3 : RETENCION;
     const espera = window.setTimeout(() => (hayOtra ? setViendo(viendo + 1) : setFase('resultados')), segundos * 1000);
     return () => window.clearTimeout(espera);
   }, [fase, actualListo, viendo, cantidad, terminada]);

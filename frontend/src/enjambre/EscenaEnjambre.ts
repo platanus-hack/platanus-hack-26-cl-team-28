@@ -16,7 +16,12 @@ interface Rotulada extends Burbuja {
   lado: 1 | -1;
   /** Porcentaje de la región que tomó esta postura. */
   pct: number;
+  /** Personas distintas en la burbuja (un agente puede dibujarse con varios puntos). */
+  personas: number;
 }
+
+/** Con menos personas que esto en la región, el porcentaje engaña: se muestra cuántas son. */
+const MINIMO_PARA_PORCENTAJE = 5;
 
 const LAT_NORTE = -17.2;
 const GRADOS = 39.1;
@@ -202,7 +207,7 @@ export class EscenaEnjambre {
     this.u = (this.alto - this.margen() * 2) / GRADOS;
     // El tamaño del punto crece con la pantalla: en un proyector se tiene que ver desde el fondo de la sala.
     this.paso = Math.max(2, Math.min(4.6, this.ancho / 450, this.alto / 250));
-    this.letra = Math.round(Math.max(11, Math.min(16, this.alto / 68)));
+    this.letra = Math.round(Math.max(11, Math.min(15, this.alto / 70)));
     this.silueta = new Path2D();
     for (const region of REGIONES_GEO) {
       for (const anillo of region) {
@@ -255,7 +260,9 @@ export class EscenaEnjambre {
     for (const { lado, regiones, puestas } of armado) {
       regiones.forEach((g, k) => {
         const burbuja = puestas[k];
-        this.burbujas.push({ ...burbuja, region: g.region, lado, pct: Math.round((g.lista.length / total[g.region]) * 100) });
+        const personas = new Set(g.lista.map((i) => this.personas[i].agente ?? i)).size;
+        const enRegion = Math.max(1, Math.round((total[g.region] / g.lista.length) * personas));
+        this.burbujas.push({ ...burbuja, region: g.region, lado, personas, pct: enRegion < MINIMO_PARA_PORCENTAJE ? -1 : Math.round((g.lista.length / total[g.region]) * 100) });
         g.lista.forEach((i, orden) => {
           const [dx, dy] = puntoEnBurbuja(orden, paso);
           this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
@@ -381,7 +388,11 @@ export class EscenaEnjambre {
   private rotulos(visible: number): void {
     const { ctx } = this;
     const ocupados: [number, number, number, number][] = [];
+    // Franja que ocupa el país: ningún rótulo va encima del mapa.
+    const paisIzq = this.ancho / 2 - 4.5 * ESTRECHEZ * this.u;
+    const paisDer = this.ancho / 2 + 3.4 * ESTRECHEZ * this.u;
     const libre = (x: number, y: number, w: number, h: number, propia: Rotulada) =>
+      (x + w <= paisIzq || x >= paisDer) &&
       x >= 2 &&
       x + w <= this.ancho - 2 &&
       y >= 2 &&
@@ -427,7 +438,7 @@ export class EscenaEnjambre {
       ctx.font = `600 ${this.letra - 1}px ${this.fuente}`;
       ctx.fillStyle = this.tinta;
       ctx.globalAlpha = visible * 0.8;
-      ctx.fillText(`${b.pct} %`, cx, cy + this.letra * 0.65);
+      ctx.fillText(b.pct < 0 ? `${b.personas} ${b.personas === 1 ? 'persona' : 'personas'}` : `${b.pct} %`, cx, cy + this.letra * 0.65);
       ctx.globalAlpha = visible;
     }
     ctx.globalAlpha = 1;

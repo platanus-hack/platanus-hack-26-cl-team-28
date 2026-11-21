@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { formatear } from '../dominio/textos';
 import type { Metricas, MotorInfo } from '../vivo/api';
 import type { CasoVivo } from '../vivo/useEnVivo';
@@ -9,6 +10,21 @@ interface Props {
   total: number;
   metricas: Metricas;
   motor: MotorInfo | null;
+  /** En la versión del agente: frases reales de quienes no apoyaron la A, que rotan mientras se espera. */
+  objeciones?: string[];
+}
+
+const ROTACION = 1800;
+
+/** Una objeción real a la vez, para que la espera cuente qué leyó el agente. */
+function useRotacion(frases: string[] | undefined): string | undefined {
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    if (!frases?.length) return;
+    const tic = window.setInterval(() => setK((n) => n + 1), ROTACION);
+    return () => window.clearInterval(tic);
+  }, [frases]);
+  return frases?.length ? frases[k % frases.length] : undefined;
 }
 
 export function nombreModelo(modelo: string): string {
@@ -20,7 +36,8 @@ export function dinero(usd: number): string {
 }
 
 /** Mientras los agentes corren: cuántos ya respondieron y lo que costó, medido por el motor. */
-export function BloqueAvance({ caso, total, metricas, motor }: Props) {
+export function BloqueAvance({ caso, total, metricas, motor, objeciones }: Props) {
+  const objecion = useRotacion(caso.respondidas === 0 ? objeciones : undefined);
   const contado = useConteo(caso.respondidas);
   const esperando = caso.respondidas === 0;
   return (
@@ -40,8 +57,14 @@ export function BloqueAvance({ caso, total, metricas, motor }: Props) {
           {caso.iteracion.cambio}
         </p>
       )}
+      {objecion && (
+        <p className={estilos.objecion} key={objecion}>
+          <span>Lo que leyó el agente</span>
+          {objecion}
+        </p>
+      )}
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
-        <p className={estilos.detalle}>Ya se había preguntado: estas respuestas vienen de la caché, sin llamar al modelo</p>
+        <p className={estilos.detalle}>Esta pregunta ya se hizo hoy: se muestran las respuestas que dieron los agentes en esa corrida</p>
       )}
       {motor && !motor.grabado && caso.desdeCache < caso.respondidas && (
         <p className={estilos.detalle}>

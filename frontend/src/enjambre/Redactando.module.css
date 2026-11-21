@@ -1,21 +1,21 @@
 .redactando {
   display: grid;
   justify-items: start;
-  gap: var(--e3);
-  width: min(100%, 24rem);
+  gap: var(--e2);
+  width: min(100%, 26rem);
+  margin-bottom: var(--e3);
   pointer-events: none;
 }
 
 .etiqueta {
-  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tinta-suave);
 }
 
 .texto {
-  font: 500 clamp(1.4rem, 0.9rem + 1.3vw, 2.2rem) / 1.12 var(--fuente-voz);
-  letter-spacing: -0.01em;
+  font: 500 1.15rem / 1.25 var(--fuente-voz);
   text-wrap: balance;
 }
 

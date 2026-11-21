@@ -24,6 +24,15 @@ const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
 
+/** Frases reales de quienes no apoyaron la A: lo que leyó el agente antes de reescribir. */
+function objecionesDe(a: CasoVivo): string[] {
+  const frases: string[] = [];
+  a.acuerdo.forEach((valor, i) => {
+    if (valor && valor <= 3 && a.frase[i]) frases.push(a.frase[i]);
+  });
+  return frases.slice(0, 40);
+}
+
 function textoDelta(delta: number, caso: CasoVivo): string {
   const quien = caso.iteracion ? 'con la versión del agente' : `con la variante ${caso.letra}`;
   if (delta === 0) return `Igual que A ${quien}`;
@@ -94,8 +103,9 @@ export function AppEnjambre() {
   const conReferencia = !!casos[0]?.referencia;
   useEffect(() => {
     if (fase !== 'corriendo' || !primeraLista || !conReferencia || conexion?.demo) return;
-    const entra = window.setTimeout(() => setClimax(true), 1700);
-    const sale = window.setTimeout(() => setClimax(false), 6200);
+    // Entra cuando los puntos ya llegaron a sus burbujas, para no tapar el vuelo.
+    const entra = window.setTimeout(() => setClimax(true), 3500);
+    const sale = window.setTimeout(() => setClimax(false), 9000);
     return () => {
       window.clearTimeout(entra);
       window.clearTimeout(sale);
@@ -144,7 +154,7 @@ export function AppEnjambre() {
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} data-oculta={oculta || undefined}>
+    <div className={estilos.app} data-oculta={oculta || undefined} data-climax={climax || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -168,7 +178,7 @@ export function AppEnjambre() {
             <p className={estilos.bajada}>
               {conexion?.demo
                 ? 'Cada punto es una persona simulada.'
-                : `${formatear(conexion?.agentes.length ?? 2000)} personas reales del Censo 2024, cada una con su agente de IA. Validado contra encuestas Cadem.`}
+                : `${formatear(muestra.total)} personas reales del Censo 2024, cada una con su agente de IA. Validado contra encuestas Cadem.`}
             </p>
           </>
         )}
@@ -193,22 +203,16 @@ export function AppEnjambre() {
       </div>
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
-          <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} />
+          <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} objeciones={caso.iteracion ? objecionesDe(casos[0]) : undefined} />
           {conexion && caso.desdeCache === 0 && (!caso.iteracion || caso.respondidas > 0) && <Pensando caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} />}
         </div>
       )}
-      {mostrarRedactando && base && (
-        <div className={estilos.avance}>
-          <Redactando base={base} numero={sim.redactando!} />
-        </div>
-      )}
+
       {pct && caso && (
         <>
-          {!mostrarRedactando && (
-            <div className={estilos.contra}>
-              <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
-            </div>
-          )}
+          <div className={estilos.contra}>
+            <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
+          </div>
           <div className={estilos.favor}>
             <BloquePostura
               postura="favor"
@@ -227,6 +231,7 @@ export function AppEnjambre() {
         <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={!listo && !oculta} />
       )}
       <div className={estilos.mando}>
+        {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
           <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
