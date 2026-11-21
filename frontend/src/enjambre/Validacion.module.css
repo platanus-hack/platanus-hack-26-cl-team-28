@@ -142,3 +142,29 @@
   margin-top: var(--e2);
   font-size: 1.15rem;
 }
+
+/* Ventanas bajas: la tarjeta se reduce a las dos cifras. */
+@media (max-height: 800px) {
+  .validacion {
+    gap: var(--e1);
+    padding: var(--e2) var(--e3);
+  }
+
+  .filas b {
+    font-size: 1.7rem;
+  }
+
+  .filas p {
+    grid-template-columns: 4.2rem 1fr;
+  }
+
+  .distancia {
+    display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .validacion {
+    width: 100%;
+  }
+}

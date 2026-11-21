@@ -201,6 +201,16 @@ export class EscenaEnjambre {
     return [this.ancho / 2 + (lon - LON_CENTRO) * ESTRECHEZ * this.u, this.margen() + (LAT_NORTE - lat) * this.u];
   }
 
+  /**
+   * Ancho que ocupan las columnas de la interfaz a cada lado (mismo cálculo que `.izquierda` en
+   * AppEnjambre.module.css: margen más min(28vw, 26rem)). Ni burbujas ni rótulos entran ahí.
+   */
+  private lateral(): number {
+    if (this.ancho < ANCHO_CON_CIFRAS) return 4;
+    const margenLado = Math.max(16, Math.min(40, this.ancho * 0.026));
+    return margenLado + Math.min(this.ancho * 0.28, 416) + 14;
+  }
+
   private margen(): number {
     return Math.max(18, this.alto * 0.03);
   }
@@ -250,10 +260,10 @@ export class EscenaEnjambre {
     const lados = [[PUNTO.favor, 1], [PUNTO.contra, -1]] as const;
     const bordes = { 1: this.ancho / 2 + 3.4 * ESTRECHEZ * this.u + 10, [-1]: this.ancho / 2 - 4.5 * ESTRECHEZ * this.u - 10 };
     // En pantallas anchas los costados son de las cifras: si las burbujas los invaden, los puntos se juntan más.
-    const reserva = this.ancho >= ANCHO_CON_CIFRAS ? this.ancho * 0.25 : 4;
+    const reserva = this.lateral();
     let paso = this.paso;
     let armado: { lado: 1 | -1; regiones: { lista: number[]; region: number }[]; puestas: Burbuja[] }[] = [];
-    for (let intento = 0; intento < 6; intento++) {
+    for (let intento = 0; intento < 12; intento++) {
       armado = lados.map(([estado, lado]) => {
         const regiones = grupos[estado].map((lista, region) => ({ lista, region })).filter((g) => g.lista.length);
         const pedidos = regiones.map((g) => ({ y: this.proyectar(0, REGIONES[g.region].capitalLat)[1], r: radioDe(g.lista.length, paso) }));
@@ -397,12 +407,13 @@ export class EscenaEnjambre {
     const { ctx } = this;
     const ocupados: [number, number, number, number][] = [];
     // Franja que ocupa el país: ningún rótulo va encima del mapa.
+    const lateral = this.lateral();
     const paisIzq = this.ancho / 2 - 4.5 * ESTRECHEZ * this.u;
     const paisDer = this.ancho / 2 + 3.4 * ESTRECHEZ * this.u;
     const libre = (x: number, y: number, w: number, h: number, propia: Rotulada) =>
       (x + w <= paisIzq || x >= paisDer) &&
-      x >= 2 &&
-      x + w <= this.ancho - 2 &&
+      x >= lateral &&
+      x + w <= this.ancho - lateral &&
       y >= 2 &&
       y + h <= this.alto - 2 &&
       !this.burbujas.some((b) => b !== propia && circuloTocaCaja(b, x, y, w, h)) &&

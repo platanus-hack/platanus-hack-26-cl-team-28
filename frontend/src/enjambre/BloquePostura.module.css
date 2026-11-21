@@ -11,7 +11,7 @@
 
 .cifra {
   margin-top: var(--e2);
-  font: 500 clamp(4.5rem, 2rem + 9vw, 11rem) / 0.8 var(--fuente-voz);
+  font: 500 clamp(3.5rem, min(2rem + 9vw, 17vh), 11rem) / 0.8 var(--fuente-voz);
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.04em;
   white-space: nowrap;
@@ -54,7 +54,7 @@
 }
 
 .encabezado {
-  max-width: min(24rem, 22vw);
+  max-width: 100%;
   margin-top: var(--e4);
   font: 500 clamp(1.3rem, 0.9rem + 0.9vw, 2rem) / 1.1 var(--fuente-voz);
   color: var(--favor-texto);

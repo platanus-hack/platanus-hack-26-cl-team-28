@@ -52,3 +52,9 @@
     animation: none;
   }
 }
+
+@media (max-height: 800px) {
+  .detalle {
+    display: none;
+  }
+}

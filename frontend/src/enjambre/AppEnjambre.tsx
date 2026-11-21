@@ -48,17 +48,6 @@ export function AppEnjambre() {
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
   const mostrar = useRef<HTMLDivElement>(null);
-  const app = useRef<HTMLDivElement>(null);
-  const mando = useRef<HTMLDivElement>(null);
-
-  // El titular de entrada ocupa lo que deja libre el mando: se mide el mando y el CSS ajusta la letra.
-  useEffect(() => {
-    const medir = () => app.current?.style.setProperty('--alto-mando', `${mando.current?.offsetHeight ?? 0}px`);
-    const observador = new ResizeObserver(medir);
-    if (mando.current) observador.observe(mando.current);
-    medir();
-    return () => observador.disconnect();
-  }, []);
 
   const puntos = conexion?.puntos;
   const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
@@ -139,7 +128,7 @@ export function AppEnjambre() {
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} ref={app} data-fase={fase} data-oculta={oculta || undefined}>
+    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -147,6 +136,8 @@ export function AppEnjambre() {
         role="img"
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
+      {/* Dos columnas: en cada una, cada bloque va debajo del anterior y nada se pisa. */}
+      <div className={estilos.izquierda}>
       <header className={estilos.arriba}>
         {caso ? (
           <h1 className={estilos.pregunta}>
@@ -172,6 +163,21 @@ export function AppEnjambre() {
           </div>
         )}
       </header>
+      {pct && caso && (
+        <div className={estilos.contra}>
+          <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
+        </div>
+      )}
+      <div className={estilos.mando}>
+        {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
+        {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
+        {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
+          <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
+        )}
+        {fase === 'cargando' && <p className={estilos.cargando}>Conectando con el motor de simulación</p>}
+      </div>
+      </div>
+      <div className={estilos.derecha}>
       <div className={estilos.nota}>
         <Insignia conexion={conexion} agentes={muestra.total} />
         {pct && (
@@ -189,37 +195,20 @@ export function AppEnjambre() {
           </p>
         )}
       </div>
-
       {pct && caso && (
-        <>
-          <div className={estilos.contra}>
-            <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
-          </div>
-          <div className={estilos.favor}>
-            <BloquePostura
-              postura="favor"
-              porcentaje={pct.favor}
-              personas={caso.conteo.favor}
-              unidad="agentes"
-              aspecto={1}
-              compacto={angosto}
-              encabezado={viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : undefined}
-              nota={viendo > 0 && casos[0].listo ? textoConversos(casos[0], caso, muestra.agentes) : undefined}
-            />
-          </div>
-        </>
+        <div className={estilos.favor}>
+          <BloquePostura
+            postura="favor"
+            porcentaje={pct.favor}
+            personas={caso.conteo.favor}
+            unidad="agentes"
+            aspecto={1}
+            compacto={angosto}
+            encabezado={viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : undefined}
+            nota={viendo > 0 && casos[0].listo ? textoConversos(casos[0], caso, muestra.agentes) : undefined}
+          />
+        </div>
       )}
-      {puntos && (fase === 'corriendo' || fase === 'resultados') && conexion && (
-        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
-      )}
-      <div className={estilos.mando} ref={mando}>
-        {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
-        {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
-        {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
-          <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
-        )}
-        {fase === 'cargando' && <p className={estilos.cargando}>Conectando con el motor de simulación</p>}
-      </div>
       <div className={estilos.utiles}>
         {fase === 'corriendo' ? (
           <Boton variante="secundario" onClick={sim.detener}>
@@ -229,6 +218,10 @@ export function AppEnjambre() {
           <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
         )}
       </div>
+      </div>
+      {puntos && (fase === 'corriendo' || fase === 'resultados') && conexion && (
+        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
+      )}
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
       )}

@@ -15,23 +15,49 @@
   height: 100%;
 }
 
-.arriba,
-.nota,
-.avance,
-.contra,
-.favor,
-.mando,
-.utiles {
+/*
+ * Dos columnas a los costados del país. Dentro de cada una los bloques van en fila, uno
+ * debajo del otro: el título arriba, la cifra al medio y el mando abajo. Así no se pisan
+ * en ningún tamaño de ventana. El lienzo reserva este mismo ancho (ver EscenaEnjambre).
+ */
+.izquierda,
+.derecha {
   position: absolute;
+  top: var(--e5);
+  bottom: var(--e5);
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e4);
+  width: min(28vw, 26rem);
+  pointer-events: none;
   transition: opacity var(--medio);
 }
 
-.arriba {
-  top: var(--e5);
+.izquierda {
   left: var(--gutter);
-  width: min(32vw, 34rem);
-  pointer-events: none;
+}
+
+.derecha {
+  right: var(--gutter);
+  align-items: flex-end;
+}
+
+.derecha {
+  z-index: 2;
+}
+
+.mando,
+.utiles,
+.nota,
+.completo {
+  pointer-events: auto;
+}
+
+.arriba {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .marca {
@@ -40,7 +66,7 @@
 }
 
 .titular {
-  font: 500 clamp(2.2rem, 0.9rem + 3.3vw, 4.6rem) / 1 var(--fuente-voz);
+  font: 500 clamp(1.8rem, min(1rem + 3.4vw, 9vh), 4.4rem) / 1 var(--fuente-voz);
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
@@ -55,7 +81,7 @@
 
 .pregunta {
   margin-top: 0;
-  font: 500 clamp(1.3rem, 0.9rem + 1.1vw, 2rem) / 1.12 var(--fuente-voz);
+  font: 500 clamp(1.2rem, min(0.9rem + 1.1vw, 4.4vh), 2rem) / 1.12 var(--fuente-voz);
   letter-spacing: -0.01em;
 }
 
@@ -69,8 +95,6 @@
 }
 
 .nota {
-  top: var(--e5);
-  right: var(--gutter);
   display: grid;
   justify-items: end;
   gap: var(--e4);
@@ -129,7 +153,10 @@
 }
 
 .pregunta small {
-  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
   margin-top: var(--e3);
   font: 500 var(--texto-m) / 1.35 var(--fuente-ui);
   letter-spacing: 0;
@@ -156,35 +183,32 @@
   white-space: nowrap;
 }
 
+/* La cifra ocupa el centro de su columna; el mando y el botón quedan al pie. */
 .contra,
 .favor {
-  top: 50%;
-  translate: 0 -46%;
+  flex: none;
+  margin-block: auto;
 }
 
-.contra {
-  left: var(--gutter);
-}
-
-/* El contador va debajo del título, en la misma columna: nunca se pisan. */
 .avance {
-  position: static;
-  margin-top: var(--e6);
+  margin-top: var(--e5);
 }
 
-.favor {
-  right: var(--gutter);
-}
-
-.mando {
-  left: var(--gutter);
-  bottom: var(--e5);
-}
-
+.mando,
 .utiles {
-  right: var(--gutter);
-  bottom: var(--e5);
-  z-index: 2;
+  flex: none;
+  margin-top: auto;
+}
+
+.contra ~ .mando,
+.favor ~ .utiles {
+  margin-top: 0;
+}
+
+.app[data-fase='preparar'] .mando {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 /* Con la interfaz oculta queda un botón tenue para recuperarla sin saber la tecla. */
@@ -220,15 +244,19 @@
     padding: var(--e4) var(--gutter);
   }
 
-  .lienzo,
-  .arriba,
-  .nota,
-  .avance,
+  .izquierda,
+  .derecha {
+    display: contents;
+  }
+
+  .lienzo {
+    position: static;
+  }
+
   .contra,
   .favor,
   .mando {
-    position: static;
-    translate: none;
+    margin: 0;
   }
 
   .lienzo {
@@ -272,84 +300,17 @@
   }
 
   .utiles {
+    position: absolute;
     top: var(--e3);
     right: var(--gutter);
-    bottom: auto;
-  }
-}
-
-.climax {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  display: grid;
-  place-items: center;
-  padding: var(--gutter);
-  background: color-mix(in srgb, var(--mar) 55%, transparent);
-  pointer-events: none;
-  animation: velo 500ms ease-out both;
-}
-
-@keyframes velo {
-  from {
-    background: transparent;
+    z-index: 2;
+    margin: 0;
   }
 }
 
 @media (max-width: 899px) {
   .pista {
     display: none;
-  }
-}
-
-
-@media (min-width: 900px) {
-  .climax {
-    place-items: start center;
-    padding-top: 6vh;
-  }
-
-  /* Las cifras cuelgan desde su borde superior: lo que se agrega debajo no las empuja contra la tarjeta de la encuesta. */
-  .contra,
-  .favor {
-    top: 41%;
-    translate: none;
-  }
-}
-
-@media (min-width: 900px) and (max-height: 800px) {
-  .contra,
-  .favor {
-    top: 49%;
-  }
-}
-
-/* Mientras la comparación con la encuesta ocupa la pantalla, lo que queda debajo se retira. */
-.app[data-climax] .arriba,
-.app[data-climax] .nota {
-  opacity: 0;
-}
-
-/*
- * Entrada: el titular va arriba y el mando abajo, en la misma columna. El titular toma el alto
- * que deja el mando y su letra se calcula con ese alto, así nunca quedan uno encima del otro.
- */
-@media (min-width: 900px) {
-  .app[data-fase='preparar'] .arriba,
-  .app[data-fase='cargando'] .arriba {
-    height: calc(100dvh - var(--alto-mando, 0px) - var(--e5) * 3);
-    overflow: hidden;
-    container-type: size;
-  }
-
-  .app[data-fase='preparar'] .titular,
-  .app[data-fase='cargando'] .titular {
-    font-size: clamp(1.5rem, min(1rem + 3.4vw, 100cqh / 3.3), 4.4rem);
-  }
-
-  .app[data-fase='preparar'] .mando {
-    max-height: calc(100dvh - var(--e5) * 2 - 5rem);
-    overflow-y: auto;
   }
 }
 
@@ -362,4 +323,43 @@
   line-height: 1.3;
   color: var(--tinta);
   text-align: right;
+}
+
+/* Si aun así falta alto, se recorta la nota de arriba antes que sacar de pantalla el botón del pie. */
+.nota {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-height: 800px) {
+  .nota {
+    gap: var(--e2);
+  }
+
+  .izquierda,
+  .derecha {
+    gap: var(--e3);
+  }
+}
+
+/* Pantallas angostas: el mapa conserva su alto y, si el contenido no cabe, la página se desplaza. */
+@media (max-width: 899px) {
+  .app {
+    grid-template-rows: max-content 38vh max-content max-content max-content;
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  .lienzo {
+    height: 38vh;
+  }
+
+  /* Sin alto mínimo cero: si no, la grilla encoge estas filas y los bloques se montan. */
+  .arriba,
+  .nota,
+  .app[data-fase='preparar'] .mando {
+    min-height: max-content;
+    overflow: visible;
+  }
 }
