@@ -185,8 +185,12 @@ export class CapaPersonas {
       const cuadro = reducido ? 0 : Math.floor(ahora * 6 + this.fase[i]) % CUADROS;
       const atlas = h > 40 ? o.grande : o.chico;
       const [sx, sy, sw, sh] = celdaAtlas(atlas, this.aspectos[i], this.visto[i], cuadro);
+      // Al saltar se estira y al caer se achata, como una pelota blanda.
+      const blando = salto < 1 ? Math.sin(Math.PI * 2 * salto) * 0.12 : 0;
       if (i === o.elegida || i === o.apuntada) this.anillo(o, px, py, w, i === o.elegida);
-      ctx.drawImage(atlas.lienzo, sx, sy, sw, sh, px - w / 2, py - h * PIES_RELATIVO - sube - respira - (i === o.apuntada ? 3 : 0), w, h);
+      const wb = w * (1 - blando);
+      const hb = h * (1 + blando);
+      ctx.drawImage(atlas.lienzo, sx, sy, sw, sh, px - wb / 2, py - hb * PIES_RELATIVO - sube - respira - (i === o.apuntada ? 3 : 0), wb, hb);
       const falta = this.tCambio[i] - ahora;
       if (this.barrido && falta > 0 && falta < AVISO) this.globo(o, px + w * 0.3, py - h * 0.8);
     }

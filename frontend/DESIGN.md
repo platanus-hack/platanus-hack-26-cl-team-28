@@ -35,7 +35,9 @@ Paleta de tres tintas de imprenta sobre mar frío: azul cobalto (a favor), mosta
 con tinta azul negra para el trazo. El color nunca va solo: a favor levanta los brazos y sonríe, indecisa se ladea
 bajo un signo de pregunta, en contra se eriza en púas y frunce el ceño. Toda barra lleva su porcentaje escrito.
 
-Las figuras no son personas dibujadas: son criaturas redondas con patas cortas y dos ojos. Una multitud de siluetas
+Las figuras no son personas dibujadas: son criaturas blandas y redondas, con pies chicos, ojos grandes con brillo,
+mejillas y algo en la cabeza (un brote, un mechón, orejas, una antena). Antes de responder cada una tiene su propio
+color pastel; al responder toma el color de su postura y cambia de cara. Una multitud de siluetas
 humanas sobre un mapa resultaba inquietante; una mascota abstracta representa a un grupo sin retratar a nadie.
 
 **Densidad según la distancia.** De lejos, las figuras que quedarían encimadas se funden en una sola más grande, con

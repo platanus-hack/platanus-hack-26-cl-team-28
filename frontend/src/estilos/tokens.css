@@ -25,7 +25,16 @@
   --contra: #e0432b;
   --contra-texto: #b02c18;
   --indecisa: #f0b429;
-  --neutra: #d5dde8;
+  /* Cuerpos de las criaturas antes de responder: cada una tiene su color, más suave que los de postura. */
+  --pastel-1: #bfe8d2;
+  --pastel-2: #dccff6;
+  --pastel-3: #ffd8c0;
+  --pastel-4: #ffcde0;
+  --pastel-5: #c2e6f4;
+  --pastel-6: #e6efb2;
+  --rubor: #ff7f9c;
+  --brote: #5cc08a;
+  --ojo: #fff;
   --indecisa-texto: #765300;
   --foco: #2450d6;
 
