@@ -1,0 +1,32 @@
+{
+ "A": {
+  "nombre": "Senado",
+  "financiamiento": "fondo",
+  "copago": "sin_ayuda",
+  "transicion": "mes12"
+ },
+ "B": {
+  "nombre": "Cámara",
+  "financiamiento": "cotizacion",
+  "copago": "suplemento",
+  "transicion": "mes48"
+ },
+ "C": {
+  "nombre": "Cámara + tope",
+  "financiamiento": "cotizacion",
+  "copago": "tope",
+  "transicion": "mes48"
+ },
+ "D": {
+  "nombre": "Sin copago",
+  "financiamiento": "cotizacion",
+  "copago": "sin_copago",
+  "transicion": "mes48"
+ },
+ "E": {
+  "nombre": "Híbrida",
+  "financiamiento": "fondo",
+  "copago": "suplemento",
+  "transicion": "mes12"
+ }
+}

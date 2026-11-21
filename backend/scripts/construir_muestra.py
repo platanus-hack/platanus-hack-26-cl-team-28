@@ -99,7 +99,7 @@ COLUMNAS_CASEN = sorted(
     set(DEL_HOGAR) | set(DE_LA_PERSONA)
     | {"folio", "id_persona", "region", "area", "expr", "expr_osig", "edad", "sexo", "pco1", "ecivil", "esc",
        "activ", "oficio1_08", "lugar_nac", "pueblos_indigenas", "disc_wg", "o28c", "o28a_hr", "o28a_min",
-       "s5", "genero", "ten_viv", "v1", "ind_hacina", "r17a", "depen_fun"}
+       "s5", "genero", "ten_viv", "v1", "ind_hacina", "r17a", "depen_fun", "e3", "depen"}
 )
 
 
@@ -208,6 +208,8 @@ def grupos_persona(df):
     df["edad5"] = (edad // 5 * 5).astype("int64")
     df["edad10"] = np.select([edad < 15, edad < 25, edad < 35, edad < 45, edad < 55, edad < 65, edad < 75], [0, 15, 25, 35, 45, 55, 65], 75)
     df["edadb"] = np.select([edad < 15, edad < 65], [0, 15], 65)
+    # Etapa escolar: 6 a 13 (básica) y 14 a 17 (media).
+    df["etapa"] = np.select([edad < 6, edad < 14, edad < 18], [0, 6, 14], 18)
     esc = df["esc"]
     df["educ5"] = np.select(
         [df["edad"] < 15, esc.isna(), esc < 8, esc < 12, esc == 12, esc < 17], [0, 9, 1, 2, 3, 4], 5
@@ -237,6 +239,9 @@ def rasgos_hogar(per, hog):
     r = r.join(hog.set_index("hk")[["region", "area", "ten", "viv", "hacin", "inet"]])
     r["macro"] = r["region"].map(MACROZONA)
     r["tam5"] = r["tam"].clip(upper=5)
+    # Composición por edad: 0 solo adultos menores de 65, 1 con menores de 18, 2 con mayores de 65, 3 con ambos.
+    # El ingreso de los hogares con adultos mayores tiene un piso (pensiones) que el valor predicho no recoge.
+    r["comp"] = (r["n_men18"] > 0).astype("int64") + 2 * (r["n_65"] > 0).astype("int64")
     r["tam6"] = r["tam"].clip(upper=6)
     r["n_ocup"] = r["n_ocup"].clip(upper=3)
     r["n_men18"] = r["n_men18"].clip(upper=3)
@@ -413,39 +418,35 @@ def etiquetas_casen(casen_dir, variables):
 # ---------------------------------------------------------------- principal
 
 
-def main():
-    if len(sys.argv) != 5:
-        sys.exit(__doc__)
-    censo, casen_dir, salida, contexto = (Path(a) for a in sys.argv[1:])
-    salida.mkdir(parents=True, exist_ok=True)
-    contexto.mkdir(parents=True, exist_ok=True)
-    rng = np.random.default_rng(SEMILLA)
-    con = duckdb.connect()
-
-    print("1. Sorteando la muestra del censo ...", flush=True)
-    per, hog, edades, (n_per, n_hog, n_fuera) = sortear(con, censo, rng)
-    per = completar_edad(per, edades, rng)
-    per = derivar_familia(per)
-    hog["hk"] = hog["id_vivienda"] * 100 + hog["id_hogar"]
-    en_hogar = (per["tipo_operativo"] == 2).to_numpy()
-    print(f"   {len(hog):,} hogares y {len(per):,} personas ({en_hogar.sum():,} en hogares)")
-
-    print("2. Leyendo Casen ...", flush=True)
+def leer_casen(con, casen_dir):
+    """Paso 2: Casen con las llaves estandarizadas. Devuelve (casen, personas, hogares)."""
     cols = ", ".join(COLUMNAS_CASEN)
     casen = con.execute(f"select {cols} from '{(casen_dir / 'casen_2024.parquet').as_posix()}' order by folio, id_persona").df()
     casen = casen[casen["folio"].isin(casen.loc[casen["dau"].notna(), "folio"])].reset_index(drop=True)
     cp, ch = estandarizar_casen(casen)
-    rp, rh = estandarizar_censo(per[en_hogar].reset_index(drop=True), hog)
     cp["expr"] = casen["expr"].to_numpy()
+    return casen, cp, ch
 
-    print("3. Emparejando hogares (ingresos, vehículos, redes, alimentación, discriminación) ...", flush=True)
+
+def imputar_casen(per, hog, casen, cp, ch, rng, avisar=lambda texto: print(texto, flush=True)):
+    """Pasos 3 y 4: copia a hogares y personas del censo los datos de un donante parecido de Casen.
+
+    `per` y `hog` son las personas y los hogares del censo, ya con la edad completa, los datos
+    de familia y la llave `hk`. Sirve igual para una muestra que para una región entera.
+    Devuelve (personas con las columnas imputadas, hogares, datos para el informe).
+    """
+    en_hogar = (per["tipo_operativo"] == 2).to_numpy()
+    rp, rh = estandarizar_censo(per[en_hogar].reset_index(drop=True), hog)
+
+
+    avisar("3. Emparejando hogares (ingresos, vehículos, redes, alimentación, discriminación) ...")
     dh = rasgos_hogar(cp, ch).merge(casen[casen["pco1"] == 1].drop_duplicates("folio")[["folio", "expr", *DEL_HOGAR]],
                                    left_on="hk", right_on="folio")
     hh = rasgos_hogar(rp, rh)
     hh = hog[["hk"]].merge(hh, on="hk", how="left")  # mismo orden que `hog`
     dh["pred"], hh["pred"], r2 = predecir_ingreso(dh, hh)
-    clases = [["region", "area", "tam5", "j_inmig", "j_indig"], ["macro", "area", "tam5", "j_inmig", "j_indig"],
-              ["area", "tam5", "j_inmig"], ["tam5"]]
+    clases = [["region", "area", "tam5", "comp", "j_inmig", "j_indig"], ["macro", "area", "tam5", "comp", "j_inmig", "j_indig"],
+              ["area", "tam5", "comp", "j_inmig"], ["tam5", "comp"], ["tam5"]]
     don_h, nivel_h = emparejar_por_prediccion(hh, dh, clases, "expr", VECINOS, rng)
     for origen, destino in DEL_HOGAR.items():
         hog[destino] = dh[origen].to_numpy()[don_h]
@@ -453,9 +454,9 @@ def main():
     hog["inseg_alim_n"] = (hog[[d for o, d in DEL_HOGAR.items() if o.startswith("r8")]] == 1).sum(axis=1)
     hog["casen_folio_donante"] = dh["folio"].to_numpy()[don_h]
     hog["nivel_match_hogar"] = nivel_h
-    print(f"   R2 ponderado del modelo de ingreso: {r2:.3f}; niveles usados: {np.bincount(nivel_h)[1:].tolist()}")
+    avisar(f"   R2 ponderado del modelo de ingreso: {r2:.3f}; niveles usados: {np.bincount(nivel_h)[1:].tolist()}")
 
-    print("4. Emparejando personas (previsión, trabajo, participación, cuidados) ...", flush=True)
+    avisar("4. Emparejando personas (previsión, trabajo, participación, cuidados) ...")
     decil_h = hog.set_index("hk")["decil_ingreso"]
     rp["decil"] = rp["hk"].map(decil_h).astype("int64")
     # El servicio doméstico puertas adentro no tiene decil propio en Casen: se usa el del hogar.
@@ -522,18 +523,51 @@ def main():
     imput.loc[falta, "hijos_total"] = np.maximum(casen.loc[filtro, "s5"].to_numpy()[d], p_hog.loc[falta, "hijos_en_hogar"].fillna(0).to_numpy())
     imput["hijos_origen"] = np.select([observado, falta], ["censo", "casen"], None)
 
-    print("5. Escribiendo resultados ...", flush=True)
-    hog.insert(0, "id_hogar_muestra", np.arange(1, len(hog) + 1))
+    # Tipo de colegio de los menores de 6 a 17 años que asisten a clases. Depende sobre todo del ingreso
+    # del hogar y del lugar: es lo que se usa para emparejar. Códigos 1 a 5 de Casen (colegios).
+    escolar = (rp["edad"].between(6, 17) & (p_hog["p33_edu_asiste"] == 1)).to_numpy()
+    filtro = (casen["edad"].between(6, 17) & (casen["e3"] == 1) & casen["depen"].between(1, 5)).to_numpy()
+    dc = cp[filtro].reset_index(drop=True)
+    d, _ = emparejar(rp[escolar], dc, [["decil", "region", "area", "etapa"], ["decil", "macro", "area", "etapa"], ["decil", "area", "etapa"],
+                                       ["quintil", "area"], ["quintil"], []], "expr", rng)
+    imput["dependencia_colegio"] = np.nan
+    imput.loc[escolar, "dependencia_colegio"] = casen.loc[filtro, "depen"].to_numpy()[d]
+
     hog["n_personas"] = hog["hk"].map(per[en_hogar].groupby("hk").size()).to_numpy()
-    completo = pd.DataFrame(index=per.index, columns=imput.columns)
-    completo.loc[en_hogar] = imput.to_numpy()
-    fuera = ~en_hogar
-    mujeres_fuera = fuera & (per["p46a_tot_hijs_nac"] >= 0).fillna(False).to_numpy(bool)
+    # Las personas fuera de hogares quedan sin datos de Casen.
+    completo = imput.set_axis(per.index[en_hogar]).reindex(per.index)
+    mujeres_fuera = ~en_hogar & (per["p46a_tot_hijs_nac"] >= 0).fillna(False).to_numpy(bool)
     completo.loc[mujeres_fuera, "hijos_total"] = per.loc[mujeres_fuera, "p46a_tot_hijs_nac"]
     completo.loc[mujeres_fuera, "hijos_origen"] = "censo"
-    numericas = [c for c in imput.columns if c != "hijos_origen"]
-    completo[numericas] = completo[numericas].apply(pd.to_numeric)
     per = pd.concat([per, completo], axis=1)
+    return per, hog, dict(r2=r2, nivel_h=nivel_h, nivel_p=nivel_p)
+
+
+
+def main():
+    if len(sys.argv) != 5:
+        sys.exit(__doc__)
+    censo, casen_dir, salida, contexto = (Path(a) for a in sys.argv[1:])
+    salida.mkdir(parents=True, exist_ok=True)
+    contexto.mkdir(parents=True, exist_ok=True)
+    rng = np.random.default_rng(SEMILLA)
+    con = duckdb.connect()
+
+    print("1. Sorteando la muestra del censo ...", flush=True)
+    per, hog, edades, (n_per, n_hog, n_fuera) = sortear(con, censo, rng)
+    per = completar_edad(per, edades, rng)
+    per = derivar_familia(per)
+    hog["hk"] = hog["id_vivienda"] * 100 + hog["id_hogar"]
+    en_hogar = (per["tipo_operativo"] == 2).to_numpy()
+    print(f"   {len(hog):,} hogares y {len(per):,} personas ({en_hogar.sum():,} en hogares)")
+
+    print("2. Leyendo Casen ...", flush=True)
+    casen, cp, ch = leer_casen(con, casen_dir)
+    per, hog, imputacion = imputar_casen(per, hog, casen, cp, ch, rng)
+    r2, nivel_h, nivel_p = imputacion["r2"], imputacion["nivel_h"], imputacion["nivel_p"]
+
+    print("5. Escribiendo resultados ...", flush=True)
+    hog.insert(0, "id_hogar_muestra", np.arange(1, len(hog) + 1))
     per.insert(0, "id_persona_muestra", np.arange(1, len(per) + 1))
     per.insert(1, "id_hogar_muestra", per["hk"].map(hog.set_index("hk")["id_hogar_muestra"]).astype("Int64"))
     enteras = [c for c in per.columns if c not in ("hijos_origen", "cod_caenes") and per[c].dtype.kind == "f"
@@ -561,7 +595,7 @@ def main():
     todo.to_csv(salida / "muestra.csv", index=False)
     print(f"   tabla única: {len(todo):,} filas y {todo.shape[1]} columnas")
 
-    etiquetas, descripcion = etiquetas_casen(casen_dir, {**DEL_HOGAR, **DE_LA_PERSONA, "genero": "genero"})
+    etiquetas, descripcion = etiquetas_casen(casen_dir, {**DEL_HOGAR, **DE_LA_PERSONA, "genero": "genero", "depen": "dependencia_colegio"})
     etiquetas.to_csv(contexto / "etiquetas_casen.csv", index=False)
 
     documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con,
@@ -660,7 +694,7 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
     mixtos = per[en_hogar].groupby("id_hogar_muestra")["prevision_salud"].nunique().gt(1).mean() * 100
     mixtos_casen = np.average(casen.groupby("folio")["s13"].nunique().gt(1), weights=casen.groupby("folio")["expr"].first()) * 100
 
-    niveles_h = np.bincount(info["nivel_h"], minlength=5)[1:]
+    niveles_h = np.bincount(info["nivel_h"], minlength=6)[1:]
     niveles_p = np.bincount(info["nivel_p"], minlength=12)[1:]
     val = [
         "# Validación de la muestra del 1 %",
@@ -702,7 +736,8 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
         "",
         tabla_md(["Nivel", "Clase", "Hogares", "%"], [
             (i + 1, c, miles(n), dec(n / len(hog) * 100)) for i, (c, n) in enumerate(zip(
-                ["región, área, tamaño, origen de la jefatura", "macrozona, área, tamaño, origen de la jefatura", "área, tamaño, jefatura inmigrante", "tamaño"], niveles_h))]),
+                ["región, área, tamaño, composición por edad, origen de la jefatura", "macrozona, área, tamaño, composición por edad, origen de la jefatura",
+                 "área, tamaño, composición por edad, jefatura inmigrante", "tamaño y composición por edad", "tamaño"], niveles_h))]),
         "",
         "Personas según el nivel de coincidencia con su donante (`nivel_match_persona`). Del 1 al 5 coinciden sexo, edad quinquenal, educación, actividad y discapacidad; del 6 en adelante la coincidencia es más gruesa:",
         "",
@@ -746,6 +781,7 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
         ("`dependencia_grado`", "15 años o más: 0 no dependiente, 1 severa, 2 moderada, 3 leve."),
         ("`es_cuidador`", "1 si cuida a un integrante del hogar con dependencia."),
         ("`tiempo_traslado_min`", "Minutos de viaje al trabajo, para ocupados que se trasladan. Se emparejó por el medio de transporte declarado en el censo (`p45_medio_transporte`)."),
+        ("`dependencia_colegio`", "Tipo de colegio de quienes tienen entre 6 y 17 años y asisten a clases: 1 municipal, 2 particular subvencionado, 3 particular pagado, 4 corporación de administración delegada, 5 servicio local de educación. Se emparejó por el decil del hogar, la región, la zona y la etapa (6 a 13 o 14 a 17 años)."),
         ("`genero`", f"18 años o más: {cats('genero')}."),
         ("`nivel_match_persona`", "Qué tan fino fue el emparejamiento (1 el mejor, 11 el peor). Ver `validacion.md`."),
         ("`casen_folio_donante`, `casen_id_persona_donante`", "Identifican a la persona de Casen de la que se copiaron los datos."),
@@ -778,11 +814,11 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
         "2. **Edad.** En las 51 comunas donde el censo solo publica el tramo quinquenal, la edad exacta se sorteó según la distribución de su región, sexo y tramo.",
         "3. **Familia.** Hijos, hermanos y educación de los padres se dedujeron del parentesco dentro del hogar. Solo existen para quienes viven juntos.",
         f"4. **Hogares.** Con Casen se ajustó un modelo del ingreso per cápita según región, área, tamaño, características de la jefatura, ocupados, educación, tenencia, tipo de vivienda, hacinamiento e internet. "
-        f"Dentro de cada combinación de región, área y tamaño, los hogares de la muestra y los de Casen se ordenan por su ingreso predicho, y cada hogar de la muestra recibe un donante de Casen que ocupa su misma posición relativa (con un margen aleatorio de {VECINOS} vecinos). "
+        f"Dentro de cada combinación de región, área, tamaño y composición por edad (con menores de 18, con mayores de 65, con ambos o con ninguno), los hogares de la muestra y los de Casen se ordenan por su ingreso predicho, y cada hogar de la muestra recibe un donante de Casen que ocupa su misma posición relativa (con un margen aleatorio de {VECINOS} vecinos). "
         "Se empareja por posición y no por valor porque el censo registra algo menos de empleo y educación que Casen; así la distribución de ingresos de cada clase queda igual a la de Casen. De ese donante se copian ingresos, vehículos, redes de apoyo, inseguridad alimentaria y discriminación.",
         "5. **Personas.** A cada persona se le sorteó un donante de Casen del mismo sexo, edad, educación, actividad y discapacidad, y en lo posible del mismo decil, región, ocupación y parentesco. "
         "El decil es el que se imputó a su hogar en el paso anterior, y los integrantes de un hogar se emparejan además por el sistema de salud de su jefatura. De ese donante se copian previsión, datos del trabajo, participación y cuidados.",
-        "6. **Sorteos aparte.** El tiempo de traslado, el género y los hijos de quienes el censo no pregunta tienen cada uno su propio emparejamiento, con las llaves que más les importan.",
+        "6. **Sorteos aparte.** El tiempo de traslado, el género, los hijos de quienes el censo no pregunta y el tipo de colegio de los menores tienen cada uno su propio emparejamiento, con las llaves que más les importan.",
         "",
         f"La semilla del sorteo está fija (`SEMILLA = {SEMILLA}`), así que volver a ejecutar el script produce la misma muestra.",
         "",

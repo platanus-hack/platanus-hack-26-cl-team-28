@@ -16,10 +16,15 @@
 set -euo pipefail
 
 modelo="${1:-qwen9}"
+# El contexto se reparte entre los slots. Un perfil completo de scripts/personas_muestra.py son
+# unos 1.200 tokens (hasta 1.400) y con la política y las preguntas el prompt pasa de 2.000:
+# cada slot necesita unos 2.560. Con perfiles cortos (--secciones) alcanza con menos.
 slots=16
-ctx=20480
+ctx=40960
 case "$modelo" in
-    qwen9)   repo="unsloth/Qwen3.5-9B-GGUF:Q4_K_M" ;;
+    # Mismos 20.480 tokens de contexto que antes, que es lo que cabe en 8 GB, en la mitad de slots. Sin medir todavía.
+    qwen9)   repo="unsloth/Qwen3.5-9B-GGUF:Q4_K_M"; slots=8; ctx=20480 ;;
+    # Con 32.768 ocupó 4,7 GB de los 8; 40.960 está sin medir.
     qwen4)   repo="unsloth/Qwen3.5-4B-GGUF:Q4_K_M" ;;
     # 7 GB de pesos en 8 GB de VRAM: queda espacio para menos contexto. Sin medir todavía.
     gemma12) repo="google/gemma-4-12B-it-qat-q4_0-gguf"; slots=4; ctx=8192 ;;

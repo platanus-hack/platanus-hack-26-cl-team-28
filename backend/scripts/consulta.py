@@ -18,6 +18,13 @@ Vistas:
     muestra_personas, muestra_hogares la misma muestra separada en personas y hogares (ver contexto/muestra/)
     etiquetas_casen                   columna, variable_casen, valor, etiqueta de las columnas imputadas
     casen                             Encuesta Casen 2024 completa (881 variables; ponderar con expr)
+    muestra_actitudes                 actitudes políticas imputadas a los adultos de la muestra (ver contexto/muestra/actitudes.md)
+    etiquetas_cep                     columna, variable_cep, valor, etiqueta de las actitudes imputadas
+    cep                               Encuesta CEP N° 96, abril-mayo 2026 (1.466 entrevistas; ponderar con pond)
+    chile                             población completa en una sola tabla: 18,5 M de personas con su hogar, su vivienda,
+                                      lo imputado desde Casen y, los adultos, sus opiniones de la CEP (ver contexto/chile/)
+    chile_personas, chile_hogares,
+    chile_actitudes                   la misma población separada en personas, hogares y opiniones
 
 Sin --todo se muestran como máximo 200 filas. Con --csv la salida es CSV completo.
 """
@@ -51,6 +58,19 @@ def conectar():
     ruta = RAIZ / "data" / "casen2024" / "casen_2024.parquet"
     if ruta.exists():
         con.execute(f"create view casen as select * from read_parquet('{ruta.as_posix()}')")
+    ruta = RAIZ / "data" / "muestra" / "actitudes.parquet"
+    if ruta.exists():
+        con.execute(f"create view muestra_actitudes as select * from read_parquet('{ruta.as_posix()}')")
+    ruta = RAIZ / "contexto" / "muestra" / "etiquetas_cep.csv"
+    if ruta.exists():
+        con.execute(f"create view etiquetas_cep as select * from read_csv('{ruta.as_posix()}')")
+    for vista, archivo in (("chile", "chile"), ("chile_personas", "personas"), ("chile_hogares", "hogares"), ("chile_actitudes", "actitudes")):
+        ruta = RAIZ / "data" / "chile" / f"{archivo}.parquet"
+        if ruta.exists():
+            con.execute(f"create view {vista} as select * from read_parquet('{ruta.as_posix()}')")
+    ruta = RAIZ / "data" / "cep96" / "cep96.parquet"
+    if ruta.exists():
+        con.execute(f"create view cep as select * from read_parquet('{ruta.as_posix()}')")
     for t in ("etiquetas", "comunas", "territorios", "territorios_especificos"):
         con.execute(f"create view {t} as select * from read_csv('{(CONTEXTO / f'{t}.csv').as_posix()}')")
     for t in ("manzana_entidad", "zona_localidad", "urbanos", "aldeas"):

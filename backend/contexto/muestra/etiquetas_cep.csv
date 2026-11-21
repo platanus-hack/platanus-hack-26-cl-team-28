@@ -1,0 +1,448 @@
+columna,variable_cep,valor,etiqueta
+problema_1,percepcion_1_a,1,Pensiones
+problema_1,percepcion_1_a,2,Corrupción
+problema_1,percepcion_1_a,3,"Delincuencia, asaltos y robos"
+problema_1,percepcion_1_a,4,Derechos humanos
+problema_1,percepcion_1_a,5,Educación
+problema_1,percepcion_1_a,6,Empleo
+problema_1,percepcion_1_a,7,Pobreza
+problema_1,percepcion_1_a,8,Protección del medio ambiente
+problema_1,percepcion_1_a,9,Narcotráfico
+problema_1,percepcion_1_a,10,Salud
+problema_1,percepcion_1_a,11,Sueldos
+problema_1,percepcion_1_a,12,Transporte público
+problema_1,percepcion_1_a,13,Vivienda
+problema_1,percepcion_1_a,14,Inmigración
+problema_1,percepcion_1_a,16,Desigualdad
+problema_1,percepcion_1_a,17,"Alzas de precios, inflación"
+problema_1,percepcion_1_a,26,Violencia
+problema_1,percepcion_1_a,-8,No sabe
+problema_2,percepcion_1_b,1,Pensiones
+problema_2,percepcion_1_b,2,Corrupción
+problema_2,percepcion_1_b,3,"Delincuencia, asaltos y robos"
+problema_2,percepcion_1_b,4,Derechos humanos
+problema_2,percepcion_1_b,5,Educación
+problema_2,percepcion_1_b,6,Empleo
+problema_2,percepcion_1_b,7,Pobreza
+problema_2,percepcion_1_b,8,Protección del medio ambiente
+problema_2,percepcion_1_b,9,Narcotráfico
+problema_2,percepcion_1_b,10,Salud
+problema_2,percepcion_1_b,11,Sueldos
+problema_2,percepcion_1_b,12,Transporte público
+problema_2,percepcion_1_b,13,Vivienda
+problema_2,percepcion_1_b,14,Inmigración
+problema_2,percepcion_1_b,16,Desigualdad
+problema_2,percepcion_1_b,17,"Alzas de precios, inflación"
+problema_2,percepcion_1_b,26,Violencia
+problema_2,percepcion_1_b,-9,No contesta
+problema_3,percepcion_1_c,1,Pensiones
+problema_3,percepcion_1_c,2,Corrupción
+problema_3,percepcion_1_c,3,"Delincuencia, asaltos y robos"
+problema_3,percepcion_1_c,4,Derechos humanos
+problema_3,percepcion_1_c,5,Educación
+problema_3,percepcion_1_c,6,Empleo
+problema_3,percepcion_1_c,7,Pobreza
+problema_3,percepcion_1_c,8,Protección del medio ambiente
+problema_3,percepcion_1_c,9,Narcotráfico
+problema_3,percepcion_1_c,10,Salud
+problema_3,percepcion_1_c,11,Sueldos
+problema_3,percepcion_1_c,12,Transporte público
+problema_3,percepcion_1_c,13,Vivienda
+problema_3,percepcion_1_c,14,Inmigración
+problema_3,percepcion_1_c,16,Desigualdad
+problema_3,percepcion_1_c,17,"Alzas de precios, inflación"
+problema_3,percepcion_1_c,26,Violencia
+problema_3,percepcion_1_c,-9,No contesta
+problema_3,percepcion_1_c,-8,No sabe
+economia_pais,percepcion_2,1,Muy mala
+economia_pais,percepcion_2,2,Mala
+economia_pais,percepcion_2,3,"Ni buena, ni mala"
+economia_pais,percepcion_2,4,Buena
+economia_pais,percepcion_2,5,Muy buena
+economia_pais,percepcion_2,-9,No contesta
+economia_pais,percepcion_2,-8,No sabe
+economia_pais_futuro,percepcion_3,1,Mejorará
+economia_pais_futuro,percepcion_3,2,No cambiará
+economia_pais_futuro,percepcion_3,3,Empeorará
+economia_pais_futuro,percepcion_3,-9,No contesta
+economia_pais_futuro,percepcion_3,-8,No sabe
+economia_personal,percepcion_5,1,Muy mala
+economia_personal,percepcion_5,2,Mala
+economia_personal,percepcion_5,3,"Ni buena, ni mala"
+economia_personal,percepcion_5,4,Buena
+economia_personal,percepcion_5,5,Muy buena
+economia_personal,percepcion_5,-9,No contesta
+economia_personal,percepcion_5,-8,No sabe
+economia_personal_futuro,percepcion_6,1,Mucho mejor
+economia_personal_futuro,percepcion_6,2,Mejor
+economia_personal_futuro,percepcion_6,3,Igual
+economia_personal_futuro,percepcion_6,4,Peor
+economia_personal_futuro,percepcion_6,5,Mucho peor
+economia_personal_futuro,percepcion_6,-8,No sabe
+situacion_politica,percepcion_38,1,Muy buena
+situacion_politica,percepcion_38,2,Buena
+situacion_politica,percepcion_38,3,Ni buena ni mala
+situacion_politica,percepcion_38,4,Mala
+situacion_politica,percepcion_38,5,Muy mala
+situacion_politica,percepcion_38,-9,No contesta
+situacion_politica,percepcion_38,-8,No sabe
+rumbo_pais,percepcion_4,1,Progresando
+rumbo_pais,percepcion_4,2,Estancado
+rumbo_pais,percepcion_4,3,En decadencia
+rumbo_pais,percepcion_4,-9,No contesta
+rumbo_pais,percepcion_4,-8,No sabe
+aprueba_gobierno,eval_gob_1,1,Aprueba
+aprueba_gobierno,eval_gob_1,2,Desaprueba
+aprueba_gobierno,eval_gob_1,3,No aprueba ni desaprueba
+aprueba_gobierno,eval_gob_1,-9,No contesta
+aprueba_gobierno,eval_gob_1,-8,No sabe
+aprueba_gobierno_anterior,eval_gob_63,1,Aprueba
+aprueba_gobierno_anterior,eval_gob_63,2,Desaprueba
+aprueba_gobierno_anterior,eval_gob_63,3,No aprueba ni desaprueba
+aprueba_gobierno_anterior,eval_gob_63,-9,No contesta
+aprueba_gobierno_anterior,eval_gob_63,-8,No sabe
+posicion_politica,iden_pol_2,1,1 Izquierda
+posicion_politica,iden_pol_2,2,2
+posicion_politica,iden_pol_2,3,3
+posicion_politica,iden_pol_2,4,4
+posicion_politica,iden_pol_2,5,5
+posicion_politica,iden_pol_2,6,6
+posicion_politica,iden_pol_2,7,7
+posicion_politica,iden_pol_2,8,8
+posicion_politica,iden_pol_2,9,9
+posicion_politica,iden_pol_2,10,10 Derecha
+posicion_politica,iden_pol_2,-9,No contesta
+posicion_politica,iden_pol_2,-8,No sabe
+confianza_iglesia_catolica,confianza_6_a,1,Mucha confianza
+confianza_iglesia_catolica,confianza_6_a,2,Bastante confianza
+confianza_iglesia_catolica,confianza_6_a,3,Poca confianza
+confianza_iglesia_catolica,confianza_6_a,4,Nada de confianza
+confianza_iglesia_catolica,confianza_6_a,-9,No contesta
+confianza_iglesia_catolica,confianza_6_a,-8,No sabe
+confianza_fuerzas_armadas,confianza_6_c,1,Mucha confianza
+confianza_fuerzas_armadas,confianza_6_c,2,Bastante confianza
+confianza_fuerzas_armadas,confianza_6_c,3,Poca confianza
+confianza_fuerzas_armadas,confianza_6_c,4,Nada de confianza
+confianza_fuerzas_armadas,confianza_6_c,-9,No contesta
+confianza_fuerzas_armadas,confianza_6_c,-8,No sabe
+confianza_partidos,confianza_6_j,1,Mucha confianza
+confianza_partidos,confianza_6_j,2,Bastante confianza
+confianza_partidos,confianza_6_j,3,Poca confianza
+confianza_partidos,confianza_6_j,4,Nada de confianza
+confianza_partidos,confianza_6_j,-9,No contesta
+confianza_partidos,confianza_6_j,-8,No sabe
+confianza_tribunales,confianza_6_d,1,Mucha confianza
+confianza_tribunales,confianza_6_d,2,Bastante confianza
+confianza_tribunales,confianza_6_d,3,Poca confianza
+confianza_tribunales,confianza_6_d,4,Nada de confianza
+confianza_tribunales,confianza_6_d,-9,No contesta
+confianza_tribunales,confianza_6_d,-8,No sabe
+confianza_television,confianza_6_f,1,Mucha confianza
+confianza_television,confianza_6_f,2,Bastante confianza
+confianza_television,confianza_6_f,3,Poca confianza
+confianza_television,confianza_6_f,4,Nada de confianza
+confianza_television,confianza_6_f,-9,No contesta
+confianza_television,confianza_6_f,-8,No sabe
+confianza_redes_sociales,confianza_6_x,1,Mucha confianza
+confianza_redes_sociales,confianza_6_x,2,Bastante confianza
+confianza_redes_sociales,confianza_6_x,3,Poca confianza
+confianza_redes_sociales,confianza_6_x,4,Nada de confianza
+confianza_redes_sociales,confianza_6_x,-9,No contesta
+confianza_redes_sociales,confianza_6_x,-8,No sabe
+confianza_sindicatos,confianza_6_g,1,Mucha confianza
+confianza_sindicatos,confianza_6_g,2,Bastante confianza
+confianza_sindicatos,confianza_6_g,3,Poca confianza
+confianza_sindicatos,confianza_6_g,4,Nada de confianza
+confianza_sindicatos,confianza_6_g,-9,No contesta
+confianza_sindicatos,confianza_6_g,-8,No sabe
+confianza_carabineros,confianza_6_h,1,Mucha confianza
+confianza_carabineros,confianza_6_h,2,Bastante confianza
+confianza_carabineros,confianza_6_h,3,Poca confianza
+confianza_carabineros,confianza_6_h,4,Nada de confianza
+confianza_carabineros,confianza_6_h,-9,No contesta
+confianza_carabineros,confianza_6_h,-8,No sabe
+confianza_gobierno,confianza_6_i,1,Mucha confianza
+confianza_gobierno,confianza_6_i,2,Bastante confianza
+confianza_gobierno,confianza_6_i,3,Poca confianza
+confianza_gobierno,confianza_6_i,4,Nada de confianza
+confianza_gobierno,confianza_6_i,-9,No contesta
+confianza_gobierno,confianza_6_i,-8,No sabe
+confianza_congreso,confianza_6_k,1,Mucha confianza
+confianza_congreso,confianza_6_k,2,Bastante confianza
+confianza_congreso,confianza_6_k,3,Poca confianza
+confianza_congreso,confianza_6_k,4,Nada de confianza
+confianza_congreso,confianza_6_k,-9,No contesta
+confianza_congreso,confianza_6_k,-8,No sabe
+confianza_empresas,confianza_6_s,1,Mucha confianza
+confianza_empresas,confianza_6_s,2,Bastante confianza
+confianza_empresas,confianza_6_s,3,Poca confianza
+confianza_empresas,confianza_6_s,4,Nada de confianza
+confianza_empresas,confianza_6_s,-9,No contesta
+confianza_empresas,confianza_6_s,-8,No sabe
+confianza_municipalidades,confianza_6_o,1,Mucha confianza
+confianza_municipalidades,confianza_6_o,2,Bastante confianza
+confianza_municipalidades,confianza_6_o,3,Poca confianza
+confianza_municipalidades,confianza_6_o,4,Nada de confianza
+confianza_municipalidades,confianza_6_o,-9,No contesta
+confianza_municipalidades,confianza_6_o,-8,No sabe
+confianza_universidades,confianza_6_m,1,Mucha confianza
+confianza_universidades,confianza_6_m,2,Bastante confianza
+confianza_universidades,confianza_6_m,3,Poca confianza
+confianza_universidades,confianza_6_m,4,Nada de confianza
+confianza_universidades,confianza_6_m,-9,No contesta
+confianza_universidades,confianza_6_m,-8,No sabe
+confianza_sistema_salud,confianza_6_ab,1,Mucha confianza
+confianza_sistema_salud,confianza_6_ab,2,Bastante confianza
+confianza_sistema_salud,confianza_6_ab,3,Poca confianza
+confianza_sistema_salud,confianza_6_ab,4,Nada de confianza
+confianza_sistema_salud,confianza_6_ab,-9,No contesta
+confianza_sistema_salud,confianza_6_ab,-8,No sabe
+confianza_sistema_pensiones,confianza_6_ac,1,Mucha confianza
+confianza_sistema_pensiones,confianza_6_ac,2,Bastante confianza
+confianza_sistema_pensiones,confianza_6_ac,3,Poca confianza
+confianza_sistema_pensiones,confianza_6_ac,4,Nada de confianza
+confianza_sistema_pensiones,confianza_6_ac,-9,No contesta
+confianza_sistema_pensiones,confianza_6_ac,-8,No sabe
+apoyo_democracia,democracia_21,1,La democracia siempre es preferible
+apoyo_democracia,democracia_21,2,A veces un régimen autoritario puede ser preferible
+apoyo_democracia,democracia_21,3,Da lo mismo un régimen democrático que uno autoritario
+apoyo_democracia,democracia_21,-9,No contesta
+apoyo_democracia,democracia_21,-8,No sabe
+funciona_democracia,democracia_20,1,Muy mal
+funciona_democracia,democracia_20,2,Mal
+funciona_democracia,democracia_20,3,Regular
+funciona_democracia,democracia_20,4,Bien
+funciona_democracia,democracia_20,5,Muy bien
+funciona_democracia,democracia_20,-9,No contesta
+funciona_democracia,democracia_20,-8,No sabe
+responsabilidad_sustento,pobreza_63,1,1 La principal responsabilidad está en el Estado
+responsabilidad_sustento,pobreza_63,2,2
+responsabilidad_sustento,pobreza_63,3,3
+responsabilidad_sustento,pobreza_63,4,4
+responsabilidad_sustento,pobreza_63,5,5
+responsabilidad_sustento,pobreza_63,6,6
+responsabilidad_sustento,pobreza_63,7,7
+responsabilidad_sustento,pobreza_63,8,8
+responsabilidad_sustento,pobreza_63,9,9
+responsabilidad_sustento,pobreza_63,10,10 La principal responsabilidad está en las personas
+responsabilidad_sustento,pobreza_63,-9,No contesta
+responsabilidad_sustento,pobreza_63,-8,No sabe
+menos_estado_economia,democracia_33_a,1,Muy de acuerdo
+menos_estado_economia,democracia_33_a,2,De acuerdo
+menos_estado_economia,democracia_33_a,3,Ni de acuerdo ni en desacuerdo
+menos_estado_economia,democracia_33_a,4,En desacuerdo
+menos_estado_economia,democracia_33_a,5,Muy en desacuerdo
+menos_estado_economia,democracia_33_a,-9,No contesta
+menos_estado_economia,democracia_33_a,-8,No sabe
+estado_burocracia,democracia_33_d,1,Muy de acuerdo
+estado_burocracia,democracia_33_d,2,De acuerdo
+estado_burocracia,democracia_33_d,3,Ni de acuerdo ni en desacuerdo
+estado_burocracia,democracia_33_d,4,En desacuerdo
+estado_burocracia,democracia_33_d,5,Muy en desacuerdo
+estado_burocracia,democracia_33_d,-9,No contesta
+estado_burocracia,democracia_33_d,-8,No sabe
+empleados_publicos,rol_gobierno_28,1,Demasiado alto
+empleados_publicos,rol_gobierno_28,2,Alto
+empleados_publicos,rol_gobierno_28,3,Adecuado
+empleados_publicos,rol_gobierno_28,4,Bajo
+empleados_publicos,rol_gobierno_28,5,Demasiado bajo
+empleados_publicos,rol_gobierno_28,-9,No contesta
+empleados_publicos,rol_gobierno_28,-8,No sabe
+reducir_gasto_publico,rol_gobierno_31,1,Muy de acuerdo
+reducir_gasto_publico,rol_gobierno_31,2,De acuerdo
+reducir_gasto_publico,rol_gobierno_31,3,Ni de acuerdo ni en desacuerdo
+reducir_gasto_publico,rol_gobierno_31,4,En desacuerdo
+reducir_gasto_publico,rol_gobierno_31,5,Muy en desacuerdo
+reducir_gasto_publico,rol_gobierno_31,-9,No contesta
+reducir_gasto_publico,rol_gobierno_31,-8,No sabe
+clase_subjetiva,educacion_104_a,1,Nivel más bajo
+clase_subjetiva,educacion_104_a,2,2
+clase_subjetiva,educacion_104_a,3,3
+clase_subjetiva,educacion_104_a,4,4
+clase_subjetiva,educacion_104_a,5,5
+clase_subjetiva,educacion_104_a,6,6
+clase_subjetiva,educacion_104_a,7,7
+clase_subjetiva,educacion_104_a,8,8
+clase_subjetiva,educacion_104_a,9,9
+clase_subjetiva,educacion_104_a,10,Nivel más alto
+clase_subjetiva,educacion_104_a,-9,No contesta
+clase_subjetiva,educacion_104_a,-8,No sabe
+preocupa_deudas,bienestar_13_a,0,Nada preocupado
+preocupa_deudas,bienestar_13_a,1,1
+preocupa_deudas,bienestar_13_a,2,2
+preocupa_deudas,bienestar_13_a,3,3
+preocupa_deudas,bienestar_13_a,4,4
+preocupa_deudas,bienestar_13_a,5,5
+preocupa_deudas,bienestar_13_a,6,6
+preocupa_deudas,bienestar_13_a,7,7
+preocupa_deudas,bienestar_13_a,8,8
+preocupa_deudas,bienestar_13_a,9,9
+preocupa_deudas,bienestar_13_a,10,Muy preocupado
+preocupa_deudas,bienestar_13_a,-9,No contesta
+preocupa_deudas,bienestar_13_a,-8,No sabe
+preocupa_enfermedad,bienestar_13_c,0,Nada preocupado
+preocupa_enfermedad,bienestar_13_c,1,1
+preocupa_enfermedad,bienestar_13_c,2,2
+preocupa_enfermedad,bienestar_13_c,3,3
+preocupa_enfermedad,bienestar_13_c,4,4
+preocupa_enfermedad,bienestar_13_c,5,5
+preocupa_enfermedad,bienestar_13_c,6,6
+preocupa_enfermedad,bienestar_13_c,7,7
+preocupa_enfermedad,bienestar_13_c,8,8
+preocupa_enfermedad,bienestar_13_c,9,9
+preocupa_enfermedad,bienestar_13_c,10,Muy preocupado
+preocupa_pension,bienestar_13_h,0,Nada preocupado
+preocupa_pension,bienestar_13_h,1,1
+preocupa_pension,bienestar_13_h,2,2
+preocupa_pension,bienestar_13_h,3,3
+preocupa_pension,bienestar_13_h,4,4
+preocupa_pension,bienestar_13_h,5,5
+preocupa_pension,bienestar_13_h,6,6
+preocupa_pension,bienestar_13_h,7,7
+preocupa_pension,bienestar_13_h,8,8
+preocupa_pension,bienestar_13_h,9,9
+preocupa_pension,bienestar_13_h,10,Muy preocupado
+preocupa_pension,bienestar_13_h,-9,No contesta
+preocupa_pension,bienestar_13_h,-8,No sabe
+ingresos_alcanzan,bienestar_21,1,"Les alcanza bien, pueden ahorrar"
+ingresos_alcanzan,bienestar_21,2,"Les alcanza justo, sin grandes dificultades"
+ingresos_alcanzan,bienestar_21,3,"No les alcanza, tienen algunas dificultades"
+ingresos_alcanzan,bienestar_21,4,"No les alcanza, tienen grandes dificultades"
+ingresos_alcanzan,bienestar_21,-9,No contesta
+ingresos_alcanzan,bienestar_21,-8,No sabe
+apertura_inmigracion,iden_nacional_16,1,Prohibir toda inmigración
+apertura_inmigracion,iden_nacional_16,2,2
+apertura_inmigracion,iden_nacional_16,3,3
+apertura_inmigracion,iden_nacional_16,4,4
+apertura_inmigracion,iden_nacional_16,5,5
+apertura_inmigracion,iden_nacional_16,6,6
+apertura_inmigracion,iden_nacional_16,7,7
+apertura_inmigracion,iden_nacional_16,8,8
+apertura_inmigracion,iden_nacional_16,9,9
+apertura_inmigracion,iden_nacional_16,10,Permitir libremente toda inmigración
+apertura_inmigracion,iden_nacional_16,-9,No contesta
+apertura_inmigracion,iden_nacional_16,-8,No sabe
+inmigrantes_criminalidad,iden_nacional_8_a,1,Muy de acuerdo
+inmigrantes_criminalidad,iden_nacional_8_a,2,De acuerdo
+inmigrantes_criminalidad,iden_nacional_8_a,3,Ni de acuerdo ni en desacuerdo
+inmigrantes_criminalidad,iden_nacional_8_a,4,En desacuerdo
+inmigrantes_criminalidad,iden_nacional_8_a,5,Muy en desacuerdo
+inmigrantes_criminalidad,iden_nacional_8_a,-9,No contesta
+inmigrantes_criminalidad,iden_nacional_8_a,-8,No sabe
+inmigrantes_aporte,iden_nacional_8_l,1,Muy de acuerdo
+inmigrantes_aporte,iden_nacional_8_l,2,De acuerdo
+inmigrantes_aporte,iden_nacional_8_l,3,Ni de acuerdo ni en desacuerdo
+inmigrantes_aporte,iden_nacional_8_l,4,En desacuerdo
+inmigrantes_aporte,iden_nacional_8_l,5,Muy en desacuerdo
+inmigrantes_aporte,iden_nacional_8_l,-9,No contesta
+inmigrantes_aporte,iden_nacional_8_l,-8,No sabe
+libertades_o_seguridad,democracia_38,0,"Se deben garantizar las libertades públicas y privadas, aunque eso impida controlar la delincuencia"
+libertades_o_seguridad,democracia_38,1,1
+libertades_o_seguridad,democracia_38,2,2
+libertades_o_seguridad,democracia_38,3,3
+libertades_o_seguridad,democracia_38,4,4
+libertades_o_seguridad,democracia_38,5,5
+libertades_o_seguridad,democracia_38,6,6
+libertades_o_seguridad,democracia_38,7,7
+libertades_o_seguridad,democracia_38,8,8
+libertades_o_seguridad,democracia_38,9,9
+libertades_o_seguridad,democracia_38,10,Se deben suprimir las libertades públicas y privadas para controlar la delincuencia
+libertades_o_seguridad,democracia_38,-9,No contesta
+libertades_o_seguridad,democracia_38,-8,No sabe
+causa_delincuencia,seguridad_37_a,1,La inmigración irregular
+causa_delincuencia,seguridad_37_a,2,La falta de condenas o bajas penas que reciben los delincuentes
+causa_delincuencia,seguridad_37_a,3,La pobreza y falta de oportunidades
+causa_delincuencia,seguridad_37_a,4,La pérdida de valores en la sociedad
+causa_delincuencia,seguridad_37_a,5,La crisis de la familia
+causa_delincuencia,seguridad_37_a,6,El consumo de drogas y alcohol
+causa_delincuencia,seguridad_37_a,7,Las restricciones de las policías
+causa_delincuencia,seguridad_37_a,8,La falta de capacitación de las policías
+causa_delincuencia,seguridad_37_a,9,La desigualdad
+causa_delincuencia,seguridad_37_a,10,La validación de la violencia durante el estallido social
+causa_delincuencia,seguridad_37_a,11,Las bandas de narcotráfico
+causa_delincuencia,seguridad_37_a,12,Otra
+causa_delincuencia,seguridad_37_a,-9,No contesta
+causa_delincuencia,seguridad_37_a,-8,No sabe
+justifica_marchas,ciudadania_29_a,1,Siempre
+justifica_marchas,ciudadania_29_a,2,Casi siempre
+justifica_marchas,ciudadania_29_a,3,A veces
+justifica_marchas,ciudadania_29_a,4,Casi nunca
+justifica_marchas,ciudadania_29_a,5,Nunca
+justifica_marchas,ciudadania_29_a,-9,No contesta
+justifica_marchas,ciudadania_29_a,-8,No sabe
+justifica_fuerza_carabineros,ciudadania_30_b,1,Siempre
+justifica_fuerza_carabineros,ciudadania_30_b,2,Casi siempre
+justifica_fuerza_carabineros,ciudadania_30_b,3,A veces
+justifica_fuerza_carabineros,ciudadania_30_b,4,Casi nunca
+justifica_fuerza_carabineros,ciudadania_30_b,5,Nunca
+justifica_fuerza_carabineros,ciudadania_30_b,-9,No contesta
+justifica_fuerza_carabineros,ciudadania_30_b,-8,No sabe
+hijos_ideal,mtf_84,0,0
+hijos_ideal,mtf_84,1,1
+hijos_ideal,mtf_84,2,2
+hijos_ideal,mtf_84,3,3
+hijos_ideal,mtf_84,4,4
+hijos_ideal,mtf_84,5,5
+hijos_ideal,mtf_84,6,6
+hijos_ideal,mtf_84,7,7
+hijos_ideal,mtf_84,8,8
+hijos_ideal,mtf_84,10,10
+hijos_ideal,mtf_84,12,12
+hijos_ideal,mtf_84,18,18
+hijos_ideal,mtf_84,20,20
+hijos_ideal,mtf_84,-9,No contesta
+hijos_carga_financiera,mtf_46_d,1,Muy en desacuerdo
+hijos_carga_financiera,mtf_46_d,2,En desacuerdo
+hijos_carga_financiera,mtf_46_d,3,Ni de acuerdo ni en desacuerdo
+hijos_carga_financiera,mtf_46_d,4,De acuerdo
+hijos_carga_financiera,mtf_46_d,5,Muy de acuerdo
+hijos_carga_financiera,mtf_46_d,-9,No contesta
+hijos_carga_financiera,mtf_46_d,-8,No sabe
+hijos_restringen_carrera,mtf_46_e,1,Muy en desacuerdo
+hijos_restringen_carrera,mtf_46_e,2,En desacuerdo
+hijos_restringen_carrera,mtf_46_e,3,Ni de acuerdo ni en desacuerdo
+hijos_restringen_carrera,mtf_46_e,4,De acuerdo
+hijos_restringen_carrera,mtf_46_e,5,Muy de acuerdo
+hijos_restringen_carrera,mtf_46_e,-9,No contesta
+hijos_restringen_carrera,mtf_46_e,-8,No sabe
+interes_politica,interes_pol_1_b,1,Muy interesado
+interes_politica,interes_pol_1_b,2,Bastante interesado
+interes_politica,interes_pol_1_b,3,Algo interesado
+interes_politica,interes_pol_1_b,4,No muy interesado
+interes_politica,interes_pol_1_b,5,Nada interesado
+interes_politica,interes_pol_1_b,-9,No contesta
+interes_politica,interes_pol_1_b,-8,No sabe
+fuente_noticias,interes_pol_27,1,"Redes sociales (por ejemplo, Whatsapp, Facebook, Tiktok, Instagram, Youtube, Twitter/X)"
+fuente_noticias,interes_pol_27,2,Televisión (incluye aplicaciones de TV o acceso online)
+fuente_noticias,interes_pol_27,3,Diarios en formato impreso u online
+fuente_noticias,interes_pol_27,4,Radio y podcasts (incluye radio por internet o acceso vía internet)
+fuente_noticias,interes_pol_27,5,Sitios web
+fuente_noticias,interes_pol_27,6,Otro
+fuente_noticias,interes_pol_27,7,De ninguna parte
+fuente_noticias,interes_pol_27,-9,No contesta
+fuente_noticias,interes_pol_27,-8,No sabe
+partido,iden_pol_3,1,Democracia Cristiana
+partido,iden_pol_3,3,Partido Comunista
+partido,iden_pol_3,5,Partido Por la Democracia
+partido,iden_pol_3,9,Partido Socialista
+partido,iden_pol_3,10,Renovación Nacional
+partido,iden_pol_3,13,Unión Demócrata Independiente
+partido,iden_pol_3,14,Otros
+partido,iden_pol_3,15,Ninguno
+partido,iden_pol_3,17,Partido de la Gente
+partido,iden_pol_3,18,Partido Republicano
+partido,iden_pol_3,20,Partido Liberal
+partido,iden_pol_3,25,Frente Amplio
+partido,iden_pol_3,27,Partido Nacional Libertario
+partido,iden_pol_3,-9,No contesta
+partido,iden_pol_3,-8,No sabe
+voto_segunda_vuelta_2025,elec_pres_155,1,Jeannette Jara
+voto_segunda_vuelta_2025,elec_pres_155,2,José Antonio Kast
+voto_segunda_vuelta_2025,elec_pres_155,3,Votó en blanco
+voto_segunda_vuelta_2025,elec_pres_155,4,Votó nulo
+voto_segunda_vuelta_2025,elec_pres_155,-9,No contesta
+voto_segunda_vuelta_2025,elec_pres_155,-8,No sabe
+votaria_voluntario,elec_part_10,1,Si
+votaria_voluntario,elec_part_10,2,No
+votaria_voluntario,elec_part_10,-9,No contesta
+votaria_voluntario,elec_part_10,-8,No sabe
