@@ -169,3 +169,39 @@
   min-height: 60px;
   font-size: 1.15rem;
 }
+
+/* Ventanas bajas: el mando se aprieta para dejarle lugar al titular. */
+@media (min-width: 900px) and (max-height: 860px) {
+  .barra {
+    gap: var(--e2);
+    padding: var(--e3);
+  }
+
+  .campo textarea {
+    min-height: 0;
+    max-height: 5.2rem;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .referencia {
+    font-size: var(--texto-s);
+  }
+
+  .casos span {
+    display: none;
+  }
+
+  .casos button {
+    min-height: 36px;
+  }
+
+  .iterar {
+    min-height: 36px;
+  }
+
+  .barra > button[type='submit'] {
+    min-height: 48px;
+    font-size: 1rem;
+  }
+}

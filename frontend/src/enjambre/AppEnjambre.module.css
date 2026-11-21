@@ -329,3 +329,37 @@
 .app[data-climax] .nota {
   opacity: 0;
 }
+
+/*
+ * Entrada: el titular va arriba y el mando abajo, en la misma columna. El titular toma el alto
+ * que deja el mando y su letra se calcula con ese alto, así nunca quedan uno encima del otro.
+ */
+@media (min-width: 900px) {
+  .app[data-fase='preparar'] .arriba,
+  .app[data-fase='cargando'] .arriba {
+    height: calc(100dvh - var(--alto-mando, 0px) - var(--e5) * 3);
+    overflow: hidden;
+    container-type: size;
+  }
+
+  .app[data-fase='preparar'] .titular,
+  .app[data-fase='cargando'] .titular {
+    font-size: clamp(1.5rem, min(0.9rem + 3.3vw, (100cqh - 7.5rem) / 4.1), 4.6rem);
+  }
+
+  @container (max-height: 300px) {
+    .bajada {
+      display: none;
+    }
+
+    .app[data-fase='preparar'] .titular,
+    .app[data-fase='cargando'] .titular {
+      font-size: clamp(1.4rem, min(0.9rem + 3.3vw, 100cqh / 4.2), 4.6rem);
+    }
+  }
+
+  .app[data-fase='preparar'] .mando {
+    max-height: calc(100dvh - var(--e5) * 2 - 5rem);
+    overflow-y: auto;
+  }
+}

@@ -59,6 +59,17 @@ export function AppEnjambre() {
   const angosto = useAngosto();
   const [climax, setClimax] = useState(false);
   const mostrar = useRef<HTMLDivElement>(null);
+  const app = useRef<HTMLDivElement>(null);
+  const mando = useRef<HTMLDivElement>(null);
+
+  // El titular de entrada ocupa lo que deja libre el mando: se mide el mando y el CSS ajusta la letra.
+  useEffect(() => {
+    const medir = () => app.current?.style.setProperty('--alto-mando', `${mando.current?.offsetHeight ?? 0}px`);
+    const observador = new ResizeObserver(medir);
+    if (mando.current) observador.observe(mando.current);
+    medir();
+    return () => observador.disconnect();
+  }, []);
 
   const puntos = conexion?.puntos;
   const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
@@ -154,7 +165,7 @@ export function AppEnjambre() {
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} data-oculta={oculta || undefined} data-climax={climax || undefined}>
+    <div className={estilos.app} ref={app} data-fase={fase} data-oculta={oculta || undefined} data-climax={climax || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -230,7 +241,7 @@ export function AppEnjambre() {
       {puntos && fase === 'corriendo' && conexion && (
         <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={!listo && !oculta} />
       )}
-      <div className={estilos.mando}>
+      <div className={estilos.mando} ref={mando}>
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
