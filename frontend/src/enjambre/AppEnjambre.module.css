@@ -206,19 +206,37 @@
 }
 
 /*
- * El resultado de cada pregunta. Si falta alto, es lo primero que se encoge (su lista se
- * desplaza por dentro): así no se recorta el título de la propuesta.
+ * El resultado de cada pregunta. Conserva el alto de las seis preguntas de partida (apretadas, una
+ * línea cada una): si falta alto, primero se recorta el título, que se lee completo desde su
+ * enlace. Solo con más preguntas o una ventana muy baja la lista se desplaza por dentro.
  */
 .encuesta {
   display: flex;
   flex: 0 100 auto;
-  min-height: 7.5rem;
+  min-height: min(14rem, 34vh);
   pointer-events: auto;
 }
 
+/* En una ventana muy baja no caben el título y las seis preguntas: la lista cede y se desplaza. */
+@media (max-height: 640px) {
+  .encuesta {
+    min-height: 9.5rem;
+  }
+}
+
+/*
+ * Con la encuesta a la vista y poco alto, el título se recorta a menos líneas con puntos
+ * suspensivos, nunca a media línea. Va por variable: el título es de otro componente (Propuesta).
+ */
 @media (min-width: 900px) and (max-height: 960px) {
-  .app[data-encuesta] .titulo {
-    -webkit-line-clamp: 3;
+  .app[data-encuesta] {
+    --lineas-titulo: 3;
+  }
+}
+
+@media (min-width: 900px) and (max-height: 760px) {
+  .app[data-encuesta] {
+    --lineas-titulo: 2;
   }
 }
 

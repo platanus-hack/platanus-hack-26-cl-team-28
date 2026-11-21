@@ -7,7 +7,8 @@
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  /* La pantalla que lo muestra puede pedir menos líneas (AppEnjambre lo hace cuando falta alto). */
+  -webkit-line-clamp: var(--lineas-titulo, 4);
   quotes: none;
 }
 

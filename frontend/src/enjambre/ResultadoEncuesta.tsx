@@ -85,9 +85,9 @@ export function ResultadoEncuesta({ casos, viendo, preguntas, agentes, version }
         })}
       </ol>
       <footer>
-        <span data-postura="contra">En desacuerdo (1 a 3)</span>
-        <span data-postura="indecisa">Al medio (4)</span>
-        <span data-postura="favor">De acuerdo (5 a 7)</span>
+        <span data-postura="contra">En desacuerdo 1 a 3</span>
+        <span data-postura="indecisa">Al medio 4</span>
+        <span data-postura="favor">De acuerdo 5 a 7</span>
       </footer>
     </section>
   );

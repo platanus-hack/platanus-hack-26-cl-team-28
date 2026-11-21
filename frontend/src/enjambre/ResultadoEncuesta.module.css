@@ -35,11 +35,17 @@
   padding: 0;
   overflow-y: auto;
   list-style: none;
-  /* Barra de desplazamiento fina, del color de la hoja: sin flechas ni carril gris del sistema. */
-  scrollbar-width: thin;
-  scrollbar-color: var(--tinta-suave) transparent;
-  scrollbar-gutter: stable;
+  /*
+   * Sin barra de desplazamiento: la del sistema (con flechas y carril) ocupaba más que una fila.
+   * La lista cabe entera casi siempre; si hay más preguntas que alto, se desplaza con la rueda,
+   * el dedo o el teclado, y el borde inferior desvanecido avisa que sigue.
+   */
+  scrollbar-width: none;
   overscroll-behavior: contain;
+}
+
+.encuesta ol::-webkit-scrollbar {
+  display: none;
 }
 
 /* Si hay más preguntas abajo, la lista se desvanece en el borde para que se note. */
@@ -114,8 +120,21 @@
   text-wrap: pretty;
 }
 
-/* En ventanas bajas cada pregunta ocupa una línea, para que quepan todas. */
+/* En ventanas bajas cada pregunta ocupa una línea y las filas se aprietan, para que quepan todas. */
 @media (min-width: 900px) and (max-height: 999px) {
+  .encuesta {
+    gap: 6px;
+    padding-block: var(--e2);
+  }
+
+  .encuesta li {
+    padding: 3px 0;
+  }
+
+  .encuesta li button {
+    min-height: 20px;
+  }
+
   .encuesta li button span {
     -webkit-line-clamp: 1;
   }
@@ -192,6 +211,7 @@
   gap: 2px var(--e3);
   font-size: var(--texto-xs);
   color: var(--tinta-suave);
+  white-space: nowrap;
 }
 
 .encuesta footer span::before {
@@ -201,6 +221,13 @@
   height: 8px;
   margin-right: 5px;
   background: var(--color);
+}
+
+/* En una ventana muy baja la leyenda cede su lugar a las preguntas: los colores son los del mapa. */
+@media (min-width: 900px) and (max-height: 640px) {
+  .encuesta footer {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
