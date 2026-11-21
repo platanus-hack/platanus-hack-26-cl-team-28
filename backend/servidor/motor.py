@@ -154,10 +154,11 @@ class ClaudeCodigo(Motor):
             "claude", "-p", "--model", modelo,
             "--setting-sources", "", "--strict-mcp-config", "--tools", "",
             "--no-session-persistence", "--output-format", "json",
-            "--system-prompt", sistema, "--json-schema", json.dumps(esquema), prompt,
+            "--system-prompt", sistema, "--json-schema", json.dumps(esquema),
         ]
+        # El prompt va por la entrada estándar: una ley completa no cabe como argumento de un proceso.
         salida = subprocess.run(
-            orden, cwd=self._carpeta, stdin=subprocess.DEVNULL, capture_output=True,
+            orden, cwd=self._carpeta, input=prompt, capture_output=True,
             text=True, timeout=self._espera, check=False,
         )
         datos = json.loads(salida.stdout or "{}")

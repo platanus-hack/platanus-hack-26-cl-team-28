@@ -79,7 +79,12 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
           onChange={(e) => sim.cambiarTexto(actual.id, e.target.value)}
         />
       </label>
-      {actual.referencia && (
+      {sim.conexion?.demo && (
+        <p className={estilos.aviso} role="status">
+          Sin motor conectado: las respuestas se sortean en el navegador y no se comparan con encuestas.
+        </p>
+      )}
+      {actual.referencia && !sim.conexion?.demo && (
         <p className={estilos.referencia}>
           Se comparará con <b>{actual.referencia.fuente}</b>, {actual.referencia.fecha}: {actual.referencia.favor} % a favor.
         </p>

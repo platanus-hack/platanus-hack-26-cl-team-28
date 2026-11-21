@@ -1,6 +1,7 @@
 .insignia {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto auto;
+  justify-content: end;
   align-items: center;
   column-gap: var(--e2);
   row-gap: var(--e1);

@@ -23,7 +23,6 @@ export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad =
   const alto = compacto ? 44 : Math.round(64 + contado * 1.5);
   return (
     <section className={estilos.bloque} data-postura={postura} data-compacto={compacto || undefined} aria-label={`${porcentaje} % ${POSTURA_TEXTO[postura]}`}>
-      {encabezado && <p className={estilos.encabezado}>{encabezado}</p>}
       <Figura estado={postura} aspecto={aspecto} alto={alto} />
       <p className={estilos.cifra} aria-hidden="true">
         {Math.round(contado)}
@@ -31,6 +30,7 @@ export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad =
       </p>
       <p className={estilos.nombre}>{POSTURA_TEXTO[postura]}</p>
       <p className={estilos.personas}>{formatear(personas)} {unidad}</p>
+      {encabezado && <p className={estilos.encabezado}>{encabezado}</p>}
     </section>
   );
 }

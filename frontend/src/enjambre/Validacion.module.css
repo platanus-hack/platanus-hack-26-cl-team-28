@@ -30,6 +30,7 @@
 
 .filas b {
   font: 500 2.3rem/1 var(--fuente-voz);
+  white-space: nowrap;
   font-variant-numeric: tabular-nums lining-nums;
 }
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-const CONSULTA = '(max-width: 899px)';
+const CONSULTA = '(max-width: 899px), (max-height: 800px)';
 
-/** Verdadero en pantallas angostas, donde las cifras van bajo el mapa y no a sus costados. */
+/** Verdadero en pantallas angostas o bajas: la criatura junto a la cifra no crece, no hay lugar. */
 export function useAngosto(): boolean {
   const [angosto, setAngosto] = useState(() => matchMedia(CONSULTA).matches);
   useEffect(() => {

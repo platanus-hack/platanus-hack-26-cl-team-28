@@ -68,6 +68,15 @@ export interface Conexion {
 
 export const posturaDe = (acuerdo: number): Postura => (acuerdo >= 5 ? 'favor' : acuerdo <= 3 ? 'contra' : 'indecisa');
 
+/**
+ * Mensaje para la persona: los errores que el motor redacta para humanos pasan tal cual;
+ * los técnicos (códigos HTTP, excepciones) se cambian por uno claro.
+ */
+function humano(error: unknown, porDefecto: string): string {
+  const texto = error instanceof Error ? error.message : '';
+  return !texto || /\d{3}|Error|Errno|Exception|fetch/i.test(texto) ? porDefecto : texto;
+}
+
 const METRICAS_CERO: Metricas = { llamadas: 0, costo_usd: 0, tokens: 0, segundos: 0 };
 const conteoVacio = (): Conteo => ({ favor: 0, contra: 0, indecisa: 0, total: 0 });
 
@@ -223,7 +232,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           setTerminada(true);
           break;
         case 'error':
-          setAviso(evento.mensaje);
+          setAviso(humano(new Error(evento.mensaje), 'La simulación se interrumpió. Lo que alcanzó a responder queda en pantalla.'));
           setRedactando(null);
           setTerminada(true);
           // Lo que alcanzó a terminar se puede mirar; si no terminó nada, se vuelve a preparar.
@@ -263,7 +272,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     try {
       cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento);
     } catch (error) {
-      setAviso(error instanceof Error ? error.message : 'El motor no respondió');
+      setAviso(humano(error, 'El motor de simulación no respondió. Intenta de nuevo en unos segundos.'));
       setFase('preparar');
     }
   }, [puedePreguntar, conexion, listos, nuevoCaso, muestra.agentes, iteraciones, alEvento]);
@@ -293,7 +302,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           : await subirDocumento(archivo);
         fijar(id, { leido, leyendo: false });
       } catch (error) {
-        fijar(id, { leyendo: false, errorDocumento: error instanceof Error ? error.message : 'No se pudo leer el documento' });
+        fijar(id, { leyendo: false, errorDocumento: humano(error, 'No pudimos leer este documento. Prueba con un PDF con texto, un .docx o un .txt.') });
       }
     },
     [conexion, edicion, fijar],

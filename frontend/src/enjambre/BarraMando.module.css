@@ -23,7 +23,7 @@
 
 .pestanas button {
   min-width: 44px;
-  height: 40px;
+  height: 44px;
   padding: 0 var(--e3);
   border: 1px solid transparent;
   border-radius: var(--radio);
@@ -84,7 +84,7 @@
 .iterar select {
   flex: none;
   width: 4.2rem;
-  height: 36px;
+  height: 44px;
   padding: 0 28px 0 var(--e3);
   border: 1px solid var(--tinta-suave);
   border-radius: var(--radio);
@@ -136,7 +136,7 @@
 }
 
 .casos button {
-  min-height: 34px;
+  min-height: 44px;
   padding: 0 var(--e3);
   border: 1px solid var(--linea-suave);
   border-radius: 999px;

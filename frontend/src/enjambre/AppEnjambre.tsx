@@ -40,6 +40,7 @@ export function AppEnjambre() {
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
   const [climax, setClimax] = useState(false);
+  const mostrar = useRef<HTMLDivElement>(null);
 
   const puntos = conexion?.puntos;
   const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
@@ -83,7 +84,7 @@ export function AppEnjambre() {
   const primeraLista = casos[0]?.listo ?? false;
   const conReferencia = !!casos[0]?.referencia;
   useEffect(() => {
-    if (fase !== 'corriendo' || !primeraLista || !conReferencia) return;
+    if (fase !== 'corriendo' || !primeraLista || !conReferencia || conexion?.demo) return;
     const entra = window.setTimeout(() => setClimax(true), 1700);
     const sale = window.setTimeout(() => setClimax(false), 6200);
     return () => {
@@ -91,7 +92,7 @@ export function AppEnjambre() {
       window.clearTimeout(sale);
       setClimax(false);
     };
-  }, [fase, primeraLista, conReferencia]);
+  }, [fase, primeraLista, conReferencia, conexion]);
 
   const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
   const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
@@ -115,7 +116,11 @@ export function AppEnjambre() {
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).closest('textarea, input, select')) return;
-      if (e.key === 'h' || e.key === 'H') setOculta((valor) => !valor);
+      if (e.key === 'h' || e.key === 'H') {
+        setOculta((valor) => !valor);
+        // El foco no se queda en algo invisible: pasa al botón que devuelve la interfaz.
+        window.setTimeout(() => mostrar.current?.querySelector('button')?.focus(), 0);
+      }
       if (fase !== 'resultados') return;
       if (e.key === 'ArrowRight') sim.setViendo(Math.min(casos.length - 1, viendo + 1));
       if (e.key === 'ArrowLeft') sim.setViendo(Math.max(0, viendo - 1));
@@ -146,7 +151,7 @@ export function AppEnjambre() {
               {caso.iteracion && ` · reescrita por el agente sobre ${caso.iteracion.de}`}
             </span>
             <q className={estilos.titulo}>{caso.titulo}</q>
-            {caso.iteracion?.cambio && <small>{caso.iteracion.cambio}</small>}
+            {caso.iteracion?.cambio && listo && <small>{caso.iteracion.cambio}</small>}
           </h1>
         ) : (
           <>
@@ -175,7 +180,7 @@ export function AppEnjambre() {
             </span>
           </p>
         )}
-        {caso && !climax && <Validacion casos={casos} viendo={viendo} />}
+        {caso && !climax && !conexion?.demo && <Validacion casos={casos} viendo={viendo} />}
       </div>
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
@@ -235,7 +240,7 @@ export function AppEnjambre() {
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
       )}
       {oculta && (
-        <div className={estilos.mostrar}>
+        <div className={estilos.mostrar} ref={mostrar}>
           <Boton variante="texto" onClick={() => setOculta(false)}>
             Mostrar la interfaz (H)
           </Boton>

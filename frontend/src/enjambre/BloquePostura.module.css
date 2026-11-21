@@ -55,7 +55,7 @@
 
 .encabezado {
   max-width: 18rem;
-  margin-bottom: var(--e4);
+  margin-top: var(--e5);
   font: 500 clamp(1.4rem, 0.9rem + 1.2vw, 2.4rem) / 1.1 var(--fuente-voz);
   color: var(--favor-texto);
   text-wrap: balance;

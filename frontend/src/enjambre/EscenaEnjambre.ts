@@ -56,7 +56,6 @@ export class EscenaEnjambre {
   private burbujas: Rotulada[] = [];
   private colores: string[] = [];
   private tinta = '';
-  private tintaSuave = '';
   private fondo = '';
   private chile = '';
   private chileBorde = '';
@@ -123,7 +122,6 @@ export class EscenaEnjambre {
     const v = (nombre: string) => estilo.getPropertyValue(nombre).trim();
     this.colores = [v('--punto-fuera'), v('--punto-neutro'), v('--favor'), v('--contra'), v('--indecisa'), v('--punto-pendiente')];
     this.tinta = v('--tinta');
-    this.tintaSuave = v('--tinta-suave');
     this.fondo = v('--mar');
     this.chile = v('--chile');
     this.chileBorde = v('--chile-borde');
@@ -402,7 +400,15 @@ export class EscenaEnjambre {
       const adentro = b.r >= 30;
       const candidatos: [number, number][] = adentro
         ? [[b.x, b.y]]
-        : [[b.x + b.lado * (b.r + w / 2 + 3), b.y], [b.x, b.y - b.r - h / 2 - 2], [b.x, b.y + b.r + h / 2 + 2]];
+        : [
+            [b.x + b.lado * (b.r + w / 2 + 3), b.y],
+            [b.x, b.y - b.r - h / 2 - 2],
+            [b.x, b.y + b.r + h / 2 + 2],
+            [b.x + b.lado * (b.r * 0.7 + w / 2), b.y - b.r * 0.7 - h / 2],
+            [b.x + b.lado * (b.r * 0.7 + w / 2), b.y + b.r * 0.7 + h / 2],
+            [b.x + b.lado * (b.r + w / 2 + 3), b.y - h * 0.6],
+            [b.x + b.lado * (b.r + w / 2 + 3), b.y + h * 0.6],
+          ];
       const lugar = candidatos.find(([cx, cy]) => adentro || libre(cx - w / 2, cy - h / 2, w, h, b));
       if (!lugar) continue;
       const [cx, cy] = lugar;
@@ -419,8 +425,10 @@ export class EscenaEnjambre {
       ctx.fillStyle = this.tinta;
       ctx.fillText(nombre, cx, cy - this.letra * 0.6);
       ctx.font = `600 ${this.letra - 1}px ${this.fuente}`;
-      ctx.fillStyle = this.tintaSuave;
+      ctx.fillStyle = this.tinta;
+      ctx.globalAlpha = visible * 0.8;
       ctx.fillText(`${b.pct} %`, cx, cy + this.letra * 0.65);
+      ctx.globalAlpha = visible;
     }
     ctx.globalAlpha = 1;
   }
