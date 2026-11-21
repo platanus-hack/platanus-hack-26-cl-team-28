@@ -1,16 +1,16 @@
 .validacion {
   display: grid;
   gap: var(--e2);
-  width: min(100%, 19rem);
+  width: min(100%, 21rem);
   padding: var(--e3) var(--e4);
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
   background: var(--papel-velo);
-  animation: entrar 500ms var(--curva-salida) 1.6s both;
+  animation: entrar 500ms var(--curva-salida) both;
 }
 
 .titulo {
-  font: 650 var(--texto-xxs) / 1 var(--fuente-ui);
+  font: 650 var(--texto-xs) / 1.2 var(--fuente-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tinta-suave);
@@ -23,34 +23,79 @@
 
 .filas p {
   display: grid;
-  grid-template-columns: 4.6rem 1fr;
+  grid-template-columns: 5.4rem 1fr;
   align-items: baseline;
   gap: var(--e2);
 }
 
 .filas b {
-  font: 500 2rem/1 var(--fuente-voz);
+  font: 500 2.3rem/1 var(--fuente-voz);
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-.filas p:last-child b {
+.filas p[data-agentes] b {
   color: var(--favor-texto);
 }
 
+.filas p[data-otra] b {
+  color: var(--tinta-fuerte);
+}
+
 .filas span {
-  font-size: var(--texto-xs);
+  font-size: var(--texto-s);
   line-height: 1.25;
   color: var(--tinta-suave);
 }
 
 .distancia {
-  font-size: var(--texto-xs);
-  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  color: var(--tinta);
 }
 
 .distancia a {
-  color: var(--tinta);
+  color: var(--tinta-suave);
   text-underline-offset: 3px;
+}
+
+/* El momento en que se contesta "¿cómo confiamos?": las dos cifras al centro, grandes. */
+.validacion[data-grande] {
+  justify-items: center;
+  gap: var(--e4);
+  width: auto;
+  padding: var(--e6) var(--e7);
+  background: var(--papel);
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.55);
+  text-align: center;
+  animation: aparecer 600ms var(--curva-salida) both;
+}
+
+.validacion[data-grande] .titulo {
+  font-size: 1.1rem;
+}
+
+.validacion[data-grande] .filas {
+  grid-auto-flow: column;
+  gap: var(--e7);
+}
+
+.validacion[data-grande] .filas p {
+  grid-template-columns: none;
+  justify-items: center;
+  gap: var(--e3);
+}
+
+.validacion[data-grande] .filas b {
+  font-size: clamp(4.5rem, 2rem + 6vw, 8rem);
+  letter-spacing: -0.03em;
+}
+
+.validacion[data-grande] .filas span {
+  max-width: 15rem;
+  font-size: 1.15rem;
+}
+
+.validacion[data-grande] .distancia {
+  font: 500 clamp(1.4rem, 1rem + 1vw, 2rem) / 1.2 var(--fuente-voz);
 }
 
 @keyframes entrar {
@@ -60,8 +105,26 @@
   }
 }
 
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    scale: 0.94;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .validacion {
+  .validacion,
+  .validacion[data-grande] {
     animation: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .validacion[data-grande] {
+    padding: var(--e5) var(--e4);
+  }
+
+  .validacion[data-grande] .filas {
+    gap: var(--e4);
   }
 }

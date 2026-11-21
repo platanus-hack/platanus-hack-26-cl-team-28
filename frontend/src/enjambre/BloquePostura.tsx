@@ -9,6 +9,8 @@ interface Props {
   porcentaje: number;
   personas: number;
   aspecto: number;
+  /** Línea grande sobre la cifra, por ejemplo cuánto ganó una variante contra la A. */
+  encabezado?: string;
   /** Qué se cuenta: personas simuladas o agentes. */
   unidad?: string;
   /** En pantallas angostas la criatura no crece: no hay lugar. */
@@ -16,11 +18,12 @@ interface Props {
 }
 
 /** La cifra de un lado del país: la criatura de esa postura crece con su porcentaje. */
-export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad = 'personas', compacto = false }: Props) {
+export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad = 'personas', compacto = false, encabezado }: Props) {
   const contado = useConteo(porcentaje);
   const alto = compacto ? 44 : Math.round(64 + contado * 1.5);
   return (
     <section className={estilos.bloque} data-postura={postura} data-compacto={compacto || undefined} aria-label={`${porcentaje} % ${POSTURA_TEXTO[postura]}`}>
+      {encabezado && <p className={estilos.encabezado}>{encabezado}</p>}
       <Figura estado={postura} aspecto={aspecto} alto={alto} />
       <p className={estilos.cifra} aria-hidden="true">
         {Math.round(contado)}

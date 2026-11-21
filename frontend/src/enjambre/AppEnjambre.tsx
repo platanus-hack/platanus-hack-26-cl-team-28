@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { Figura } from '../componentes/comunes/Figura';
-import { MARCA } from '../contenido';
 import { formatear } from '../dominio/textos';
 import { REGIONES_GEO } from '../mapa/geografia';
-import { porcentajesDe, posturaDe, useEnVivo } from '../vivo/useEnVivo';
+import { porcentajesDe, posturaDe, useEnVivo, type CasoVivo } from '../vivo/useEnVivo';
 import estilos from './AppEnjambre.module.css';
 import { BarraMando } from './BarraMando';
 import { BarraResultado } from './BarraResultado';
@@ -24,6 +23,12 @@ const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
 
+function textoDelta(delta: number, caso: CasoVivo): string {
+  const quien = caso.iteracion ? 'con la versión del agente' : `con la variante ${caso.letra}`;
+  if (delta === 0) return `Igual que A ${quien}`;
+  return `${delta > 0 ? '+' : ''}${delta} ${Math.abs(delta) === 1 ? 'punto' : 'puntos'} ${quien}`;
+}
+
 export function AppEnjambre() {
   const sim = useEnVivo(REGIONES_GEO, PUNTOS);
   const { conexion, fase, casos, viendo, muestra, version } = sim;
@@ -34,6 +39,7 @@ export function AppEnjambre() {
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
+  const [climax, setClimax] = useState(false);
 
   const puntos = conexion?.puntos;
   const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
@@ -73,9 +79,23 @@ export function AppEnjambre() {
   }, [claro]);
   useEffect(() => setFicha(null), [fase, viendo]);
 
+  // Cuando la primera variante termina y tiene encuesta real, la comparación ocupa el centro unos segundos.
+  const primeraLista = casos[0]?.listo ?? false;
+  const conReferencia = !!casos[0]?.referencia;
+  useEffect(() => {
+    if (fase !== 'corriendo' || !primeraLista || !conReferencia) return;
+    const entra = window.setTimeout(() => setClimax(true), 1700);
+    const sale = window.setTimeout(() => setClimax(false), 6200);
+    return () => {
+      window.clearTimeout(entra);
+      window.clearTimeout(sale);
+      setClimax(false);
+    };
+  }, [fase, primeraLista, conReferencia]);
+
   const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
   const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
-  const alHablar = useCallback((agente: number | null) => escena.current?.resaltar(agente === null ? [] : puntosDe(agente)), [puntosDe]);
+  const alHablar = useCallback((agentes: number[]) => escena.current?.resaltar(agentes.flatMap(puntosDe)), [puntosDe]);
   useEffect(() => {
     if (ficha) escena.current?.resaltar(puntosDe(ficha.agente));
     else if (fase !== 'corriendo') escena.current?.resaltar([]);
@@ -119,7 +139,6 @@ export function AppEnjambre() {
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
       <header className={estilos.arriba}>
-        <p className={estilos.marca}>{MARCA}</p>
         {caso ? (
           <h1 className={estilos.pregunta}>
             <span>
@@ -130,7 +149,14 @@ export function AppEnjambre() {
             {caso.iteracion?.cambio && <small>{caso.iteracion.cambio}</small>}
           </h1>
         ) : (
-          <h1 className={estilos.titular}>Pregúntale a Chile</h1>
+          <>
+            <h1 className={estilos.titular}>Sabe cómo reacciona Chile a una ley antes de aprobarla</h1>
+            <p className={estilos.bajada}>
+              {conexion?.demo
+                ? 'Cada punto es una persona simulada.'
+                : `${formatear(conexion?.agentes.length ?? 2000)} personas reales del Censo 2024, cada una con su agente de IA. Validado contra encuestas Cadem.`}
+            </p>
+          </>
         )}
         {caso && caso.texto !== caso.titulo && caso.texto && (
           <details className={estilos.completo}>
@@ -145,11 +171,11 @@ export function AppEnjambre() {
           <p className={estilos.indecisas}>
             <Figura estado="indecisa" aspecto={2} alto={30} />
             <span>
-              <b>{pct.indecisa} %</b> indecisas se quedan en el mapa
+              <b>{pct.indecisa} %</b> no se decide y se queda en el mapa
             </span>
           </p>
         )}
-        {caso && <Validacion caso={caso} />}
+        {caso && !climax && <Validacion casos={casos} viendo={viendo} />}
       </div>
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
@@ -169,7 +195,15 @@ export function AppEnjambre() {
             </div>
           )}
           <div className={estilos.favor}>
-            <BloquePostura postura="favor" porcentaje={pct.favor} personas={caso.conteo.favor} unidad="agentes" aspecto={1} compacto={angosto} />
+            <BloquePostura
+              postura="favor"
+              porcentaje={pct.favor}
+              personas={caso.conteo.favor}
+              unidad="agentes"
+              aspecto={1}
+              compacto={angosto}
+              encabezado={viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : undefined}
+            />
           </div>
         </>
       )}
@@ -192,6 +226,11 @@ export function AppEnjambre() {
           <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
         )}
       </div>
+      {climax && (
+        <div className={estilos.climax}>
+          <Validacion casos={casos} viendo={0} grande />
+        </div>
+      )}
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
       )}

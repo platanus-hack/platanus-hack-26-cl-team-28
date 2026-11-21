@@ -1,7 +1,7 @@
 .barra {
   display: grid;
   gap: var(--e3);
-  width: min(100%, 27rem);
+  width: min(100%, 31rem);
   max-width: 100%;
   padding: var(--e4);
   border: 1px solid var(--linea-suave);
@@ -53,8 +53,8 @@
   border: 1px solid var(--tinta-suave);
   border-radius: var(--radio);
   background: var(--mar);
-  font-size: var(--texto-m);
-  line-height: 1.35;
+  font-size: 1.15rem;
+  line-height: 1.4;
   resize: none;
   field-sizing: content;
 }
@@ -111,13 +111,12 @@
 }
 
 .referencia {
-  font-size: var(--texto-s);
+  font-size: 1rem;
   line-height: 1.35;
-  color: var(--tinta-suave);
+  color: var(--favor-texto);
 }
 
 .referencia b {
-  color: var(--tinta);
   font-weight: 650;
 }
 
@@ -164,4 +163,9 @@
   .casos button:hover {
     border-color: var(--tinta-suave);
   }
+}
+
+.barra > button[type='submit'] {
+  min-height: 60px;
+  font-size: 1.15rem;
 }

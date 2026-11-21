@@ -29,21 +29,23 @@
   --color: var(--indecisa);
 }
 
-.globo[data-viejo] {
-  opacity: 0.38;
-  translate: 0 -8px;
+.globo[data-lado='izquierda'] {
+  border-right: 3px solid var(--color);
+  border-left: 0;
+  border-radius: var(--radio) 0 0 var(--radio);
+  text-align: right;
 }
 
 .globo blockquote {
   margin: 0;
-  font: italic 500 1.18rem/1.25 var(--fuente-voz);
+  font: italic 500 1.6rem/1.22 var(--fuente-voz);
   color: var(--tinta);
   text-wrap: pretty;
 }
 
 .globo figcaption {
   margin-top: var(--e2);
-  font: 600 var(--texto-xs) / 1.2 var(--fuente-ui);
+  font: 600 1rem / 1.2 var(--fuente-ui);
   letter-spacing: 0.02em;
   color: var(--tinta-suave);
 }

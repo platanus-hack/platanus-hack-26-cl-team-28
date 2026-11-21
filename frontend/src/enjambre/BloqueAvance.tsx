@@ -31,13 +31,21 @@ export function BloqueAvance({ caso, total, metricas, motor }: Props) {
         de {formatear(total)} agentes {esperando ? 'leyendo la propuesta' : 'ya respondieron'}
       </p>
       <progress className={estilos.barra} max={total} value={caso.respondidas} aria-label="Avance de la simulación" />
-      {motor && !motor.grabado && caso.respondidas === 0 && <p className={estilos.detalle}>Cada agente lee la propuesta y su perfil del censo antes de responder</p>}
+      {motor && !motor.grabado && caso.respondidas === 0 && !caso.iteracion && (
+        <p className={estilos.detalle}>Cada agente lee la propuesta y su perfil del censo antes de responder</p>
+      )}
+      {caso.iteracion && caso.respondidas === 0 && (
+        <p className={estilos.cambio}>
+          <span>Qué cambió el agente</span>
+          {caso.iteracion.cambio}
+        </p>
+      )}
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
         <p className={estilos.detalle}>Ya se había preguntado: estas respuestas vienen de la caché, sin llamar al modelo</p>
       )}
       {motor && !motor.grabado && caso.desdeCache < caso.respondidas && (
         <p className={estilos.detalle}>
-          {formatear(metricas.llamadas)} llamadas a {nombreModelo(motor.modelo)} · {formatear(Math.round(metricas.segundos))} s ·{' '}
+          {formatear(metricas.llamadas)} {metricas.llamadas === 1 ? 'llamada' : 'llamadas'} a {nombreModelo(motor.modelo)} · {formatear(Math.round(metricas.segundos))} s ·{' '}
           {dinero(metricas.costo_usd)}
         </p>
       )}

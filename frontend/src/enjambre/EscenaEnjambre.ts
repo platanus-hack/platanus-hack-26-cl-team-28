@@ -67,6 +67,8 @@ export class EscenaEnjambre {
   private dpr = 1;
   private u = 1;
   private paso = 3;
+  /** Tamaño de letra de los rótulos de región: crece con la pantalla para leerse en un proyector. */
+  private letra = 12;
   /** Separación con que quedaron armadas las burbujas (puede ser menor que `paso` si no cabían). */
   private pasoActual = 3;
   private cuadro = 0;
@@ -202,6 +204,7 @@ export class EscenaEnjambre {
     this.u = (this.alto - this.margen() * 2) / GRADOS;
     // El tamaño del punto crece con la pantalla: en un proyector se tiene que ver desde el fondo de la sala.
     this.paso = Math.max(2, Math.min(4.6, this.ancho / 450, this.alto / 250));
+    this.letra = Math.round(Math.max(11, Math.min(16, this.alto / 68)));
     this.silueta = new Path2D();
     for (const region of REGIONES_GEO) {
       for (const anillo of region) {
@@ -391,11 +394,11 @@ export class EscenaEnjambre {
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
     for (const b of [...this.burbujas].sort((p, q) => q.r - p.r)) {
-      if (b.r < 9) continue;
+      if (b.r < 7) continue;
       const nombre = REGIONES[b.region].corto;
-      ctx.font = `650 11px ${this.fuente}`;
-      const w = Math.max(ctx.measureText(nombre).width, 26) + 12;
-      const h = 30;
+      ctx.font = `650 ${this.letra}px ${this.fuente}`;
+      const w = Math.max(ctx.measureText(nombre).width, 30) + 14;
+      const h = this.letra * 2.7;
       const adentro = b.r >= 30;
       const candidatos: [number, number][] = adentro
         ? [[b.x, b.y]]
@@ -412,12 +415,12 @@ export class EscenaEnjambre {
         ctx.fill();
         ctx.globalAlpha = visible;
       }
-      ctx.font = `650 11px ${this.fuente}`;
+      ctx.font = `650 ${this.letra}px ${this.fuente}`;
       ctx.fillStyle = this.tinta;
-      ctx.fillText(nombre, cx, cy - 6);
-      ctx.font = `500 11px ${this.fuente}`;
+      ctx.fillText(nombre, cx, cy - this.letra * 0.6);
+      ctx.font = `600 ${this.letra - 1}px ${this.fuente}`;
       ctx.fillStyle = this.tintaSuave;
-      ctx.fillText(`${b.pct} %`, cx, cy + 7);
+      ctx.fillText(`${b.pct} %`, cx, cy + this.letra * 0.65);
     }
     ctx.globalAlpha = 1;
   }

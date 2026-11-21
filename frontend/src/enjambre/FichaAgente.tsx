@@ -15,7 +15,7 @@ interface Props {
 }
 
 const MOSTRAR = ['Nivel educacional', 'Tramo socioeconómico', 'Previsión de salud', 'Tipo de vivienda', 'Hijos', 'Transporte al trabajo', 'Estado civil'];
-const ANCHO = 340;
+const ANCHO = 420;
 const POSTURA = { favor: 'a favor', contra: 'en contra', indecisa: 'indecisa' } as const;
 
 function corto(clave: string, valor: string): string {
@@ -64,7 +64,7 @@ export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
               <li key={c.id} data-postura={valor ? posturaDe(valor) : undefined}>
                 <b>{c.letra}</b>
                 <span style={{ width: `${(valor / 7) * 100}%` }} />
-                <i>{valor || '·'}</i>
+                <i>{valor ? `${valor} de 7` : 'sin respuesta'}</i>
               </li>
             );
           })}

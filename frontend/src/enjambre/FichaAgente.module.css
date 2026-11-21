@@ -23,7 +23,7 @@
 }
 
 .quien {
-  font: 500 1.4rem/1.1 var(--fuente-voz);
+  font: 500 1.7rem/1.1 var(--fuente-voz);
 }
 
 .donde {
@@ -74,7 +74,7 @@
 
 .respuesta blockquote {
   margin: 0 0 var(--e2);
-  font: italic 500 1.15rem/1.3 var(--fuente-voz);
+  font: italic 500 1.5rem/1.25 var(--fuente-voz);
 }
 
 .respuesta p {
@@ -92,7 +92,7 @@
 
 .variantes li {
   display: grid;
-  grid-template-columns: 1.4rem 1fr 1.2rem;
+  grid-template-columns: 1.4rem 1fr 5.5rem;
   align-items: center;
   gap: var(--e2);
   font-size: var(--texto-s);
