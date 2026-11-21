@@ -314,10 +314,18 @@ def situacion_laboral(f):
 # ---------------------------------------------------------------- secciones del censo y de Casen
 
 
+def texto_edad(f):
+    if f["edad"] >= 85:
+        return "85 años o más"
+    if f.get("edad_suprimida"):
+        return f"entre {f['edad']} y {f['edad'] + 4} años"
+    return f"{f['edad']} años"
+
+
 def identidad(f, e, g, q=todo):
     quien = {1: "hombre", 2: "mujer", 3: "hombre trans", 4: "mujer trans", 5: "una persona no binaria"}.get(f["genero"])
     quien = quien or (None if valido(f["genero"]) else {1: "hombre", 2: "mujer"}.get(f["sexo"]))
-    edad = "85 años o más" if f["edad"] >= 85 else f"{f['edad']} años"
+    edad = texto_edad(f)
     region = e["territorios"].get(("region", f["region"]))
     comuna = e["territorios"].get(("comuna", f["comuna"]))
     zona = {1: "urbana", 2: "rural"}.get(f["area"])
@@ -403,6 +411,8 @@ def trabajo(f, e, g, q=todo):
 
 def menores_del_hogar(f):
     """(frase, grupo): los niños y adolescentes que viven en el hogar, con sus edades."""
+    if f.get("edades_menores_conocidas") is False:
+        return None, "Sin dato"
     todos = list(f["edades_menores"] or [])
     if not todos:
         return "En tu hogar no viven menores de 18 años.", "Sin menores"
@@ -446,7 +456,7 @@ def hogar(f, e, g, q=todo):
     g["Tipo de hogar"] = e["censo"]["tipologia_hogar"].get(f["tipologia_hogar"]) if valido(f["tipologia_hogar"]) else None
 
     frase, g["Menores en el hogar"] = menores_del_hogar(f)
-    if n > 1 and q("menores_hogar"):
+    if n > 1 and frase and q("menores_hogar"):
         frases.append(frase)
     otros_mayores = (f["mayores_65"] or 0) - (1 if f["edad"] >= 65 else 0)
     if otros_mayores > 0 and q("mayores_hogar"):

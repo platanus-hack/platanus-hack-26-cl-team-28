@@ -44,6 +44,7 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
   const base = enCorrida ? sim.totalCorrida : sim.conexion?.demo ? (sim.conexion?.agentes.length ?? 0) : filtros.tamano;
   const representadas = !enCorrida && !sim.conexion?.demo ? muestra.representadas : undefined;
   const niveles = sim.conexion?.estado?.poblacion?.niveles ?? [];
+  const grupoFijo = niveles.length === 1 && (niveles[0] === 3 || niveles[0] === 5) ? niveles[0] : null;
   const llenos = base ? Math.max(muestra.total ? 1 : 0, Math.round((muestra.total / base) * CUADROS)) : 0;
   const cambiar = (parte: Partial<Filtros>) => setFiltros({ ...filtros, ...parte });
   const alternar = (clave: 'region' | 'genero' | 'quintil' | 'educacion', valor: number) =>
@@ -78,6 +79,8 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
           <span>
             {enCorrida
               ? `de ${formatear(base)} personas, las que estás mirando`
+              : grupoFijo !== null && representadas
+                ? `agentes van a responder, sorteados de un catálogo que representa a ${formatear(representadas)} personas con estos filtros`
               : representadas
                 ? `personas del Censo 2024 van a responder, sorteadas entre las ${formatear(representadas)} que cumplen los filtros`
                 : `personas del Censo 2024 van a responder`}
@@ -107,7 +110,11 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
           </div>
         </fieldset>
 
-        {niveles.length > 1 && (
+        {grupoFijo !== null ? (
+          <fieldset className={estilos.grupo}>
+            <legend>Clusterización <output>1 agente por cada {grupoFijo} personas</output></legend>
+          </fieldset>
+        ) : niveles.length > 1 && (
           <fieldset className={estilos.grupo}>
             <legend>
               Clusterización
@@ -187,26 +194,28 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
           </fieldset>
         </div>
 
-        <fieldset className={estilos.grupo}>
-          <legend>
-            Ingreso del hogar
-            <output>{filtros.quintil === SIN_FILTRO ? 'de menor a mayor' : `quintil ${QUINTILES[filtros.quintil]}`}</output>
-          </legend>
-          <div className={estilos.escalera} data-eligiendo={filtros.quintil !== SIN_FILTRO || undefined}>
-            {QUINTILES.map((nombre, k) => (
-              <button
-                key={nombre}
-                type="button"
-                aria-pressed={filtros.quintil === k}
-                aria-label={`Quintil ${nombre}`}
-                style={{ '--alto': `${44 + k * 14}%` } as CSSProperties}
-                onClick={() => alternar('quintil', k)}
-              >
-                <span>{nombre}</span>
-              </button>
-            ))}
-          </div>
-        </fieldset>
+        {grupoFijo === null && (
+          <fieldset className={estilos.grupo}>
+            <legend>
+              Ingreso del hogar
+              <output>{filtros.quintil === SIN_FILTRO ? 'de menor a mayor' : `quintil ${QUINTILES[filtros.quintil]}`}</output>
+            </legend>
+            <div className={estilos.escalera} data-eligiendo={filtros.quintil !== SIN_FILTRO || undefined}>
+              {QUINTILES.map((nombre, k) => (
+                <button
+                  key={nombre}
+                  type="button"
+                  aria-pressed={filtros.quintil === k}
+                  aria-label={`Quintil ${nombre}`}
+                  style={{ '--alto': `${44 + k * 14}%` } as CSSProperties}
+                  onClick={() => alternar('quintil', k)}
+                >
+                  <span>{nombre}</span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        )}
 
         {filtrando && (
           <button type="button" className={estilos.limpiar} onClick={() => setFiltros({ ...FILTROS_INICIALES, tamano: filtros.tamano, reduccion: filtros.reduccion })}>

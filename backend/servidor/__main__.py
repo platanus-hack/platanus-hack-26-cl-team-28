@@ -47,6 +47,8 @@ POBLACION = elegir_poblacion(fija=GRABADO)
 FIJOS = POBLACION.agentes if isinstance(POBLACION, ArchivoFijo) else ArchivoFijo().agentes
 MOTOR = elegir_motor(FIJOS)
 if MOTOR.grabado and not isinstance(POBLACION, ArchivoFijo):
+    if os.environ.get("TAMANO_GRUPO") is not None:
+        raise SystemExit("TAMANO_GRUPO requiere un motor en vivo disponible. Configura Claude o LLAMA_URL.")
     POBLACION = ArchivoFijo()
 CACHE = Cache()
 CORRIDAS: dict[str, Corrida] = {}
@@ -58,7 +60,7 @@ def sacar_muestra(filtros: dict | None, tamano) -> Muestra:
     """Filtra la población y sortea; las últimas muestras se guardan para poder correrlas."""
     tamano = max(1, min(MAXIMO_MUESTRA, int(tamano or TAMANO_POR_DEFECTO)))
     # Una muestra ya pedida se devuelve tal cual: el sorteo es fijo, así que sería la misma.
-    conocida = identificador(limpiar(filtros), tamano)
+    conocida = identificador(limpiar(filtros), tamano, POBLACION.tamano_grupo)
     with CERROJO_MUESTRAS:
         if conocida in MUESTRAS:
             MUESTRAS.move_to_end(conocida)

@@ -20,8 +20,9 @@ import ast
 import dataclasses
 import hashlib
 import json
+import os
 import threading
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -30,6 +31,8 @@ from .agentes import ARCHIVO_AGENTES, REGIONES, Agente, agente_de, cargar_agente
 
 RAIZ = Path(__file__).resolve().parent.parent
 CARPETA_TABLA = RAIZ / "data" / "agentes"
+CARPETA_TRIOS = RAIZ / "data" / "agentes_trios"
+CARPETAS_GRUPOS = {3: CARPETA_TRIOS, 5: RAIZ / "data" / "agentes_grupos_5"}
 # La muestra es siempre la misma para los mismos filtros: así la caché de respuestas sirve.
 SEMILLA = 2024
 EDAD_SIN_TOPE = 90
@@ -78,7 +81,7 @@ def limpiar(filtros: dict | None) -> dict:
         "region": entero("region", SIN_FILTRO), "edadMin": max(EDAD_MINIMA, entero("edadMin", EDAD_MINIMA)), "edadMax": min(EDAD_SIN_TOPE, entero("edadMax", EDAD_SIN_TOPE)),
         "genero": entero("genero", SIN_FILTRO), "quintil": entero("quintil", SIN_FILTRO),
         "educacion": entero("educacion", SIN_FILTRO), "politica": entero("politica", SIN_FILTRO),
-        "reduccion": entero("reduccion", SIN_REDUCIR) if entero("reduccion", SIN_REDUCIR) in NIVELES else SIN_REDUCIR,
+        "reduccion": entero("reduccion", SIN_REDUCIR) if entero("reduccion", SIN_REDUCIR) in (*NIVELES, *CARPETAS_GRUPOS) else SIN_REDUCIR,
     }
 
 
@@ -115,14 +118,18 @@ def repartir(tamano: int, por_region: dict[int, tuple[int, float]]) -> dict[int,
     return cuotas
 
 
-def identificador(filtros: dict, tamano: int) -> str:
-    return hashlib.sha256(json.dumps([filtros, tamano], sort_keys=True).encode()).hexdigest()[:12]
+def identificador(filtros: dict, tamano: int, tamano_grupo: int | None = None) -> str:
+    clave = [filtros, tamano]
+    if tamano_grupo is not None:
+        clave.append(tamano_grupo)
+    return hashlib.sha256(json.dumps(clave, sort_keys=True).encode()).hexdigest()[:12]
 
 
 class ArchivoFijo:
     """Las 2.000 personas del archivo de pruebas, filtradas en memoria."""
 
     nombre = "Archivo de 2.000 personas"
+    tamano_grupo = None
 
     def __init__(self, archivo: Path = ARCHIVO_AGENTES):
         self.agentes = cargar_agentes(archivo)
@@ -154,7 +161,7 @@ class TablaAgentes:
 
     nombre = "Tabla de agentes del Censo 2024"
 
-    def __init__(self, carpeta: Path = CARPETA_TABLA):
+    def __init__(self, carpeta: Path = CARPETA_TABLA, tamano_grupo: int | None = None):
         import duckdb  # solo hace falta para esta fuente
 
         ruta = RAIZ / "scripts" / "personas_muestra.py"
@@ -162,15 +169,28 @@ class TablaAgentes:
         self._perfiles, self._etiquetas, self._secciones = metodo.redactor()
         self._comunas = cargar_comunas()
         self._carpeta = carpeta
+        manifiesto = carpeta / "catalogo.json"
+        self.tamano_grupo = json.loads(manifiesto.read_text(encoding="utf-8"))["tamano_grupo"] if manifiesto.is_file() else None
+        if tamano_grupo is not None and self.tamano_grupo != tamano_grupo:
+            raise ValueError(f"{carpeta} debe contener un catálogo válido de grupos de {tamano_grupo}.")
+        es_catalogo_fijo = self.tamano_grupo is not None
         if not list(carpeta.glob("region_*.parquet")):
             raise FileNotFoundError(f"No hay tabla de agentes en {carpeta}")
         self._con = duckdb.connect()
         self._cerrojo = threading.Lock()
         self._agentes, self._personas = self._con.execute(f"select count(*), sum(representa) from {self._origen(SIN_FILTRO)}").fetchall()[0]
+        if es_catalogo_fijo:
+            limites = self._con.execute(f"select min(representa), max(representa) from {self._origen(SIN_FILTRO)}").fetchone()
+            if limites != (self.tamano_grupo, self.tamano_grupo) or self._personas != self._agentes * self.tamano_grupo:
+                raise ValueError(f"{carpeta} contiene grupos de tamaño inconsistente.")
         self._columnas = self._columnas_del_perfil(ruta)
         self._armados: OrderedDict[int, Agente] = OrderedDict()
         de_la_tabla = {c[0] for c in self._con.execute(f"describe select * from {self._origen(SIN_FILTRO)}").fetchall()}
-        self._niveles = {n: columna for n, columna in NIVELES.items() if columna in de_la_tabla}
+        if es_catalogo_fijo:
+            self.nombre = f"Catálogo de grupos de {self.tamano_grupo} del Censo 2024"
+            self._niveles = {self.tamano_grupo: "representa"}
+        else:
+            self._niveles = {n: columna for n, columna in NIVELES.items() if columna in de_la_tabla}
 
     def _columnas_del_perfil(self, ruta: Path) -> str:
         """Solo las columnas que el perfil usa: leer las 230 de la tabla cuesta el doble.
@@ -209,6 +229,7 @@ class TablaAgentes:
         f = limpiar(filtros)
         origen = self._origen(f["region"])
         peso = self._niveles.get(f["reduccion"], NIVELES[SIN_REDUCIR])
+        es_catalogo_fijo = self.tamano_grupo is not None
         donde, valores = self._condiciones(f, peso)
         with self._cerrojo:
             cursor = self._con.cursor()
@@ -239,21 +260,42 @@ class TablaAgentes:
                 columnas = [c[0] for c in resultado.description]
                 for valores_fila in resultado.fetchall():
                     fila = dict(zip(columnas, valores_fila))
-                    perfil, grupos = self._perfiles.describir(fila, self._etiquetas, self._secciones, con_cep=True)
+                    if es_catalogo_fijo:
+                        fila = defaultdict(lambda: None, fila)
+                    perfil, grupos = self._perfiles.describir(fila, self._etiquetas, self._secciones, con_cep=not es_catalogo_fijo)
                     datos = self._perfiles.datos_sueltos(fila, self._etiquetas, grupos)
-                    self._armados[fila["id_persona_muestra"]] = agente_de(0, f"p{fila['id_persona_muestra']}", perfil, grupos, datos, self._comunas, fila)
+                    id_persona = fila["id_persona_muestra"]
+                    prefijo = {3: "trio-", 5: "grupo5-"}.get(self.tamano_grupo, "p")
+                    armado = agente_de(0, f"{prefijo}{id_persona}", perfil, grupos, datos, self._comunas, fila)
+                    if es_catalogo_fijo:
+                        atributos = {**armado.atributos, "Edad": self._perfiles.texto_edad(fila)}
+                        armado = dataclasses.replace(armado, atributos=atributos, quintil=-1)
+                    self._armados[id_persona] = armado
             agentes = [dataclasses.replace(self._armados[i], indice=k, representa=int(w)) for k, (i, w) in enumerate(sorteo)]
             for i in elegidos:
                 self._armados.move_to_end(i)
             while len(self._armados) > AGENTES_GUARDADOS:
                 self._armados.popitem(last=False)
-        return Muestra(identificador(f, tamano), agentes, int(disponibles), int(representadas))
+        return Muestra(identificador(f, tamano, self.tamano_grupo), agentes, int(disponibles), int(representadas))
 
 
 def elegir_poblacion(fija: bool = False):
-    """La tabla de agentes si se puede leer; si no, o si se pide, el archivo fijo."""
+    """Selecciona un catálogo experimental por flag y mantiene el respaldo histórico."""
+    pedido = os.environ.get("TAMANO_GRUPO")
+    if pedido is not None:
+        if pedido not in ("3", "5"):
+            raise ValueError("TAMANO_GRUPO debe ser 3 o 5.")
+        if fija:
+            raise ValueError("TAMANO_GRUPO requiere un motor en vivo. MOTOR=grabado usa el panel histórico.")
+        tamano = int(pedido)
+        carpeta = CARPETAS_GRUPOS[tamano]
+        if not (carpeta / "catalogo.json").is_file():
+            raise FileNotFoundError(f"Falta el catálogo en {carpeta}. Genéralo con scripts/exportar_catalogo.py --tamano {tamano}.")
+        return TablaAgentes(carpeta, tamano_grupo=tamano)
     if not fija:
         try:
+            if (CARPETA_TRIOS / "catalogo.json").is_file():
+                return TablaAgentes(CARPETA_TRIOS, tamano_grupo=3)
             return TablaAgentes()
         except (ImportError, FileNotFoundError) as error:
             print(f"Sin tabla de agentes ({error}); se usa el archivo de 2.000 personas.", flush=True)
