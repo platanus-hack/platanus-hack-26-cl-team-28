@@ -4,57 +4,50 @@
   gap: var(--e1);
 }
 
+/*
+ * Una papeleta por variante: la letra, su apoyo y, al pie, una barra que se llena con ese
+ * apoyo. Se comparan de un vistazo por el largo de la barra.
+ */
 .pestanas {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--e2);
-  max-width: 30rem;
+  gap: 6px;
+  max-width: 100%;
 }
 
 .pestanas button {
+  position: relative;
   display: grid;
-  justify-items: start;
-  gap: var(--e0);
-  min-width: 6.4rem;
-  min-height: 56px;
-  padding: var(--e2) var(--e3);
-  border: 1px solid var(--linea-suave);
-  border-radius: var(--radio);
-  background: var(--papel-velo);
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  column-gap: var(--e2);
+  row-gap: 2px;
+  min-width: 6.2rem;
+  min-height: 58px;
+  padding: var(--e2) var(--e3) 13px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 3px;
+  background: var(--relleno-suave);
   color: var(--tinta-suave);
   text-align: left;
-  transition: background var(--rapido);
+  transition:
+    background var(--rapido),
+    color var(--rapido);
 }
 
 .pestanas b {
-  font: 500 1.5rem/1 var(--fuente-voz);
+  grid-row: span 2;
+  align-self: center;
+  font: 650 1.7rem/1 var(--fuente-voz);
+  color: var(--tinta);
 }
 
 .pestanas span {
   font-size: var(--texto-s);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-}
-
-.pestanas small {
-  font-size: var(--texto-xxs);
-  white-space: nowrap;
-}
-
-.pestanas button[aria-selected='true'] {
-  border-color: var(--tinta);
-  background: var(--tinta);
-  color: var(--mar);
-}
-
-.pestanas button:disabled {
-  cursor: default;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .pestanas button[aria-selected='false']:not(:disabled):hover {
-    background: var(--relleno-suave);
-  }
 }
 
 .pestanas em {
@@ -70,10 +63,50 @@
   color: var(--contra-texto);
 }
 
+.pestanas small {
+  grid-column: 1 / -1;
+  font-size: var(--texto-xxs);
+  white-space: nowrap;
+}
+
+/* La barra del pie: cuánto apoyo tiene la variante. */
+.pestanas i {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 5px;
+  background: var(--favor);
+  transition: width 700ms var(--curva-salida);
+}
+
+.pestanas button::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: var(--linea-suave);
+}
+
+.pestanas i {
+  z-index: 1;
+}
+
+.pestanas button[aria-selected='true'] {
+  background: var(--tinta);
+  color: var(--mar);
+}
+
+.pestanas button[aria-selected='true'] b,
 .pestanas button[aria-selected='true'] em {
   color: inherit;
 }
 
-.pestanas button[data-iteracion] {
-  border-style: dashed;
+.pestanas button:disabled {
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pestanas button[aria-selected='false']:not(:disabled):hover {
+    background: var(--linea-suave);
+  }
 }

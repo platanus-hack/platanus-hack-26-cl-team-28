@@ -41,7 +41,8 @@ export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver }:
                   {delta} pts
                 </em>
               )}
-              {caso.iteracion && <small>reescrita por el agente</small>}
+              {caso.iteracion && <small>versión del agente</small>}
+              <i aria-hidden="true" style={{ width: `${caso.respondidas ? pct : 0}%` }} />
             </button>
           );
         })}

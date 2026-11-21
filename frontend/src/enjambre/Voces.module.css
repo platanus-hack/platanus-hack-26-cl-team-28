@@ -5,16 +5,30 @@
   pointer-events: none;
 }
 
+/*
+ * Globo de diálogo: relleno con el color de la postura y una punta que apunta al punto de
+ * quien habla. Nada de tarjeta con borde: se tiene que leer como alguien diciendo algo.
+ */
 .globo {
   position: absolute;
   margin: 0;
-  padding: var(--e3) var(--e4);
-  border-left: 3px solid var(--color);
-  border-radius: 0 var(--radio) var(--radio) 0;
-  background: var(--papel-velo);
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
-  animation: entrar 420ms var(--curva-salida) both;
-  transition: opacity 600ms, translate 600ms;
+  padding: var(--e3) var(--e4) var(--e3);
+  border-radius: 16px;
+  background: var(--color);
+  color: var(--tinta-figura);
+  transform-origin: 0 34px;
+  animation: entrar 460ms cubic-bezier(0.34, 1.5, 0.64, 1) both;
+}
+
+.globo::before {
+  content: '';
+  position: absolute;
+  top: 26px;
+  left: -11px;
+  border: 9px solid transparent;
+  border-right-color: var(--color);
+  border-left-width: 0;
+  border-right-width: 12px;
 }
 
 .globo[data-postura='favor'] {
@@ -30,37 +44,41 @@
 }
 
 .globo[data-lado='izquierda'] {
-  border-right: 3px solid var(--color);
-  border-left: 0;
-  border-radius: var(--radio) 0 0 var(--radio);
-  text-align: right;
+  transform-origin: 100% 34px;
+}
+
+.globo[data-lado='izquierda']::before {
+  right: -11px;
+  left: auto;
+  border-right-width: 0;
+  border-left-width: 12px;
+  border-right-color: transparent;
+  border-left-color: var(--color);
 }
 
 .globo blockquote {
   margin: 0;
-  font: 500 1.6rem/1.22 var(--fuente-voz);
-  color: var(--tinta);
+  font: 600 clamp(1.05rem, 0.8rem + 0.6vw, 1.45rem) / 1.2 var(--fuente-voz);
+  letter-spacing: -0.01em;
   text-wrap: pretty;
 }
 
 .globo figcaption {
   margin-top: var(--e2);
-  font: 600 1rem / 1.2 var(--fuente-ui);
-  letter-spacing: 0.02em;
-  color: var(--tinta-suave);
+  font: 650 var(--texto-s) / 1.2 var(--fuente-ui);
+  opacity: 0.72;
 }
 
 @keyframes entrar {
   from {
     opacity: 0;
-    translate: 0 10px;
+    scale: 0.6;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .globo {
     animation: none;
-    transition: none;
   }
 }
 
@@ -72,5 +90,8 @@
 
 .capa[data-saliendo] .globo {
   opacity: 0;
-  transition: opacity 400ms ease-out;
+  scale: 0.9;
+  transition:
+    opacity 400ms ease-out,
+    scale 400ms ease-out;
 }

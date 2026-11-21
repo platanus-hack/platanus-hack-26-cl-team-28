@@ -187,7 +187,7 @@ export function AppEnjambre() {
       <div className={estilos.derecha}>
       <div className={estilos.nota}>
         <Insignia conexion={conexion} agentes={muestra.total} indecisas={pct?.indecisa} />
-        {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} viendo={viendo} />}
+        {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} />}
         {caso && sim.filtrada && (
           <p className={estilos.filtro}>
             Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes, según los filtros

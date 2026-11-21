@@ -1,49 +1,77 @@
+/*
+ * Credencial de una persona. Arriba, una franja del color de su postura con su criatura
+ * asomada; abajo, papel plano. Una esquina recortada, sin marco ni sombra de tarjeta.
+ */
 .ficha {
+  --color: var(--indecisa);
   position: absolute;
   z-index: 3;
   display: grid;
-  gap: var(--e3);
-  max-height: calc(100dvh - 32px);
-  padding: var(--e4);
-  overflow: auto;
-  border: 1px solid var(--linea-suave);
-  border-radius: var(--radio);
+  grid-template-rows: auto minmax(0, 1fr);
   background: var(--papel);
-  box-shadow: 0 18px 48px rgb(0 0 0 / 0.35);
-  animation: abrir 260ms var(--curva-salida) both;
+  color: var(--tinta);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 22px), calc(100% - 22px) 100%, 0 100%);
+  animation: abrir 320ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
 }
 
 .ficha:focus {
   outline: none;
 }
 
-.ficha header {
-  position: relative;
-  padding-right: 40px;
+.ficha[data-postura='favor'],
+.variantes li[data-postura='favor'] {
+  --color: var(--favor);
 }
 
-.quien {
-  font: 500 1.7rem/1.1 var(--fuente-voz);
+.ficha[data-postura='contra'],
+.variantes li[data-postura='contra'] {
+  --color: var(--contra);
 }
 
-.donde {
-  margin-top: var(--e1);
-  font-size: var(--texto-s);
-  color: var(--tinta-suave);
+.variantes li[data-postura='indecisa'] {
+  --color: var(--indecisa);
+}
+
+.franja {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e3);
+  height: 62px;
+  padding: 0 var(--e3) 0 var(--e4);
+  background: var(--color);
+  color: var(--tinta-figura);
+}
+
+/* La criatura se asoma: sus pies bajan de la franja al papel. */
+.franja canvas {
+  margin-bottom: -12px;
+}
+
+.postura {
+  flex: 1;
+  display: grid;
+  gap: 3px;
+  align-self: center;
+  font: 650 1.45rem/1 var(--fuente-voz);
+  letter-spacing: -0.01em;
+}
+
+.postura span {
+  font: 600 var(--texto-s) / 1 var(--fuente-ui);
+  letter-spacing: 0;
+  opacity: 0.75;
 }
 
 .cerrar {
-  position: absolute;
-  top: -6px;
-  right: -6px;
+  align-self: center;
   display: grid;
   place-items: center;
   width: 40px;
   height: 40px;
   border: 0;
-  border-radius: var(--radio);
+  border-radius: 50%;
   background: transparent;
-  color: var(--tinta-suave);
+  color: var(--tinta-figura);
 }
 
 .cerrar svg {
@@ -51,111 +79,123 @@
   height: 12px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.8;
+  stroke-width: 2;
   stroke-linecap: round;
 }
 
-.respuesta {
-  padding-left: var(--e3);
-  border-left: 3px solid var(--color);
+.cuerpo {
+  display: grid;
+  align-content: start;
+  gap: var(--e3);
+  padding: var(--e5) var(--e4) var(--e5);
+  overflow-y: auto;
 }
 
-[data-postura='favor'] {
-  --color: var(--favor);
+.frase {
+  margin: 0;
+  font: 600 1.4rem/1.2 var(--fuente-voz);
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
 }
 
-[data-postura='contra'] {
-  --color: var(--contra);
+.frase::before {
+  content: '“';
 }
 
-[data-postura='indecisa'] {
-  --color: var(--indecisa);
+.frase::after {
+  content: '”';
 }
 
-.respuesta blockquote {
-  margin: 0 0 var(--e2);
-  font: 500 1.5rem/1.25 var(--fuente-voz);
+.quien {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--e2);
+  font-size: var(--texto-m);
+  font-weight: 650;
 }
 
-.respuesta p {
-  font-size: var(--texto-s);
+.quien span {
+  font-weight: 400;
   color: var(--tinta-suave);
 }
 
+/* Cada variante en la misma escala de 1 a 7 con que respondió: siete cuadrados. */
 .variantes {
   display: grid;
-  gap: var(--e1);
+  gap: 6px;
   margin: 0;
-  padding: 0;
+  padding: var(--e3) 0;
+  border-block: 1px solid var(--linea-suave);
   list-style: none;
 }
 
 .variantes li {
   display: grid;
-  grid-template-columns: 1.4rem 1fr 5.5rem;
+  grid-template-columns: 1.3rem auto 1fr;
   align-items: center;
-  gap: var(--e2);
-  font-size: var(--texto-s);
+  gap: var(--e3);
 }
 
 .variantes b {
-  font: 500 1.05rem/1 var(--fuente-voz);
+  font: 650 1rem/1 var(--fuente-voz);
 }
 
 .variantes span {
-  height: 6px;
-  border-radius: 3px;
-  background: var(--color, var(--linea-suave));
-  transition: width var(--medio);
+  display: flex;
+  gap: 4px;
 }
 
 .variantes i {
+  width: 16px;
+  height: 16px;
+  background: var(--relleno-suave);
+}
+
+.variantes i[data-lleno] {
+  background: var(--color, var(--tinta-suave));
+}
+
+.variantes em {
+  font: 600 var(--texto-s) / 1 var(--fuente-ui);
   font-variant-numeric: tabular-nums;
   color: var(--tinta-suave);
-  text-align: right;
 }
 
 .datos {
-  display: grid;
-  gap: var(--e2);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
   margin: 0;
-  padding-top: var(--e3);
-  border-top: 1px solid var(--linea-suave);
+  padding: 0;
+  list-style: none;
 }
 
-.datos div {
-  display: grid;
-  grid-template-columns: 8.5rem 1fr;
-  gap: var(--e2);
-  font-size: var(--texto-xs);
-  line-height: 1.3;
-}
-
-.datos dt {
-  color: var(--tinta-suave);
-}
-
-.datos dd {
-  margin: 0;
+.datos li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--relleno-suave);
+  font-size: var(--texto-s);
+  line-height: 1.2;
 }
 
 .fuente {
+  padding-right: 22px;
   font-size: var(--texto-xxs);
-  line-height: 1.35;
+  line-height: 1.3;
   color: var(--tinta-suave);
 }
 
 @keyframes abrir {
   from {
     opacity: 0;
-    scale: 0.97;
+    scale: 0.92;
+    translate: 0 8px;
   }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .cerrar:hover {
-    background: var(--relleno-suave);
-    color: var(--tinta);
+    background: rgb(0 0 0 / 0.14);
   }
 }
 

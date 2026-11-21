@@ -1,0 +1,479 @@
+/*
+ * Cajón de la muestra: una hoja a todo el alto pegada al borde derecho. Plana, sin marco ni
+ * esquinas redondeadas: su único borde es la línea que la separa del mapa.
+ */
+.cajon {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 6;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100vw, 25.5rem);
+  border-left: 1px solid var(--linea-suave);
+  background: var(--papel);
+  color: var(--tinta);
+  animation: entrar 360ms var(--curva-salida) both;
+}
+
+.cajon:focus {
+  outline: none;
+}
+
+@keyframes entrar {
+  from {
+    translate: 100% 0;
+  }
+}
+
+/* Cabeza: cuánta gente queda, en grande, y la misma cuenta dibujada con cuadrados. */
+.cabeza {
+  position: relative;
+  display: grid;
+  gap: var(--e3);
+  padding: var(--e5) var(--e5) var(--e4);
+}
+
+.cuenta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e3);
+  padding-right: 44px;
+}
+
+.cuenta b {
+  font: 600 clamp(2.6rem, 1.8rem + 2.4vh, 3.6rem) / 0.9 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.cuenta span {
+  font-size: var(--texto-s);
+  line-height: 1.25;
+  color: var(--tinta-suave);
+}
+
+.cerrar {
+  position: absolute;
+  top: var(--e3);
+  right: var(--e3);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--tinta-suave);
+}
+
+.cerrar svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.cuadros {
+  display: grid;
+  grid-template-columns: repeat(30, 1fr);
+  gap: 3px;
+}
+
+.cuadros i {
+  aspect-ratio: 1;
+  background: var(--linea-suave);
+  transition: background 240ms;
+}
+
+.cuadros i[data-lleno] {
+  background: var(--tinta);
+}
+
+/* Cuerpo: los filtros. */
+.cuerpo {
+  display: grid;
+  align-content: start;
+  gap: var(--e4);
+  padding: var(--e2) var(--e5) var(--e4);
+  overflow-y: auto;
+}
+
+.grupo {
+  display: grid;
+  align-content: start;
+  gap: var(--e2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.grupo legend {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  width: 100%;
+  margin-bottom: var(--e2);
+  padding: 0;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.grupo output {
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--tinta);
+}
+
+.par {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--e5);
+}
+
+/* Fichas que se tocan: apagadas dejan pasar a todos; una encendida filtra. */
+.fichas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.fichas button,
+.ejemplos button {
+  min-height: 34px;
+  padding: 0 var(--e3);
+  border: 0;
+  border-radius: 999px;
+  background: var(--relleno-suave);
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 500;
+  transition:
+    background var(--rapido),
+    color var(--rapido),
+    scale var(--rapido);
+}
+
+.fichas[data-denso] button {
+  min-height: 30px;
+  padding: 0 10px;
+}
+
+.fichas button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+  font-weight: 650;
+}
+
+.fichas button:active,
+.tamanos button:active,
+.escalera button:active {
+  scale: 0.95;
+}
+
+/* Tamaño de la muestra: cuatro cifras grandes sobre una misma línea. */
+.tamanos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 2px solid var(--linea-suave);
+}
+
+.tamanos button {
+  margin-bottom: -2px;
+  padding: var(--e2) 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--tinta-suave);
+  font: 500 1.25rem/1 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  text-align: left;
+  transition:
+    color var(--rapido),
+    border-color var(--rapido);
+}
+
+.tamanos button[aria-pressed='true'] {
+  border-color: var(--tinta);
+  color: var(--tinta);
+  font-weight: 650;
+}
+
+/* Edad: una regla con dos topes. */
+.edad {
+  position: relative;
+  height: 30px;
+  background:
+    linear-gradient(var(--tinta), var(--tinta)) no-repeat,
+    linear-gradient(var(--linea-suave), var(--linea-suave)) no-repeat;
+  background-size:
+    calc((100% - 16px) * (var(--hasta) - var(--desde)) / 100%) 4px,
+    calc(100% - 16px) 4px;
+  background-position:
+    calc(8px + (100% - 16px) * var(--desde) / 100%) 50%,
+    8px 50%;
+}
+
+.edad input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.edad input::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 24px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--tinta);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.edad input::-moz-range-thumb {
+  width: 16px;
+  height: 24px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--tinta);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.edad input:focus-visible {
+  outline: 0;
+}
+
+.edad input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.edad input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+/* Ingreso: una escalera de cinco peldaños; se elige tocando uno. */
+.escalera {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: end;
+  gap: 5px;
+  height: 64px;
+}
+
+.escalera button {
+  display: grid;
+  align-items: end;
+  height: var(--alto);
+  padding: 0 0 5px 8px;
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  background: var(--tinta-suave);
+  color: var(--papel);
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  text-align: left;
+  transition:
+    background var(--rapido),
+    scale var(--rapido);
+  transform-origin: bottom;
+}
+
+.escalera[data-eligiendo] button {
+  background: var(--relleno-suave);
+  color: var(--tinta-suave);
+}
+
+.escalera button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.limpiar {
+  justify-self: start;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Pie: ejemplos para probar y cómo se ve la pantalla. */
+.pie {
+  display: grid;
+  gap: var(--e3);
+  padding: var(--e3) var(--e5) var(--e4);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.ejemplos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ejemplos p {
+  width: 100%;
+  margin-bottom: 3px;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.ejemplos button {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--tinta-suave);
+}
+
+.vista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.tema {
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--relleno-suave);
+}
+
+.tema button {
+  min-height: 30px;
+  padding: 0 var(--e3);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  font-weight: 600;
+}
+
+.tema button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.ocultar {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 600;
+}
+
+.ocultar kbd {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 1px solid var(--tinta-suave);
+  border-radius: 4px;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .fichas button[aria-pressed='false']:hover,
+  .ejemplos button:hover {
+    background: var(--linea-suave);
+  }
+
+  .tamanos button:hover,
+  .cerrar:hover {
+    color: var(--tinta);
+  }
+
+  .escalera button:hover {
+    scale: 1 1.06;
+  }
+}
+
+/* Ventanas bajas: todo se aprieta para caber sin desplazarse. */
+@media (max-height: 760px) {
+  .cabeza {
+    gap: var(--e2);
+    padding: var(--e4) var(--e5) var(--e3);
+  }
+
+  .cuerpo {
+    gap: var(--e3);
+  }
+
+  .grupo legend {
+    margin-bottom: var(--e1);
+  }
+
+  .escalera {
+    height: 48px;
+  }
+
+  .cuadros {
+    grid-template-columns: repeat(60, 1fr);
+    gap: 2px;
+  }
+
+  .pie {
+    gap: var(--e2);
+    padding-block: var(--e2) var(--e3);
+  }
+
+  .fichas button,
+  .ejemplos button {
+    min-height: 28px;
+    padding: 0 9px;
+    font-size: var(--texto-xs);
+  }
+
+  .fichas[data-denso] button {
+    min-height: 26px;
+    padding: 0 8px;
+  }
+
+  .ejemplos p {
+    display: none;
+  }
+
+  .tamanos button {
+    padding: var(--e1) 0;
+    font-size: 1.1rem;
+  }
+
+  .edad {
+    height: 24px;
+  }
+
+  .edad input::-webkit-slider-thumb {
+    height: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cajon {
+    animation: none;
+  }
+}

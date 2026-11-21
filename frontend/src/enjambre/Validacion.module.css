@@ -1,103 +1,100 @@
-.validacion {
+/*
+ * Comparación con la encuesta real, sin tarjeta: una regla de 0 a 100 con dos marcas. La de
+ * arriba es la encuesta; la de abajo, los agentes. Si casi se tocan, acertó.
+ */
+.regla {
   display: grid;
   gap: var(--e2);
   width: min(100%, 21rem);
-  padding: var(--e3) var(--e4);
-  border: 1px solid var(--linea-suave);
-  border-radius: var(--radio);
-  background: var(--papel-velo);
+  text-align: left;
   animation: entrar 500ms var(--curva-salida) both;
 }
 
 .titulo {
-  font: 650 var(--texto-xs) / 1.2 var(--fuente-ui);
+  font: 650 var(--texto-xs) / 1.25 var(--fuente-ui);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tinta-suave);
 }
 
-.filas {
+.pista {
+  position: relative;
   display: grid;
-  gap: var(--e1);
+  gap: 5px;
+  padding-block: 2px;
 }
 
-.filas p {
-  display: grid;
-  grid-template-columns: 5.4rem 1fr;
-  align-items: baseline;
-  gap: var(--e2);
+/* La regla: una línea con marcas cada 10 y las dos posiciones resaltadas. */
+.linea {
+  position: relative;
+  height: 12px;
+  background:
+    repeating-linear-gradient(to right, var(--tinta-suave) 0 1px, transparent 1px 10%) 0 50% / 100% 6px no-repeat,
+    linear-gradient(var(--tinta-suave), var(--tinta-suave)) 0 50% / 100% 1px no-repeat;
+  border-right: 1px solid var(--tinta-suave);
 }
 
-.filas b {
-  font: 500 2.3rem/1 var(--fuente-voz);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums lining-nums;
+.linea::before,
+.linea::after {
+  content: '';
+  position: absolute;
+  width: 3px;
+  translate: -50% 0;
 }
 
-.filas p[data-agentes] b {
-  color: var(--favor-texto);
+.linea::before {
+  bottom: 50%;
+  left: var(--encuesta);
+  height: 13px;
+  background: var(--tinta);
 }
 
-.filas p[data-otra] b {
-  color: var(--tinta-fuerte);
+.linea::after {
+  top: 50%;
+  left: var(--agentes);
+  height: 13px;
+  background: var(--favor);
 }
 
-.filas span {
+/* Cada marca lleva su cifra, centrada sobre su posición sin salirse de la regla. */
+.marca {
+  justify-self: start;
+  margin-left: clamp(0%, var(--donde) - 2.6rem, 100% - 7.4rem);
   font-size: var(--texto-s);
-  line-height: 1.25;
+  line-height: 1;
   color: var(--tinta-suave);
+  white-space: nowrap;
 }
 
-.distancia {
-  font-size: var(--texto-s);
+.marca[data-encuesta] {
+  --donde: var(--encuesta);
+}
+
+.marca[data-agentes] {
+  --donde: var(--agentes);
+}
+
+.marca b {
+  margin-right: 0.2em;
+  font: 600 1.7rem/1 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
   color: var(--tinta);
 }
 
-.distancia a {
+.marca[data-agentes] b {
+  color: var(--favor-texto);
+}
+
+.pie {
+  font-size: var(--texto-s);
+  line-height: 1.3;
+  color: var(--tinta);
+}
+
+.pie a {
   color: var(--tinta-suave);
   text-underline-offset: 3px;
-}
-
-/* El momento en que se contesta "¿cómo confiamos?": las dos cifras al centro, grandes. */
-.validacion[data-grande] {
-  justify-items: center;
-  gap: var(--e4);
-  width: auto;
-  padding: var(--e6) var(--e7);
-  background: var(--papel);
-  box-shadow: 0 30px 90px rgb(0 0 0 / 0.55);
-  text-align: center;
-  animation: aparecer 600ms var(--curva-salida) both;
-}
-
-.validacion[data-grande] .titulo {
-  font-size: 1.1rem;
-}
-
-.validacion[data-grande] .filas {
-  grid-auto-flow: column;
-  gap: var(--e7);
-}
-
-.validacion[data-grande] .filas p {
-  grid-template-columns: none;
-  justify-items: center;
-  gap: var(--e3);
-}
-
-.validacion[data-grande] .filas b {
-  font-size: clamp(4.5rem, 2rem + 6vw, 8rem);
-  letter-spacing: -0.03em;
-}
-
-.validacion[data-grande] .filas span {
-  max-width: 18rem;
-  min-height: 2.6em;
-  font-size: 1.15rem;
-}
-
-.validacion[data-grande] .distancia {
-  font: 500 clamp(1.4rem, 1rem + 1vw, 2rem) / 1.2 var(--fuente-voz);
 }
 
 @keyframes entrar {
@@ -107,64 +104,14 @@
   }
 }
 
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    scale: 0.94;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .validacion,
-  .validacion[data-grande] {
+  .regla {
     animation: none;
   }
 }
 
 @media (max-width: 899px) {
-  .validacion[data-grande] {
-    padding: var(--e5) var(--e4);
-  }
-
-  .validacion[data-grande] .filas {
-    gap: var(--e4);
-  }
-}
-
-.historial {
-  display: block;
-  margin-top: var(--e1);
-  font: 500 var(--texto-xs) / 1.3 var(--fuente-ui);
-  color: var(--tinta-suave);
-}
-
-.validacion[data-grande] .historial {
-  margin-top: var(--e2);
-  font-size: 1.15rem;
-}
-
-/* Ventanas bajas: la tarjeta se reduce a las dos cifras. */
-@media (max-height: 800px) {
-  .validacion {
-    gap: var(--e1);
-    padding: var(--e2) var(--e3);
-  }
-
-  .filas b {
-    font-size: 1.7rem;
-  }
-
-  .filas p {
-    grid-template-columns: 4.2rem 1fr;
-  }
-
-  .distancia {
-    display: none;
-  }
-}
-
-@media (max-width: 899px) {
-  .validacion {
+  .regla {
     width: 100%;
   }
 }

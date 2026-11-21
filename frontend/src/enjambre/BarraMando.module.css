@@ -4,14 +4,15 @@
   width: min(100%, 27rem);
   max-width: 100%;
   padding: var(--e4);
-  border: 1px solid var(--linea-suave);
-  border-radius: var(--radio);
-  background: var(--papel-velo);
+  /* Una hoja con su borde superior marcado, como una papeleta: sin marco ni esquinas redondas. */
+  border: 0;
+  border-top: 4px solid var(--tinta);
+  background: var(--papel);
 }
 
 .barra[data-sobre] {
-  border-color: var(--tinta);
-  border-style: dashed;
+  border-top-color: var(--favor);
+  background: var(--relleno-suave);
 }
 
 .pestanas {
@@ -50,10 +51,11 @@
   min-height: 3.6rem;
   max-height: 9rem;
   padding: var(--e2) var(--e3);
-  border: 1px solid var(--tinta-suave);
-  border-radius: var(--radio);
+  border: 0;
+  border-bottom: 2px solid var(--tinta-suave);
+  border-radius: 0;
   background: var(--mar);
-  font-size: var(--texto-m);
+  font-size: 1.05rem;
   line-height: 1.35;
   resize: none;
   field-sizing: content;
@@ -174,7 +176,7 @@
 
   .campo textarea {
     min-height: 0;
-    max-height: calc(1.35em * 4 + var(--e2) * 2 + 2px);
+    max-height: calc(1.35em * 5 + var(--e2) * 2 + 2px);
     overflow-y: auto;
     font-size: 1rem;
     line-height: 1.35;
