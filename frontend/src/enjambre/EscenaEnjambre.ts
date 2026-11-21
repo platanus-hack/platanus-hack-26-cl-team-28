@@ -1,7 +1,7 @@
 import { REGIONES } from '../dominio/catalogos';
 import type { Persona } from '../dominio/tipos';
 import { REGIONES_GEO } from '../mapa/geografia';
-import { puntoEnBurbuja, radioDe, ubicarBurbujas, type Burbuja } from './disposicion';
+import { puntoEnBurbuja, radioDe, type Burbuja } from './disposicion';
 
 /** Estado de cada punto. El número es también su color. */
 export const PUNTO = { fuera: 0, neutra: 1, favor: 2, contra: 3, indecisa: 4, pendiente: 5 } as const;
@@ -11,13 +11,13 @@ export const PUNTO = { fuera: 0, neutra: 1, favor: 2, contra: 3, indecisa: 4, pe
  */
 export type ModoVuelo = 'ola' | 'cambio' | 'aparecer' | 'inmediato';
 
-interface Rotulada extends Burbuja {
-  region: number;
+interface Etiqueta {
+  /** Borde del texto más cercano a la burbuja. */
+  x: number;
+  y: number;
   lado: 1 | -1;
-  /** Porcentaje de la región que tomó esta postura. */
-  pct: number;
-  /** Personas distintas en la burbuja (un agente puede dibujarse con varios puntos). */
-  personas: number;
+  region: number;
+  texto: string;
 }
 
 /** Con menos personas que esto en la región, el porcentaje engaña: se muestra cuántas son. */
@@ -35,8 +35,11 @@ const DESTELLO = 0.45;
 /** Desde este ancho las cifras gigantes van a los costados del lienzo. */
 const ANCHO_CON_CIFRAS = 900;
 
-/** Mayor espacio libre, en píxeles, que se deja entre una burbuja y la siguiente hacia el sur. */
-const SEPARACION_MAXIMA = 26;
+/** Disposición del resultado por filas (píxeles). */
+const MARGEN_FILAS = 18;
+const ENTRE_FILAS = 4;
+const ENTRE_FILAS_MAXIMO = 16;
+const SEPARA_ROTULO = 9;
 
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
@@ -61,7 +64,8 @@ export class EscenaEnjambre {
   private readonly llega: Float32Array;
   private readonly color: Uint8Array;
   private estados: Uint8Array;
-  private burbujas: Rotulada[] = [];
+  private burbujas: Burbuja[] = [];
+  private etiquetas: Etiqueta[] = [];
   private colores: string[] = [];
   private tinta = '';
   private fondo = '';
@@ -252,10 +256,15 @@ export class EscenaEnjambre {
   }
 
   /** Calcula a dónde va cada punto según su estado: a su burbuja o de vuelta a casa. */
+  /**
+   * Calcula a dónde va cada punto. Con respuestas, el resultado se arma como una fila por región,
+   * de norte a sur: la burbuja en contra a la izquierda del país, la de a favor a la derecha y el
+   * nombre de la región junto a cada una. Todas las regiones de la muestra aparecen siempre.
+   */
   private destinos(modo: ModoVuelo): void {
     if (!this.ancho) return;
-    const filas = (): number[][] => REGIONES.map(() => []);
-    const grupos = { [PUNTO.favor]: filas(), [PUNTO.contra]: filas() };
+    const vacias = (): number[][] => REGIONES.map(() => []);
+    const grupos = { [PUNTO.favor]: vacias(), [PUNTO.contra]: vacias() };
     const total = REGIONES.map(() => 0);
     for (let i = 0; i < this.n; i++) {
       const estado = this.estados[i];
@@ -264,51 +273,86 @@ export class EscenaEnjambre {
     }
     const ahora = performance.now() / 1000;
     const pendiente = new Uint8Array(this.n);
-    const lados = [[PUNTO.favor, 1], [PUNTO.contra, -1]] as const;
-    const bordes = { 1: this.ancho / 2 + 3.4 * ESTRECHEZ * this.u + 10, [-1]: this.ancho / 2 - 4.5 * ESTRECHEZ * this.u - 10 };
-    // En pantallas anchas los costados son de las cifras: si las burbujas los invaden, los puntos se juntan más.
-    const reserva = this.lateral();
-    let paso = this.paso;
-    let armado: { lado: 1 | -1; regiones: { lista: number[]; region: number }[]; puestas: Burbuja[] }[] = [];
-    for (let intento = 0; intento < 12; intento++) {
-      armado = lados.map(([estado, lado]) => {
-        const regiones = grupos[estado].map((lista, region) => ({ lista, region })).filter((g) => g.lista.length);
-        const pedidos = regiones.map((g) => ({ y: this.proyectar(0, REGIONES[g.region].capitalLat)[1], r: radioDe(g.lista.length, paso) }));
-        // El extremo sur está casi vacío y muy lejos: sus burbujas se acercan a las anteriores para
-        // que la columna se lea como un solo gráfico, sin una burbuja suelta al pie de la pantalla.
-        const orden = pedidos.map((_, k) => k).sort((a, b) => pedidos[a].y - pedidos[b].y);
-        for (let k = 1; k < orden.length; k++) {
-          const previo = pedidos[orden[k - 1]];
-          const actual = pedidos[orden[k]];
-          actual.y = Math.min(actual.y, previo.y + previo.r + actual.r + SEPARACION_MAXIMA);
-        }
-        return { lado, regiones, puestas: ubicarBurbujas(pedidos, lado, bordes[lado], 8, this.alto - 8) };
-      });
-      const cabe = armado.every(({ puestas }) => puestas.every((b) => b.x - b.r >= reserva && b.x + b.r <= this.ancho - reserva));
-      if (cabe) break;
-      paso *= 0.88;
-    }
-    this.pasoActual = paso;
+    const hayResultado = grupos[PUNTO.favor].some((g) => g.length) || grupos[PUNTO.contra].some((g) => g.length);
     this.burbujas = [];
-    for (const { lado, regiones, puestas } of armado) {
-      regiones.forEach((g, k) => {
-        const burbuja = puestas[k];
-        const personas = new Set(g.lista.map((i) => this.personas[i].agente ?? i)).size;
-        const enRegion = Math.max(1, Math.round((total[g.region] / g.lista.length) * personas));
-        this.burbujas.push({ ...burbuja, region: g.region, lado, personas, pct: enRegion < MINIMO_PARA_PORCENTAJE ? -1 : Math.round((g.lista.length / total[g.region]) * 100) });
-        g.lista.forEach((i, orden) => {
-          const [dx, dy] = puntoEnBurbuja(orden, paso);
-          this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
-          pendiente[i] = 1;
-        });
+    this.etiquetas = [];
+    if (hayResultado) {
+      const regiones = REGIONES.map((_, region) => region).filter((region) => total[region] > 0);
+      const bordeDer = this.ancho / 2 + 3.4 * ESTRECHEZ * this.u + 10;
+      const bordeIzq = this.ancho / 2 - 4.5 * ESTRECHEZ * this.u - 10;
+      const lateral = this.lateral();
+      const textos = regiones.map((region) => ({
+        region,
+        favor: this.textoDe(region, grupos[PUNTO.favor][region], total[region]),
+        contra: this.textoDe(region, grupos[PUNTO.contra][region], total[region]),
+      }));
+      this.ctx.font = `650 ${this.letra}px ${this.fuente}`;
+      const anchoTexto = (t: string) => this.ctx.measureText(t).width;
+      const altoFila = this.letra * 1.55;
+      const disponible = this.alto - 2 * MARGEN_FILAS;
+      let paso = this.paso;
+      let radios: { favor: number; contra: number }[] = [];
+      for (let intento = 0; intento < 24; intento++) {
+        radios = regiones.map((region) => ({
+          favor: grupos[PUNTO.favor][region].length ? radioDe(grupos[PUNTO.favor][region].length, paso) : 0,
+          contra: grupos[PUNTO.contra][region].length ? radioDe(grupos[PUNTO.contra][region].length, paso) : 0,
+        }));
+        const altura = radios.reduce((suma, r) => suma + Math.max(2 * r.favor, 2 * r.contra, altoFila) + ENTRE_FILAS, 0);
+        const cabeAncho = radios.every(
+          (r, k) =>
+            bordeDer + 2 * r.favor + SEPARA_ROTULO + anchoTexto(textos[k].favor) <= this.ancho - lateral &&
+            bordeIzq - 2 * r.contra - SEPARA_ROTULO - anchoTexto(textos[k].contra) >= lateral,
+        );
+        if (altura <= disponible && cabeAncho) break;
+        paso *= 0.92;
+      }
+      this.pasoActual = paso;
+      const altos = radios.map((r) => Math.max(2 * r.favor, 2 * r.contra, altoFila));
+      const ocupado = altos.reduce((a, b) => a + b, 0);
+      // El espacio que sobra se reparte entre las filas (hasta un tope) y el conjunto se centra.
+      const entre = Math.max(ENTRE_FILAS, Math.min(ENTRE_FILAS_MAXIMO, (disponible - ocupado) / Math.max(1, regiones.length - 1)));
+      let y = Math.max(MARGEN_FILAS, (this.alto - ocupado - entre * (regiones.length - 1)) / 2);
+      regiones.forEach((region, k) => {
+        const centro = y + altos[k] / 2;
+        const lados = [
+          [PUNTO.favor, 1, radios[k].favor, textos[k].favor],
+          [PUNTO.contra, -1, radios[k].contra, textos[k].contra],
+        ] as const;
+        for (const [estado, lado, r, texto] of lados) {
+          const borde = lado === 1 ? bordeDer : bordeIzq;
+          const lista = grupos[estado][region];
+          this.etiquetas.push({ x: borde + lado * (2 * r + SEPARA_ROTULO), y: centro, lado, region, texto });
+          if (!lista.length) continue;
+          const burbuja = { x: borde + lado * r, y: centro, r };
+          this.burbujas.push(burbuja);
+          lista.forEach((i, orden) => {
+            const [dx, dy] = puntoEnBurbuja(orden, paso);
+            this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
+            pendiente[i] = 1;
+          });
+        }
+        y += altos[k] + entre;
       });
     }
+    // Para comprobar desde fuera que cada región quedó rotulada a ambos lados.
+    this.lienzo.dataset.regiones = String(this.etiquetas.filter((e) => e.lado === 1).length);
+    this.lienzo.dataset.rotulos = this.etiquetas.map((e) => `${e.lado === 1 ? 'F' : 'C'}:${e.texto}@${Math.round(e.x)},${Math.round(e.y)}`).join('|');
     for (let i = 0; i < this.n; i++) if (!pendiente[i]) this.volar(i, this.casaX[i], this.casaY[i], modo, ahora);
     if (modo === 'inmediato') this.color.set(this.estados);
     const espera = modo === 'ola' ? 1.7 : modo === 'cambio' ? 0.4 : 0;
     this.finVuelo = Math.max(this.finVuelo, ahora + espera + VUELO);
     this.inicioRotulos = modo === 'inmediato' ? 0 : ahora + espera + VUELO * 0.6;
     this.sucio = true;
+  }
+
+  /** "Maule 58 %": nombre de la región y qué parte de ella tomó esa postura. */
+  private textoDe(region: number, lista: number[], total: number): string {
+    const nombre = REGIONES[region].corto;
+    const personas = new Set(lista.map((i) => this.personas[i].agente ?? i)).size;
+    // Con muy poca gente en la región el porcentaje engaña: se dice cuántas personas son.
+    const enRegion = lista.length ? Math.max(1, Math.round((total / lista.length) * personas)) : MINIMO_PARA_PORCENTAJE;
+    if (lista.length && enRegion < MINIMO_PARA_PORCENTAJE) return `${nombre} ${personas} ${personas === 1 ? 'persona' : 'personas'}`;
+    return `${nombre} ${Math.round((lista.length / total) * 100)} %`;
   }
 
   private volar(i: number, x: number, y: number, modo: ModoVuelo, ahora: number): void {
@@ -414,74 +458,27 @@ export class EscenaEnjambre {
     ctx.globalAlpha = 1;
   }
 
-  /**
-   * Nombre de la región y qué parte de ella tomó esa postura. En las burbujas grandes va
-   * adentro, sobre una placa; en las chicas, afuera, solo si no pisa a otra burbuja ni a otro rótulo.
-   */
+  /** Los rótulos van siempre junto a su burbuja, del lado de afuera, en una sola línea. */
   private rotulos(visible: number): void {
     const { ctx } = this;
-    const ocupados: [number, number, number, number][] = [];
-    // Franja que ocupa el país: ningún rótulo va encima del mapa.
-    const lateral = this.lateral();
-    const paisIzq = this.ancho / 2 - 4.5 * ESTRECHEZ * this.u;
-    const paisDer = this.ancho / 2 + 3.4 * ESTRECHEZ * this.u;
-    const libre = (x: number, y: number, w: number, h: number, propia: Rotulada) =>
-      (x + w <= paisIzq || x >= paisDer) &&
-      x >= lateral &&
-      x + w <= this.ancho - lateral &&
-      y >= 2 &&
-      y + h <= this.alto - 2 &&
-      !this.burbujas.some((b) => b !== propia && circuloTocaCaja(b, x, y, w, h)) &&
-      !ocupados.some(([ox, oy, ow, oh]) => x < ox + ow && ox < x + w && y < oy + oh && oy < y + h);
     ctx.globalAlpha = visible;
     ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-    for (const b of [...this.burbujas].sort((p, q) => q.r - p.r)) {
-      if (b.r < 7) continue;
-      const nombre = REGIONES[b.region].corto;
+    for (const e of this.etiquetas) {
+      const corte = e.texto.indexOf(' ', REGIONES[e.region].corto.length);
+      const nombre = e.texto.slice(0, corte);
+      const valor = e.texto.slice(corte);
       ctx.font = `650 ${this.letra}px ${this.fuente}`;
-      const w = Math.max(ctx.measureText(nombre).width, 30) + 14;
-      const h = this.letra * 2.7;
-      // Adentro solo si la burbuja es bastante más ancha que el rótulo; si no, el texto tapa los puntos.
-      const adentro = b.r * 2 >= w + 44;
-      const candidatos: [number, number][] = adentro
-        ? [[b.x, b.y]]
-        : [
-            [b.x + b.lado * (b.r + w / 2 + 3), b.y],
-            [b.x, b.y - b.r - h / 2 - 2],
-            [b.x, b.y + b.r + h / 2 + 2],
-            [b.x + b.lado * (b.r * 0.7 + w / 2), b.y - b.r * 0.7 - h / 2],
-            [b.x + b.lado * (b.r * 0.7 + w / 2), b.y + b.r * 0.7 + h / 2],
-            [b.x + b.lado * (b.r + w / 2 + 3), b.y - h * 0.6],
-            [b.x + b.lado * (b.r + w / 2 + 3), b.y + h * 0.6],
-          ];
-      const lugar = candidatos.find(([cx, cy]) => adentro || libre(cx - w / 2, cy - h / 2, w, h, b));
-      if (!lugar) continue;
-      const [cx, cy] = lugar;
-      ocupados.push([cx - w / 2, cy - h / 2, w, h]);
-      if (adentro) {
-        ctx.fillStyle = this.fondo;
-        ctx.globalAlpha = visible * 0.86;
-        ctx.beginPath();
-        ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 4);
-        ctx.fill();
-        ctx.globalAlpha = visible;
-      }
-      ctx.font = `650 ${this.letra}px ${this.fuente}`;
+      const anchoNombre = ctx.measureText(nombre).width;
+      const anchoTotal = ctx.measureText(e.texto).width;
+      const inicio = e.lado === 1 ? e.x : e.x - anchoTotal;
+      ctx.textAlign = 'left';
       ctx.fillStyle = this.tinta;
-      ctx.fillText(nombre, cx, cy - this.letra * 0.6);
-      ctx.font = `600 ${this.letra - 1}px ${this.fuente}`;
-      ctx.fillStyle = this.tinta;
-      ctx.globalAlpha = visible * 0.8;
-      ctx.fillText(b.pct < 0 ? `${b.personas} ${b.personas === 1 ? 'persona' : 'personas'}` : `${b.pct} %`, cx, cy + this.letra * 0.65);
+      ctx.fillText(nombre, inicio, e.y);
+      ctx.font = `500 ${this.letra}px ${this.fuente}`;
+      ctx.globalAlpha = visible * 0.72;
+      ctx.fillText(valor, inicio + anchoNombre, e.y);
       ctx.globalAlpha = visible;
     }
     ctx.globalAlpha = 1;
   }
-}
-
-function circuloTocaCaja(c: Burbuja, x: number, y: number, w: number, h: number): boolean {
-  const dx = c.x - Math.max(x, Math.min(x + w, c.x));
-  const dy = c.y - Math.max(y, Math.min(y + h, c.y));
-  return dx * dx + dy * dy < c.r * c.r;
 }

@@ -226,7 +226,6 @@ export function AppEnjambre() {
           </Boton>
         </div>
       )}
-      {fase === 'resultados' && !ficha && <p className={estilos.pista}>Toca un punto para conocer a esa persona</p>}
     </div>
   );
 }
