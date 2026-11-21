@@ -30,7 +30,7 @@ Dos archivos en `/etc/ph26` de la máquina, que se crean a mano una vez:
 - `acceso.caddy`: usuario y clave para entrar al sitio, porque cada corrida gasta la suscripción de
   quien puso su token. Sin este archivo el sitio queda abierto.
 
-      basic_auth {
+      basicauth {
           USUARIO HASH        # el hash sale de: caddy hash-password
       }
 
