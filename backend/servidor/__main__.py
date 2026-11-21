@@ -35,7 +35,8 @@ MAXIMO_ITERACIONES = 3
 TAMANO_POR_DEFECTO = 2000
 # El tamaño con que parte la interfaz (TAMANO_INICIAL en frontend/src/vivo/useEnVivo.ts).
 TAMANO_AL_ABRIR = 1000
-MAXIMO_MUESTRA = 5000
+# En un servidor con memoria de sobra se puede subir con MAXIMO_MUESTRA (cada lote es un proceso de 240 MB).
+MAXIMO_MUESTRA = int(os.environ.get("MAXIMO_MUESTRA", "5000"))
 MUESTRAS_GUARDADAS = 24
 
 # La corrida grabada solo tiene respuestas de las personas del archivo fijo: con ella se usa ese archivo.

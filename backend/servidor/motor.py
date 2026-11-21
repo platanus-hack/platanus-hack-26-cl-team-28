@@ -17,6 +17,7 @@ piden después, en una llamada aparte, a unas pocas personas que ya respondieron
 """
 
 import hashlib
+import itertools
 import json
 import os
 import shutil
@@ -197,6 +198,18 @@ class ClaudeCodigo(Motor):
         # Carpeta vacía para que la CLI no cargue instrucciones de ningún proyecto.
         self._carpeta = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "ph26-agentes"
         self._carpeta.mkdir(parents=True, exist_ok=True)
+        # En un servidor sin navegador la sesión viene de tokens de `claude setup-token`. Con varios
+        # (CLAUDE_TOKENS, separados por coma) las llamadas se reparten entre las cuentas, por turno.
+        self._tokens = [t.strip() for t in os.environ.get("CLAUDE_TOKENS", "").split(",") if t.strip()]
+        self._turno = itertools.count()
+
+    def _entorno(self) -> dict:
+        # Sin telemetría ni actualizador: cada proceso gasta un tercio menos de CPU al arrancar, y con
+        # cientos de procesos a la vez la CPU es lo que limita.
+        entorno = {**os.environ, "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1", "DISABLE_AUTOUPDATER": "1"}
+        if self._tokens:
+            entorno["CLAUDE_CODE_OAUTH_TOKEN"] = self._tokens[next(self._turno) % len(self._tokens)]
+        return entorno
 
     @staticmethod
     def disponible() -> bool:
@@ -212,7 +225,7 @@ class ClaudeCodigo(Motor):
         # El prompt va por la entrada estándar: una ley completa no cabe como argumento de un proceso.
         salida = subprocess.run(
             orden, cwd=self._carpeta, input=prompt, capture_output=True,
-            text=True, timeout=self._espera, check=False,
+            text=True, timeout=self._espera, check=False, env=self._entorno(),
         )
         datos = json.loads(salida.stdout or "{}")
         if datos.get("is_error") or "structured_output" not in datos:
