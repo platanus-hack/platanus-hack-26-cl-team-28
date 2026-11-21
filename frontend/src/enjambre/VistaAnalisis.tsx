@@ -3,6 +3,7 @@ import { formatear } from '../dominio/textos';
 import { alto, cruzar, mediaDe, MINIMO_GRUPO, ordenarDimensiones, resumirDimension, type ClaveDimension, type ResumenDimension } from '../vivo/analisis';
 import { midePostura, preguntaDe, resumirEncuesta } from '../vivo/encuesta';
 import type { Conexion, EnVivo } from '../vivo/useEnVivo';
+import { Propuesta } from './Propuesta';
 import { ListaSeparan } from './analisis/ListaSeparan';
 import { PreguntasJuntas } from './analisis/PreguntasJuntas';
 import { TablaGrupos, type Cruce } from './analisis/TablaGrupos';
@@ -21,16 +22,21 @@ const MAXIMO_COLUMNAS = 6;
 
 const decimal = (valor: number) => valor.toFixed(1).replace('.', ',');
 
-/** Lo que muestra la característica elegida, dicho en una frase. */
-function hallazgo(resumen: ResumenDimension, maximo: string | undefined): ReactNode {
+/** Los dos lados de una escala en pocas palabras: «totalmente de acuerdo» es «de acuerdo», «nada influyente» es «poco influyente». */
+const breve = (extremo: string) => extremo.replace(/^(totalmente|muy) /, '').replace(/^nada /, 'poco ');
+
+const minuscula = (texto: string) => texto.charAt(0).toLowerCase() + texto.slice(1);
+const mayuscula = (texto: string) => texto.charAt(0).toUpperCase() + texto.slice(1);
+
+/** Lo que muestra la característica elegida, dicho en una frase. `lado` nombra el tramo de 5 a 7. */
+function hallazgo(resumen: ResumenDimension, lado: string): ReactNode {
   const { extremos, grupos, dimension, clara } = resumen;
   if (!extremos) return `No hay dos grupos con al menos ${MINIMO_GRUPO} respuestas para comparar.`;
-  const hacia = maximo ? `, hacia «${maximo}»` : '';
   const puntos = `${extremos.brecha} ${extremos.brecha === 1 ? 'punto' : 'puntos'}`;
   if (!clara) return `Esta característica casi no ordena las respuestas: entre el grupo más alto y el más bajo hay ${puntos}, lo esperable por azar con esta muestra.`;
   return (
     <>
-      <b>{dimension.grupos[extremos.mayor]}</b> es el grupo con más respuestas de 5 a 7{hacia} ({alto(grupos[extremos.mayor])}{'\u00a0'}%) y <b>{dimension.grupos[extremos.menor]}</b> el que tiene menos ({alto(grupos[extremos.menor])}{'\u00a0'}%). Los separan {puntos}.
+      <b>{dimension.grupos[extremos.mayor]}</b> es el grupo que más respondió {lado} ({alto(grupos[extremos.mayor])}{'\u00a0'}%) y <b>{dimension.grupos[extremos.menor]}</b> el que menos ({alto(grupos[extremos.menor])}{'\u00a0'}%). Los separan {puntos}.
     </>
   );
 }
@@ -76,7 +82,8 @@ export function VistaAnalisis({ sim, conexion }: Props) {
   const extremosEscala = estado?.escalas?.[delMotor(encuesta[pregunta] ?? '')];
   const escala = conocida ?? (extremosEscala ? { minimo: extremosEscala[0], maximo: extremosEscala[1] } : undefined);
   const neutra = !midePostura(encuesta[pregunta] ?? '');
-  const hayPocos = !!actual && actual.grupos.some((g) => g.total > 0 && g.total < MINIMO_GRUPO);
+  // Cómo se nombran los tres tramos de la escala de esta pregunta; sin escala conocida, por sus notas.
+  const lados = escala ? { bajo: breve(escala.minimo), alto: breve(escala.maximo) } : { bajo: 'de 1 a 3', alto: 'de 5 a 7' };
   const activo = actual && lectura?.clave === actual.dimension.clave && actual.grupos[lectura.grupo]?.total ? lectura.grupo : null;
   const leido = actual && activo !== null ? actual.grupos[activo] : null;
   const respondieron = totales[pregunta]?.conteo.total ?? 0;
@@ -91,14 +98,20 @@ export function VistaAnalisis({ sim, conexion }: Props) {
     <div className={estilos.vista} data-neutra={neutra || undefined}>
       <header className={estilos.cabeza}>
         <div className={estilos.variante}>
-          <div className={estilos.variantes} role="group" aria-label="Variante">
-            {casos.map((otro, k) => (
-              <button key={otro.id} type="button" aria-pressed={k === viendo} disabled={!otro.respondidas} onClick={() => sim.setViendo(k)}>
-                {otro.letra}
-              </button>
-            ))}
-          </div>
-          <h1 className={estilos.titulo}>{caso.titulo}</h1>
+          {/* Con una sola propuesta no hay variantes que elegir: basta decir qué es el texto. */}
+          <span className={estilos.rotulo}>{casos.length > 1 ? 'Variante' : 'Propuesta'}</span>
+          {casos.length > 1 && (
+            <div className={estilos.variantes} role="group" aria-label="Variante que se analiza">
+              {casos.map((otro, k) => (
+                <button key={otro.id} type="button" aria-pressed={k === viendo} disabled={!otro.respondidas} title={otro.titulo} onClick={() => sim.setViendo(k)}>
+                  {otro.letra}
+                </button>
+              ))}
+            </div>
+          )}
+          <h1 className={estilos.titulo}>
+            <Propuesta letra={caso.letra} titulo={caso.titulo} texto={caso.texto} />
+          </h1>
         </div>
         <div className={estilos.preguntas} role="group" aria-label="Pregunta de la encuesta que se analiza">
           {nombres.map((nombre, k) => (
@@ -107,15 +120,7 @@ export function VistaAnalisis({ sim, conexion }: Props) {
               <b>{totales[k].conteo.total ? `${alto(totales[k].conteo)} %` : ''}</b>
             </button>
           ))}
-          <p>
-            {encuesta[pregunta]}
-            {escala && (
-              <span>
-                {' '}
-                Del 1, {escala.minimo}, al 7, {escala.maximo}.
-              </span>
-            )}
-          </p>
+          <p>{encuesta[pregunta]}</p>
         </div>
       </header>
       {!actual ? (
@@ -128,8 +133,10 @@ export function VistaAnalisis({ sim, conexion }: Props) {
           </aside>
           <main className={estilos.centro}>
             <div className={estilos.encabezado}>
-              <h2>{actual.dimension.rotulo}</h2>
-              <p className={estilos.hallazgo}>{hallazgo(actual, escala?.maximo)}</p>
+              <h2>
+                {nombres[pregunta]} <span>según {minuscula(actual.dimension.breve)}</span>
+              </h2>
+              <p className={estilos.hallazgo}>{hallazgo(actual, escala ? `«${lados.alto}»` : lados.alto)}</p>
               <div className={estilos.controles}>
                 <label>
                   <span>Cruzar con</span>
@@ -147,33 +154,32 @@ export function VistaAnalisis({ sim, conexion }: Props) {
                 </button>
               </div>
             </div>
-            <TablaGrupos resumen={actual} base={deLaA} cruce={cruce} neutra={neutra} porResultado={porResultado} activo={activo} alActivar={(grupo) => setLectura(grupo === null ? null : { clave: actual.dimension.clave, grupo })} />
+            <ul className={estilos.leyenda} aria-label="Cómo leer las barras">
+              <li data-postura="contra">{mayuscula(lados.bajo)}{escala && ' (1 a 3)'}</li>
+              <li data-postura="indecisa">{escala ? 'Al medio (4)' : 'El 4'}</li>
+              <li data-postura="favor">{mayuscula(lados.alto)}{escala && ' (5 a 7)'}</li>
+              <li data-marca="total">Total de la muestra</li>
+              {deLaA && <li data-marca="antes">Dónde estaba en la variante A</li>}
+              {cruce && <li data-marca="casilla">Casilla: % {lados.alto}, más intensa mientras más lejos del total</li>}
+            </ul>
+            <TablaGrupos alto={mayuscula(lados.alto)} resumen={actual} base={deLaA} cruce={cruce} neutra={neutra} porResultado={porResultado} activo={activo} alActivar={(grupo) => setLectura(grupo === null ? null : { clave: actual.dimension.clave, grupo })} />
             <footer className={estilos.pie} aria-live="polite">
               {leido && activo !== null ? (
                 <p>
-                  <b>{actual.dimension.grupos[activo]}</b> · {formatear(leido.total)} {leido.total === 1 ? 'agente' : 'agentes'} · {alto(leido)} % de 5 a 7, {100 - alto(leido) - Math.round((leido.contra / leido.total) * 100)} % en el 4 y{' '}
-                  {Math.round((leido.contra / leido.total) * 100)} % de 1 a 3 · nota media {decimal(mediaDe(leido))} de 7
+                  <b>{actual.dimension.grupos[activo]}</b> · {formatear(leido.total)} {leido.total === 1 ? 'agente' : 'agentes'} · {alto(leido)} % {lados.alto}, {100 - alto(leido) - Math.round((leido.contra / leido.total) * 100)} % al medio y{' '}
+                  {Math.round((leido.contra / leido.total) * 100)} % {lados.bajo} · nota media {decimal(mediaDe(leido))} de 7
                 </p>
               ) : (
-                <>
-                  <ul className={estilos.leyenda}>
-                    <li data-postura="contra">1 a 3</li>
-                    <li data-postura="indecisa">4</li>
-                    <li data-postura="favor">5 a 7</li>
-                    <li data-marca="total">total</li>
-                    {deLaA && <li data-marca="antes">variante A</li>}
-                    {cruce && <li data-marca="casilla">casilla: % de 5 a 7, teñida según su distancia al total</li>}
-                  </ul>
-                  <p>
-                    {actual.total.total < respondieron ? `${formatear(actual.total.total)} de ${formatear(respondieron)} respuestas tienen este dato` : `${formatear(actual.total.total)} respuestas`}
-                    {sim.filtrada ? ', según los filtros' : ''}
-                    {hayPocos ? ` · apagados, los grupos con menos de ${MINIMO_GRUPO}` : ''}
-                  </p>
-                </>
+                <p>
+                  {actual.total.total < respondieron ? `${formatear(actual.total.total)} de ${formatear(respondieron)} agentes tienen este dato` : `${formatear(actual.total.total)} agentes`}
+                  {sim.filtrada ? ', según los filtros' : ''}. Pasa el cursor por una fila para ver su detalle.
+                </p>
               )}
             </footer>
             {filas <= FILAS_CON_VOCES && (
-              <VocesGrupos key={`${actual.dimension.clave}-${pregunta}`} resumen={actual} pregunta={pregunta} agentes={personas} notas={caso.notas} frases={caso.frase} mirados={muestra.agentes} cuantas={filas <= 4 ? 2 : 1} neutra={neutra} />
+              <div className={estilos.hueco}>
+              <VocesGrupos key={`${actual.dimension.clave}-${pregunta}`} resumen={actual} pregunta={pregunta} agentes={personas} notas={caso.notas} frases={caso.frase} mirados={muestra.agentes} cuantas={filas <= 4 ? 2 : 1} neutra={neutra} nombres={lados} />
+              </div>
             )}
           </main>
         </div>

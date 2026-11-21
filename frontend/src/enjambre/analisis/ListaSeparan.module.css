@@ -1,7 +1,7 @@
 /* El índice de la vista: cada característica con sus grupos puestos en una misma escala de 0 a 100. */
 .lista {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: var(--e2);
   min-height: 0;
 }
@@ -36,14 +36,39 @@
   display: none;
 }
 
-/* Desde aquí hacia abajo las características no ordenan las respuestas. */
-.lista li[data-corte] {
-  margin-top: var(--e2);
-  padding-top: var(--e2);
+/* Las que no ordenan las respuestas quedan plegadas detrás de este botón. */
+.lista .resto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 30px;
+  padding: 0 var(--e2);
+  border: 0;
   border-top: 1px dashed var(--linea-suave);
+  border-radius: 0;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: var(--texto-xs);
+  font-weight: 550;
 }
 
-.lista button {
+.resto svg {
+  width: 10px;
+  height: 7px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate var(--rapido);
+}
+
+.resto[aria-expanded='true'] svg {
+  rotate: 180deg;
+}
+
+.lista ol button {
   display: grid;
   grid-template-columns: minmax(0, 10.4rem) minmax(3rem, 1fr) 2.6rem;
   align-items: center;
@@ -62,21 +87,21 @@
     color var(--rapido);
 }
 
-.lista button > span:first-child {
+.lista ol button > span:first-child {
   overflow: hidden;
   font-weight: 550;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.lista button b {
+.lista ol button b {
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 }
 
-.lista button[aria-pressed='true'] {
+.lista ol button[aria-pressed='true'] {
   background: var(--relleno-suave);
   color: var(--tinta);
 }
@@ -110,11 +135,11 @@
   background: var(--tinta-suave);
 }
 
-.lista button[aria-pressed='true'] .franja i[data-extremo='mayor'] {
+.lista ol button[aria-pressed='true'] .franja i[data-extremo='mayor'] {
   background: var(--favor);
 }
 
-.lista button[aria-pressed='true'] .franja i[data-extremo='menor'] {
+.lista ol button[aria-pressed='true'] .franja i[data-extremo='menor'] {
   background: var(--contra);
 }
 
@@ -123,13 +148,13 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .lista button[aria-pressed='false']:hover {
+  .lista ol button[aria-pressed='false']:hover {
     color: var(--tinta);
   }
 }
 
 @media (max-height: 800px) {
-  .lista button {
+  .lista ol button {
     min-height: 26px;
   }
 }
@@ -157,7 +182,7 @@
 }
 
 @media (max-height: 700px) {
-  .lista button {
+  .lista ol button {
     min-height: 23px;
   }
 }

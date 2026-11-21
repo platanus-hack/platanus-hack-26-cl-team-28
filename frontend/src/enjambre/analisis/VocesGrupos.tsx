@@ -1,4 +1,4 @@
-import { alto, vocesDe, type Notas, type ResumenDimension } from '../../vivo/analisis';
+import { vocesDe, type Notas, type ResumenDimension } from '../../vivo/analisis';
 import type { AgenteRemoto } from '../../vivo/api';
 import { FiguraWati } from '../FiguraWati';
 import { rasgosDe } from '../wati';
@@ -15,6 +15,8 @@ interface Props {
   /** Frases por grupo: dos si hay lugar, una si la tabla es larga. */
   cuantas: number;
   neutra: boolean;
+  /** Cómo se llaman los dos lados de la escala en esta pregunta. */
+  nombres: { bajo: string; alto: string };
 }
 
 const GENERO = ['Mujer', 'Hombre'];
@@ -24,8 +26,8 @@ const GENERO = ['Mujer', 'Hombre'];
  * más bajo. En el más alto hablan quienes respondieron de 5 a 7 y en el más bajo quienes
  * respondieron de 1 a 3: el rótulo dice qué parte del grupo son.
  */
-export function VocesGrupos({ resumen, pregunta, agentes, notas, frases, mirados, cuantas, neutra }: Props) {
-  const { extremos, dimension, grupos } = resumen;
+export function VocesGrupos({ resumen, pregunta, agentes, notas, frases, mirados, cuantas, neutra, nombres }: Props) {
+  const { extremos, dimension } = resumen;
   if (!extremos || extremos.brecha === 0) return null;
   const lados = [
     { grupo: extremos.mayor, lado: 'alto' as const },
@@ -41,9 +43,7 @@ export function VocesGrupos({ resumen, pregunta, agentes, notas, frases, mirados
           </span>
           <h3>
             {dimension.grupos[grupo]}
-            <span>
-              {lado === 'alto' ? `${alto(grupos[grupo])} % respondió de 5 a 7` : `${Math.round((grupos[grupo].contra / grupos[grupo].total) * 100)} % respondió de 1 a 3`} · en sus palabras
-            </span>
+            <span>en palabras de quien respondió {nombres[lado]}</span>
           </h3>
           {voces.map((i) => (
             <figure key={i}>

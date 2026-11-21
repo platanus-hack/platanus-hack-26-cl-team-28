@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { formatear } from '../../dominio/textos';
-import { alto, MINIMO_CASILLA, MINIMO_GRUPO, type Dimension, type ResumenDimension, type ResumenGrupo } from '../../vivo/analisis';
+import { alto as parteAlta, MINIMO_CASILLA, MINIMO_GRUPO, type Dimension, type ResumenDimension, type ResumenGrupo } from '../../vivo/analisis';
 import { FiguraWati } from '../FiguraWati';
 import { rasgosDe } from '../wati';
 import estilos from './TablaGrupos.module.css';
@@ -13,6 +13,8 @@ export interface Cruce {
 
 interface Props {
   resumen: ResumenDimension;
+  /** Cómo se llama el tramo de 5 a 7 en esta pregunta («De acuerdo», «Justo»...): encabeza su cifra. */
+  alto: string;
   /** La misma característica en la variante A, cuando se mira otra variante. */
   base: ResumenDimension | null;
   cruce: Cruce | null;
@@ -56,9 +58,9 @@ function tinte(distancia: number): CSSProperties {
  * total, así se ve de un vistazo quién queda sobre él y quién bajo. Con un cruce, cada fila sigue
  * a la derecha con una casilla por grupo de la segunda característica.
  */
-export function TablaGrupos({ resumen, base, cruce, neutra, porResultado, activo, alActivar }: Props) {
+export function TablaGrupos({ resumen, alto: nombreAlto, base, cruce, neutra, porResultado, activo, alActivar }: Props) {
   const { dimension, grupos, total } = resumen;
-  const delTotal = alto(total);
+  const delTotal = parteAlta(total);
   const filas = grupos.map((_, j) => j).filter((j) => grupos[j].total > 0);
   if (porResultado) {
     const valor = (j: number) => (grupos[j].total >= MINIMO_GRUPO ? grupos[j].favor / grupos[j].total : -1);
@@ -70,7 +72,7 @@ export function TablaGrupos({ resumen, base, cruce, neutra, porResultado, activo
   return (
     <div className={estilos.tabla} role="table" aria-label={`${dimension.rotulo}: respuestas por grupo`} data-neutra={neutra || undefined} data-cruce={cruce ? true : undefined} data-base={base ? true : undefined} data-larga={filas.length > FILAS_HOLGADAS || undefined} style={variables}>
       <div className={estilos.cabeza} role="row">
-        <span role="columnheader">{dimension.rotulo}</span>
+        <span role="columnheader">Grupo de personas</span>
         <span role="columnheader" className={estilos.derecha}>
           Agentes
         </span>
@@ -78,7 +80,7 @@ export function TablaGrupos({ resumen, base, cruce, neutra, porResultado, activo
           <i>Total {delTotal} %</i>
         </span>
         <span role="columnheader" className={estilos.derecha}>
-          5 a 7
+          {nombreAlto}
         </span>
         <span role="columnheader" className={estilos.derecha}>
           Contra el total
@@ -97,9 +99,9 @@ export function TablaGrupos({ resumen, base, cruce, neutra, porResultado, activo
       </div>
       {filas.map((j, lugar) => {
         const grupo = grupos[j];
-        const pct = alto(grupo);
+        const pct = parteAlta(grupo);
         const pocos = grupo.total < MINIMO_GRUPO;
-        const antes = base && base.grupos[j].total >= MINIMO_GRUPO ? alto(base.grupos[j]) : null;
+        const antes = base && base.grupos[j].total >= MINIMO_GRUPO ? parteAlta(base.grupos[j]) : null;
         return (
           <div
             key={`${dimension.clave}-${j}`}
@@ -152,7 +154,7 @@ export function TablaGrupos({ resumen, base, cruce, neutra, porResultado, activo
                     </span>
                   );
                 }
-                const suyo = alto(casilla);
+                const suyo = parteAlta(casilla);
                 return (
                   <span
                     key={c}

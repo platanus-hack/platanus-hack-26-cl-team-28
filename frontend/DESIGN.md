@@ -83,13 +83,18 @@ censo la publica con ese tope. Catálogo y reglas en `src/vivo/sociedad.ts`; pie
 contesta una pregunta: quiénes respondieron distinto. Usa a los mismos agentes que se están mirando (con los filtros
 puestos) y cuenta en agentes, sin ponderar, igual que el resto de la pantalla.
 
-- *Cabeza.* La variante (A, B...) y, debajo, una ficha por pregunta de la encuesta con su cifra: tocar una cambia
-  todo el análisis a esa pregunta. Al lado, la pregunta completa y lo que significan el 1 y el 7.
+- *Cabeza.* La propuesta en una línea, rotulada, con «Leer completa» (la misma hoja del mapa); con varias
+  variantes, las letras para elegir cuál se analiza. Debajo, una ficha por pregunta de la encuesta con su cifra:
+  tocar una cambia todo el análisis a esa pregunta. Al lado, la pregunta completa.
 - *Izquierda, el índice, que a la vez es un gráfico.* Una fila por característica (región, edad, género, educación,
   trabajo, ingreso, posición política...), ordenadas por su correlación con las notas. Cada fila pone a sus grupos
-  como puntos en una misma escala de 0 a 100: mientras más separados, más divide esa característica. Bajo una línea
-  punteada quedan, apagadas, las que no ordenan las respuestas. Debajo, las demás preguntas de la encuesta con su
+  como puntos en una misma escala de 0 a 100: mientras más separados, más divide esa característica. Las que no ordenan
+  las respuestas quedan plegadas tras «Otras N sin relación clara». Debajo, las demás preguntas de la encuesta con su
   correlación contra la que se mira.
+- *Dos cosas distintas, dichas aparte.* Las filas son grupos de personas; los colores de la barra son cómo
+  respondió ese grupo. El título lo dice («Apoyo según aprobación del gobierno»), la primera columna se llama
+  «Grupo de personas» y la leyenda va antes de la tabla, con las palabras de la escala de esa pregunta («En
+  desacuerdo (1 a 3)», «De acuerdo (5 a 7)»).
 - *Centro, la característica elegida.* Título, una frase con el hallazgo (qué grupo queda más alto, cuál más bajo y
   cuántos puntos los separan) y una fila por grupo: cuántos agentes, el reparto en la escala (1 a 3, 4, 5 a 7), su
   cifra y la distancia al total. Una línea punteada baja por todas las barras marcando el total. Con otra variante

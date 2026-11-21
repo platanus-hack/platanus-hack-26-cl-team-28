@@ -92,15 +92,20 @@
   color: var(--tinta-suave);
 }
 
-/* En ventanas bajas no hay lugar para las frases: mandan la tabla y su pie. */
-@media (max-height: 759px) {
+/* Las frases nunca se cortan: si no cabe la segunda se muestra una, y si no cabe ninguna, nada. */
+@container (max-height: 12.5rem) {
+  .voces figure:nth-of-type(n + 2) {
+    display: none;
+  }
+}
+
+@container (max-height: 7.75rem) {
   .voces {
     display: none;
   }
 }
 
-/* Con poco alto o poco ancho cabe una sola frase por grupo. */
-@media (max-height: 859px), (max-width: 1180px) {
+@media (max-width: 1180px) {
   .voces figure:nth-of-type(n + 2) {
     display: none;
   }

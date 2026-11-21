@@ -62,14 +62,44 @@
   cursor: default;
 }
 
+/* Qué es el texto de al lado: la propuesta, o la variante que se eligió con las letras. */
+.rotulo {
+  flex: none;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+/*
+ * El título en una línea, con su enlace para leerlo completo al lado: el mismo componente de la
+ * pantalla del mapa, que abre la hoja con el texto que leyeron los agentes.
+ */
 .titulo {
-  overflow: hidden;
+  --lineas-titulo: 1;
+  flex: 1;
   min-width: 0;
   margin: 0;
   font: 500 clamp(1.1rem, 0.9rem + 0.7vw, 1.6rem) / 1.2 var(--fuente-voz);
   letter-spacing: -0.01em;
+}
+
+.titulo > div {
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+  min-width: 0;
+}
+
+.titulo q {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.titulo button {
+  flex: none;
+  margin: 0;
   white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 /* Las preguntas de la encuesta: cada una con su cifra, y la elegida con su texto completo al lado. */
@@ -147,7 +177,7 @@
 
 .centro {
   display: grid;
-  grid-template-rows: auto minmax(0, auto) auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, auto) auto minmax(0, 1fr);
   align-content: start;
   gap: var(--e3);
   min-width: 0;
@@ -172,8 +202,21 @@
 
 .encabezado h2 {
   margin: 0;
-  font: 600 clamp(1.5rem, 1.1rem + 1.3vw, 2.3rem) / 1.05 var(--fuente-voz);
+  font: 600 clamp(1.4rem, 1rem + 1.1vw, 2rem) / 1.08 var(--fuente-voz);
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* El alto que sobra bajo la tabla: las frases se muestran solo si caben enteras (lo decide su hoja). */
+.hueco {
+  min-height: 0;
+  container-type: size;
+}
+
+/* «según posición política»: la segunda mitad del título, en tono suave. */
+.encabezado h2 span {
+  font-weight: 450;
+  color: var(--tinta-suave);
 }
 
 .hallazgo {
@@ -269,13 +312,16 @@
   color: var(--tinta);
 }
 
+/* Cómo leer las barras, antes de la tabla: qué es cada color y cada marca. */
 .leyenda {
   display: flex;
   flex-wrap: wrap;
   gap: 4px var(--e4);
-  margin: 0;
+  margin: var(--e1) 0 0;
   padding: 0;
   list-style: none;
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
 }
 
 .leyenda li {
