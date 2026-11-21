@@ -1,0 +1,490 @@
+tabla,variable,valor,etiqueta,casos
+viviendas,area,1,Urbano,6365998
+viviendas,area,2,Rural,1298468
+viviendas,tipo_operativo,1,Persona en situación de calle,21750
+viviendas,tipo_operativo,2,Vivienda particular,7638396
+viviendas,tipo_operativo,3,Vivienda colectiva,4320
+viviendas,p2_tipo_vivienda,1,Casa,5937284
+viviendas,p2_tipo_vivienda,3,Departamento,1579970
+viviendas,p2_tipo_vivienda,5,Vivienda tradicional indígena (ruka u otras),1967
+viviendas,p2_tipo_vivienda,6,Pieza en casa antigua o en conventillo,51305
+viviendas,p2_tipo_vivienda,7,"Mediagua, mejora, vivienda de emergencia, rancho o choza",27490
+viviendas,p2_tipo_vivienda,8,"Móvil (carpa, casa rodante o similar)",1557
+viviendas,p2_tipo_vivienda,9,Otro tipo de vivienda particular,38823
+viviendas,p2_tipo_vivienda,,No aplica,26070
+viviendas,p3a_estado_ocupacion,1,Ocupada,6730463
+viviendas,p3a_estado_ocupacion,2,Desocupada,907933
+viviendas,p3a_estado_ocupacion,,No aplica,26070
+viviendas,p3b_estado_ocupacion,1,Moradores presentes,6408172
+viviendas,p3b_estado_ocupacion,2,Moradores ausentes,208084
+viviendas,p3b_estado_ocupacion,6,Otras razones de no entrevista,114207
+viviendas,p3b_estado_ocupacion,7,En venta o arriendo,173315
+viviendas,p3b_estado_ocupacion,8,Vivienda de temporada (veraneo o de uso temporal),476135
+viviendas,p3b_estado_ocupacion,9,Abandonada,97052
+viviendas,p3b_estado_ocupacion,10,Otra razón de desocupación,161431
+viviendas,p3b_estado_ocupacion,,No aplica,26070
+viviendas,p4a_mat_paredes,1,Hormigón armado,1499949
+viviendas,p4a_mat_paredes,2,"Albañilería: bloque de cemento, ladrillo o piedra",2754185
+viviendas,p4a_mat_paredes,3,Tabique forrado por ambas caras (madera o acero),1854738
+viviendas,p4a_mat_paredes,4,Tabique sin forro interior (madera u otro),176313
+viviendas,p4a_mat_paredes,5,"Adobe, barro, pirca, quincha u otro material artesanal",106790
+viviendas,p4a_mat_paredes,6,"Materiales precarios o de desecho: cartón, sacos, trozos de latas o plásticos, etc.",14752
+viviendas,p4a_mat_paredes,-99,No respuesta,1445
+viviendas,p4a_mat_paredes,,No aplica,1256294
+viviendas,p4b_mat_techo,1,"Tejas o tejuelas de arcilla, metálicas, de cemento, de madera, asfálticas o plásticas",1069613
+viviendas,p4b_mat_techo,2,Losa hormigón,958191
+viviendas,p4b_mat_techo,3,"Planchas metálicas de zinc, cobre, etc",3658013
+viviendas,p4b_mat_techo,4,Planchas de fibrocemento tipo pizarreño,699395
+viviendas,p4b_mat_techo,5,Fonolita o plancha de fieltro embreado,10847
+viviendas,p4b_mat_techo,6,"Paja, coirón, totora o caña",1090
+viviendas,p4b_mat_techo,7,"Materiales precarios o de desecho: cartón, sacos, trozos de latas o plásticos, etc",6800
+viviendas,p4b_mat_techo,8,Sin cubierta sólida de techo,1872
+viviendas,p4b_mat_techo,-99,No respuesta,2351
+viviendas,p4b_mat_techo,,No aplica,1256294
+viviendas,p4c_mat_piso,1,"Parquet, piso flotante, cerámico, madera, alfombra, flexit, cubrepiso u otro similar; sobre radier o vigas de madera",6036357
+viviendas,p4c_mat_piso,2,Radier sin revestimiento,145177
+viviendas,p4c_mat_piso,3,Baldosa de cemento,143611
+viviendas,p4c_mat_piso,4,Capa de cemento sobre tierra,63853
+viviendas,p4c_mat_piso,5,Tierra,17010
+viviendas,p4c_mat_piso,-99,No respuesta,2164
+viviendas,p4c_mat_piso,,No aplica,1256294
+viviendas,p5_num_dormitorios,0,0,36835
+viviendas,p5_num_dormitorios,1,1,1575168
+viviendas,p5_num_dormitorios,2,2,2419639
+viviendas,p5_num_dormitorios,3,3,1785285
+viviendas,p5_num_dormitorios,4,4,451532
+viviendas,p5_num_dormitorios,5,5,100036
+viviendas,p5_num_dormitorios,6,6 o más,38643
+viviendas,p5_num_dormitorios,-99,No respuesta,1034
+viviendas,p5_num_dormitorios,,No aplica,1256294
+viviendas,p6_fuente_agua,1,Red pública,5914136
+viviendas,p6_fuente_agua,2,Pozo o noria,263309
+viviendas,p6_fuente_agua,-99,No respuesta,1343
+viviendas,p6_fuente_agua,,No aplica,1256294
+viviendas,p7_distrib_agua,1,Con llave dentro de la vivienda,6196815
+viviendas,p7_distrib_agua,2,"Con llave dentro del sitio, pero fuera de la vivienda",160098
+viviendas,p7_distrib_agua,3,"No tiene sistema, la acarrea",49617
+viviendas,p7_distrib_agua,-99,No respuesta,1642
+viviendas,p7_distrib_agua,,No aplica,1256294
+viviendas,p8_serv_hig,1,"Dentro de la vivienda, conectado a una red de alcantarillado",5344651
+viviendas,p8_serv_hig,2,"Fuera de la vivienda, conectado a una red de alcantarillado",104723
+viviendas,p8_serv_hig,3,Conectado a una fosa séptica,767214
+viviendas,p8_serv_hig,4,Conectado a pozo negro (letrina sanitaria o cajón),164499
+viviendas,p8_serv_hig,5,En un cajón sobre acequia o canal,3868
+viviendas,p8_serv_hig,6,En un cajón conectado a otro sistema,2310
+viviendas,p8_serv_hig,7,Baño químico,2141
+viviendas,p8_serv_hig,8,Conectado a baño seco,2443
+viviendas,p8_serv_hig,9,No tiene servicio higiénico,14794
+viviendas,p8_serv_hig,-99,No respuesta,1529
+viviendas,p8_serv_hig,,No aplica,1256294
+viviendas,p9_fuente_elect,1,Red pública,6316147
+viviendas,p9_fuente_elect,2,Generador con diésel o bencina,16021
+viviendas,p9_fuente_elect,3,Placa solar,32343
+viviendas,p9_fuente_elect,4,Energía eólica (viento),695
+viviendas,p9_fuente_elect,5,Otro,16430
+viviendas,p9_fuente_elect,6,No tiene energía eléctrica,24917
+viviendas,p9_fuente_elect,-99,No respuesta,1619
+viviendas,p9_fuente_elect,,No aplica,1256294
+viviendas,p10_basura,1,La recogen los servicios de aseo,6221171
+viviendas,p10_basura,2,La entierra y/o quema,111904
+viviendas,p10_basura,3,"La deja en terreno eriazo, quebrada o zanja",14058
+viviendas,p10_basura,4,"La tira al río, laguna o mar",1009
+viviendas,p10_basura,5,Otro,58798
+viviendas,p10_basura,-99,No respuesta,1232
+viviendas,p10_basura,,No aplica,1256294
+viviendas,p11a_num_personas,,,1256294
+viviendas,p11b_comparte_gasto,1,Sí,4965946
+viviendas,p11b_comparte_gasto,2,No,153693
+viviendas,p11b_comparte_gasto,,,2544827
+viviendas,p11c_num_hogar,,,7510773
+viviendas,cant_hog,,No aplica,26070
+viviendas,indice_hacinamiento,1,Vivienda sin hacinamiento,6039952
+viviendas,indice_hacinamiento,2,Vivienda con hacinamiento medio,330955
+viviendas,indice_hacinamiento,3,Vivienda con hacinamiento crítico,36231
+viviendas,indice_hacinamiento,-99,No respuesta,1034
+viviendas,indice_hacinamiento,,No aplica,1256294
+viviendas,comuna_bajo_umbral,1,Sí,99321
+viviendas,comuna_bajo_umbral,2,No,7565145
+hogares,area,1,Urbano,5733950
+hogares,area,2,Rural,888647
+hogares,tipo_operativo,1,Persona en Situación de Calle,21750
+hogares,tipo_operativo,2,Vivienda Particular,6596527
+hogares,tipo_operativo,3,Vivienda Colectiva,4320
+hogares,p12_tenencia_viv,1,Propia pagada,3120238
+hogares,p12_tenencia_viv,2,Propia pagándose,910247
+hogares,p12_tenencia_viv,3,Arrendada con contrato,1229328
+hogares,p12_tenencia_viv,4,Arrendada sin contrato,498871
+hogares,p12_tenencia_viv,5,Cedida por trabajo o servicio,90697
+hogares,p12_tenencia_viv,6,Cedida por familiar u otro,511118
+hogares,p12_tenencia_viv,7,Usufructo: solo uso y goce,61019
+hogares,p12_tenencia_viv,8,Ocupada de hecho,57788
+hogares,p12_tenencia_viv,9,Propiedad en sucesión o litigio,116125
+hogares,p12_tenencia_viv,-99,No respuesta,1096
+hogares,p12_tenencia_viv,,No aplica,26070
+hogares,p13_comb_cocina,1,Gas,5780274
+hogares,p13_comb_cocina,2,Parafina o petróleo,3832
+hogares,p13_comb_cocina,3,Leña,339220
+hogares,p13_comb_cocina,4,Pellet,1960
+hogares,p13_comb_cocina,5,Carbón,1520
+hogares,p13_comb_cocina,6,Electricidad,439520
+hogares,p13_comb_cocina,7,Energía solar (ej. cocina u horno solar),639
+hogares,p13_comb_cocina,8,No utiliza fuente de energía o combustible para cocinar,28860
+hogares,p13_comb_cocina,-99,No respuesta,702
+hogares,p13_comb_cocina,,No aplica,26070
+hogares,p14_comb_calefaccion,1,Gas,1688313
+hogares,p14_comb_calefaccion,2,Parafina o petróleo,680755
+hogares,p14_comb_calefaccion,3,Leña,1606997
+hogares,p14_comb_calefaccion,4,Pellet,137853
+hogares,p14_comb_calefaccion,5,Carbón,13426
+hogares,p14_comb_calefaccion,6,Electricidad,1283687
+hogares,p14_comb_calefaccion,7,Otra,24691
+hogares,p14_comb_calefaccion,8,No utiliza fuente de energía o combustible para calefaccionar,1159827
+hogares,p14_comb_calefaccion,-99,No respuesta,978
+hogares,p14_comb_calefaccion,,No aplica,26070
+hogares,p15a_serv_tel_movil,1,Sí,6475071
+hogares,p15a_serv_tel_movil,2,No,119949
+hogares,p15a_serv_tel_movil,-99,No respuesta,1507
+hogares,p15a_serv_tel_movil,,No aplica,26070
+hogares,p15b_serv_compu,1,Sí,3621619
+hogares,p15b_serv_compu,2,No,2964123
+hogares,p15b_serv_compu,-99,No respuesta,10785
+hogares,p15b_serv_compu,,No aplica,26070
+hogares,p15c_serv_tablet,1,Sí,1645321
+hogares,p15c_serv_tablet,2,No,4939222
+hogares,p15c_serv_tablet,-99,No respuesta,11984
+hogares,p15c_serv_tablet,,No aplica,26070
+hogares,p15d_serv_internet_fija,1,Sí,4250122
+hogares,p15d_serv_internet_fija,2,No,2338834
+hogares,p15d_serv_internet_fija,-99,No respuesta,7571
+hogares,p15d_serv_internet_fija,,No aplica,26070
+hogares,p15e_serv_internet_movil,1,Sí,5734118
+hogares,p15e_serv_internet_movil,2,No,854837
+hogares,p15e_serv_internet_movil,-99,No respuesta,7572
+hogares,p15e_serv_internet_movil,,No aplica,26070
+hogares,p15f_serv_internet_satelital,1,Sí,288473
+hogares,p15f_serv_internet_satelital,2,No,6293135
+hogares,p15f_serv_internet_satelital,-99,No respuesta,14919
+hogares,p15f_serv_internet_satelital,,No aplica,26070
+hogares,tipologia_hogar,1,Unipersonal,1437648
+hogares,tipologia_hogar,2,Nuclear monoparental,985912
+hogares,tipologia_hogar,3,Nuclear pareja sin hijos,940030
+hogares,tipologia_hogar,4,Nuclear pareja con hijos,1796839
+hogares,tipologia_hogar,5,Extenso,945125
+hogares,tipologia_hogar,6,Compuesto,112706
+hogares,tipologia_hogar,7,Sin núcleo,378267
+hogares,tipologia_hogar,,No aplica,26070
+hogares,comuna_bajo_umbral,1,Sí,60761
+hogares,comuna_bajo_umbral,2,No,6561836
+personas,area,1,Urbano,16018474
+personas,area,2,Rural,2461958
+personas,tipo_operativo,1,Persona en situación de calle,21750
+personas,tipo_operativo,2,Vivienda particular,18339655
+personas,tipo_operativo,3,Vivienda colectiva,119027
+personas,parentesco,1,Jefe/a de hogar,6596527
+personas,parentesco,2,Esposo/a o cónyuge,2090815
+personas,parentesco,3,Conviviente por unión civil,61672
+personas,parentesco,4,Conviviente de hecho o pareja,1226712
+personas,parentesco,5,Hijo/a,5861272
+personas,parentesco,6,"Hijo/a del cónyuge, conviviente o pareja",200617
+personas,parentesco,7,Hermano/a,281643
+personas,parentesco,8,Padre/Madre,247279
+personas,parentesco,9,Cuñado/a,59280
+personas,parentesco,10,Suegro/a,73702
+personas,parentesco,11,Yerno/Nuera,193892
+personas,parentesco,12,Nieto/a,853354
+personas,parentesco,13,Abuelo/a,10030
+personas,parentesco,14,Otro Pariente,330270
+personas,parentesco,15,No Pariente​,236858
+personas,parentesco,16,Servicio doméstico puertas adentro,15732
+personas,parentesco,17,Persona en vivienda colectiva,119027
+personas,parentesco,19,Persona en operativo calle,21750
+personas,sexo,1,Hombre,8967033
+personas,sexo,2,Mujer,9513399
+personas,edad,-66,Valor suprimido por anonimización,151199
+personas,edad_quinquenal,0,0-4,870693
+personas,edad_quinquenal,5,5-9,1147515
+personas,edad_quinquenal,10,10-14,1256440
+personas,edad_quinquenal,15,15-19,1219347
+personas,edad_quinquenal,20,20-24,1273193
+personas,edad_quinquenal,25,25-29,1383669
+personas,edad_quinquenal,30,30-34,1527489
+personas,edad_quinquenal,35,35-39,1408198
+personas,edad_quinquenal,40,40-44,1270493
+personas,edad_quinquenal,45,45-49,1151776
+personas,edad_quinquenal,50,50-54,1173352
+personas,edad_quinquenal,55,55-59,1133239
+personas,edad_quinquenal,60,60-64,1077790
+personas,edad_quinquenal,65,65-69,870801
+personas,edad_quinquenal,70,70-74,646241
+personas,edad_quinquenal,75,75-79,477186
+personas,edad_quinquenal,80,80-84,317424
+personas,edad_quinquenal,85,85 o más,275586
+personas,p23_est_civil,1,Casado/a,4608520
+personas,p23_est_civil,2,Conviviente o pareja sin acuerdo de unión civil,2638561
+personas,p23_est_civil,3,Conviviente civil (con acuerdo de unión civil),133624
+personas,p23_est_civil,4,Anulado/a,16450
+personas,p23_est_civil,5,Separado/a,462915
+personas,p23_est_civil,6,Divorciado/a,482427
+personas,p23_est_civil,7,Viudo/a,740311
+personas,p23_est_civil,8,Soltero/a,6068849
+personas,p23_est_civil,-99,No respuesta,54127
+personas,p23_est_civil,,No aplica,3274648
+personas,p24_lug_resid5,1,Aún no nacía,870693
+personas,p24_lug_resid5,2,En esta comuna,14426941
+personas,p24_lug_resid5,3,En otra comuna,2442116
+personas,p24_lug_resid5,4,En otro país,604170
+personas,p24_lug_resid5,-99,No respuesta,136512
+personas,p24_lug_resid5_esp,-99,No respuesta en país de residencia hace 5 años,141242
+personas,p24_lug_resid5_esp,,No aplica,870693
+personas,p24_lug_resid5_esp,-66,Valor suprimido por anonimización,2459
+personas,p25_lug_nacimiento,1,En esta comuna,9457200
+personas,p25_lug_nacimiento,2,En otra comuna,7301521
+personas,p25_lug_nacimiento,3,En otro país,1608650
+personas,p25_lug_nacimiento,-99,No respuesta,113061
+personas,p25_lug_nacimiento_rec,1,Sí,16758721
+personas,p25_lug_nacimiento_rec,2,No,1608650
+personas,p25_lug_nacimiento_rec,-99,No respuesta,113061
+personas,p25_lug_nacimiento_esp,-99,No respuesta,137807
+personas,p25_lug_nacimiento_esp,-66,Valor suprimido por anonimización,151199
+personas,p26_llegada_periodo,1,Entre 2023 y 2024,188790
+personas,p26_llegada_periodo,2,Entre 2020 y 2022,366878
+personas,p26_llegada_periodo,3,Entre 2017 y 2019,533689
+personas,p26_llegada_periodo,4,Entre 2014 y 2016,190158
+personas,p26_llegada_periodo,5,Entre 2010 y 2013,111485
+personas,p26_llegada_periodo,6,Entre 2000 y 2009,121553
+personas,p26_llegada_periodo,7,Entre 1990 y 1999,54026
+personas,p26_llegada_periodo,8,Antes de 1990,36811
+personas,p26_llegada_periodo,-99,No respuesta,5260
+personas,p26_llegada_periodo,,No aplica,16871782
+personas,p27_nacionalidad,1,Chilena​ (exclusivamente),16500963
+personas,p27_nacionalidad,2,Chilena y otra (doble nacionalidad),242909
+personas,p27_nacionalidad,3,Otra nacionalidad,1484478
+personas,p27_nacionalidad,-99,No respuesta,100883
+personas,p27_nacionalidad,-66,Valor suprimido por anonimización,151199
+personas,p27_nacionalidad_esp,-99,No respuesta,102800
+personas,p27_nacionalidad_esp,-66,Valor suprimido por anonimización,151199
+personas,p27_nacionalidad_rec,1,Sí,16889540
+personas,p27_nacionalidad_rec,2,No,1489385
+personas,p27_nacionalidad_rec,-99,No respuesta,101507
+personas,p28_autoid_pueblo,1,Sí,2105863
+personas,p28_autoid_pueblo,2,No,16267072
+personas,p28_autoid_pueblo,-99,No respuesta,107497
+personas,p28_pueblo_pert,1,Mapuche,1621748
+personas,p28_pueblo_pert,2,Aymara,175353
+personas,p28_pueblo_pert,3,Rapa Nui,4383
+personas,p28_pueblo_pert,4,Atacameño o Lickanantay,33686
+personas,p28_pueblo_pert,5,Quechua,43779
+personas,p28_pueblo_pert,6,Colla,20075
+personas,p28_pueblo_pert,7,Diaguita,150692
+personas,p28_pueblo_pert,8,Kawésqar,868
+personas,p28_pueblo_pert,9,Yagán,397
+personas,p28_pueblo_pert,10,Chango,10244
+personas,p28_pueblo_pert,11,Selk’nam,143
+personas,p28_pueblo_pert,12,Otro,20630
+personas,p28_pueblo_pert,-99,No respuesta,2395
+personas,p28_pueblo_pert,-66,Valor suprimido por anonimización,21470
+personas,p28_pueblo_pert,,No aplica,16374569
+personas,p29_afrodescendencia,1,Afrodescendiente,90254
+personas,p29_afrodescendencia,2,Afrochileno/a,35711
+personas,p29_afrodescendencia,3,Negro/a,11771
+personas,p29_afrodescendencia,4,Del Pueblo Tribal Afrodescendiente Chileno,10066
+personas,p29_afrodescendencia,5,Moreno/a de Azapa,6162
+personas,p29_afrodescendencia,6,Negro/a de la Chimba,1463
+personas,p29_afrodescendencia,7,Ninguna de las anteriores,18195851
+personas,p29_afrodescendencia,-99,No respuesta,110391
+personas,p29_afrodescendencia,-66,Valor suprimido por anonimización,18763
+personas,p29_afrodescendencia_rec,1,Sí,174190
+personas,p29_afrodescendencia_rec,2,No,18195851
+personas,p29_afrodescendencia_rec,-99,No respuesta,110391
+personas,p30_lengua_indigena,1,Mapuzugún (lengua mapuche),380780
+personas,p30_lengua_indigena,2,Aymara,60080
+personas,p30_lengua_indigena,3,Quechua,37837
+personas,p30_lengua_indigena,4,Rapa Nui,6376
+personas,p30_lengua_indigena,5,Ckunza,2541
+personas,p30_lengua_indigena,6,Kawésqar,546
+personas,p30_lengua_indigena,7,Yagán,710
+personas,p30_lengua_indigena,8,Otra lengua indígena de Chile,17604
+personas,p30_lengua_indigena,9,No habla ni entiende ninguna lengua indígena de Chile,16996225
+personas,p30_lengua_indigena,-99,No respuesta,103050
+personas,p30_lengua_indigena,-66,Valor suprimido por anonimización,3990
+personas,p30_lengua_indigena,,No aplica,870693
+personas,p30_lengua_indigena_rec,1,Sí,510464
+personas,p30_lengua_indigena_rec,2,No,16996225
+personas,p30_lengua_indigena_rec,-99,No respuesta,103050
+personas,p30_lengua_indigena_rec,,No aplica,870693
+personas,p31_religion,1,Católica,8168578
+personas,p31_religion,2,Evangélica o Protestante,2466199
+personas,p31_religion,5,Iglesia de Jesucristo de los Santos de los Últimos Días,91796
+personas,p31_religion,10,Testigo de Jehová,112688
+personas,p31_religion,12,Ninguna,3903308
+personas,p31_religion,999,Otra religión o credo,363305
+personas,p31_religion,-99,No respuesta,87515
+personas,p31_religion,-66,Valor suprimido por anonimización,12395
+personas,p31_religion,,No aplica,3274648
+personas,p31_religion_rec,1,Sí,11214961
+personas,p31_religion_rec,2,No,3903308
+personas,p31_religion_rec,-99,No respuesta,87515
+personas,p31_religion_rec,,No aplica,3274648
+personas,p32a_dificultad_ver,1,"No, sin dificultad",13905057
+personas,p32a_dificultad_ver,2,"Sí, algo de dificultad",2758800
+personas,p32a_dificultad_ver,3,"Sí, mucha dificultad",795335
+personas,p32a_dificultad_ver,4,No puede hacerlo,51667
+personas,p32a_dificultad_ver,-99,No respuesta,98880
+personas,p32a_dificultad_ver,,No aplica,870693
+personas,p32b_dificultad_oir,1,"No, sin dificultad",16144858
+personas,p32b_dificultad_oir,2,"Sí, algo de dificultad",964940
+personas,p32b_dificultad_oir,3,"Sí, mucha dificultad",357490
+personas,p32b_dificultad_oir,4,No puede hacerlo,41580
+personas,p32b_dificultad_oir,-99,No respuesta,100871
+personas,p32b_dificultad_oir,,No aplica,870693
+personas,p32c_dificultad_mover,1,"No, sin dificultad",15289715
+personas,p32c_dificultad_mover,2,"Sí, algo de dificultad",1307950
+personas,p32c_dificultad_mover,3,"Sí, mucha dificultad",759016
+personas,p32c_dificultad_mover,4,No puede hacerlo,149696
+personas,p32c_dificultad_mover,-99,No respuesta,103362
+personas,p32c_dificultad_mover,,No aplica,870693
+personas,p32d_dificultad_cogni,1,"No, sin dificultad",15198358
+personas,p32d_dificultad_cogni,2,"Sí, algo de dificultad",1808201
+personas,p32d_dificultad_cogni,3,"Sí, mucha dificultad",424594
+personas,p32d_dificultad_cogni,4,No puede hacerlo,73643
+personas,p32d_dificultad_cogni,-99,No respuesta,104943
+personas,p32d_dificultad_cogni,,No aplica,870693
+personas,p32e_dificultad_cuidado,1,"No, sin dificultad",16880403
+personas,p32e_dificultad_cuidado,2,"Sí, algo de dificultad",324960
+personas,p32e_dificultad_cuidado,3,"Sí, mucha dificultad",155590
+personas,p32e_dificultad_cuidado,4,No puede hacerlo,146513
+personas,p32e_dificultad_cuidado,-99,No respuesta,102273
+personas,p32e_dificultad_cuidado,,No aplica,870693
+personas,p32f_dificultad_comunic,1,"No, sin dificultad",17002154
+personas,p32f_dificultad_comunic,2,"Sí, algo de dificultad",307637
+personas,p32f_dificultad_comunic,3,"Sí, mucha dificultad",127428
+personas,p32f_dificultad_comunic,4,No puede hacerlo,72283
+personas,p32f_dificultad_comunic,-99,No respuesta,100237
+personas,p32f_dificultad_comunic,,No aplica,870693
+personas,discapacidad,1,Con discapacidad,1950388
+personas,discapacidad,2,Sin discapacidad,15561356
+personas,discapacidad,-99,No respuesta,97995
+personas,discapacidad,,No aplica,870693
+personas,p33_edu_asiste,1,Sí,5106338
+personas,p33_edu_asiste,2,No,13274483
+personas,p33_edu_asiste,-99,No respuesta,99611
+personas,asistencia_parv,1,Sí,555041
+personas,asistencia_parv,2,No,506360
+personas,asistencia_parv,-99,No respuesta,9544
+personas,asistencia_parv,-66,Valor suprimido por anonimización,8430
+personas,asistencia_parv,,No aplica,17401057
+personas,asistencia_basica,1,Sí,1822358
+personas,asistencia_basica,2,No,87531
+personas,asistencia_basica,-99,No respuesta,12922
+personas,asistencia_basica,-66,Valor suprimido por anonimización,15076
+personas,asistencia_basica,,No aplica,16542545
+personas,asistencia_media,1,Sí,858688
+personas,asistencia_media,2,No,123361
+personas,asistencia_media,-99,No respuesta,6645
+personas,asistencia_media,-66,Valor suprimido por anonimización,7975
+personas,asistencia_media,,No aplica,17483763
+personas,asistencia_superior,1,Sí,808427
+personas,asistencia_superior,2,No,921756
+personas,asistencia_superior,-99,No respuesta,12225
+personas,asistencia_superior,-66,Valor suprimido por anonimización,10849
+personas,asistencia_superior,,No aplica,16727175
+personas,p37_alfabet,1,Sí,16769140
+personas,p37_alfabet,2,No,725905
+personas,p37_alfabet,-99,No respuesta,114694
+personas,p37_alfabet,,,870693
+personas,escolaridad,-99,No respuesta,132058
+personas,cine11,1,01: Nunca cursó un programa educativo,552698
+personas,cine11,2,02: Educación de la primera infancia (incluye la forma parcial),821251
+personas,cine11,3,03: Primaria en forma parcial (sin conclusión del nivel),2122256
+personas,cine11,4,10: Educación primaria (nivel 1),1192382
+personas,cine11,5,"14: Educación primaria (nivel 2), con orientación general",3362035
+personas,cine11,6,"24: Educación secundaria, con orientación general",4371768
+personas,cine11,7,"25: Educación secundaria, con orientación vocacional",1568048
+personas,cine11,8,"35: Educación terciaria de ciclo corto, con orientación vocacional",1412112
+personas,cine11,9,"46: Grado de educación terciaria o nivel equivalente, con orientación no especificada",2545699
+personas,cine11,10,"56: Nivel de maestría, especialización o equivalente, con orientación no especificada",277835
+personas,cine11,11,"64: Nivel de doctorado o equivalente, con orientación académica",31694
+personas,cine11,12,98: Educación especial o diferencial,100691
+personas,cine11,-99,No respuesta,121963
+personas,sit_fuerza_trabajo,1,Ocupado,8277501
+personas,sit_fuerza_trabajo,2,Desocupado,777920
+personas,sit_fuerza_trabajo,3,Fuera de la fuerza de trabajo,6060837
+personas,sit_fuerza_trabajo,-99,No respuesta,89526
+personas,sit_fuerza_trabajo,,No aplica,3274648
+personas,p40_cise_rec,1,Independiente,2794082
+personas,p40_cise_rec,2,Dependiente,5352532
+personas,p40_cise_rec,3,Trabajador/a familiar o personal no remunerado en un negocio de un integrante de su familia,127429
+personas,p40_cise_rec,-99,No respuesta,3458
+personas,p40_cise_rec,,No aplica,10202931
+personas,depend_econ_deficit_hab,1,Económicamente independiente,10417681
+personas,depend_econ_deficit_hab,2,Económicamente dependiente,7970061
+personas,depend_econ_deficit_hab,-99,No respuesta,92690
+personas,cod_ciuo,1,"Directores, gerentes y administradores",383706
+personas,cod_ciuo,2,"Profesionales, científicos e intelectuales",1490307
+personas,cod_ciuo,3,Técnicos y profesionales de nivel medio,884233
+personas,cod_ciuo,4,Personal de apoyo administrativo,518314
+personas,cod_ciuo,5,Trabajadores de los servicios y vendedores de comercios y mercados,1622622
+personas,cod_ciuo,6,"Agricultores y trabajadores calificados agropecuarios, forestales y pesqueros",224291
+personas,cod_ciuo,7,Artesanos y operarios de oficios,1038385
+personas,cod_ciuo,8,"Operadores de instalaciones, máquinas y ensambladores",662440
+personas,cod_ciuo,9,Ocupaciones elementales,1132704
+personas,cod_ciuo,0,Ocupaciones de las fuerza armadas,24165
+personas,cod_ciuo,999,Respuesta no codificable,275787
+personas,cod_ciuo,-99,No respuesta,20547
+personas,cod_ciuo,,No aplica,10202931
+personas,cod_caenes,999,Respuesta no codificable,406001
+personas,cod_caenes,-99,No respuesta,24067
+personas,cod_caenes,,No aplica,10202931
+personas,p44_lug_trab,1,"En su comuna, en la vivienda donde reside",1637632
+personas,p44_lug_trab,2,"En su comuna, fuera de la vivienda donde reside",3311492
+personas,p44_lug_trab,3,En otra comuna,2856674
+personas,p44_lug_trab,4,En otro país,6751
+personas,p44_lug_trab,5,Varias comunas o países,460346
+personas,p44_lug_trab,-99,No respuesta,4606
+personas,p44_lug_trab,,No aplica,10202931
+personas,p44_lug_trab_esp,-99,No respuesta,9029
+personas,p44_lug_trab_esp,,No aplica,10202931
+personas,p45_medio_transporte,1,Auto particular,2341926
+personas,p45_medio_transporte,2,"Transporte público (bus, micro, metro, tren, taxi, colectivo)",2793070
+personas,p45_medio_transporte,3,Caminando,677171
+personas,p45_medio_transporte,4,Bicicleta (incluye scooter),254215
+personas,p45_medio_transporte,5,Motocicleta,95687
+personas,p45_medio_transporte,6,"Caballo, lancha o bote",6348
+personas,p45_medio_transporte,7,Otro,465580
+personas,p45_medio_transporte,-99,No respuesta,1266
+personas,p45_medio_transporte,,No aplica,11845169
+personas,p46a_tot_hijs_nac,-99,No respuesta,44706
+personas,p46a_tot_hijs_nac,,No aplica,10573151
+personas,p46b_hijas_nac,-99,No respuesta,2085
+personas,p46b_hijas_nac,,No aplica,12907456
+personas,p46c_hijos_nac,-99,No respuesta,2085
+personas,p46c_hijos_nac,,No aplica,12907456
+personas,p47a_tot_hijs_sobrev,-99,No respuesta,3133
+personas,p47a_tot_hijs_sobrev,,No aplica,12907456
+personas,p47b_hijas_sobrev,-99,No respuesta,58447
+personas,p47b_hijas_sobrev,,No aplica,12946237
+personas,p47c_hijos_sobrev,-99,No respuesta,58447
+personas,p47c_hijos_sobrev,,No aplica,12946237
+personas,p48_anio_nac_uh,-99,No responde,218495
+personas,p48_anio_nac_uh,,No aplica,12907456
+personas,p48_mes_nac_uh,1,Enero,459083
+personas,p48_mes_nac_uh,2,Febrero,410413
+personas,p48_mes_nac_uh,3,Marzo,455275
+personas,p48_mes_nac_uh,4,Abril,436463
+personas,p48_mes_nac_uh,5,Mayo,443334
+personas,p48_mes_nac_uh,6,Junio,441553
+personas,p48_mes_nac_uh,7,Julio,431142
+personas,p48_mes_nac_uh,8,Agosto,445898
+personas,p48_mes_nac_uh,9,Septiembre,457217
+personas,p48_mes_nac_uh,10,Octubre,452482
+personas,p48_mes_nac_uh,11,Noviembre,434750
+personas,p48_mes_nac_uh,12,Diciembre,444343
+personas,p48_mes_nac_uh,-99,No respuesta,261023
+personas,p48_mes_nac_uh,,No aplica,12907456
+personas,div_genero,1,Sí,64101
+personas,div_genero,2,No,12983214
+personas,div_genero,3,No clasificable,143512
+personas,div_genero,-66,Valor suprimido por anonimización,1275674
+personas,div_genero,,No aplica,4013931
+personas,comuna_bajo_umbral,1,Sí,151199
+personas,comuna_bajo_umbral,2,No,18329233

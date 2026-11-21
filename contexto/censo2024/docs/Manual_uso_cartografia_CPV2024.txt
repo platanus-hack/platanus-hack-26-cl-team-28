@@ -1,0 +1,1077 @@
+Manual de uso de la
+Cartografía Censal
+
+
+
+
+                      1
+Tabla de contenido
+1.      Presentación ........................................................................................................................................................................................................ 3
+2.      Base Cartográfica Censal............................................................................................................................................................................. 4
+     2.1.     Alcance de la base cartográfica censal ....................................................................................................................................... 4
+     2.2.          Desagregación geográfica de la base cartográfica ...................................................................................................... 5
+3.      Indeterminación geográfica - ¿Qué es? ............................................................................................................................................ 8
+     3.1.     ¿Cómo se representan las manzanas – entidades indeterminadas? ...................................................................... 9
+     3.2.          Consideraciones sobre confidencialidad y anonimización ...................................................................................... 9
+     3.3.          Alcance sobre los polígonos de Localidad y Entidad rural ..................................................................................... 10
+4.            Casos especiales de estructuración de datos .........................................................................................................................11
+     4.1.          Datos censales asociados a nivel de comuna “Contenedores comunales” ...................................................11
+5.      Capas cartográficas disponibles y su estructura ........................................................................................................................ 12
+     5.1.     Capas Cartográficas disponibles .................................................................................................................................................... 12
+     5.2.          Variables (campos) ............................................................................................................................................................................. 12
+     5.3.          Tabulados manzana – entidad ...................................................................................................................................................17
+        5.3.1.          ¿Cómo se visualizan los tabulados a nivel de capa cartográfica? ................................................................ 18
+        5.3.2.          Identificadores únicos para agrupación de capas cartográficas ................................................................... 21
+6.      Formatos disponibles para el uso de la Base Cartográfica Censal ................................................................................. 22
+
+
+
+
+                                                                                                                                                                                                                            2
+   1. Presentación
+El Censo de Población y Vivienda 2024 constituye el principal operativo estadístico nacional para la
+medición y caracterización de la población, los hogares y las viviendas del país. A diferencia de operativos
+censales anteriores, el Censo 2024, realizado entre los meses de marzo y julio de 2024, corresponde a un
+censo de derecho, en el que las personas fueron registradas según su lugar de residencia habitual.
+
+En este contexto, la cartografía censal es la herramienta que permite materializar el concepto de residencia
+habitual en el territorio. Si bien el operativo censal permite responder con precisión a las preguntas
+“¿cuántos somos?” y “¿cómo vivimos?”, el uso de la información espacial permite responder a la pregunta
+“¿dónde vivimos?”.
+
+Para facilitar esta tarea, el presente manual detalla la estructura geográfica de publicación, describiendo
+las características de las capas cartográficas indeterminadas disponibles y la estructura de los campos que
+la componen, incorporando los tabulados asociados a 189 variables del cuestionario censal, los cuales se
+encuentran vinculados a las capas geográficas definidas para su visualización.
+
+Asimismo, detalla cómo estos datos se vinculan con los distintos niveles de desagregación geográfica
+censal, poniendo a disposición del usuario el marco de referencia necesario para el correcto uso e
+interpretación de la información censal.
+
+Con el propósito de garantizar el acceso a la información territorial, la base cartográfica indeterminada de
+la presente publicación de resultados del Censo de población y Vivienda 2024 se encuentra disponible en
+distintos formatos geográficos, lo que asegura la interoperabilidad de los datos, permitiendo que su
+visualización y uso no dependan exclusivamente de un software especifico, facilitando el acceso tanto a
+especialistas en el análisis territorial como a usuarios que no cuenten con conocimientos avanzados en
+herramientas de Sistemas de Información Geográfica (SIG).
+
+
+
+
+                                                                                                          3
+2. Base Cartográfica Censal
+2.1.   Alcance de la base cartográfica censal
+
+La Base Cartográfica del Censo de Población y Vivienda 2024 constituye un soporte territorial
+sobre el cual se estructura y difunde información censal, permitiendo su análisis e
+interpretación desde una perspectiva espacial coherente con el diseño y ejecución del
+operativo censal.
+
+Esta base tiene como propósito representar la estructura geográfica, facilitando la vinculación
+de los datos censales con los distintos niveles de desagregación territorial. En este sentido, la
+Base Cartográfica Censal permite contextualizar los resultados del Censo en el territorio,
+respondiendo a la necesidad de identificar dónde y cómo se distribuye la población, los
+hogares y las viviendas, teniendo la posibilidad de caracterizarlos.
+
+El alcance de la Base Cartográfica Censal es de carácter estadístico y operativo, y se sustenta
+en la utilización conjunta de la División Político-Administrativa (DPA), de carácter legal, y de la
+División Geográfica Censal (DGC), definida por el INE para efectos del levantamiento censal y
+la difusión de resultados.
+
+Asimismo, la Base Cartográfica Censal se encuentra sujeta a los principios de confidencialidad
+y secreto estadístico que rigen la producción estadística oficial. En consecuencia, su
+publicación considera la aplicación de criterios de agregación e indeterminación geográfica
+en aquellas unidades territoriales que, por su tamaño o composición, presentan riesgos de
+identificación, asegurando el resguardo de la información de las personas y viviendas
+censadas.
+
+
+
+
+                                                                                                      4
+2.2.    Desagregación geográfica de la base cartográfica
+
+Para el levantamiento del Censo de Población y Vivienda 2024 y la desagregación de los datos
+censales se utiliza en primer lugar la División Política Administrativa (DPA), de carácter legal y
+la división geográfica censal (DGC), 1que es de ámbito operativo, la que permite obtener una
+desagregación hasta los niveles mínimos de la división censal, correspondiente a manzana -
+entidad.
+
+                                     Figura 2.1 Desagregación geográfica
+
+
+
+
+                                  Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+1.   División Política Administrativa (DPA):
+
+     Permite el cumplimiento de los objetivos, tanto del gobierno como de la administración
+     del Estado, y se encuentra normada mediante la Constitución Política de Chile.
+
+     De acuerdo con la actual División Política Administrativa, el país está conformado por 16
+     regiones, 56 provincias y 346 comunas.
+
+
+
+
+1 Desagregación geográfica disponible para descarga en página de resultados https://censo2024.ine.gob.cl/resultados/
+
+
+
+
+                                                                                                                       5
+        2. División Geográfica Censal (DGC)2:
+
+            La base territorial se estructura a partir de la división comunas en Distritos urbanos, rurales
+            o mixtos. Al interior de estos, la estructura se diferencia y subdivide según el área:
+
+                 •   En área Urbana: Entidad urbana → Zona Censal → Manzana
+                 •   En área Rural: Localidad → Entidad rural → Manzana aldea (solo en categoría Aldea)
+
+        Tanto las entidades urbanas como rurales se encuentran definidas y clasificadas según una
+        categoría de entidad, la cual se define en base a sus características geográficas (ver tabla 2.1).
+
+
+                                            Tabla 2.1: Categorías de entidad poblada
+
+                     Característica geográfica que     Requisito de            Requisito de
+Categoría                                                                                        Alcances del concepto
+                     presenta                          viviendas               población
+                                                                                                Población mayor a 2.000 habitantes,
+                                                                                                o entre 1.001 y 2.000 habitantes
+                     Amanzanamiento,
+                                                                          Mayor a 5.000         donde menos del 50% de la
+Ciudad               concentración, continuidad de     No tiene
+                                                                          habitantes            población que declara haber
+                     construcciones
+                                                                                                trabajado se dedica a actividades
+                                                                                                primarias.
+                                                                                                Población que fluctúa entre 2.001 y
+                                                                                                5.000 habitantes o entre 1.001 y 2.000
+                     Amanzanamiento,
+                                                                          Entre 1.000 y 5.000   habitantes, donde menos del 50% de
+Pueblo               concentración, continuidad de     No tiene
+                                                                          habitantes            la población que declara haber
+                     construcciones
+                                                                                                trabajado se dedica a actividades
+                                                                                                primarias.
+                                                                                                Población fluctúa entre 301 y 2.000
+                     Amanzanamiento,                                                            habitantes o entre 1.001 y 2.000
+                                                                          Entre 301 y 2.000
+Aldea                concentración, continuidad de     No tiene                                 habitantes, con más del 50% de su
+                                                                          habitantes
+                     construcciones                                                             población dedicada a actividades
+                                                                                                primarias.
+                                                                                                Existen excepciones de entidades
+                                                                                                definidas como Caserío que
+                                                                                                presentan un mayor número de
+                     Concentración de                  Igual o mayor a    Menor a 301           habitantes, debido a que no
+Caserío
+                     construcciones                    3 viviendas        habitantes            cumplen los criterios de
+                                                                                                amanzanamiento y concentración
+                                                                                                necesarios para ser categorizadas
+                                                                                                como Aldea.
+                                                                                                Incluye pirquenes, canteras,
+Asentamiento         Concentración o dispersión de                                              plataformas petroleras y
+                                                       No tiene           No tiene
+minero               construcciones                                                             campamentos mineros
+                                                                                                permanentes
+                     Concentración o dispersión de
+                     construcciones. Estacional o                                               Se realizan actividades vinculadas
+Asentamiento
+                     permanente. Se ubica en área      No tiene           No tiene              con la pesca u otra actividad
+pesquero
+                     aledaña a borde costero                                                    productiva
+                     marítimo, orilla de lago o río.
+
+
+
+
+        2
+         El trazado de la División Geográfica Censal (DGC) es definida por el INE con objetivos operativos, por lo que no revisten
+        un carácter legal.
+
+
+
+
+                                                                                                                                         6
+                  Característica geográfica que     Requisito de             Requisito de
+Categoría                                                                                        Alcances del concepto
+                  presenta                          viviendas                población
+
+                                                                                                 Propiedad de gran extensión.
+Fundo-Estancia-   Concentración o dispersión de
+                                                    No tiene            No tiene                 Generalmente presenta actividad
+Hacienda          construcciones
+                                                                                                 agrícola, ganadera o forestal
+
+                                                                                                 De mediana o pequeña, extensión.
+                  Concentración o dispersión de
+Parcela-Hijuela                                     No tiene            No tiene                 Generalmente presenta actividad
+                  construcciones
+                                                                                                 agrícola, ganadera o forestal
+                  Concentración o dispersión de
+                                                                                                 No constituye explotación agrícola
+Parcela de        construcciones. Generalmente
+                                                    No tiene            No tiene                 aun cuando tenga cultivos en su
+Agrado            se ubica en la cercanía de
+                                                                                                 interior
+                  urbanos de importancia
+                  Asentamiento autóctono
+Comunidad         constituido por personas que                                                   Condición jurídica de la tierra no
+                                                    No tiene            No tiene
+Indígena          se identifican con una etnia de                                                determina su categoría
+                  costumbres ancestrales
+                  Estacional.
+Veranada-
+                  Se ubica en tierras de aptitud    No tiene            No tiene                 No tiene
+Majada-Aguada
+                  ganadera temporal
+
+                  Concentración o dispersión de     Igual o menor a
+Otros                                                               No tiene                     Existen
+                  construcciones                    2 viviendas
+
+
+Indeterminada     No aplica                         No aplica           No aplica                No aplica
+
+
+                                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                                                                      7
+       3. Indeterminación geográfica - ¿Qué es?
+       Con el objetivo de garantizar el resguardo de la confidencialidad, toda la información censal,
+       incluida aquella de carácter geográfico, debe difundirse con un nivel de agregación que
+       impida la identificación directa o indirecta de personas o viviendas. Para ello, la información
+       geográfica es publicada de manera indeterminada en las unidades territoriales que, por su
+       tamaño o composición, presenten riesgos de identificación.
+
+       La indeterminación geográfica corresponde a la agrupación de datos espaciales, comenzando
+       por las unidades territoriales de menor tamaño (entidades de población rural, manzanas
+       urbanas o manzanas de aldea) y avanzando hacia niveles superiores de la división geográfica
+       censal, con el fin de resguardar la confidencialidad de los datos en aquellas unidades con
+       riesgo de identificación.
+
+       El procedimiento (figura 2.2) consiste en identificar las unidades geográficas censales que
+       presentan entre una y tres viviendas particulares ocupadas con morador presente (VPOMP) y
+       agruparlas con unidades cercanas del mismo estrato censal. Esta agrupación se implementa
+       tanto en la dimensión geográfica – mediante la fusión de las geometrías - como en la
+       dimensión estadística, mediante la recodificación y consolidación de atributos en la base de
+       datos3.
+
+                                       Figura 3.1: Proceso de indeterminación geográfica
+
+                                                                                                                      Recodifi-
+  Identifica-                           Procesa-
+                                                                                                                      cación de
+    ción de                            miento por                            Validación y
+                                                                                                                     manzanas y   Normalizar las
+   unidades     Detectar las           estratos e                            consistencia
+                                                                                                                     entidades
+geográficas a                          indetermi-   Ejecutar la               territorial                                         codificaciones de
+                unidades que                                                                Garantizar la calidad    indetermi-
+indetermi-nar                            nación     indeterminación de                                                  nadas     las unidades para
+                requeren                                                                    de los resultados y la
+                                                    forma independiente                                                           garantizar la
+                indeterminación.                                                            coherencia
+                                                    para cada tipo de                                                             continuidad en las
+                Preprar los datos de                                                        geográfica
+                                                    zona                                                                          secuencias
+                proximidad
+                                                                                                                                  numéricas
+
+
+                                              Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+       3
+        Para más detalle del proceso, revisar Nota técnica Indeterminación geográfica disponible para descarga en página
+       de resultados https://censo2024.ine.gob.cl/resultados/
+
+
+
+
+                                                                                                                                                       8
+3.1.     ¿Cómo se representan las manzanas – entidades indeterminadas?
+
+Para las manzanas y entidades definidas como indeterminadas, se utiliza la geometría de
+“Polígono multiparte”. Esta técnica, propia de los Sistemas de Información Geográfica (SIG),
+permite agrupar múltiples elementos (manzanas y entidades) en un único registro tabular,
+tanto a nivel cartográfico como a nivel tabular (base de datos).
+
+
+       Figura 3.2: Manzanas sin indeterminación                                  Figura 3.3: Manzanas con indeterminación
+
+
+
+
+                                                                                                   MANZENT       COD_ENTIDAD_MANZANA
+                         MANZENT         COD_ENTIDAD_MANZANA
+                                                                                                 9201021002057           57
+                       9201021002056             56
+
+                       9201021002057             57
+
+
+
+
+                                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+3.2.     Consideraciones sobre confidencialidad y anonimización
+
+En la actualidad, las oficinas de estadísticas enfrentan importantes desafíos en materia de
+protección de datos asociados a sus publicaciones. La constante evolución de las técnicas de
+reidentificación, impulsada por los avances tecnológicos y la proliferación de fuentes de
+información no tradicionales, plantea nuevos retos para resguardar la confidencialidad de la
+información y la protección de los datos que las personas entregan con fines de uso
+estadísticos.
+
+La base de tabulados manzana-entidad del Censo de Población y Vivienda 2024 fue sometida
+a un tratamiento de anonimización estadística con el propósito de proteger la confidencialidad
+de las personas y hogares y viviendas censadas. Este procedimiento se enmarca en las
+disposiciones establecidas en la Ley del Secreto Estadístico (Ley N° 17.374) y en la Ley sobre
+protección de la vida privada (Ley N° 19.628), las cuales mandatan al Instituto Nacional de
+Estadísticas a resguardar la identidad de las personas informantes y evitar la divulgación de
+información que permita su identificación directa o indirecta, o incluso eventuales procesos
+de reidentificación.
+
+
+
+
+                                                                                                                                       9
+La anonimización aplicada se sustenta en el marco de control de divulgación estadística, que
+tiene como objetivo reducir el riesgo de reidentificación manteniendo la utilidad de la
+información para fines analíticos y de investigación.
+
+Por lo tanto, para reducir el riesgo de reidentificación, se aplicó la supresión de información en
+aquellas manzanas y entidades que presentan un bajo número de casos asociados
+exclusivamente a las variables que caracterizan personas, garantizando así el resguardo del
+secreto estadístico.
+
+
+
+
+3.3.   Alcance sobre los polígonos de Localidad y Entidad rural
+
+Los polígonos de las entidades se construyen a partir de la ubicación espacial de las viviendas
+y sus respectivos habitantes. Para cubrir la totalidad del territorio nacional, se utiliza la
+herramienta de los Sistemas de Información Geográfica, conocida como “Polígonos Thiessen”.
+
+Este proceso Thiessen genera limites teóricos alrededor de las viviendas. Por lo tanto, el usuario
+debe considerar estos polígonos como una referencia estadística y no como una delimitación
+legal, ya que su delimitación no siempre estará compuesta por elementos geográficos
+reconocibles en terreno.
+
+              Figura 3.4: Localidades y entidades conformada por polígonos Thiessen
+
+
+
+
+                            Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                                     10
+4. Casos especiales de estructuración de
+   datos
+4.1.   Datos censales asociados a nivel de comuna “Contenedores
+       comunales”
+
+No todos los registros censales de la base de datos se encuentran asociados a manzanas o
+entidades, ya que por sus características específicas al momento del levantamiento no se llegó
+a niveles de desagregación mayor que la comuna. Estos casos corresponden a los datos
+recolectados en el marco de operativos especiales y personas en situación de calle.
+
+Con el fin de resguardar la consistencia e integridad de la información a nivel comunal, los
+registros que no pudieron ser georreferenciados a una manzana o entidad específica fueron
+asignados a una manzana genérica denominada “contenedor comunal”
+
+En este contexto, las manzanas definidas como contenedor comunal no corresponden a un
+elemento existente dentro de la capa cartográfica de manzanas o entidades censales. Su
+existencia es exclusivamente tabular, y su uso responde a criterios metodológicos y operativos
+de estructuración de la base de datos.
+
+
+
+
+                                                                                                 11
+5. Capas cartográficas disponibles y su
+       estructura
+5.1.       Capas Cartográficas disponibles
+
+Con el fin de organizar la información censal en el territorio, la base cartográfica puesta a
+disposición del usuario está conformada por diez capas cartográficas en formato poligonal.
+Cada una de estas capas de información representa y contiene información tabular asociada a
+un nivel específico de la estructura geográfica censal.
+
+
+                                        Tabla 5.1: Lista de capas cartográficas
+
+     Capa cartográfica                                       Formato                                      Sistema de Coordenadas
+
+      Regional_CPV24
+
+      Provincial_CPV24
+
+      Comunal_CPV24
+
+       Distrital_CPV24
+
+    Limite_Urbano_CPV24
+                                                                                                               GCS_SIRGAS_20004
+                                                             Poligonal
+                                                                                                                  EPSG - 4674
+     Localidades_CPV24
+
+        Zonal_CPV24
+
+       Aldeas_CPV24
+
+     Entidades_CPV24
+
+     Manzanas_CPV24
+                                     Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+5.2.       Variables (campos)
+                                            Tabla 5.2: Variables regionales
+
+                                                       Regional_CPV24
+
+                   Nombre de campo                      Descripción                            Visualización
+                                                 Código identificador de la
+                      COD_REGION                                                                    3
+                                                          región
+
+                         REGION                      Nombre de región                           ATACAMA
+
+
+
+
+4
+    Para cálculos de áreas o distancias métricas, se recomienda reproyectar a un sistema plano (ej. UTM)
+
+
+
+
+                                                                                                                                   12
+                   Tabla 5.3: Variables Provinciales
+
+                            Provincial_CPV24
+
+Nombre de campo                Descripción              Visualización
+                         Código identificador de la
+  COD_REGION                                                 13
+                                  región
+    REGION                  Nombre de región           METROPOLITANA
+                         Código identificador de la
+COD_PROVINCIA                                                131
+                                 provincia
+   PROVINCIA               Nombre de provincia           SANTIAGO
+
+
+
+
+                   Tabla 5.4: Variables Comunales
+
+                             Comunal_CPV24
+
+Nombre de campo                Descripción              Visualización
+                         Código identificador de la
+     CUT                                                    13101
+                                 comuna
+                         Código identificador de la
+  COD_REGION                                                 13
+                                  región
+    REGION                  Nombre de región           METROPOLITANA
+                         Código identificador de la
+COD_PROVINCIA                                                131
+                                 provincia
+   PROVINCIA               Nombre de provincia           SANTIAGO
+   COMUNA                  Nombre de comuna              SANTIAGO
+
+
+
+                    Tabla 5.5: Variables Distritales
+
+                              Distrital_CPV24
+
+Nombre de campo                Descripción              Visualización
+                         Código identificador de la
+     CUT                                                    13101
+                                 comuna
+                         Código identificador de la
+  COD_REGION                                                 13
+                                  región
+    REGION                  Nombre de región           METROPOLITANA
+                         Código identificador de la
+COD_PROVINCIA                                                131
+                                 provincia
+   PROVINCIA               Nombre de provincia           SANTIAGO
+   COMUNA                  Nombre de comuna              SANTIAGO
+   DISTRITO                 Nombre de distrito            MONEDA
+                          Código identificador de
+ COD_DISTRITO                                                2
+                                  distrito
+ TIPO_DISTRITO                Tipo de distrito            URBANO
+                          Identificador único de
+  ID_DISTRITO                                              1310102
+                          distrito dentro de País
+
+
+
+                  Tabla 5.6: Variables Límite Urbano
+
+                          Limite_Urbano_CPV24
+
+Nombre de campo                Descripción              Visualización
+                         Código identificador de la
+     CUT                                                    13101
+                                 comuna
+                         Código identificador de la
+  COD_REGION                                                 13
+                                  región
+
+
+
+
+                                                                        13
+                         Limite_Urbano_CPV24
+
+Nombre de campo               Descripción             Visualización
+    REGION                 Nombre de región          METROPOLITANA
+                       Código identificador de la
+COD_PROVINCIA                                              131
+                               provincia
+   PROVINCIA             Nombre de provincia           SANTIAGO
+   COMUNA                 Nombre de comuna             SANTIAGO
+    AREA_C                   Estrato censal             URBANO
+                        Código identificador de
+COD_LOCALIDAD                                              8
+                              localidad
+  LOCALIDAD              Nombre de localidad         GRAN SANTIAGO
+                       Código de entidad poblada
+ COD_ENTIDAD                                                1
+                                urbana
+   ENTIDAD            Nombre de entidad (Urbano)       SANTIAGO
+COD_CATEGORIA             Código de categoría               1
+  CATEGORIA              Nombre de categoría             Ciudad
+                         Identificador único de
+  ID_ENTIDAD                                          1310100100101
+                         entidad dentro de País
+                         Identificador único de
+ ID_LOCALIDAD                                           131011001
+                        localidad dentro de País
+                        Nombre de conurbación
+ CONURBACION                                         GRAN SANTIAGO
+                         (cuando corresponda)
+
+
+
+                  Tabla 5.7: Variables Localidades
+
+                          Localidades_CPV24
+
+Nombre de campo               Descripción             Visualización
+                       Código identificador de la
+     CUT                                                  1101
+                               comuna
+                       Código identificador de la
+  COD_REGION                                                1
+                                región
+    REGION                 Nombre de región            TARAPACÁ
+                       Código identificador de la
+COD_PROVINCIA                                              11
+                               provincia
+   PROVINCIA             Nombre de provincia            IQUIQUE
+   COMUNA                 Nombre de comuna              IQUIQUE
+    AREA_C               Estrato censal (Rural)          RURAL
+                        Código identificador de
+COD_LOCALIDAD                                               1
+                              localidad
+  LOCALIDAD              Nombre de localidad          AEROPUERTO
+                         Identificador único de
+ ID_LOCALIDAD                                           11012001
+                        localidad dentro de País
+
+
+
+                     Tabla 5.8: Variables Zona
+
+                             Zonal_CPV24
+
+Nombre de campo               Descripción             Visualización
+                       Código identificador de la
+     CUT                                                  9201
+                               comuna
+                       Código identificador de la
+  COD_REGION                                               9
+                                región
+    REGION                 Nombre de región          LA ARAUCANÍA
+                       Código identificador de la
+COD_PROVINCIA                                              92
+                               provincia
+
+
+
+
+                                                                      14
+                             Zonal_CPV24
+
+Nombre de campo               Descripción            Visualización
+   PROVINCIA             Nombre de provincia           MALLECO
+    COMUNA               Nombre de comuna               ANGOL
+     AREA_C                  Estrato censal            URBANO
+    DISTRITO              Nombre de distrito          REGIMIENTO
+                        Código identificador de
+  COD_DISTRITO                                            16
+                                distrito
+                        Código identificador de
+ COD_LOCALIDAD                                             3
+                              localidad
+   COD _ZONA                Código de zona                 1
+   LOCALIDAD             Nombre de localidad            ANGOL
+                      Código de entidad poblada
+  COD_ENTIDAD                                              1
+                               urbana
+    ENTIDAD           Nombre de entidad (Urbano)        ANGOL
+ COD_CATEGORIA           Código de categoría               1
+   CATEGORIA             Nombre de categoría            Ciudad
+                        Identificador único de
+   ID_ENTIDAD                                        920100300101
+                        entidad dentro de País
+                         Identificador único de
+  ID_LOCALIDAD                                         92011003
+                        localidad dentro de País
+                         Identificador único de
+   ID_DISTRITO                                          920116
+                         distrito dentro de País
+                      Identificador único de zona
+    ID_ZONA                                            920116001
+                            dentro del País
+
+
+
+                    Tabla 5.9: Variables Aldeas
+
+                           Aldeas_CPV24
+Nombre de campo              Descripción             Visualización
+                       Código identificador de la
+      CUT                                                4106
+                               comuna
+                       Código identificador de la
+  COD_REGION                                              4
+                                región
+    REGION                Nombre de región            COQUIMBO
+                       Código identificador de la
+ COD_PROVINCIA                                            41
+                               provincia
+   PROVINCIA             Nombre de provincia            ELQUI
+    COMUNA               Nombre de comuna               VICUÑA
+     AREA_C                  Estrato censal             RURAL
+    ENTIDAD           Nombre de entidad (Aldea)        LOURDES
+ COD_CATEGORIA           Código de categoría               3
+   CATEGORIA             Nombre de categoría             Aldea
+                      Identificador único de aldea
+   ID_ENTIDAD                                           410605
+                             dentro de País
+
+
+
+
+                  Tabla 5.10: Variables Entidades
+
+                           Entidades_CPV24
+
+Nombre de campo               Descripción            Visualización
+                       Código identificador de la
+      CUT                                                8305
+                               comuna
+
+
+
+
+                                                                     15
+                          Entidades_CPV24
+
+Nombre de campo              Descripción                 Visualización
+                      Código identificador de la
+  COD_REGION                                                   8
+                               región
+    REGION                Nombre de región                  BIOBÍO
+                      Código identificador de la
+COD_PROVINCIA                                                 83
+                              provincia
+   PROVINCIA            Nombre de provincia                 BIOBÍO
+   COMUNA                Nombre de comuna                 MULCHÉN
+    AREA_C                  Estrato censal                  RURAL
+                      Código único identificador
+   MANZENT                                              8305092025072
+                             de entidad
+   DISTRITO              Nombre de distrito             PEÑAS VERDES
+                       Código identificador de
+ COD_DISTRITO                                                  9
+                               distrito
+                       Código identificador de
+COD_LOCALIDAD                                                 25
+                             localidad
+  LOCALIDAD             Nombre de localidad              LOS HINOJOS
+                       Código identificador de
+ COD_ENTIDAD                                                  72
+                              entidad
+   ENTIDAD            Nombre de entidad (Rural)          SANTA ROSA
+COD_CATEGORIA            Código de categoría                   7
+  CATEGORIA             Nombre de categoría         Fundo-Estancia-Hacienda
+                       Identifica entidades con        1: con información
+MZ_BASE_CENSO
+                         datos en tabulados            0: sin información
+                        Identificador único de
+  ID_ENTIDAD                                             830502507207
+                        entidad dentro de País
+                        Identificador único de
+ ID_LOCALIDAD                                              83052025
+                       localidad dentro de País
+                        Identificador único de
+  ID_DISTRITO                                               830509
+                        distrito dentro de País
+
+
+
+
+                  Tabla 5.11: Variables Manzanas
+
+                          Manzanas_CPV24
+
+Nombre de campo              Descripción                 Visualización
+                      Código identificador de la
+     CUT                                                     5401
+                              comuna
+                      Código identificador de la
+  COD_REGION                                                   5
+                               región
+    REGION                Nombre de región               VALPARAÍSO
+                      Código identificador de la
+COD_PROVINCIA                                                 54
+                              provincia
+   PROVINCIA            Nombre de provincia                PETORCA
+   COMUNA                Nombre de comuna                  LA LIGUA
+    AREA_C                  Estrato censal                 URBANO
+                      Código único identificador
+   MANZENT                                               5401011001025
+                            de manzana
+   DISTRITO              Nombre de distrito            LA LIGUA NORTE
+                       Código identificador de
+ COD_DISTRITO                                                  1
+                               distrito
+                       Código identificador de
+COD_LOCALIDAD                                                  9
+                             localidad
+  COD_ZONA           Código identificador de zona              1
+  LOCALIDAD             Nombre de localidad                LA LIGUA
+
+
+
+
+                                                                              16
+                                                        Manzanas_CPV24
+
+                   Nombre de campo                         Descripción                            Visualización
+                                                      Código identificador de
+                     COD_ENTIDAD                                                                        1
+                                                             entidad
+                                                      Código identificador de
+                    COD_MANZANA                                                                        25
+                                                            manzana
+                                                   Nombre de entidad (Urbana
+                        ENTIDAD                                                                     LA LIGUA
+                                                           - Aldea)
+                                                    Tipo de manzana (Urbano -
+                        TIPO_MZ                                                                     URBANO
+                                                             Aldea)
+                    COD_CATEGORIA                      Código de categoría                              1
+                       CATEGORIA                       Nombre de categoría                           Ciudad
+                                                     Identifica manzanas con
+                                                                                               1: con información
+                    MZ_BASE_CENSO                     datos en tabulados de
+                                                                                               0: sin información
+                                                             manzana
+                                                      Identificador único de
+                      ID_ENTIDAD                                                                  540100900101
+                                                      entidad dentro de País
+                                                      Identificador único de
+                     ID_LOCALIDAD                                                                   54011009
+                                                     localidad dentro de País
+                                                      Identificador único de
+                      ID_DISTRITO                                                                    540101
+                                                      distrito dentro de País
+                                                    Identificador único de zona
+                        ID_ZONA                        dentro del País (para                       540101001
+                                                       manzanas urbanas)
+
+
+
+
+5.3.     Tabulados manzana – entidad
+
+Una de las características de esta publicación censal es la inclusión de los resultados a nivel de
+tabulados de las variables de indicadores de personas, hogares y viviendas directamente
+integrados en la base cartográfica censal. Esta característica representa una ventaja relevante
+para el usuario, ya que elimina la necesidad de realizar de forma manual la vinculación
+(conocida como “Join5”) entre las capas cartográficas y la información tabular en formato .csv 6.
+
+La información de las 189 variables, asociadas a 10 temáticas del cuestionario (tabla 2.13),
+conocidas como “base tabulados manzana – entidad” se encontrará disponible en las capas
+cartográficas que representan la desagregación operativa del territorio:
+
+    •    Área Urbana: Entidad urbana, Zona censal y Manzana
+    •    Área Rural: Localidad, Entidad rural, Aldea, Manzana aldea
+
+
+                                      Tabla 5.12: Temáticas de base de tabulados
+
+                                                   Temática                        N° variables
+
+
+
+                                           Características generales                     3
+
+
+                                        Características de las viviendas                  34
+
+
+
+
+5
+ Operación mediante la cual se incorporan a una capa cartográfica los atributos contenidos en una tabla externa, utilizando un campo
+común como llave de vinculación
+6
+   Tabulados    con variables       de indicadores   disponibles    para     descarga   a través     de página         de resultados
+https://censo2024.ine.gob.cl/resultados/
+
+
+
+
+                                                                                                                                       17
+                                          Temática                        N° variables
+
+
+
+                               Servicios básicos de la vivienda                  27
+
+
+                              Déficit habitacional cuantitativo                  6
+
+
+                               Características de los hogares                    12
+
+
+                               Tecnologías de la información                     7
+
+
+                               Uso de energía o combustible                      16
+
+
+                            Características demográficas básicas                 18
+
+
+                                   Grupos de la población                        11
+
+
+                              Características socioeconómicas                    55
+
+
+                             Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+5.3.1.     ¿Cómo se visualizan los tabulados a nivel de capa cartográfica?
+A continuación se presentan ejemplos que ilustran la visualización de las variables publicadas
+a nivel de tabulados, y su representación en las distintas capas cartográficas.
+
+En relación con las variables sometidas a tratamiento de anonimización estadística, estas se
+representan con valores nulos en la base tabular asociada a la capa cartográfica. Si bien en los
+archivos descargables dichas variables se muestran mediante un asterisco (*), con el fin de
+preservar la estructura numérica de los campos geográficos, en la base cartográfica estos
+casos se definen como valores nulos o en blanco.
+
+   •     Capa – Manzanas_CPV24
+
+                      Figura 5.1: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                             Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                                   18
+•   Capa – Entidades_CPV24
+
+                Figura 5.7: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+•   Capa – Aldeas_CPV24
+
+                Figura 5.8: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                   19
+•   Capa – Localidades_CPV24
+
+                Figura 5.9: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+•   Capa – Zonal_CPV24
+
+                Figura 3.0: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+•   Capa – Limite_Urbano_CPV24
+
+                Figura 3.1: Visualización capa cartográfica y tabla de atributos
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                   20
+5.3.2.    Identificadores únicos para agrupación de capas cartográficas
+En la publicación de la base cartográfica censal se incorporan variables denominadas
+identificadores únicos, las cuales permiten seleccionar, vincular y agrupar de forma directa los
+distintos niveles de las capas cartográficas en función de su nivel geográfico superior. De este
+modo, el usuario puede identificar, por ejemplo, todas las manzanas urbanas que pertenecen
+a su respectivo urbano, sin necesidad de realizar operaciones de selección o superposición
+espacial entre distintas capas de información.
+
+A continuación, se identifican las variables correspondientes a los identificadores únicos.
+
+                             Tabla 5.14: Temáticas de base de tabulados
+
+                        Variable                        Permite agrupar entre capas
+
+
+                       ID_DISTRITO                   Distrital, Zonal, Entidades, Manzanas
+
+                      ID_LOCALIDAD             Localidad, Limite Urbano, Zona, Entidad, Manzanas
+
+                       ID_ENTIDAD                 Limite Urbano, Zona, Aldea, Entidad, Manzana
+
+                        ID_ZONA                              Zona, Manzana (Urbana)
+
+                              Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                Figura 3.2: Visualización de ID_ENTIDAD en capa Limite_Urbano y Manzanas
+
+
+
+
+                              Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+                                                                                                   21
+6. Formatos disponibles para el uso de la
+       Base Cartográfica Censal
+Con el objetivo de facilitar y/o optimizar el almacenamiento, transferencia y el análisis de los
+datos geográficos, la base cartográfica censal se encuentra disponible para su descarga en los
+3 principales formatos utilizados en la actualidad, permitiendo a los usuarios utilizar el formato
+que mejor se adapte a su infraestructura tecnológica, volumen de datos y necesidades de
+procesamiento:
+
+1.     File Geodatabase (.gdb): Formato de almacenamiento de datos geográficos nativo del
+       ecosistema Esri. Funciona como un contenedor (carpeta) que permite almacenar múltiples
+       capas cartográficas y tablas relacionales.
+
+2. GeoPackage (.gpkg): Formato de almacenamiento de datos geográficos de estándar
+   abierto (OGC7), definido como el sustituto del formato Shapefile (.shp). Consiste en un único
+   archivo (basado en SQLite), ligero, fácil de compartir y sin limitaciones de tamaño de sus
+   archivos geográficos.
+
+3. GeoParquet (.parquet): Formato de almacenamiento columnar de datos geográficos
+   optimizado para el rendimiento. Permite la lectura y escritura de forma eficiente de
+   grandes volúmenes de datos permitiendo una alta tasa de compresión.
+
+
+
+                          Tabla 2.15: Recomendación de uso de bases según tipo de perfil
+
+
+                                            Perfil                     Recomendación de uso
+
+
+                                      Usuario de ArcGis                    .gdb (Geodatabase)
+
+
+                                Usuario de QGIS o Software                 .gpkg (GeoPackage)
+                                           libre
+
+                                     Analista de datos /                   .parquet (GeopParquet)
+                                       Programador
+                                          Fuente: Instituto Nacional de Estadísticas – Censo 2024
+
+
+
+
+7
+    Organización internacional (no gubernamental) que desarrolla estándares abiertos para información geográfica.
+
+
+
+
+                                                                                                                    22
+Manual de uso de microdatos censales / Capítulo 7: Definición y construcción de indicadores
+
+
+
+
+                                                                                       23
+

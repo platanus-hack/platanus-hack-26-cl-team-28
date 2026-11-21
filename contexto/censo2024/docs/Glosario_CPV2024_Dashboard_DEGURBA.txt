@@ -1,0 +1,49 @@
+                                       Glosario: conceptos generales
+
+
+
+
+Edad                    Refiere al tiempo completo de la vida de una persona, desde el momento
+                         de su nacimiento hasta el momento de contestar el cuestionario.
+
+
+
+Índice de               Es un indicador demográfico que mide el grado de envejecimiento de
+                         una población, al comparar la cantidad de personas mayores con la
+envejecimiento           cantidad de población joven.
+                     • Se obtiene dividiendo el número total de personas de 65 años o más con
+                       el número total de personas menores de 15 años y multiplicando el
+                       resultado por 100.
+                     • Esto permite conocer cuántas personas mayores hay por cada 100
+                       personas de 14 años o menos.
+
+
+
+ Paridez media          Promedio de hijos/as nacidos que han tenido las mujeres a lo largo de su vida
+                         fértil entre 15 y 49 años. Se calcula como la razón entre el total de hijos/as
+                         declarados y el total de mujeres entre 15 y 49 años con fecundidad declarada.
+
+
+
+ Pirámide de            Representación gráfica de la estructura de la población en un momento
+ población               determinado, según edad y sexo.
+
+                        El eje horizontal de una pirámide puede presentar los valores absolutos o las
+                         proporciones de la población, mientras que el eje vertical presenta las edades
+                         de la población por quinquenios (tramos de 5 años) o edades simples.
+
+
+
+ Población censada      Corresponde al total de personas contabilizadas y caracterizadas socio
+                         demográficamente en el proceso de recolección censal.
+
+
+
+ Razón               • Cantidad de hombres por cada 100 mujeres.
+ hombre - mujer
+
+
+ Sexo                   Refiere al atributo declarado por la persona informante en el
+                         cuestionario censal.
+                        Sus categorías son “hombre” y “mujer”.
+

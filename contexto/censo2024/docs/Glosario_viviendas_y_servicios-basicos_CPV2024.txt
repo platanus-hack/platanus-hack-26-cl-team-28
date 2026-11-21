@@ -1,0 +1,181 @@
+                                                   Glosario: características de las
+                                            viviendas y acceso a servicios básicos
+
+
+
+1. CARACTERÍSTICAS DE LAS VIVIENDAS
+
+Tipo de vivienda      • Corresponde a una tipología que clasifica a las viviendas en casa, departa-
+                        mentos, viviendas de emergencia, entre otras.
+                      • La información se captura en la pregunta “Seleccione el tipo de vivienda parti-
+                        cular”. Sus alternativas de respuesta son: “Casa con acceso directo desde la ca-
+                        lle”, “Casa en condominio cerrado (contorno cerrado y/o entrada controlada)”,
+                        “Departamento en edificio con ascensor”, “Departamento en edificio sin as-
+                        censor”, “Vivienda tradicional indígena (ruka u otras)”, “Pieza en casa antigua
+                        o en conventillo”, “Mediagua o mejora, vivienda de emergencia, rancho o cho-
+                        za”, “Móvil (carpa, casa rodante o similar)” y “Otro tipo de vivienda particular”.
+
+
+Materialidad de las   • El material de las viviendas hace referencia a los elementos de construcción
+viviendas               de estas en sus paredes, cubierta de techo y piso.
+                      • Las preguntas que capturan esta información en el cuestionario censal son:
+                           – Pregunta 4a “¿Cuál es el material de construcción predominante en las
+                             paredes exteriores?”
+                           – Pregunta 4b “¿Cuál es el material de construcción predominante en la
+                             cubierta del techo?”
+                           – Pregunta 4c “¿Cuál es el material de construcción predominante en el
+                             piso?”
+                      • Dependiendo de las características del material este puede ser clasificado en
+                        aceptable, recuperable e irrecuperable.
+
+                      Tabla 1. Categorías preguntas sobre materialidad de la vivienda y su clasificación
+
+                                          Materialidad             Materialidad               Materialidad
+                      Clasificación
+                                          paredes                  cubierta techo             piso
+
+                      Aceptable           • Hormigón armado        • Tejas o tejuelas         • Parquet, piso
+                                          • Albañilería            • Losa hormigón              flotante, etc.
+                                          • Tabique forrado por    • Planchas metálicas
+                                            ambas caras            • Planchas de
+                                                                     fibrocemento
+
+                      Recuperable         • Tabique sin forro      • Fonolita o plancha de • Radier sin
+                                            interior                 fieltro embreado        revestimiento
+                                          • Adobe, barro, pirca,   • Paja, coirón, totora o   • Baldosa de
+                                            quincha u otro           caña, etc.                 cemento
+                                            material artesanal.                               • Capa de cemento
+                                                                                                sobre tierra
+                      Irrecuperable       Materiales precarios     • Materiales precarios     Tierra
+                                                                   • Sin cubierta sólida de
+                                                                     techo
+                                                   Glosario: características de las
+                                            viviendas y acceso a servicios básicos
+
+
+
+1. CARACTERÍSTICAS DE LAS VIVIENDAS
+
+Viviendas              • Las viviendas irrecuperables son aquellas que debido a su tipo o a la materia-
+irrecuperables           lidad de sus muros, techo y piso, deben ser reemplazadas.
+                       • Las siguientes categorías clasifican a una vivienda como irrecuperable:
+                           – Tipo de vivienda: mediagua, mejora o vivienda de emergencia, viviendas
+                             móviles y otros tipos de vivienda.
+                           – Materiales: materiales precarios o de desecho en paredes o cubierta de
+                             techo; sin cubierta en el techo, o bien con piso de tierra.
+                       • Las preguntas del cuestionario que permiten identificar a las viviendas irre-
+                         cuperables son la pregunta 2 “Seleccione el tipo de vivienda particular” y las
+                         preguntas de materialidad de paredes, cubierta de techo y piso.
+
+
+
+Viviendas con          • El hacinamiento en una vivienda se identifica a partir del promedio de per-
+hacinamiento             sonas por número de dormitorios. Se calcula a partir del número de personas
+                         que residen en una vivienda dividido por el número de piezas de uso exclusivo
+                         para dormir.
+                       • Las viviendas pueden ser clasificadas en viviendas sin hacinamiento, con ha-
+                         cinamiento medio y hacinamiento crítico.
+                       • Las viviendas con hacinamiento son aquellas que tienen en promedio 2,5 per-
+                         sonas o más por dormitorio de uso exclusivo para dormir. Se considera que el
+                         hacinamiento es medio si el promedio se encuentra entre 2,5 y menos de 5
+                         personas por dormitorio. Por otro lado, el hacinamiento se considera crítico si el
+                         promedio de personas por dormitorio es 5 o más.
+                       • Las viviendas que no tienen habitaciones de uso exclusivo para dormir, es de-
+                         cir, su número de dormitorios es 0, se clasifican con hacinamiento crítico.
+                       • Este indicador se construye a partir del número de personas residentes ha-
+                         bituales de una vivienda y la pregunta 5 “¿Cuántas piezas de esta vivienda se
+                         usan exclusivamente como dormitorio”?
+
+
+
+
+Viviendas              • En las viviendas particulares pueden residir uno o más hogares. Este indicador
+particulares con más     presenta el porcentaje de casos en los que dos o más hogares residen en una
+de un hogar              vivienda.
+                                                   Glosario: características de las
+                                            viviendas y acceso a servicios básicos
+
+
+
+2. SERVICIOS BÁSICOS
+
+
+Fuente de agua para     • Corresponde al origen del agua utilizada para consumo doméstico.
+consumo doméstico
+                        • El agua para uso doméstico corresponde al agua destinada a consumo básico,
+                          es decir, consumo, lavado de ropa, preparación de alimentos, lavado de uten-
+                          silios para cocinar e higiene personal.
+                        • Esta información se captura en la pregunta 6 “¿El agua que usa esta vivienda
+                          proviene principalmente de…?”. Sus categorías de respuesta son “Red públi-
+                          ca”, “Pozo o noria”, “Camión aljibe” y “Río, vertiente, estero, canal, lago, agua
+                          lluvia, etc.”.
+
+
+Sistema de              • Refiere al sistema o mecanismo por el cual se transporta el agua para el uso
+distribución del agua     doméstico desde una fuente como red pública, pozo o noria, copa de agua,
+                          entre otras, hacia el interior o exterior de la vivienda.
+                        • Esta información se captura en la pregunta 7 “¿Cuál es el sistema de distribu-
+                          ción del agua en esta vivienda?”. Sus categorías de respuesta son “Con llave
+                          dentro de la vivienda”, “Con llave dentro del sitio, pero fuera de la vivienda” y
+                          “No tiene sistema, la acarrea”.
+
+
+Servicio higiénico      • Refiere a una instalación sanitaria para el excremento y la orina.
+                        • Esta información se captura a partir de la pregunta 8 “¿El servicio higiénico
+                          (WC) principal de esta vivienda es o está…?”. Sus categorías de respuesta son
+                          “Dentro de la vivienda, conectado a una red de alcantarillado”, “Fuera de la
+                          vivienda, conectado a una red de alcantarillado”, “Conectado a una fosa sép-
+                          tica”, “Conectado a pozo negro (letrina sanitaria o cajón)”, “En un cajón sobre
+                          acequia o canal”, “En un cajón conectado a otro sistema”, “Baño químico”,
+                          “Conectado a baño seco” y “No tiene servicio higiénico”.
+
+
+                        • Electricidad utilizada para el consumo básico de los integrantes de la vivienda.
+Electricidad para uso
+                        • Esta información se captura en la pregunta 9 “¿La electricidad de esta vivien-
+doméstico
+                          da proviene principalmente de…?”. Sus categorías de respuesta son “Red pú-
+                          blica”, “Generador con diésel o bencina”, “Placa solar”, “Energía eólica (vien-
+                          to)”, “Otro” y “No tiene energía eléctrica”.
+
+Tenencia de la          • Condición de propiedad que el hogar tiene sobre la vivienda en que reside.
+vivienda                • Esta información se captura a partir de la pregunta 12 “¿La vivienda que ocupa
+                          este hogar es…?”. Sus categorías de respuesta son “Propia pagada”, “Propia
+                          pagándose”, “Arrendada con contrato”, “Arrendada sin contrato”, “Cedida por
+                          trabajo o servicio”, “Cedida por familiar u otro”, “Usufructo: solo uso y goce”,
+                          “Ocupada de hecho” y “Propiedad en sucesión o litigio”.
+                                                Glosario: características de las
+                                         viviendas y acceso a servicios básicos
+
+
+
+2. SERVICIOS BÁSICOS
+
+Fuente de energía   • Los combustibles son fuentes de energía que liberan calor. Estas fuentes son
+o combustible         utilizadas por el hogar ya sea para cocinar o calefaccionar.
+para cocinar o
+                    • La información de la energía para cocinar se captura a partir de la pregunta
+calefaccionar
+                      13 “¿Cuál es la principal fuente de energía o combustible que se utiliza para
+                      cocinar?”
+                    • La información de la energía para calefaccionar se captura a partir de la pre-
+                      gunta 14 “¿Cuál es la principal fuente de energía o combustible que se utiliza
+                      para calefaccionar?”.
+                    • Las preguntas 13 y 14 comparten la mayoría de las categorías de respuesta con
+                      excepción de:
+                        – “Energía solar (ej. cocina u horno solar)” solo está presente en la pregunta
+                          13 (cocinar)
+                        – La categoría “Otra” solo está presente en la pregunta 14 (calefaccionar).
+                    • Las categorías que comparten ambas preguntas son “Gas”, “Parafina o petró-
+                      leo”, “Leña”, “Pellet”, “Carbón”, “Electricidad” y “No utiliza fuente de energía o
+                      combustible”.
+
+
+Acceso a internet   • Refiere al acceso a servicios de internet por parte del hogar, ya sea a través de
+                      internet fija, internet móvil desde un celular, Tablet o BAM o internet satelital.
+                    • Esta información se captura a partir de la pregunta 15 “Este hogar, ¿dispone
+                      de alguno de los siguientes equipos o servicios?”. Las categorías de respuesta
+                      de esta pregunta son “Teléfono móvil, celular o smartphone”, “Computador
+                      (escritorio, portátil)”, “Tablet”, “Internet fija”, “Internet móvil desde un celular,
+                      tablet o BAM” e “Internet por conexión satelital”.
+

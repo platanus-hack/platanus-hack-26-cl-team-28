@@ -1,0 +1,119 @@
+                                 Glosario: fecundidad y migración
+
+
+1. FECUNDIDAD
+
+Mujeres en edad         • Por convención, para el estudio de la fecundidad en la población desde una
+fértil                    perspectiva demográfica, la etapa reproductiva de la mujer se define entre los
+                          15 a los 49 años.
+
+
+Fecundidad              • Refiere a la probabilidad que tiene una mujer de concebir durante su etapa
+                          reproductiva. En general se expresa como el número de hijos que cada mujer
+                          tiene a lo largo de su vida fértil.
+
+Hijos/as nacidos/as     • Corresponde a la cantidad de hijas e hijos nacidos vivos declarados en el cues-
+vivos/as                  tionario censal. Un hijo o hija nacida viva refiere a los niños o niñas que en el
+                          momento de nacer muestran señales de vida, como, por ejemplo, latidos del
+                          corazón, respiración, llanto o movimiento de algún músculo.
+                        • Esta información se captura en la pregunta 46 “¿Cuántas hijas e hijos nacidos
+                          vivos ha tenido en total?”.
+
+Hijos/as                • Corresponde a la cantidad de hijos o hijas que nacieron vivos y en el momento
+sobrevivientes            de la entrevista censal continúan con vida (sobrevivientes).
+                        • Esta información se captura en la pregunta 47 “¿Cuántas hijas e hijos están
+                          vivos actualmente?”.
+
+
+Mujeres en edad         • Corresponde a las mujeres de 15 a 49 años que respondieron que han tenido
+fértil con hijos/as       al menos una hija o hijo nacido vivo.
+                        • Es decir, que en la pregunta 46 “¿Cuántas hijas e hijos nacidos vivos ha tenido
+                          en total?” declararon una cantidad distinta de cero. Excluye a las mujeres que
+                          no declaran información en fecundidad.
+
+Mujeres en edad         • Corresponde a las mujeres de 15 a 49 años que respondieron que no han teni-
+fértil sin hijos/as       do hijas e hijos nacidos vivos.
+                        • Es decir, que en la pregunta 46 “¿Cuántas hijas e hijos nacidos vivos ha tenido
+                          en total?” declararon ninguno o cero hijos. Excluye a las mujeres que no decla-
+                          ran información en fecundidad.
+
+
+
+
+Promedio de hijos/as    • Indicador conocido también bajo el nombre de paridez media. Corresponde
+a lo largo de la vida     al promedio de hijos/as que han tenido las mujeres a lo largo de su vida fértil
+fértil de una mujer       entre 15 y 49 años. Excluye a las mujeres que no declaran información en fe-
+entre 15 y 49 años        cundidad.
+                               Glosario: fecundidad y migración
+
+
+2. MIGRACIÓN INTERNA
+
+
+Migración interna     • Movimiento o desplazamiento de personas dentro de un país, que implica el
+reciente                traslado de residencia habitual de las personas desde un lugar de origen a
+                        otro lugar de destino, atravesando los límites de una división político-admi-
+                        nistrativa.
+                      • Para identificar a los migrantes internos del país se utiliza la pregunta 24 “¿En
+                        qué comuna o país vivía en abril de 2019?”.
+
+Residencia habitual   • Corresponde al lugar donde la persona censada residía habitualmente1 hace
+hace 5 años             cinco años antes del censo.
+                      • Esta información se captura en la pregunta 24 “¿En qué comuna o país vivía
+                        en abril de 2019?”.
+
+
+Tasa de migración     • Expresa el número de personas de 5 años o más que han migrado en el perío-
+neta interna            do, por cada mil habitantes de la respectiva unidad de la división político-ad-
+                        ministrativa del país, como por ejemplo una región o comuna. Si es positiva
+                        indica que la unidad atrae población, si es negativa quiere decir que sale po-
+                        blación de esa unidad.
+
+
+Saldo de migración    • Corresponde a la diferencia entre las personas que llegan a vivir a una región o
+neta                    comuna (inmigrantes), respecto de aquellas que salen a vivir a otra (emigran-
+                        tes). Región y comuna corresponden a unidades de la división político-admi-
+                        nistrativa del país.
+                      • Cuando es positivo indica que en el período analizado hay más gente que
+                        llega a vivir a la región que la que sale. Cuando es negativo, quiere decir que,
+                        en el período analizado, hay más gente que sale de la región que la que llega.
+                      • Las personas migrantes que salen de su lugar de origen son consideradas
+                        emigrantes internos, mientras que esas mismas personas cuando llegan al
+                        lugar de destino, se consideran inmigrantes internos.
+
+
+
+
+3. INMIGRACIÓN INTERNACIONAL
+
+
+Inmigración           • La inmigración internacional refiere al movimiento de personas que llegan a
+internacional           residir habitualmente al país desde el extranjero.
+                      • Para identificar a los inmigrantes internacionales se utiliza la pregunta 25
+                        “Cuando nació, ¿en qué comuna o país vivía su madre?”.
+                                 Glosario: fecundidad y migración
+
+
+
+3. INMIGRACIÓN INTERNACIONAL
+
+
+Población nacida        • Corresponde a las personas censadas que nacieron en otro país o fuera de
+fuera del país            Chile.
+                        • Esta información se captura con la pregunta 25 “Cuando nació, ¿en qué comu-
+                          na o país vivía su madre?”.
+
+
+
+País de nacimiento      • Corresponde al país de nacimiento de las personas censadas. Hace referencia
+                          a la unidad geográfica donde residía habitualmente la madre de la persona al
+                          momento de su nacimiento.
+                        • Corresponde a la respuesta del país declarado en la pregunta 25 “Cuando na-
+                          ció, ¿en qué comuna o país vivía su madre?”.
+
+
+Período de llegada al   • Corresponde al período o año donde se produjo la llegada a vivir al país de las
+país                      personas censadas que nacieron fuera de Chile.
+                        • Esta información se captura en la pregunta 26 “¿En qué año llegó a vivir a
+                          Chile?”.
+

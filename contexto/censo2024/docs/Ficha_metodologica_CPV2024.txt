@@ -1,0 +1,166 @@
+                                       Ficha Metodológica                                       Fecha creación
+                                                                                                Fecha última revisión
+                                                                                                                        14-03-2024
+                                                                                                                        18-03-2024
+
+                                     Censo de Población y Vivienda                              N° versión              01
+
+
+
+
+                            Identificación de la operación estadística
+Sigla o acrónimo     CPV 2024
+Temática             Estadísticas Demográficas y Sociales
+                     •  Ministerios, subsecretarías y servicios públicos, así como las Fuerzas Armadas, de Orden y
+                        Seguridad Pública, que en el marco de sus funciones apoyaron al operativo en gestión de
+                        seguridad, medios de movilización y transporte, comunicaciones y otros elementos requeridos
+                        para el desarrollo del Censo 2024.
+                     • Municipalidades, que participaron en las instancias de preparación y ejecución, contribuyendo
+                        con las estrategias de vinculación territorial, disposición de infraestructura, difusión de los
+                        operativos y en la coordinación de medidas de seguridad.
+                     • División de Población de la Comisión Económica para América Latina y el Caribe (CELADE-
+                        CEPAL), que brindó asesoría técnica desde la etapa de detección de necesidades hasta la
+                        diseminación de resultados.
+Instituciones        • Comité Asesor del Censo, integrado por Osvaldo Larrañaga, Ignacio Irarrázaval, David Bravo,
+colaboradoras           Pamela Jervis, Marcela Cabezas, Máximo Aguilera y Andrés Hernando, profesionales expertos en
+                        proyectos de recolección de información y operativos censales, quienes apoyaron tanto en el
+                        diseño de la operación como en las recomendaciones para el cumplimiento de los estándares
+                        de calidad.
+                     • Universidades y Centros de Formación Técnica, que proporcionaron espacios físicos para la
+                        capacitación del personal de terreno y otras instancias de trabajo y coordinación.
+                     • Organizaciones de la Sociedad Civil, tales como la Comunidad de Organizaciones Solidarias, la
+                        Fundación Hogar de Cristo, la Fundación Techo-Chile, la Fundación Déficit Cero, entre muchas
+                        otras, que entregaron apoyo técnico en el diseño y en la gestión de operativos y procedimientos
+                        especializados en sus áreas de conocimiento.
+                     • Sector Privado que apoyó en difusión, así como en facilitar espacios para Puntos Censo.
+                     Debido a la complejidad y magnitud del operativo censal, se conformaron grupos de trabajo
+Responsable(s) INE   especializados y dependientes de la coordinación nacional del Proyecto Censo 2024, la que a su vez
+                     dependía de la Dirección Nacional del INE.
+                                      Descripción de la operación estadística
+Tipo de proceso
+                     Censo de derecho.
+estadístico
+                     1.   Proveer información para la actualización y elaboración de las estimaciones y proyecciones de
+                          población.
+                     2. Proporcionar información para la actualización del marco muestral para las encuestas de
+Objetivo(s)               hogares.
+                     3. Suministrar información estadística prioritaria para el diseño y seguimiento de políticas públicas.
+                     4. Generar información estadística sobre áreas geográficas específicas y subgrupos de la
+                          población.
+                       Viviendas particulares
+Unidad(es)
+                       Hogares
+estadística(s)
+                       Personas
+principal(es)
+                       Viviendas colectivas
+                     Viviendas: caracterización de la vivienda, servicios básicos, identificación de hogares.
+Variable(s)
+                     Hogares: tenencia, uso de energía o combustible, tecnologías de la información y comunicación,
+principal(es)
+                     características del hogar.
+
+
+                                                            1
+                                        Ficha Metodológica                                      Fecha creación
+                                                                                                Fecha última revisión
+                                                                                                                        14-03-2024
+                                                                                                                        18-03-2024
+
+                                      Censo de Población y Vivienda                             N° versión              01
+
+
+
+                      Personas: sexo, edad, parentesco, migración, nivel educativo, ocupación, fecundidad y grupos de la
+                      población.
+                                            Descripción del diseño estadístico
+                      Residentes habituales del territorio nacional. Como residentes habituales se entiende a las personas
+Población objetivo    que han vivido la mayor parte los últimos doce meses en el país (es decir, al menos seis meses y un
+                      día) o que, llevando menos tiempo, tienen la intención de seguir viviendo en él.
+Cobertura geográfica Territorio nacional.
+Periodo de
+                      Desde el 9 de marzo al 31 de julio.
+recolección
+                     Se implementaron tres modalidades de recolección.
+                     • Entrevista presencial aplicada en dispositivo móvil de captura [CAPI] (modalidad principal).
+Modo de recolección
+                     • Cuestionario auto administrado vía web [CAWI] (modalidad complementaria).
+de los datos
+                     • Entrevista presencial aplicada en cuestionario en papel [PAPI] (modalidad utilizada frente a
+                         contingencias).
+                     Se implementaron tres operativos de recolección de datos.
+                     • Operativo de viviendas particulares: desde el 9 de marzo 2024 hasta el 31 de julio de 2024.
+Tipo de operativo
+                     • Operativo de viviendas colectivas: desde el 18 de abril de 2024 hasta el 31 de julio de 2024.
+                     • Operativo de Personas en situación de calle: desde el 13 al 18 de mayo 2024.
+                     Se realizaron diversos controles de calidad:
+                     • Revisión de la no respuesta al ítem para las preguntas del cuestionario.
+                     • Revisión de indicadores de calidad de edad (índice de Whipple, Myers).
+                     • Revisión de índice de masculinidad.
+Controles de calidad • Revisión de la distribución por sexo y edad (pirámide poblacional).
+                     • Contraste de indicadores demográficos con fuentes externas como encuestas, registros
+                         administrativos y censos anteriores.
+                     • Revisión de indicadores de desempeño operativo como tasa de respuesta, tasa de rechazo, tasa
+                         de cooperación y tasa de contacto.
+                                               Difusión de resultados
+                      En la primera publicación de los resultados del Censo 2024 se pondrán a disposición de las y los
+                      usuarios los siguientes productos:
+                      • Visualizador de resultados: plataforma interactiva que permite visualizar los indicadores de la
+                          publicación mediante gráficas, tablas y filtros geográficos.
+                      • Visualizador geográfico de resultados: plataforma geoespacial que permite visualizar los
+                          indicadores de la publicación por medio de mapas temáticos.
+                      • Tabulados: archivos descargables en Excel que contienen información a nivel nacional, regional
+Productos                 y comunal, permitiendo un análisis de los indicadores censales.
+                      • Infografías: resumen visual de los principales resultados para una comprensión rápida de los
+estadísticos y
+                          datos a nivel nacional y regional.
+metadatos para
+                      • Presentaciones de resultados a nivel nacional y regional.
+publicar
+                      Como parte de los metadatos y otros documentos que acompañarán la publicación se cuenta con:
+                      • Ficha metodológica: documento que describe las características principales de la recolección y
+                         de la entrega de resultados.
+                      • Nota técnica sobre indicadores de desempeño operativo: explicación técnica sobre los
+                         indicadores que reflejan el desempeño en la recolección de datos.
+                      • Nota técnica sobre la respuesta en las modalidades de recolección: informe que detalla la
+                         respuesta a nivel de viviendas y personas para las distintas modalidades de recolección
+
+                                                             2
+                                     Ficha Metodológica                                      Fecha creación
+                                                                                             Fecha última revisión
+                                                                                                                     14-03-2024
+                                                                                                                     18-03-2024
+
+                                   Censo de Población y Vivienda                             N° versión              01
+
+
+
+                       (entrevista aplicada por dispositivo móvil, cuestionario auto administrado vía web y entrevista
+                       presencial aplicada en cuestionario en papel).
+                   •   Nota técnica sobre el tratamiento de la no respuesta al ítem para las variables de sexo y edad.
+                       Esta nota será publicada dentro de los días siguientes a la primera publicación.
+                   •   Cuestionario censal: documento con las preguntas utilizadas para la recolección de datos en el
+                       censo. Se publicarán los cuestionarios para cada tipo de operativo.
+                   •   Glosario: definición de términos clave utilizados en la presentación de los resultados.
+
+                   Esta información se dispondrá en https://censo2024.cl/
+                   Ley N° 17.374 del Instituto Nacional de Estadística:
+                   • Artículo 29. “El Instituto Nacional de Estadísticas, los organismos fiscales, semifiscales y
+                       Empresas del Estado, y cada uno de sus respectivos funcionarios, no podrán divulgar los hechos
+                       que se refieren a personas o entidades determinadas de que hayan tomado conocimiento en el
+                       desempeño de sus actividades. El estricto mantenimiento de estas reservas constituye el
+Declaración de
+                       "Secreto Estadístico". Su infracción por cualquier persona sujeta a esta obligación hará incurrir
+confidencialidad
+                       en el delito previsto y penado por el artículo 247, del Código Penal, debiendo en todo caso
+                       aplicarse pena corporal”.
+                   • Artículo 30°. “Los datos estadísticos no podrán ser publicados o difundidos con referencia
+                       expresa a las personas o entidades a quienes directa o indirectamente se refieran, si mediare
+                       prohibición del o los afectados.”
+Contacto           ine@ine.gob.cl o Canales de Atención a Usuarios (ine.gob.cl)
+
+
+
+
+                                                         3
+

@@ -1,0 +1,205 @@
+                                                                  Nota técnica n° 3
+
+
+Comparación entre población censada, población residente habitual
+y población estimada
+
+
+1. Antecedentes
+
+
+De acuerdo con la forma de capturar a la población, los censos pueden ser clasificados en
+censos de hecho y censos de derecho. En Chile se realizaron censos de hecho hasta 2017,
+mientras que el Censo 2024 utilizó una metodología de derecho.
+
+
+En los censos de hecho la población censada corresponde a las personas que pernoctaron en
+el territorio nacional la noche anterior al censo. Dado el criterio empleado, para identificar la
+residencia habitual de las personas, estos censos suelen incluir dentro del cuestionario una
+pregunta sobre el lugar de residencia. Por su parte, los censos de derecho registran a las
+personas de acuerdo con su residencia habitual, la que corresponde al lugar donde una
+persona ha vivido la mayor parte de los 12 últimos meses previos al censo (es decir, al menos
+seis meses y un día), o donde habiendo vivido menos tiempo, tenía la intención de seguir
+residiendo allí. De esta manera, la población censada en un censo de derecho corresponde a
+las y los residentes habituales del territorio.
+
+
+Por su diseño, los censos de derecho tienden a medir de mejor manera la residencia habitual
+de las personas que los censos de hecho. En un censo de derecho las preguntas de registro de
+personas giran en torno a la pregunta de residencia habitual, por lo que la capacitación al
+personal en terreno profundiza con mayor detalle el concepto de residencia habitual.
+
+
+Identificar de manera correcta a las y los residentes habituales en un censo permite facilitar la
+caracterización de la población que vive en el país, en cada región y comuna, siendo a su vez
+esta información fundamental para actualizar las estimaciones y proyecciones de población.
+
+
+
+
+                                                  1
+2. La medición de residencia habitual en el Censo 2017
+
+
+La población censada en el Censo 2017 corresponde a las personas presentes en el país la
+noche anterior a la realización del censo, incluyendo residentes habituales de las viviendas y
+personas de paso en el territorio por motivos turísticos, de estudio o laborales.
+
+
+Para identificar a los residentes habituales del país, así como los de cada comuna y región se
+utiliza la pregunta de residencia habitual, que en el caso del cuestionario del Censo 2017
+corresponde a la pregunta 10 (Imagen 1).
+
+
+  Imagen 1. Pregunta para registrar la residencia habitual de la población, Cuestionario Censo 2017
+
+
+
+
+                       Fuente: Instituto Nacional de Estadísticas - Censo 2017
+
+
+Las personas que respondieron la opción “4. En otro país”, aunque fueron censadas el 2017,
+no son consideradas como parte de la población residente habitual del país. En el 2017 el 0,3%
+de las personas censadas (44.303 personas) indicaron esta alternativa.
+
+
+La pregunta de residencia habitual también permite identificar a aquellas personas que,
+siendo residentes habituales del país, fueron censadas en una comuna distinta a la de su
+residencia habitual. Este grupo corresponde a 2,7% de las personas censadas (466.271) que
+respondieron la alternativa “3. En otra comuna”.
+
+                                                 2
+De acuerdo con los resultados de esta pregunta, el 97,1% de las personas que respondieron
+la pregunta 10 residían en la comuna en las que fueron censadas (ver Tabla 1).
+
+
+          Tabla 1. ¿Vive habitualmente en esta comuna? – Residencia habitual, Censo 20171
+
+            P10 - Residencia habitual                  Frecuencia                Porcentaje
+
+ 1. Sí, en esta vivienda                               16.519.992                   95,1%
+ 2. Sí, en otra vivienda                                 340.929                    2,0%
+ 3. No, en otra comuna                                   466.271                    2,7%
+ 4. No, en otro país                                     44.303                     0,3%
+ Nacional                                              17.371.495                  100,0%
+                        Fuente: Instituto Nacional de Estadísticas - Censo 2017
+             Nota 1: 202.508 personas no respondieron la pregunta de residencia habitual.
+
+
+Por lo tanto, para identificar y analizar a las y los residentes habituales de cada comuna y
+región del país es necesario “trasladar” a las personas a la comuna en la que señalan residir
+de manera habitual.
+
+
+Así, la población censada en el Censo 2017 en un territorio específico puede ser distinta a la
+población residente habitual de ese territorio. Lo anterior no ocurre en el Censo 2024, donde
+la población censada coincide con la población residente habitual del territorio.
+
+
+
+
+                                                  3
+3. Comparación entre la población del Censo 2017 y el Censo 2024
+
+
+La población censada en el Censo 2024 corresponde a las y los residentes habituales de la
+comuna donde fue realizada la entrevista. Por lo tanto, una vez que se ha identificado a las
+personas residentes habituales del Censo 2017, es posible realizar una comparación precisa
+de los residentes del territorio.
+
+
+              Tabla 2. Comparación de la población residente habitual, Censos 2017 - 2024
+                                                      Población residente     Población residente
+                            Población censada
+           Región                                          habitual                habitual
+                                  2017
+                                                             2017                    2024
+Arica y Parinacota                  226.068                222.779                  244.569
+Tarapacá                            330.558                322.238                  369.806
+Antofagasta                         607.534                578.117                  635.416
+Atacama                             286.168                284.553                  299.180
+Coquimbo                            757.586                748.960                  832.864
+Valparaíso                       1.815.902                1.783.552                1.896.053
+Metropolitana                    7.112.808                7.028.680                7.400.741
+Libertador General B.
+                                    914.555                902.471                  987.228
+O’Higgins
+Maule                            1.044.950                1.032.291                1.123.008
+Ñuble                               480.609                474.238                  512.289
+Biobío                           1.556.805                1.545.843                1.613.059
+La Araucanía                        957.224                940.621                 1.010.423
+Los Ríos                            384.837                376.269                  398.230
+Los Lagos                           828.708                816.234                  890.284
+Aysén del General C.
+                                    103.158                 99.410                  100.745
+Ibáñez del Campo
+Magallanes y de la
+                                    166.533                161.263                  166.537
+Antártica Chilena
+Región no identificada1           No aplica                 9.673                  No aplica
+No responde residencia
+                                  No aplica                202.508                 No aplica
+(pregunta 10)
+Nacional                         17.574.003               17.529.7002              18.480.432
+                        Fuente: Instituto Nacional de Estadísticas - Censo 2024
+Nota 1: los casos de región no identificada corresponden a personas que respondieron que residían en
+otra comuna, pero no especificaron en su respuesta la comuna o la región de residencia.
+Nota 2: en el Censo 2017, 44.303 (0,3%) personas censadas no residían en el país.
+
+                                                  4
+Para los casos de las comunas con alta población flotante por motivos laborales, el
+cuestionario censal 2024 incluye una pregunta sobre el lugar de trabajo. Con esta pregunta
+será posible analizar, entre otras temáticas, la población que trabaja en la comuna, pese a no
+residir en ella, y así complementar los análisis comunales sobre la demanda potencial de
+distintos servicios (Imagen 2).
+
+
+                Imagen 2. Pregunta sobre lugar de trabajo, Cuestionario Censo 2024
+
+
+
+
+                      Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+                                                5
+4. Población total estimada
+
+
+Entre los objetivos principales de un censo se encuentra el proveer de información para
+actualizar las estimaciones y proyecciones de población. Este proceso de actualización utiliza
+los datos del último censo disponible, siendo en este caso los del Censo 2024. Junto con esta
+información, se utiliza la información de los censos anteriores, de las estadísticas vitales de
+nacimientos y defunciones, así como diversas fuentes de registros administrativos y
+encuestas.
+
+
+Dado lo anterior, las proyecciones y estimaciones de población son el resultado de modelos
+demográficos sobre la evolución de una población (tamaño y estructura), considerando
+supuestos respecto a cambios futuros en la fecundidad, la mortalidad y la migración
+(inmigración y emigración). En ese sentido, la población total estimada refiere al resultado de
+un cálculo que se realiza sobre el tamaño de la población y su distribución por sexo y edad, en
+un momento pasado o presente, mientras que la proyección de población es un cálculo
+orientado al futuro. Por lo tanto, la población estimada y las proyecciones son distintas a la
+población censada.
+
+
+En enero 2026 se iniciará la publicación de la población estimada que reside en el país y la
+actualización de las proyecciones de población para los próximos años, con las cifras a nivel
+nacional, desagregadas por sexo y edad. El calendario de la entrega de esta cifra a nivel
+regional y comunal será informado por el INE. Con esta cifra será posible comparar la
+población censada en 2024, no siendo correcto realizar la comparación con la proyección
+vigente que está basada en el Censo 2017 y en supuestos que deben ser revisados dados los
+cambios demográficos ocurridos durante el periodo 2017-2024, considerando especialmente
+los cambios observados durante la pandemia.
+
+
+Finalmente, cabe aclarar que la cifra utilizada para programas de asignación de recursos como
+el Fondo Común Municipal, el Fondo de Incentivo a la Gestión Municipal o el Índice de
+Prioridad Social, entre otros, es la estimación y proyección de población. A su vez, no es
+facultad del INE la definición del mecanismo de uso de esta información.
+                                              6
+

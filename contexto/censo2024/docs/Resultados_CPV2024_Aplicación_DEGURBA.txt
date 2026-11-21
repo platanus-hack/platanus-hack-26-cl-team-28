@@ -1,0 +1,1334 @@
+RESULTADOS GENERALES DE LA APLICACIÓN DE LA
+METODOLOGÍA DEGURBA CON DATOS DEL CENSO
+       DE POBLACIÓN Y VIVIENDA 2024
+
+
+
+
+          INSTITUTO NACIONAL DE ESTADÍSTICAS
+                     AGOSTO / 2026
+ÍNDICE
+
+Introducción .................................................................................................................................................... 3
+1.      Definición, características y aplicación de la metodología DEGURBA .................................................... 4
+2.      Resultados de la aplicación con datos del Censo DE POBLACIÓN Y VIVIENDA 2024 .............................. 9
+     2.1. Distribución de clústeres en el país..................................................................................................... 9
+     2.2. Superficie suburbana o periurbana ................................................................................................... 14
+     2.3. Distribución de la población censada según nivel 1 y nivel 2 de DEGURBA ..................................... 17
+     2.4. Análisis demográfico ......................................................................................................................... 20
+3.      Conclusiones.......................................................................................................................................... 30
+4.      BIBLIOGRAFÍA ........................................................................................................................................ 31
+
+
+
+
+                                                                                                                                                                 2
+INTRODUCCIÓN
+La metodología de DEGURBA (del inglés Degree of Urbanisation, «grado de urbanización») se presenta
+como un método único y estandarizado para medir, comparar y analizar las áreas urbanas y rurales entre
+países1. También permite medir los avances de los Estados en materia de políticas urbanas, y caracterizar
+asentamientos urbanos y rurales más allá de una definición dicotómica. Esto último es especialmente
+relevante para visualizar brechas entre los territorios, contribuyendo a la toma de decisiones eficientes y
+focalizadas mediante una mirada territorial2.
+Entre los años 2021 y 2022, y por invitación del Programa de las Naciones Unidas para los Asentamientos
+Humanos (ONU-Hábitat), el Instituto Nacional de Estadísticas (INE) aplicó por primera vez esta metodología
+en un ejercicio piloto. El análisis se realizó con los datos de Censo 2017, y sus resultados confirmaron que
+la metodología permite la identificación y caracterización de áreas intermedias, enriqueciendo la definición
+dicotómica urbano/rural utilizada por la institución3.
+El presente documento expone los resultados de la aplicación de la metodología DEGURBA considerando
+los datos del Censo de Población y Vivienda 2024. Se describen los fundamentos conceptuales de la
+clasificación, sus niveles de análisis y criterios de construcción, y posteriormente, se presentan los
+resultados generales para Chile.
+
+
+
+
+1
+  La metodología fue propuesta por ONU-Hábitat y la Comisión Europea. Posteriormente fue validada y recomendada por la
+Comisión Estadística de Naciones Unidas en marzo de 2020 (European Commission, and Statistical Office of the European Union,
+2021). La metodología ha sido actualizada debido a la retroalimentación recibida por distintos países que la han aplicado,
+específicamente sobre la clasificación de áreas periurbanas y clústeres semidensos (Eurostat, 2026).
+2
+  La Política Nacional de Desarrollo Rural (PNDR) reconoce que las áreas rurales no deben ser consideradas como lugares
+homogéneos, definidos en oposición a lo urbano, sino como espacios conformados por una diversidad de territorios, con
+necesidades y desafíos específicos, los que deben ser abordados con sus particularidades desde las políticas públicas (Ministerio
+de Agricultura, ODEPA & INE, 2022).
+3
+  El INE utiliza actualmente una definición dicotómica, en base a la cual se disemina el Censo de Población y Vivienda y en
+consecuencia se estratifica el Marco Maestro de Viviendas. El área urbana se define como un “asentamiento humano con
+continuidad y concentración de construcciones en un amanzanamiento con población mayor a 2.000 habitantes, o entre 1.001 y
+2.000 habitantes donde menos del 50% de la población que declara haber trabajado se dedica a actividades primarias” (INE, 2025).
+
+                                                                                                                               3
+1. DEFINICIÓN, CARACTERÍSTICAS Y APLICACIÓN DE LA METODOLOGÍA DEGURBA
+DEGURBA es una metodología internacional de clasificación del territorio en clases, calculada a partir de
+tres elementos: densidad poblacional en celdas de 1 km², umbrales de población y criterios geoespaciales
+de contigüidad4 (European Commission, and Statistical Office of the European Union, 2021). La
+metodología permite comparar datos a nivel internacional al establecer parámetros homogéneos para su
+definición. A pesar de esta estandarización, se reconocen diferencias metodológicas derivadas del tipo y la
+escala de la información poblacional georreferenciada disponible en cada país (European Commission, and
+Statistical Office of the European Union, 2021).
+DEGURBA no busca reemplazar la conceptualización de lo urbano y rural utilizada por cada oficina de
+estadística ni de otro organismo público, sino que su objetivo es complementar estas definiciones y apoyar
+el análisis del territorio al capturar el continuo urbano-rural (Eurostat, 2026).
+DEGURBA clasifica el territorio en dos niveles: nivel 1 (L1) y nivel 2 (L2). En el nivel 1 se distinguen tres
+clases: «centros urbanos» (cuya unidad territorial se denomina «ciudad»), «clústeres urbanos» («pueblos
+o áreas semidensas») y «celdas rurales» («área rural»). Estas clases se subdividen en un total de siete
+subclases o categorías que forman el nivel 2. El Cuadro 15 detalla ambos niveles.
+
+Cuadro 1: Términos técnicos para la clasificación de las celdas de cuadrículas y unidades territoriales en los niveles 1
+                                                  y 2 de DEGURBA
+Nivel DEGURBA Código de la clase             1. Clasificación de celdas                2. Clasificación de unidades territoriales
+                               3       Centro urbano                             Ciudad
+      1 (L1)                   2       Clúster urbano                            Pueblo y área semidensa
+                               1       Celda rural                               Área rural
+                              30       Centro urbano                             Ciudad
+                              23       Clúster urbano denso                      Pueblo denso
+                              22       Clúster urbano semidenso                  Pueblo semidenso
+      2 (L2)                  21       Celdas suburbanas o periurbanas       6   Área suburbana o periurbana
+                              13       Clúster rural                             Aldea
+                              12       Celdas de baja densidad                   Área rural dispersa
+                              11       Celdas de muy baja densidad               Área rural muy dispersa
+Nota: La clasificación de unidades territoriales (2.) a partir de la clasificación de las celdas (1.) se detalla en la Figura 1. Para las
+siguientes secciones del documento se utilizarán ambas terminologías: para las secciones 2.1 y 2.2 se considera la nomenclatura
+asignada a las celdas de cuadrícula; para las secciones 2.3 y 2.4 se utilizarán los nombres asociados a la clasificación de unidades
+territoriales.
+Fuente: Elaboración propia a partir de European Commission and Statistical Office of the European Union, 2021. INE,
+                                                     2023.
+
+
+4
+   Esta contigüidad depende de la relación espacial entre celdas de la cuadrícula de 1 km² de acuerdo con los parámetros
+establecidos por esta metodología (contigüidad de 4 u 8 puntos). El objetivo es relacionar celdas que cumplan condiciones similares
+para definir clústeres o asentamientos (European Commission, and Statistical Office of the European Union, 2021)
+5
+  Tanto en este documento como en numerosas publicaciones internacionales, las clases se presentan desde el número mayor al
+menor (3 a 1 en nivel 1; 30 a 11 en nivel 2). Esto, en concordancia con el orden de mayor a menor densidad y cantidad de habitantes
+por km², según corresponda.
+6
+  DEGURBA no busca diferenciar el concepto de lo “periurbano” respecto a lo “suburbano”. Ambas tipologías se agrupan dentro de
+la misma clase ya que cumplen, según la metodología, con los mismos requisitos para su clasificación (Statistical Office of the
+European Union, 2021).
+
+
+                                                                                                                                        4
+La implementación de DEGURBA se realiza a través de tres pasos secuenciales: 1) generación de una grilla
+de población a partir de una capa de población, 2) cálculo del grado de urbanización, y 3) clasificación de
+unidades territoriales.
+Estos pasos se llevan a cabo a través de herramientas7 puestas a disposición por el Joint Research Centre
+(JRC) de la Comisión Europea. En la Figura 1 se presenta el flujo de trabajo desarrollado a través de ellas:
+
+                             Figura 1: Flujo de DEGURBA utilizando las aplicaciones disponibles
+
+
+
+
+Fuente: Elaboración propia a partir de European Commission and Statistical Office of the European Union, 2021. INE,
+                                                     2023.
+
+A continuación, se describe el objetivo de cada una de estas herramientas:
+     1. Generación de una grilla de población: la herramienta «POP2G» procesa una capa con dato de
+        población y la reinterpreta en una grilla de 1 km². En este caso, se consideran las manzanas y
+        entidades8 del Censo de Población y Vivienda 20249.
+
+
+
+
+7
+  Estas herramientas corresponden a sistemas desarrollados en el marco del Global Human Settlement Layer (GHSL) para producir
+información geoespacial en forma de cuadrícula y unidades territoriales de interés. Para mayor información, se recomienda revisar
+los siguientes antecedentes:
+      -    POP2G: Realiza conteos de población a nivel de cuadrícula en diferentes resoluciones espaciales. La guía de usuario se
+           encuentra disponible en: https://publications.jrc.ec.europa.eu/repository/handle/JRC121485 (en inglés).
+      -    DUG: Produce cuadrículas espaciales cuyo objetivo es clasificar clases de asentamientos y extraer estadísticas
+           relacionadas según metodología DEGURBA. La guía del usuario de la cuadrícula del grado de urbanización en:
+           https://publications.jrc.ec.europa.eu/repository/handle/JRC121484 (en inglés).
+      -    DU-TUC: Clasifica unidades territoriales (TUC, por su sigla en inglés) de acuerdo con los resultados de la aplicación de la
+           metodología DEGURBA (clasificación realizada a través del aplicativo GHS-DUG). Puede revisar la guía del usuario de GHS-
+           DU-TUC en: https://publications.jrc.ec.europa.eu/repository/handle/JRC121486 (en inglés).
+8
+  Manzana censal se define como una unidad geográfica básica con fines estadísticos que conforman zonas censales en áreas
+urbanas. Contiene un grupo de viviendas contiguas o separadas, edificios, establecimientos y/o predios, delimitados por rasgos
+geográficos, culturales y naturales (INE, 2018b). Una entidad rural corresponde a un asentamiento humano concentrado o disperso
+que posee 1.000 o menos habitantes, o entre 1.001 o 2.000 habitantes, donde más del 50% de la población que declara haber
+trabajado se dedica a actividades primarias (INE, 2019).
+9
+  Para la presente aplicación de DEGURBA se utiliza la cartografía de manzanas y entidades sin indeterminar, que no puede ser
+puesta a disposición del público (INE, 2025d). No obstante, la cartografía indeterminada puede igualmente ser considerada como
+insumo.
+
+                                                                                                                                    5
+    2. Cálculo del grado de urbanización: posteriormente, la herramienta «DUG» asigna a cada celda de
+       la grilla de población una de las tres clases del primer nivel de DEGURBA, desde las cuales derivan
+       las siete del segundo (Cuadro 1). Las condiciones de dicha clasificación son detalladas más adelante.
+    3. Clasificación de unidades territoriales: finalmente, la herramienta «DU-TUC» traspasa la
+       clasificación de las celdas a unidades territoriales, en este caso, manzanas y entidades. Este proceso
+       tiene la potencialidad de asociar dichas unidades con datos provenientes de censos, encuestas y
+       otros registros, y así obtener estadísticas que caractericen a cada clase.
+Los niveles tienen las siguientes características:
+
+    a. Nivel 1:
+        Clasifica las celdas (tercer paso en la Figura 1) de acuerdo con tres clases: «centros urbanos» (clase
+         3), «clústeres urbanos» (clase 2) y «celdas rurales» (clase 1). En términos prácticos, se considera
+         como parte de lo urbano a la clase 3 y a la clase 2, mientras la clase 1 se clasifica como rural. Los
+         umbrales de población y densidad para realizar la clasificación se detallan en el Cuadro 2.
+
+  Cuadro 2: Umbrales de población y densidad de población para la clasificación de clases del nivel 1 de DEGURBA
+                                           Umbrales mínimos de población en los clústeres (tamaño del asentamiento)
+                   Nivel 1 (L1)
+                                                 ≥50.000                   ≥5.000                   Sin umbral
+
+               Densidad de
+                                  ≥1.500      Centro urbano
+                                  ≥900                                  Clúster urbano
+            población por celda   ≥300                                                             Celda rural
+                                  ≥50
+            (personas por km²)    >0
+                       Fuente: European Commission and Statistical Office of the European Union, 2021.
+
+La definición de un clúster urbano comienza con la identificación de todas las celdas de una grilla con una
+densidad de al menos 300 habitantes por kilómetro cuadrado. A partir de cada una de estas celdas se realiza
+un análisis de contigüidad, mediante el cual se identifican las celdas adyacentes que cumplen el mismo
+criterio de densidad para conformar un clúster. En conjunto, las celdas que integran este clúster deben
+alcanzar una población mínima de 5.000 habitantes para ser clasificadas como un área urbana.
+El mismo procedimiento con otras métricas de densidad, población total y contigüidad de celdas, es
+considerado para la identificación de un «centro urbano» (Figura 2) (Statistical Office of the European
+Union, 2021). Si no se cumplen estos criterios el territorio se clasifica como una «celda rural».
+
+
+
+
+                                                                                                                      6
+                              Figura 2: Identificación de centros urbanos y clústeres urbanos
+
+
+
+
+                      Fuente: European Commission and Statistical Office of the European Union, 2021.
+
+Las tres clases definidas en el nivel 1 constituyen una primera aproximación al continuo urbano-rural. Si
+bien los «centros urbanos» corresponden a asentamientos claramente identificables según su tamaño
+poblacional, los «clústeres urbanos» y las «áreas rurales» agrupan dentro de sus límites realidades
+territoriales diversas. Por ello, se incorpora la clasificación de nivel 2, que permite representar de mejor
+manera la jerarquía de asentamientos, distinguiendo entre ciudades, pueblos y aldeas (Statistical Office of
+the European Union, 2021).
+
+     b. Nivel 2:
+         Las clases definidas en el nivel 1 se subdividen formando siete subclases o categorías
+          correspondientes al nivel 210, ya detalladas en el Cuadro 1. La única clase que no se subdivide es la
+          3 que se renombra como clase 30.
+         Las clases 2 y 1 se subdividen en las clases 23, 22 y 21, y 13, 12 y 11, respectivamente (Figura 3).
+          Siguiendo la lógica del nivel 1, se puede asignar al área urbana las clases 30, 23, 22 y 21, y al área
+          rural las clases 13, 12 y 11 (Figura 3).
+El nivel 2 logra identificar áreas periurbanas y aldeas rurales con distintos grados de densidad.
+
+
+
+
+10
+   ONU-Hábitat destaca la relevancia de identificar estas áreas intermedias para comprender, estudiar y tomar decisiones sobre un
+territorio clasificado de forma diversa y alejada de las definiciones dicotómicas de lo urbano y rural.
+
+                                                                                                                               7
+   Figura 3: Subdivisión de clases del nivel 1 (L1) en las clases del nivel 2 (L2) según clasificación urbano y rural de
+                                                         DEGURBA
+
+
+
+
+         Fuente: Elaboración propia a partir de European Commission and Statistical Office of the European Union,
+                                                  2021. INE, 2023.
+
+Los criterios para definir las clases del nivel 2 dicen relación con umbrales mínimos de población y densidad
+poblacional, los que se detallan en el Cuadro 3. La conformación de clústeres se trabaja con la misma lógica
+descrita en la Figura 2, pero aplica valores propios para el nivel 2.
+
+  Cuadro 3: Umbrales de población y densidad de población para la clasificación de clases del nivel 2 de DEGURBA
+                                                     Umbrales mínimos de población en los clústeres (tamaño del asentamiento)
+                  Nivel 2 (L2)                                                                   ≥ 500 (superior ≤
+                                                ≥50.000      ≥5.000     ≥2.500     Sin umbral                          Sin umbral
+                                                                                                      5.000)
+                                                             Clúster
+                                                 Centro
+
+
+           Densidad de población por
+                                       ≥1.500                urbano
+                                                 urbano                             Celdas
+                                                             denso
+                                                             Clúster urbano      suburbanas o      Clúster rural
+                                       ≥900                                       periurbanas
+                                                               semidenso
+                                       ≥300
+
+
+            celda (personas por km²)
+                                                                                                                     Celdas de baja
+                                       ≥50
+                                                                                                                     densidad
+                                       >0                                                           Celdas de muy baja densidad
+                                       Fuente: European Commission and Statistical Office of the European Union, 2021.
+
+
+
+
+                                                                                                                                      8
+2. RESULTADOS DE LA APLICACIÓN CON DATOS DEL CENSO DE POBLACIÓN Y
+   VIVIENDA 2024
+A continuación, se presentan los resultados de la aplicación de la metodología DEGURBA en el país para los
+niveles 1 y 2, abordando cuatro aspectos principales: distribución de los clústeres identificados en el
+territorio nacional, superficie y distribución de las áreas periurbanas del país, distribución de la población
+entre las distintas clases, y características demográficas de la población para cada uno de los niveles y
+clases.
+
+     2.1. Distribución de clústeres en el país
+El Gráfico 1 muestra la cantidad de clústeres urbanos y rurales identificados en cada región11 según los
+resultados de la metodología DEGURBA para el nivel 2.
+
+               Gráfico 1: Distribución de clústeres urbanos y rurales en el país, ordenados de norte a sur
+
+                                                                                                           Clase 30 - «Centro urbano»
+Arica y Parinacota           5
+                                                                                                           Clase 23 - «Clúster urbano denso»
+         Tarapacá                7
+                                                                                                           Clase 22 - «Clúster urbano semidenso»
+       Antofagasta   2 4                     6
+                                                                                                           Clase 13 - «Clúster rural»
+          Atacama        3 3                 7
+        Coquimbo         3           6       3                               33
+        Valparaíso       5                   11                     11                          38
+     Metropolitana           6                11                    9                                 48
+         O'Higgins   2               8             9                                                  64
+            Maule        3               9             8                                         54
+            Ñuble            5           3                          26
+            Biobío       5                        17                     5                      38
+      La Araucanía                       16                     5                        36
+          Los Ríos           5           3                 17
+         Los Lagos   2               10                7                          25
+            Aysén    2               8
+       Magallanes                3
+
+                     0                       10                 20            30         40          50       60            70          80         90
+                                                                               Cantidad de clústeres
+
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Analizar los resultados en función de la cantidad de clústeres permite identificar las formas de asentamiento
+existentes en el territorio y evaluar su diversidad. No obstante, se debe considerar que el número de
+
+
+11
+  Los nombres de algunas regiones fueron simplificados para mejor visualización: Metropolitana para Región Metropolitana de
+Santiago, O’Higgins para Región del Libertador Bernardo O’Higgins; Aysén para la Región de Aysén del General Carlos Ibáñez del
+Campo; Magallanes para la Región de Magallanes y de la Antártica Chilena.
+
+
+                                                                                                                                                        9
+clústeres no debe ser interpretado como un indicador del nivel de urbanización, ya que la población y
+tamaño registrado en cada uno de ellos varía considerablemente entre regiones. Para complementar el
+análisis, la Tabla 1 expone la superficie de los clústeres por región12, mientras que el peso de la población
+de todas las clases se detalla en la sección 2.3.
+
+                       Tabla 1: Superficie en km² de clústeres por región, ordenados de norte a sur
+                                                                 Superficie en km²
+                                        Clase 30         Clase 23            Clase 22
+                         Región                                                                   Clase 13
+                                        «Centro     «Clúster urbano «Clúster urbano
+                                                                                               «Clúster rural»
+                                        urbano»           denso»           semidenso»
+                   Arica y Parinacota            43 Sin clústeres       Sin clústeres                        15
+                   Tarapacá                      62                 4 Sin clústeres                          16
+                   Antofagasta                   75                11                  6                      9
+                   Atacama                       39                18                 12                     20
+                   Coquimbo                    140                 16                  5                     81
+                   Valparaíso                  260                 80                 32                    112
+                   Metropolitana               816                 55                 23                    125
+                   O'Higgins                     80                44                 33                    168
+                   Maule                       100                 56                 25                    153
+                   Ñuble                         43                19                 11                     73
+                   Biobío                      226                 94                 14                    119
+                   La Araucanía                  51                82                 15                    107
+                   Los Ríos                      28                19                 11                     50
+                   Los Lagos                     77                48                 19                     65
+                   Aysén              Sin clústeres                16 Sin clústeres                          20
+                   Magallanes                    37                 7                  2                      6
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Considerando lo anterior, y de acuerdo con el Gráfico 1, se destaca el predominio de los «clústeres rurales»
+(clase 13) en gran parte del país. Las regiones de O'Higgins (64 clústeres), Maule (54), Metropolitana (48),
+Biobío (38), Valparaíso (38) y La Araucanía (36) concentran la mayor cantidad. Esto indicaría que, incluso en
+regiones predominantemente urbanas como la Metropolitana, existen numerosos asentamientos rurales
+concentrados en el territorio, especialmente en la periferia de la conurbación (Figura 4).
+
+
+
+
+12
+  La superficie de los clústeres se obtiene desde los resultados de la aplicación de DEGURBA y se origina desde celdas de 1 km².
+Esta superficie no coincide con otras fuentes, como, por ejemplo, la publicada en el contexto de la medición del crecimiento físico
+de los asentamientos humanos en Chile (Ministerio de Vivienda y Urbanismo, 2019).
+
+                                                                                                                                10
+                              Figura 4: Asentamientos en la Región Metropolitana
+
+
+
+
+                 Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+El Gráfico 1 ya evidenció que el conteo total de clústeres de la Región Metropolitana no es el mayor del país
+(clases 30, 23 y 22 en conjunto), aun cuando el Gran Santiago sí agrupa el mayor monto de población. La
+superficie ocupada por estos clústeres en la región (Tabla 1) se concentra en mayor medida en la clase 30
+«centro urbano» (816 km²), correspondiente en gran parte a la superficie del Gran Santiago, que supera de
+forma importante la superficie del resto de los clústeres de este tipo a nivel nacional.
+Las regiones del centro-sur del país presentan una estructura territorial más diversa, caracterizada por la
+presencia de numerosos «centros urbanos», «clústeres urbanos densos», «clústeres urbanos semidensos»,
+y «clústeres rurales». En este contexto, Biobío (Figura 5) y La Araucanía (Figura 6) destacan por registrar el
+mayor número de «clústeres urbanos densos» (Clase 23) (Gráfico 1) y la mayor superficie cubierta por ellos
+del país (Tabla 1), reflejando la presencia de numerosos asentamientos intermedios que contribuyen a la
+diversidad del territorio.
+
+
+
+
+                                                                                                           11
+               Figura 5: Asentamientos en la Región del Biobío
+
+
+
+
+Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+            Figura 6: Asentamientos en la Región de La Araucanía
+
+
+
+
+Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+                                                                                  12
+En contraste, las regiones de Arica y Parinacota (Figura 7) y Tarapacá (Figura 8) presentan una menor
+diversidad de categorías de asentamientos, tal como se observa en el Gráfico 1. En ellas se registra un
+número reducido, o incluso la ausencia de «clústeres urbanos densos» y «clústeres urbanos semidensos»,
+lo que refleja una estructura territorial caracterizada por la concentración de la población en unos pocos
+«centros urbanos» y una escasa presencia de asentamientos intermedios. No obstante, la Tabla 1 muestra
+que la superficie ocupada por los «clústeres rurales» no corresponde a la menor del país, lo que sugiere la
+existencia de asentamientos rurales concentrados relativamente extensos, aunque sin alcanzar la densidad
+necesaria para ser clasificados como urbanos. Estas características se relacionan con las particulares
+condiciones geográficas de estas regiones, donde predominan amplias áreas de baja densidad poblacional
+en contraste con la concentración de habitantes en unos pocos centros urbanos.
+
+                          Figura 7: Asentamientos en la Región de Arica y Parinacota
+
+
+
+
+                 Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+                                                                                                        13
+                               Figura 8: Asentamientos en la Región de Tarapacá
+
+
+
+
+                 Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+    2.2. Superficie suburbana o periurbana
+El Gráfico 2 expone la distribución de la superficie del «área suburbana o periurbana» (clase 21) por región,
+frente a la superficie de la suma de los «centros urbanos», «clústeres urbanos densos» y «clústeres urbanos
+semidensos», es decir, el área urbana concentrada. La mayor superficie de área periurbana se observa en
+las regiones Metropolitana, de Valparaíso, de O’Higgins y del Biobío, y las menores en las regiones de Arica
+y Parinacota, de Tarapacá, de Aysén y de Magallanes. Estas últimas se caracterizan por una fuerte
+concentración de la población en localidades específicas y, adicionalmente, por corresponder a zonas
+extremas del país, tal como se indicó en el punto anterior.
+
+
+
+
+                                                                                                          14
+Gráfico 2: Distribución de la superficie en km² de clústeres (clases 30, 23 y 22 del nivel 2 de DEGURBA) y suburbana o
+                                             periurbana (clase 21) por región
+
+
+
+
+                  Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Las «áreas suburbanas o periurbanas» no conforman clústeres, aun así, son relevantes para observar el
+gradiente urbano-rural y la expansión de los pueblos y ciudades. En algunas regiones se observa cierta
+correspondencia entre las superficies de las «áreas suburbanas o periurbanas» (clase 21) con la superficie
+del área urbana (Gráfico 2): entre mayor superficie del área urbana, mayor representación tiene la
+superficie del periurbano. No obstante, las regiones de O’Higgins (Figura 9) y Los Ríos (Figura 10) presentan
+una tendencia distinta. En ellas la superficie del área suburbana es mayor que el área cubierta por la suma
+de clústeres urbanos. Esto se explica por la presencia de múltiples centros urbanos de menor tamaño muy
+cercanos entre sí que se extienden hacia el área rural (Región de O’Higgins), o bien, una extensa área
+periurbana en torno a un urbano (Región de Los Ríos).
+
+
+
+
+                                                                                                                    15
+  Figura 9: Distribución del área periurbana en torno a urbanos de menor tamaño en la Región de O’Higgins
+
+
+
+
+                Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Figura 10: Distribución del área periurbana en torno a urbanos (especialmente en torno a Valdivia y Río Bueno),
+                                               Región de Los Ríos
+
+
+
+
+                Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+                                                                                                                  16
+     2.3. Distribución de la población censada según nivel 1 y nivel 2 de DEGURBA
+La Tabla 2 presenta la distribución de la población censada13 por región según las clases del nivel 1 de
+DEGURBA (información derivada de las clases definidas por las unidades territoriales, según lo especificado
+en el Cuadro 1).
+
+     Tabla 214: Distribución de la población por región, de acuerdo con los resultados de la aplicación del nivel 1 de
+                                                        DEGURBA
+                                                             Área urbana                      Área rural
+                                              Clase 3          Clase 2         Área urbana     Clase 1
+                            Región                          «Pueblo y área         (%)
+                                            «Ciudad»                                         «Área rural»
+                                                             semidensa»         (Clase 3 +
+                                               (%)               (%)             Clase 2)        (%)
+                       Arica y Parinacota            87,4                1,0          88,3             11,7
+                       Tarapacá                      90,1                3,5          93,6               6,4
+                       Antofagasta                   83,0             13,7            96,7               3,3
+                       Atacama                       53,5             33,2            86,7             13,3
+                       Coquimbo                      61,8             15,2            77,0             23,0
+                       Valparaíso                    60,5             27,0            87,5             12,5
+                       Metropolitana                 90,0                6,9          96,8               3,2
+                       O’Higgins                     35,1             32,0            67,1             32,9
+                       Maule                         39,1             26,7            65,7             34,3
+                       Ñuble                         35,8             22,8            58,6             41,4
+                       Biobío                        54,9             28,3            83,2             16,8
+                       La Araucanía                  22,1             40,3            62,4             37,6
+                       Los Ríos                      32,6             30,7            63,3             36,7
+                       Los Lagos                     35,9             33,5            69,4             30,6
+                       Aysén                          0,0             64,1            64,1             35,9
+                       Magallanes                    72,9             20,6            93,4               6,6
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Los resultados muestran que la Región Metropolitana registra la proporción más alta de población que
+reside en el área urbana: el 96,8% de su población reside en las clases 2 «pueblo y área semidensa» y 3
+«ciudad». Asimismo, presenta la segunda mayor proporción de población residente en «ciudades» (clase
+3), con un 90,0% (sólo superada por la Región de Tarapacá). En contraste, la población que reside en el área
+rural (clase 1) representa sólo un 3,2% del total regional.
+
+13
+    No todos los registros censales de la base de datos (y, en consecuencia, el conteo de población) se encuentran asociados a
+manzanas o entidades, ya que por sus características específicas al momento del levantamiento no se llegó a niveles de
+desagregación mayor que la comuna. Estos casos corresponden a los datos recolectados en el marco de operativos especiales y
+personas en situación de calle (INE, 2025d).
+La aplicación de la metodología considera exclusivamente los datos de población vinculados a manzanas y entidades (INE, 2023),
+por lo que los totales corresponden a la población nacional censada que se encuentra asociada explícitamente a nivel de manzana
+- entidad, según los resultados del Censo de Población y Vivienda 2024 publicados por el INE. El porcentaje de población incluida
+en la aplicación de DEGURBA, corresponde a un 98,6% de la población efectivamente censada.
+14
+   La suma de los porcentajes presentados en esta tabla y siguientes puede diferir ligeramente del 100% por efecto de redondeo.
+
+                                                                                                                              17
+Respecto de la población residente en «pueblos y áreas semidensas» (clase 2), la Región de Aysén presenta
+la mayor proporción a nivel nacional, con un 64,1% de sus habitantes en esta categoría. Le siguen las
+regiones de La Araucanía (40,3%) y de Los Lagos (33,5%), donde la población se distribuye en mayor medida
+fuera de las grandes ciudades. La Araucanía registra la menor proporción de población en «ciudades»
+(22,1%) entre las regiones que presentan esta categoría, mientras que en la Región de Aysén no se presenta
+población relativa a esta clase.
+En este análisis de distribución regional, la población que reside en el «área rural» (clase 1) alcanza su
+proporción más alta en las regiones de Ñuble (41,4%), de La Araucanía (37,6%), de Los Ríos (36,7%), de
+Aysén (35,9%) y del Maule (34,3%), evidenciando patrones de asentamiento más dispersos en el centro y
+sur.
+Existe un claro contraste entre las regiones extremas y el resto del país. Las regiones de Arica y Parinacota,
+Tarapacá, Antofagasta y Magallanes presentan una elevada concentración de población que reside en
+«ciudades», con porcentajes superiores al 70,0%. Este patrón refleja una ocupación del territorio altamente
+urbanizada y concentrada en un número reducido de grandes centros poblados. En contraste, las regiones
+del centro-sur exhiben una distribución más equilibrada entre «ciudades», «pueblos» y «áreas rurales»,
+evidenciando una estructura de asentamientos más diversa.
+Los elevados porcentajes de población residente en ciudades de regiones extremas del país pueden
+explicarse, en parte, por las condiciones geográficas que caracterizan tanto al extremo norte como al
+extremo sur de Chile. La presencia de extensas áreas desérticas en el norte y las condiciones climáticas y
+de accesibilidad del extremo austral, han forzado la concentración de población en un número reducido de
+centros urbanos de gran tamaño. Estos son los casos de Arica, Iquique, Antofagasta y Punta Arenas, los que
+actúan como principales polos de servicios, empleo y conectividad dentro de sus respectivas regiones.
+En la Tabla 3 se presenta la distribución de la población por región según las clases de DEGURBA, con el
+propósito de observar la participación de cada clase en el contexto nacional. La población clasificada como
+«ciudad» se concentra principalmente en la Región Metropolitana (54,6%), seguida por Valparaíso (9,4%) y
+Biobío (7,3%), lo que coincide con las principales conurbaciones del país: Gran Santiago, Gran Valparaíso y
+Gran Concepción. En el extremo opuesto, la Región de Aysén no registra población en esta clase, mientras
+que la Región de Magallanes presenta una participación muy reducida, lo que refleja el menor aporte de
+ambas regiones al total nacional.
+La población correspondiente a la clase «pueblo y área semidensa» se distribuye principalmente entre las
+regiones de Valparaíso y Metropolitana (14,7% cada una), mientras que Arica y Parinacota (0,1%), Tarapacá
+(0,4%) y Magallanes (1,0%) registran las menores participaciones. Si bien las diferencias entre regiones son
+relevantes, estas son considerablemente menores que las observadas en la clase «ciudad», donde la Región
+Metropolitana reúne más de la mitad de la población nacional perteneciente a esta categoría.
+En cuanto a la clase 1 («área rural»), la Tabla 3 muestra que la mayor proporción de población se concentra
+en la Región del Maule, seguida por La Araucanía y O'Higgins.
+
+
+
+
+                                                                                                           18
+Tabla 3: Distribución de la población por clase de nivel 1, de acuerdo con los resultados de la aplicación de DEGURBA
+                                                               Área urbana                      Área rural
+                                                        Clase 3           Clase 2                Clase 1
+                              Región
+                                                                       «Pueblo y área
+                                                       «Ciudad»                                «Área rural»
+                                                                        semidensa»
+                                                          (%)               (%)                      (%)
+                     Arica y Parinacota                         1,7                 0,1                        1,0
+                     Tarapacá                                   2,7                 0,4                        0,8
+                     Antofagasta                                4,3                 2,5                        0,7
+                     Atacama                                    1,3                 2,9                        1,4
+                     Coquimbo                                   4,2                 3,6                        6,8
+                     Valparaíso                                 9,4                14,7                        8,4
+                     Metropolitana                             54,6                14,7                        8,3
+                     O’Higgins                                  2,9                 9,2                       11,6
+                     Maule                                      3,6                 8,7                       13,7
+                     Ñuble                                      1,5                 3,4                        7,6
+                     Biobío                                     7,3                13,3                        9,7
+                     La Araucanía                               1,8                11,8                       13,6
+                     Los Ríos                                   1,1                 3,5                        5,2
+                     Los Lagos                                  2,6                 8,5                        9,6
+                     Aysén                                      0,0                 1,8                        1,3
+                     Magallanes                                 1,0                 1,0                        0,4
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+La Tabla 4 presenta la distribución de la población por región según las clases del nivel 2 de DEGURBA,
+profundizando en la estructura territorial observada en el nivel 1. En particular, destacan las clases 21
+(«áreas suburbanas» y «periurbanas») y 13 («aldeas»), las que visibilizan formas de asentamiento no
+capturadas por la tradicional clasificación dicotómica urbano-rural. Estas categorías adquieren especial
+relevancia en las regiones del centro-sur y sur del país, donde una proporción importante de la población
+reside en asentamientos de menor tamaño o en espacios de transición entre lo urbano y lo rural.
+
+    Tabla 4: Distribución de la población por región, de acuerdo con los resultados de la aplicación del nivel 2 de
+                                                      DEGURBA
+                                                Área urbana                                                Área rural
+     Región             Clase 30          Clase 23       Clase 22           Clase 21      Clase 13       Clase 12         Clase 11
+                                          «Pueblo        «Pueblo        «Área suburbana                «Área rural       «Área rural
+                        «Ciudad»                                                          «Aldea»
+                                          denso»       semidenso»        o periurbana»                  dispersa»       muy dispersa»
+                           (%)                                                              (%)
+                                             (%)            (%)                (%)                          (%)              (%)
+Arica y Parinacota            87,4               0,0              0,0              1,0           4,2             6,5              0,9
+Tarapacá                      90,1               2,6              0,0              0,9           3,1             2,5              0,8
+Antofagasta                   83,0               6,2              1,8              5,8           1,5             1,6              0,3
+Atacama                       53,5              20,3              6,4              6,5           4,5             7,0              1,9
+Coquimbo                      61,8               6,8              1,3              7,1           6,3            13,6              3,1
+Valparaíso                    60,5              14,6              3,2              9,2           3,6             8,1              0,8
+Metropolitana                 90,0               2,8              0,5              3,5           1,0             2,0              0,1
+O’Higgins                     35,1              14,6              5,9             11,5          10,0            20,4              2,5
+Maule                         39,1              15,6              4,2              6,8           8,2            22,3              3,8
+Ñuble                         35,8              11,0              4,0              7,8           9,5            24,8              7,1
+Biobío                        54,9              20,1              1,8              6,4           4,8             9,2              2,8
+
+
+                                                                                                                                   19
+                                              Área urbana                                              Área rural
+       Región           Clase 30        Clase 23        Clase 22         Clase 21        Clase 13       Clase 12      Clase 11
+                                        «Pueblo         «Pueblo      «Área suburbana                  «Área rural    «Área rural
+                        «Ciudad»                                                         «Aldea»
+                                        denso»        semidenso»      o periurbana»                    dispersa»    muy dispersa»
+                           (%)                                                             (%)
+                                           (%)             (%)              (%)                            (%)           (%)
+ La Araucanía                 22,1            26,9             3,1              10,4            7,7          20,4              9,4
+ Los Ríos                     32,6            15,0             6,2               9,4            7,2          19,8              9,7
+ Los Lagos                    35,9            19,0             4,3              10,2            4,9          16,2              9,4
+ Aysén                         0,0            56,4             0,0               7,7           14,5          14,6              6,8
+ Magallanes                   72,9            13,1             2,5               5,0            1,4           3,9              1,3
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+Los resultados evidencian una marcada heterogeneidad en la distribución de la población entre las regiones
+del país. Mientras las regiones extremas y la Región Metropolitana presentan una elevada concentración
+de población en «ciudades», las regiones de la zona centro-sur y sur muestran una distribución más diversa
+entre las distintas categorías de asentamiento definidas por DEGURBA.
+En estas últimas, adquieren mayor relevancia los «pueblos densos» y «pueblos semidensos», las «aldeas»,
+las «áreas suburbanas» y «periurbanas», así como las «áreas rurales dispersas» y «muy dispersas». Este
+patrón se observa particularmente en las regiones de O’Higgins, Maule, Ñuble, La Araucanía, Los Ríos y Los
+Lagos, donde las categorías intermedias y rurales alcanzan una proporción significativamente mayor que
+en el resto del país.
+En conjunto, estos resultados reflejan una estructura territorial más compleja, caracterizada por múltiples
+asentamientos de distinto tamaño que configuran un continuo urbano-rural más marcado que en otras
+regiones del país.
+
+     2.4. Análisis demográfico
+Una parte importante de este análisis se basa en la comparación de las características demográficas de la
+población según sexo y edad, considerando las distintas clases de DEGURBA identificadas a nivel nacional.
+En primer lugar, se presenta la distribución de la población residente del país según los resultados del Censo
+2024, sin considerar subdivisiones. Luego, se analizan las características demográficas de la población según
+las clasificaciones de los niveles 1 y 2 de DEGURBA, con el objetivo de identificar diferencias en la
+composición de la población entre las distintas categorías de asentamiento.
+
+Composición de la población nacional
+Como se observa en la Tabla 5, la población del país se concentra principalmente en las edades
+potencialmente activas (15-64 años)15, representando un 68,2% del total. La población menor de 15 años
+concentra el 17,7%, mientras que las personas de 65 años y más alcanzan un 14,1%.
+
+15
+  El término «población potencialmente activa» difiere del concepto «población en edad de trabajar» (PET), utilizado por el INE
+para la construcción de indicadores sobre la situación de la población en la fuerza de trabajo. De acuerdo con el glosario de la
+Encuesta Nacional de Empleo (ENE), el término PET corresponde al “conjunto de personas de 15 años o más (sin límite superior de
+edad), respecto a las cuales se indaga la condición de actividad en la ENE. La PET, se compone de la fuerza de trabajo (FT) y de las
+personas fuera de la fuerza de trabajo (FFT)” (https://bit.ly/4fezuia) (INE, 2025b). Por otro lado, la «población potencialmente
+
+
+                                                                                                                                 20
+Respecto de la población por sexo, existe una mayor presencia de mujeres, con una razón hombre-mujer16
+de 93,9 hombres por cada cien mujeres. Esto se repite en todos los grandes grupos de edad, con excepción
+de los menores de 15 años, donde hay una mayor concentración de hombres, con una razón hombre-mujer
+de 103,9 hombres por cada cien mujeres. La proporción de personas de 65 años o más es mayor entre las
+mujeres, con un 15,4% del total de mujeres, en contraste al 12,6% que representa dicho grupo entre los
+hombres.
+
+                          Tabla 5: Total de población según sexo y grandes grupos de edad.
+                              Población Total                  Razón                   Porcentaje
+    Grupos de
+                                                             hombre-
+      edad           Hombres      Mujeres          Total                   Hombres       Mujeres                       Total
+                                                               mujer
+       0-14           1.646.853       1.585.556       3.232.409         103,9             18,7%           16,9%          17,7%
+      15-64           6.067.152       6.363.208      12.430.360           95,3            68,7%           67,7%          68,2%
+      65 o +          1.114.829       1.448.686       2.563.515           77,0            12,6%           15,4%          14,1%
+       Total          8.828.834       9.397.450      18.226.284           93,9           100,0%          100,0%        100,0%
+                     Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+La pirámide de la población del país (Figura 11) da cuenta de una estructura demográfica en fase de
+envejecimiento, con un angostamiento de la base producto de la disminución de la fecundidad durante las
+últimas décadas. El aumento de la esperanza de vida, por otra parte, se refleja en un contingente
+importante de población que supera los 60 años. Estas características se aprecian en ambos sexos, aunque
+existe una mayor presencia femenina en las cohortes superiores de la pirámide.
+
+La mayor proporción de la población se concentra entre los 30-34 años, que corresponde al tramo de edad
+más numeroso de la pirámide. Este grupo representa el 8,4% de los hombres y 8,1% de las mujeres. Su
+magnitud se ha visto reforzada durante la última década por la llegada de población inmigrante
+internacional, que se concentra principalmente en edades jóvenes y potencialmente activas17.
+
+
+
+
+activa» corresponde a las personas entre los 15 y 65 años, haciendo referencia al rango considerado en los cálculos de la «relación
+de dependencia demográfica total», que mide la población en edad teóricamente activa en el mercado laboral
+(https://bit.ly/3SWffyg) (INE, 2018).
+16
+   El término original corresponde al «índice de masculinidad» (IM), definido como “la relación entre cantidad de hombres y
+mujeres en una población, y se expresa como el número de hombres por cada 100 mujeres. Su fórmula corresponde al cociente
+entre el total de hombres con respecto al total de mujeres, multiplicado por 100” (https://bit.ly/3SWffyg) (INE, 2018). No obstante,
+el concepto “razón hombre mujer” fue utilizado para las publicaciones de Censo de Población y Vivienda 2024
+(https://bit.ly/4fymKUO ) (INE, 2025c), por lo que es aplicado en el presente documento.
+17
+   Según el Censo de 2024, la mayoría de la población nacida en el extranjero y que reside en el país se concentra entre los 30-34
+años. Para más detalle se sugiere revisar: https://censo2024.ine.gob.cl/resultados/
+
+                                                                                                                                 21
+                                                 Figura 11: Pirámide de población, nivel nacional
+                                               100                                                     Mujeres
+                                                95
+                                                90                                                     Hombres
+                                                85
+                                                80
+                                                75
+                                                70
+
+
+
+
+                              Edades simples
+                                                65
+                                                60
+                                                55
+                                                50
+                                                45
+                                                40
+                                                35
+                                                30
+                                                25
+                                                20
+                                                15
+                                                10
+                                                 5
+                                                 0
+                                                     2            1                0               1                2
+                                                                            Porcentaje
+
+                        Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+  Composición de la población según nivel 1 de la metodología DEGURBA
+
+  La Tabla 6 presenta la distribución por grupo quinquenal y sexo para cada una de las clases del nivel 1 de la
+  metodología DEGURBA (clases 3, 2 y 1), incluyendo la razón hombre-mujer. La Tabla 7 organiza la población
+  en grandes grupos de edad.
+
+             Tabla 6: Distribución nacional de población por edad quinquenal y sexo, según nivel 1 de DEGURBA
+   Edad                 Clase 3 «Ciudad»                              Clase 2 «Pueblo y área semidensa»                    Clase 1 «Área rural»
+quinquenal
+             Hombres    Mujeres                  Total     RHM    Hombres       Mujeres    Total       RHM    Hombres        Mujeres      Total     RHM
+  Total      5.777.711 6.244.781 12.022.492                92,5 1.647.265 1.775.975 3.423.240          92,8 1.403.858 1.376.694 2.780.552 102,0
+   0-4        281.339    271.440                 552.779 103,6         88.802    85.712    174.514 103,6          66.707       64.691     131.398 103,1
+   5-9        370.111    356.854                 726.965 103,7        119.089   115.120    234.209 103,4          87.560       84.145     171.705 104,1
+  10-14       405.229    390.077                 795.306 103,9        131.756   126.613    258.369 104,1          96.260       90.904     187.164 105,9
+  15-19       405.091    385.733                 790.824 105,0        123.120   116.850    239.970 105,4          89.480       83.136     172.616 107,6
+  20-24       443.699    433.093                 876.792 102,4        112.922   109.763    222.685 102,9          80.339       75.046     155.385 107,1
+  25-29       480.673    475.769                 956.442 101,0        118.550   121.105    239.655     97,9       83.014       83.298     166.312    99,7
+  30-34       522.079    520.475                1.042.554 100,3       129.572   140.634    270.206     92,1       93.975       96.561     190.536    97,3
+  35-39       465.065    475.250                 940.315   97,9       122.589   135.570    258.159     90,4       92.205       95.096     187.301    97,0
+  40-44       401.991    428.357                 830.348   93,8       111.285   126.305    237.590     88,1       90.867       90.839     181.706 100,0
+  45-49       348.385    389.698                 738.083   89,4       101.158   116.077    217.235     87,1       89.705       88.576     178.281 101,3
+  50-54       346.049    398.271                 744.320   86,9       101.797   115.427    217.224     88,2       98.320       95.436     193.756 103,0
+  55-59       322.834    385.574                 708.408   83,7        97.296   111.416    208.712     87,3      101.570       98.844     200.414 102,8
+  60-64       307.347    375.164                 682.511   81,9        88.819   101.942    190.761     87,1       97.356       93.903     191.259 103,7
+  65-69       244.037    303.551                 547.588   80,4        71.574    82.451    154.025     86,8       82.506       77.134     159.640 107,0
+  70-74       175.234    229.651                 404.885   76,3        52.485    62.622    115.107     83,8       61.677       58.519     120.196 105,4
+  75-79       125.209    177.382                 302.591   70,6        36.948    46.390     83.338     79,6       44.491       42.935      87.426 103,6
+
+
+                                                                                                                                                    22
+   Edad                     Clase 3 «Ciudad»                   Clase 2 «Pueblo y área semidensa»                    Clase 1 «Área rural»
+quinquenal
+                 Hombres    Mujeres        Total     RHM     Hombres     Mujeres     Total      RHM      Hombres      Mujeres      Total        RHM
+  80-84            77.522    125.053       202.575    62,0     23.046      32.061     55.107      71,9     27.534       29.915        57.449     92,0
+  85-89            36.622     71.318       107.940    51,4     10.957      18.001     28.958      60,9     13.438       16.815        30.253     79,9
+  90-94            15.185     38.152        53.337    39,8       4.332      8.699     13.031      49,8      5.351        7.988        13.339     67,0
+  95-99             3.567     11.978        15.545    29,8       1.045      2.728      3.773      38,3      1.317        2.505         3.822     52,6
+  100+               443        1.941        2.384    22,8        123        489         612      25,2       186           408          594      45,6
+                            Nota: Por temas de diseño, se utiliza la sigla RHM para representar la razón hombre-mujer.
+
+                            Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+                              Tabla 7: Distribución por grupos de edad y sexo, según nivel 1 de DEGURBA
+     Grupos de                 Clase 3 «Ciudad»               Clase 2 «Pueblo y área semidensa»               Clase 1 «Área rural»
+       edad             Hombres         Mujeres    Total     Hombres     Mujeres        Total            Hombres         Mujeres        Total
+          0-14                18,3%       16,3%    17,3%        20,6%       18,4%             19,5%          17,8%            17,4%      17,6%
+         15-64                70,0%       68,3%    69,1%        67,2%       67,3%             67,3%          65,3%            65,4%      65,4%
+       65 o +                 11,7%       15,4%    13,6%        12,2%       14,3%             13,3%          16,8%            17,2%      17,0%
+         Total               100,0%      100,0% 100,0%         100,0%      100,0%            100,0%         100,0%          100,0% 100,0%
+
+                            Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+  En base a estos datos, se observa que:
+
+                La población que reside en las «ciudades» (clase 3) presenta una estructura por sexo y edad similar
+                 a la que reside en «pueblos y área semidensas» (clase 2) y en el total de la población del país. Sin
+                 embargo, se distingue por una mayor proporción de población en edades potencialmente activas,
+                 particularmente en los grupos de 25-29 y 30-34 años, tanto en hombres como en mujeres (Tabla
+                 6).
+                Entre las tres clases del nivel 1, las «ciudades» presentan la mayor proporción de población en
+                 edad de trabajar, alcanzando un 70,0% entre los hombres y 68,3% de las mujeres (Tabla 7).
+                 Asimismo, al igual que en las demás clases, las mujeres presentan un envejecimiento superior al
+                 de los hombres: la población de 65 años o más representa el 15,4% del total de mujeres, mientras
+                 que entre los hombres esta proporción alcanza el 11,7%.
+
+                La estructura de población en «pueblos y área semidensas» (clase 2) se caracteriza por ser más
+                 joven y heterogénea que la observada en las «ciudades». Los grupos etarios más numerosos se
+                 ubican en torno a los 10-14 años en los hombres (aunque con una proporción importante entre los
+                 30-34 años), mientras que en las mujeres la mayor proporción está entre los 30-34 años y los 35-
+                 39 años (Tabla 6). Por otro lado, la población menor de 15 años concentra más del 20% del total
+                 entre los hombres (20,6%), mientras que dicha proporción es de 18,4% en el caso de las mujeres
+                 (Tabla 7).
+                En esta misma clase, la población en edad potencialmente activa (15-64 años) representa el 67,2%
+                 en el caso de los hombres y el 67,3% en las mujeres. Estos porcentajes son inferiores a los
+                 observados en el total de la población. En el caso de las mujeres, se observa un envejecimiento
+
+                                                                                                                                               23
+        mayor respecto a los hombres, en tanto el 14,3% de la población tiene 65 años o más, población
+        que representa un 12,2% en los hombres (Tabla 7).
+
+       La población que reside en el «área rural» (clase 1) presenta una estructura etaria más envejecida
+        que la observada en las demás clases del nivel 1 (Tabla 6) y que la población del país (Figura 11).
+        Los grupos de edad más numerosos se concentran entre los 55-59 años tanto en hombres como en
+        mujeres.
+
+       En el «área rural» se observa la mayor proporción de población de 65 años o más entre las tres
+        clases analizadas, alcanzando un 16,8% en los hombres y un 17,2% en las mujeres (Tabla 7). En
+        contraste, la población en edad potencialmente activa (15 a 64 años) representa una proporción
+        menor en comparación a las demás clases, con un 65,3% en los hombres y un 65,4% entre las
+        mujeres.
+
+       Por otro lado, la población menor de 15 años también presenta una proporción relativamente baja
+        en comparación con las otras clases, representando el 17,8% en los hombres y 17,4% de las
+        mujeres. Estos resultados reflejan una estructura demográfica más envejecida y una menor
+        presencia relativa de población en edades jóvenes en las áreas rurales.
+       En cuanto a la distribución por sexo, sólo el «área rural» (clase 1) registra una mayor cantidad de
+        hombres que de mujeres, con una razón hombre-mujer de 102,0 hombres por cada cien mujeres.
+        Esto mismo se presenta entre las edades 0-24 y entre 40-79 (Tabla 6). En contraste, para las
+        «ciudades» (clase 3) y «pueblos y área semidensas» (clase 2) se registra una mayor proporción de
+        mujeres en estos tramos etarios. Asimismo, únicamente en las «ciudades» los hombres constituyen
+        una mayoría entre las edades de 25-34 años, situación que no se observa en las otras clases.
+Al comparar la estructura de las pirámides de población de cada clase (Figura 12), se aprecia que todas
+presentan una base angosta, en línea con la estructura demográfica observada a nivel nacional. La
+estructura poblacional que reside en las «ciudades» (clase 3) es la que más se asemeja a la de la población
+total nacional, dado que corresponde a la clase que concentra más habitantes. No obstante, destaca por
+una mayor proporción de población en edad potencialmente activa, especialmente entre los 30-39 años.
+
+
+
+
+                                                                                                        24
+                                     Figura 12: Pirámides de población, según clases del nivel 1 de DEGURBA
+                                           Clase 3 «Ciudad»                                                             Clase 2 «Pueblo y área semidensa»
+                                                                                                              100
+                        100                                                                                    95
+                         95                                                    Mujeres                         90                                        Mujeres
+                         90
+                         85                                                                                    85
+                         80                                                    Hombres                         80                                        Hombres
+                                                                                                               75
+
+
+
+
+       Edades simples                                                                        Edades simples
+                         75
+                         70                                                                                    70
+                         65                                                                                    65
+                         60                                                                                    60
+                         55                                                                                    55
+                         50                                                                                    50
+                         45                                                                                    45
+                         40                                                                                    40
+                         35                                                                                    35
+                         30                                                                                    30
+                         25                                                                                    25
+                         20                                                                                    20
+                         15                                                                                    15
+                         10                                                                                    10
+                          5                                                                                     5
+                          0                                                                                     0
+                              2        1          0                        1             2                          2           1           0        1             2
+                                              Porcentaje                                                                                Porcentaje
+
+                                                                                  Clase 1 «Área rural»
+                                                                 100
+                                                                  95                                                          Mujeres
+                                                                  90
+                                                                  85                                                          Hombres
+                                                                  80
+                                                                  75
+
+
+
+
+                                                Edades simples
+                                                                  70
+                                                                  65
+                                                                  60
+                                                                  55
+                                                                  50
+                                                                  45
+                                                                  40
+                                                                  35
+                                                                  30
+                                                                  25
+                                                                  20
+                                                                  15
+                                                                  10
+                                                                   5
+                                                                   0
+                                                                       2         1           0                            1             2
+                                                                                         Porcentaje
+                                  Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+En contrapartida, la estructura de población en «área rural» (clase 1) difiere de la población a nivel nacional
+(Figura 11) y de las otras clases, presentando una mayor concentración de población de edades mayores y
+con una menor proporción de población en edades jóvenes, especialmente entre los 20-25 años.
+
+La estructura de la población en clase 2 («pueblo y área semidensa») mantiene rasgos similares a la de la
+población nacional (Figura 11), tanto en su base como en las edades superiores. Sin embargo, sobresale la
+mayor presencia de población en edades entre los 10-19 años, tanto en hombres como mujeres, los que
+incluso superan a la población entre los 30-39 años en el caso de los hombres.
+
+Composición de la población según nivel 2 de la metodología DEGURBA
+A continuación, se presenta la distribución por edades quinquenales y las pirámides de población para el
+nivel 2 de acuerdo con la metodología de DEGURBA. El análisis de las siete clases se realiza en relación con
+las clases de las que se desprenden (Figura 3): las clases 11, 12 y 13 de la clase 2 se comparan con la clase
+1 del nivel 1; el análisis de las clases 21, 22 y 23 se realiza en comparación con la clase 2 del nivel 1. La clase
+30 del nivel 2 es equivalente a la clase 3 del nivel 1.
+
+
+
+                                                                                                                                                                       25
+  La Tabla 8 expone la distribución de las edades organizadas en grupos quinquenales, para cada una de las
+  clases del nivel 2.
+
+                     Tabla 8: Distribución de la población por edad quinquenal, según nivel 2 de DEGURBA
+                                  Clase 23       Clase 22         Clase 21      Clase 13      Clase 12       Clase 11
+   Edades
+                     Clase 30                                       «Área                                   «Área rural
+quinquenales        «Ciudad»      «Pueblo        «Pueblo                                     «Área rural
+                                                                 suburbana o    «Aldea»                         muy
+                                  denso»       semidenso»                                     dispersa»
+                                                                 periurbana»                                 dispersa»
+   Total            12.022.492     1.910.704        387.327         1.125.209      715.988     1.631.217        433.347
+    0-4                552.779        95.947         18.512           60.055        35.146        79.306         16.946
+    5-9                726.965       128.944         25.336           79.929        46.028       103.540         22.137
+   10-14               795.306       144.002         28.746           85.621        50.973       111.482         24.709
+   15-19               790.824       135.163         27.421           77.386        48.165       101.389         23.062
+   20-24               876.792       125.881         25.192           71.612        45.679        89.861         19.845
+   25-29               956.442       136.743         27.104           75.808        48.753        96.552         21.007
+   30-34              1.042.554      152.944         29.348           87.914        53.986       112.172         24.378
+   35-39               940.315       143.899         27.058           87.202        51.032       110.890         25.379
+   40-44               830.348       130.915         25.148           81.527        47.187       108.273         26.246
+   45-49               738.083       119.856         23.635           73.744        44.692       105.284         28.305
+   50-54               744.320       120.604         24.823           71.797        46.842       113.134         33.780
+   55-59               708.408       116.642         24.956           67.114        47.483       116.662         36.269
+   60-64               682.511       106.587         23.151           61.023        44.225       110.805         36.229
+   65-69               547.588        85.409         19.053           49.563        35.761        92.819         31.060
+   70-74               404.885        63.845         14.499           36.763        26.746        69.651         23.799
+   75-79               302.591        46.161         10.645           26.532        19.612        49.875         17.939
+   80-84               202.575        30.854          6.975           17.278        12.886        32.552         12.011
+   85-89               107.940        16.508          3.598            8.852         6.763        17.078           6.412
+   90-94                53.337         7.333          1.596            4.102         3.049          7.426          2.864
+   95-99                15.545         2.094            469            1.210           844          2.129           849
+   100+                   2.384          373                62           177           136           337            121
+                        Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+              La clase 30 del nivel 2 («ciudad») es equivalente a la clase 3 del nivel 1, análisis descrito
+               anteriormente.
+
+              En cuanto a las clases derivadas de la clase 2 («pueblo y área semidensa»), se distingue (Tabla 8):
+
+           -      La mayor proporción de la población se concentra en la clase 23 («pueblo denso»), que reúne el
+                  10,5% de la población del país (1.910.704 personas). Su estructura etaria es diversa y presenta
+                  una distribución similar a la observada en la clase 2, con una mayor concentración de personas
+                  entre los 30-39 años y 10-19 años.
+
+           -      Por su parte, la clase 22 («pueblo semidenso») agrupa al 2,1% de la población del país (387.327
+                  personas). Su estructura por edad es similar a la de las clases 21 y 23, observándose una mayor
+
+                                                                                                                           26
+               concentración de población entre los 30-34 años y entre los 10-14 años. Asimismo, esta
+               categoría presenta la proporción más alta de personas de 65 años y más (14,7%,
+               correspondiente a 56.897 personas) entre las tres clases analizadas.
+
+        -      En tercer lugar, la clase 21 («área suburbana o periurbana») concentra una población de
+               1.125.209, correspondiente al 6,2% de la población total del país. Al igual que en la clase 23, la
+               mayor proporción de población se ubica entre los 30-39 años. Sin embargo, también destaca
+               una importante presencia de población entre los 5-14 años. De hecho, esta categoría registra la
+               mayor proporción de población menor de 15 años (20,1%, 225.605 personas) entre las clases
+               21, 22 y 23.
+
+           Acerca de la subdivisión procedente de la clase 1 (Tabla 8), se observa:
+
+        -      Entre las clases 13, 12 y 11, la clase 12 («área rural dispersa») concentra la mayor proporción de
+               población, con 1.631.217 personas, equivalentes al 8,9% del total nacional. Su estructura etaria
+               muestra una mayor presencia de población entre 50-59 años. Asimismo, destaca que cerca de
+               la mitad de sus habitantes (47,6%) se concentra entre los 30-64 años.
+
+        -      La clase 13 («aldea») reúne al 3,9% de la población del país (715.988 personas). Su distribución
+               etaria es ligeramente más joven que la observada en la clase 12, ya que la mayor concentración
+               de población se ubica entre los 30-39 años. Además, esta clase presenta la proporción más alta
+               de personas menores de 15 años (132.147 personas, un 18,5%) entre las clases 13, 12 y 11.
+
+        -      Finalmente, la clase 11 («área rural muy dispersa») concentra el 2,4% de la población nacional
+               (433.347 personas). Su distribución etaria es similar a la de la clase 12, aunque presenta un perfil
+               ligeramente más envejecido. En particular, se observa una mayor concentración de personas
+               entre los 55-64 años, mientras que las personas de 65 años corresponden a 95.055 (21,9% del
+               total de la clase 11).
+
+Respecto de las pirámides de población, el análisis de la estructura por sexo y edad muestra que la
+población que reside en la clase 11 («área rural muy dispersa») (Figura 14) presenta un perfil más
+masculinizado y envejecido que el observado en las demás clases. Su estructura etaria se caracteriza por
+una marcada concentración de población, tanto en hombres como en mujeres, entre los 50 y 65 años.
+
+Asimismo, esta clase exhibe la base más angosta entre todas las pirámides analizadas y un estrechamiento
+particularmente pronunciado entre los 20-30 años. Aunque este patrón también se observa en las clases
+«aldea» y «área rural dispersa», en el «área rural muy dispersa» es mucho más notorio (Figura 14).
+
+Las clases 12 y 13 presentan distribuciones por sexo muy similares entre sí y comparables a la observada
+para la clase 1 del nivel 1. Sin embargo, difieren en su estructura etaria. Como se muestra en la Tabla 8, la
+clase 12 presenta un perfil más envejecido que la clase 13, mientras que esta última exhibe una composición
+relativamente más joven y mayores similitudes con las clases de densidad moderada del nivel 2.
+
+Por su parte, las clases 21, 22 y 23 (Figura 13) comparten estructuras de población similares, aunque
+presentan características distintivas. La clase 21 («área suburbana o periurbana») destaca por registrar la
+mayor proporción de población menor de 15 años y por presentar un estrechamiento más marcado en las
+edades de 20 a 30 años en comparación con las demás clases.
+
+
+                                                                                                                27
+En tanto, la clase 23 («pueblo denso») es la que muestra una estructura más cercana a la observada en la
+clase 30 («ciudad») y en la población total del país. No obstante, se distingue por una mayor proporción de
+población entre 10-19 años.
+
+                                  Figura 13: Pirámides de población que residen en el área urbana (clases 30, 23, 22 y 21)
+                                            Clase 30 «Ciudad»                                                 Clase 23 «Pueblo denso»
+                        100
+                         95                                                                        100
+                         90                                         Mujeres                         95                                  Mujeres
+                         85                                                                         90
+                         80                                         Hombres                         85                                  Hombres
+                                                                                                    80
+
+
+
+
+                                                                                  Edades simples
+                         75
+
+
+
+
+       Edades simples
+                         70                                                                         75
+                         65                                                                         70
+                         60                                                                         65
+                                                                                                    60
+                         55
+                                                                                                    55
+                         50                                                                         50
+                         45                                                                         45
+                         40                                                                         40
+                         35                                                                         35
+                         30                                                                         30
+                         25                                                                         25
+                         20                                                                         20
+                         15                                                                         15
+                         10                                                                         10
+                          5                                                                          5
+                          0                                                                          0
+                              2            1         0          1             2                          2       1         0        1             2
+                                                 Porcentaje                                                            Porcentaje
+
+
+                                     Clase 22 «Pueblo semidenso»                                             Clase 21 «Área suburbana o
+                                                                                                                     periurbana»
+                        100                                                                        100
+                         95                                         Mujeres                         95
+                         90                                                                         90                                  Mujeres
+                         85                                         Hombres                         85
+                         80                                                                         80
+                                                                                                                                        Hombres
+
+
+
+
+      Edades simples                                                              Edades simples
+                         75                                                                         75
+                         70                                                                         70
+                         65                                                                         65
+                         60                                                                         60
+                         55                                                                         55
+                         50                                                                         50
+                         45                                                                         45
+                         40                                                                         40
+                         35                                                                         35
+                         30                                                                         30
+                         25                                                                         25
+                         20                                                                         20
+                         15                                                                         15
+                         10                                                                         10
+                          5                                                                          5
+                          0                                                                          0
+
+                              2           1          0          1             2                          2       1         0        1             2
+                                                  Porcentaje                                                           Porcentaje
+
+                                      Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+                                                                                                                                                      28
+                           Figura 14: Pirámides de población que residen en el área rural (clases 13, 12 y 11)
+                                     Clase 13 «Aldea»                                                                Clase 12 «Área rural dispersa»
+                 100
+                  95                                                                                       100
+                  90                                                        Mujeres                         95                                      Mujeres
+                  85                                                                                        90
+                  80                                                        Hombres                         85                                      Hombres
+                  75                                                                                        80
+
+
+
+
+Edades simples                                                                            Edades simples
+                                                                                                            75
+                  70
+                                                                                                            70
+                  65                                                                                        65
+                  60                                                                                        60
+                  55                                                                                        55
+                  50                                                                                        50
+                  45                                                                                        45
+                  40                                                                                        40
+                  35                                                                                        35
+                  30                                                                                        30
+                  25                                                                                        25
+                  20                                                                                        20
+                  15                                                                                        15
+                  10                                                                                        10
+                   5                                                                                         5
+                   0                                                                                         0
+                       2         1          0                           1             2                          2         1           0        1             2
+                                        Porcentaje                                                                                 Porcentaje
+
+
+                                                                      Clase 11 «Área rural muy dispersa»
+
+                                                            100                                                          Mujeres
+                                                             95
+                                                             90                                                          Hombres
+                                                             85
+                                                             80
+
+
+
+
+                                           Edades simples
+                                                             75
+                                                             70
+                                                             65
+                                                             60
+                                                             55
+                                                             50
+                                                             45
+                                                             40
+                                                             35
+                                                             30
+                                                             25
+                                                             20
+                                                             15
+                                                             10
+                                                              5
+                                                              0
+
+                                                                  2           1                 0                    1             2
+                                                                                      Porcentaje
+
+                            Fuente: Censo de Población y Vivienda 2024, Instituto Nacional de Estadísticas.
+
+
+
+
+                                                                                                                                                                  29
+3. CONCLUSIONES
+La aplicación de la metodología DEGURBA utilizando datos del Censo de Población y Vivienda 2024 confirma
+su capacidad para enriquecer la clasificación urbano-rural utilizada por el INE, incorporando categorías
+intermedias que permiten reconocer con mayor precisión la diversidad de formas de asentamientos en el
+territorio. De este modo, la metodología mejora la comprensión del continuo urbano-rural y abre nuevas
+oportunidades para la focalización de políticas públicas, el fortalecimiento de los análisis territoriales y la
+comparabilidad internacional de las estadísticas urbanas y rurales.
+Los resultados obtenidos evidencian una marcada heterogeneidad territorial entre las regiones del país.
+Mientras las regiones extremas y la Región Metropolitana concentran gran parte de su población en
+«ciudades», las regiones del centro-sur y sur presentan una mayor diversidad de asentamientos,
+caracterizada por una presencia más significativa de «pueblos densos» y «pueblos semidensos», «áreas
+suburbanas y periurbanas», «aldeas» y «áreas rurales dispersas». Estos patrones reflejan distintas formas
+de ocupación y organización del territorio, probablemente asociadas a características geográficas, procesos
+históricos de poblamiento y actividades productivas de cada región.
+Desde el punto de vista demográfico, los resultados en base al Censo 2024 muestran diferencias entre las
+distintas clases analizadas y se reafirma la utilidad de esta tipología para comprender su diversidad. Las
+«ciudades» concentran una mayor proporción de población en edades potencialmente activas, mientras
+que las áreas rurales presentan estructuras más envejecidas y, en algunos casos, una mayor presencia
+relativa de hombres. Por su parte, los «pueblos densos», «pueblos semidensos», «áreas suburbanas y
+periurbanas» y «aldeas» exhiben características demográficas intermedias, situándose entre ambos
+extremos y permitiendo identificar matices que no son captados mediante una clasificación estrictamente
+dicotómica del territorio.
+Las «ciudades» muestran una pirámide demográfica con una base y un centro más ensanchados en
+comparación con las áreas rurales. El área urbana concentraría gran parte de las oportunidades laborales
+(Ministerio de Vivienda y Urbanismo, 2026) y educativas del país y favorecería el desarrollo de las etapas
+tempranas y medias del ciclo de vida (Ministerio de Educación, 2025), mientras que las áreas rurales
+enfrentarían el desafío de retener población y capital humano ante la constante capacidad de atracción que
+ejercen las ciudades de mayor tamaño (Ministerio de Vivienda y Urbanismo, 2026).
+A futuro, resulta pertinente evaluar la incorporación de la clasificación DEGURBA en distintos productos
+estadísticos desarrollados por el INE, tales como el Censo de Población y Vivienda y el Sistema de
+Indicadores y Estándares Territoriales (SIET). Para ello, será necesario considerar los alcances de la
+metodología y su pertinencia en las distintas etapas de la producción estadística. Estas evaluaciones son
+especialmente relevantes, ya que la desagregación territorial proporcionada por DEGURBA permite
+identificar realidades que no distingue la clasificación urbano-rural tradicional.
+
+
+
+
+                                                                                                            30
+4. BIBLIOGRAFÍA
+European Commission, and Statistical Office of the European Union. (2021). Applying the Degree of
+       Urbanisation- a Methodological Manual to Define Cities, Towns and Rural Areas for International
+       Comparisons.
+
+Eurostat. (17 de Febrero de 2026). Review and implementation of the degree of urbanisation – 2026
+        edition. Obtenido de https://ec.europa.eu/eurostat/web/products-statistical-reports/w/ks-01-26-
+        004
+
+INE. (2018). Glosario Características de la inmigración internacional en Chile, 2017. Obtenido de Instituto
+        Nacional de Estadísticas: https://www.ine.gob.cl/docs/default-source/demografia-y-
+        migracion/publicaciones-y-anuarios/migración-internacional/censo-2017-inmigración-
+        internacional/ine_características-inmigración-internacional-en-chile-censo-
+        2017_glosario_(2018).pdf?sfvrsn=6abb963_8
+
+INE. (2018b). Base cartográfica censal. Alcances y definiciones para el usuario. Obtenido de Instituto
+        Nacional de Estadísticas: https://www.ine.gob.cl/docs/default-source/geodatos-
+        abiertos/manuales/censo/alcances-base-cartografica-censo-2017.pdf?sfvrsn=d513cb51_8
+
+INE. (2019). Ciudades, Pueblos, Aldeas y Caseríos. Obtenido de Instituto Nacional de Estadísticas:
+        https://www.ine.gob.cl/docs/default-source/geodatos-abiertos/publicaciones/ciudades-pueblos-
+        aldeas-y-caserios/censo-2017/ciudades-pueblos-aldeas-y-caseríos-2019.pdf?sfvrsn=24e81d36_4
+
+INE. (2023). Reporte de resultados de la aplicación del piloto Degree of Urbanization (DEGURBA) en Chile y
+        cálculo de indicadores de Objetivos de Desarrollo Sostenible (ODS) Prioritarios. Obtenido de
+        https://www.ine.gob.cl/docs/default-source/geodatos-abiertos/publicaciones/indicadores-
+        urbanos/reporte-resultado-aplicación-de-piloto-grado-de-urbanización-(degurba)-en-
+        chile.pdf?sfvrsn=5d957539_2
+
+INE. (2025). Ciudades - Pueblos - Aldeas - Caseríos. Recuperado el 15 de junio de 2026, de
+        https://storage.googleapis.com/bktdescargascenso2024/Datos_agregados/Cs_Pb_Al_Cs_CPV202
+        4.html
+
+INE. (2025b). Glosario Encuesta Nacional de Empleo (ENE). Recuperado el 14 de Julio de 2026, de INE:
+        https://www.ine.gob.cl/docs/default-source/ocupacion-y-
+        desocupacion/metodologia/otros/glosario-ene.pdf?sfvrsn=e8d50659_5
+
+INE. (2025c). Glosario: conceptos generales Censo de Población y Vivienda 2024. Recuperado el 14 de Julio
+        de 2026, de Resultados Censo 2024: https://censo2024.ine.gob.cl/wp-
+        content/uploads/2025/03/Glosario_CPV2024-1.pdf
+
+INE. (2025d). Manual de uso de la Cartografía Censal. Obtenido de Censo 2024:
+        https://storage.googleapis.com/bktdescargascenso2024/Datos_agregados/Manual_uso_cartogra
+        fia_CPV2024.pdf
+
+Ministerio de Agricultura, ODEPA & INE. (2022). Atlas Rural de Chile. Obtenido de
+        https://www.ine.gob.cl/docs/default-source/geodatos-abiertos/publicaciones/indicadores-
+        rurales/atlas-rural-de-chile/atlas-rural-de-chile.pdf?sfvrsn=84adafb1_4
+
+
+                                                                                                          31
+Ministerio de Educación. (2025). Política Nacional de Educación en Territorios Rurales 2025-2031.
+        Obtenido de Fortalecimiento de la Educación Rural.
+
+Ministerio de Vivienda y Urbanismo. (Agosto de 2019). Metodología para medir el crecimiento físico de las
+        ciudades en Chile. Obtenido de Centro de Estudios de Ciudad y Territorio:
+        https://catalogo.minvu.cl/cgi-bin/koha/opac-retrieve-
+        file.pl?id=0d06b6488320835ffa801f9c4f0fd52a&download=1
+
+Ministerio de Vivienda y Urbanismo. (Marzo de 2026). Metodología para determinar las áreas funcionales
+        de Chile según el Censo 2024. Obtenido de Centro de Estudios de Ciudad y Territorio:
+        https://catalogo.minvu.cl/cgi-bin/koha/opac-detail.pl?biblionumber=25903
+
+Statistical Office of the European Union. (2021). Applying the degree of urbanisation manual - Extensions
+         to level 1 of the classification. Recuperado el 2 de junio de 2026, de
+         https://ec.europa.eu/eurostat/statistics-
+         explained/index.php?title=Applying_the_degree_of_urbanisation_manual_-
+         _Extensions_to_level_1_of_the_classification
+
+
+
+
+                                                                                                        32
+

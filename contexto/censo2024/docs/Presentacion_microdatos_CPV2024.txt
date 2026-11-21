@@ -1,0 +1,524 @@
+Censo 2024
+Publicación de microdatos
+Antecedentes
+Antecedentes
+
+
+
+
+               Censo de derecho: basado en la
+               residencia habitual
+
+
+
+
+               Uso de dispositivos móviles
+               de captura
+
+
+
+
+               Marzo a julio de 2024
+Antecedentes
+
+
+
+
+Objetivos del Censo de Población
+y Vivienda 2024:
+
+
+           Proveer información para actualizar las
+ 1         estimaciones y proyecciones de población a
+           nivel país, región y comuna.
+
+           Actualizar el marco muestral para diseñar las
+ 2         encuestas de hogares.
+
+           Proveer información para la definición y
+ 3         seguimiento de políticas públicas.
+
+           Generar información estadística sobre áreas
+ 4         geográficas específicas y subgrupos de
+           población.
+Antecedentes
+
+
+
+
+               Población censada    18.480.432
+               Hogares censados      6.596.527
+               Viviendas censadas    7.642.716
+Antecedentes
+
+
+
+                                                                   Productos ya publicados
+
+
+Dashboard de indicadores   Visualizador de datos con los principales
+                           resultados del Censo 2024.
+
+
+
+Geoportal                  Principales indicadores a nivel geográfico.
+
+
+                           Viviendas y hogares censados, población censada,
+                           fecundidad, migración interna, inmigración internacional,
+Tabulados temáticos
+                           pueblos originarios y afrodescendientes, discapacidad,
+                           entre otros.
+
+
+                           Documento que presenta el detalle de la planificación,
+Memoria censal
+                           vinculación, gestión logística, administrativa y
+                           comunicacional, así como modelo de recolección.
+Bases de datos
+publicadas
+Bases de datos publicadas
+
+
+
+
+                                             Próximas publicaciones durante diciembre 2025
+
+
+
+
+        1                             2                                  3
+  Base de microdatos               Base manzana - entidad              Bases cartográficas
+  Tres tablas relacionales de      Dos bases para distintos            Dieciséis bases cartográficas
+  viviendas, hogares y personas.   niveles geográficos con datos       a nivel regional y una base a
+                                   agregados.                          nivel nacional.
+    Base de
+1   microdatos
+01.   Base de microdatos
+
+
+
+
+        1       Base de microdatos
+                Conformada por tres tablas relacionales:
+
+
+
+
+                     Viviendas                             Hogares      Personas
+
+
+
+
+             Nivel mínimo de desagregación: comuna-área urbano /rural
+01.   Base de microdatos
+
+                                                                                             1      Base de microdatos
+
+
+
+
+            Área urbana                                           Área rural
+
+            Asentamiento     humano       con    continuidad  y   Asentamiento humano con población menor o igual
+            concentración     de     construcciones      en  un   a 1.000 habitantes, o entre 1.001 y 2.000 habitantes
+            amanzanamiento con población mayor a 2.000            donde más del 50% de la población que declara
+            habitantes, o entre 1.001 y 2.000 habitantes donde    haber trabajado se dedica a actividades primarias.
+            menos del 50% de la población que declara haber
+            trabajado se dedica a actividades primarias.
+01.   Base de microdatos
+
+                                                                          1   Base de microdatos
+
+
+
+
+                       Tabla de viviendas
+
+                                            Tipo de vivienda particular
+          Características de las            Materialidad de la vivienda
+          viviendas
+                                            Número de dormitorios
+                                            Índice de hacinamiento
+
+                                            Fuente y suministro de agua
+          Acceso a servicios                Servicios sanitarios
+          básicos
+                                            Energía eléctrica
+                                            Medio de eliminación de basura
+01.   Base de microdatos
+
+                                                                        1        Base de microdatos
+
+
+
+
+                       Tabla de hogares
+
+                                          Relación de tenencia con la vivienda
+          Características                 Disponibilidad de TICs
+          del hogar
+                                          Acceso a internet
+                                          Tipos de hogar
+
+
+
+          Uso de energía o                Energía o combustible para cocinar
+          combustible                     Energía o combustible para calefaccionar
+01.   Base de microdatos
+
+                                                                            1   Base de microdatos
+
+
+
+
+                       Tabla de personas
+
+                                           Sexo
+          Características                  Edad
+          demográficas básicas
+                                           Estado conyugal o civil actual
+                                           Migración reciente
+          Estructura poblacional
+                                           Lugar de nacimiento
+          Migración                        Periodo de llegada al país
+          Fecundidad                       Nacionalidad
+                                           Hijos/as nacidos vivos
+                                           Hijos/as vivos actualmente
+                                           Fecha de nacimiento último hijo/a nacido vivo
+01.   Base de microdatos
+
+                                                                           1   Base de microdatos
+
+
+
+
+                       Tabla de personas
+
+                                           Pueblos originarios
+                                           Pueblos afrodescendientes
+         Características
+                                           Manejo de lenguas originarias
+         sociales
+                                           Religión o credo
+                                           Discapacidad
+                                           Diversidades de género
+
+                                           Asistencia y logro educativo
+           Características                 Situación en la fuerza de trabajo
+           socioeconómicas                 Grupo ocupacional
+                                           Actividad económica
+                                           Conmutación laboral
+01.    Base de microdatos
+
+                                                                                                                          1       Base de microdatos
+
+
+
+
+                                                                  Viviendas                         Hogares                        Personas
+       Nombre archivo                                    viviendas_censo2024                   hogares_censo2024              personas_censo2024
+       Formato disponible                                       csv y parquet                     csv y parquet                  csv y parquet
+       N° observaciones                                           7.664.466                         6.622.597                     18.480.432
+       N° variables                                                     25                              18                             63
+       Identificadores                                           id_vivienda                   id_vivienda, id_hogar   id_vivienda, id_hogar, id_persona
+
+      Nota: Incluye un diccionario de variables en formato Excel para agregar las etiquetas.
+
+
+
+
+               Para facilitar la conversión hacia otros formatos de publicación (ej. Redatam), en las tablas de viviendas y hogares se crea una
+               observación para las entrevistas de viviendas colectivas y personas en situación de calle.
+
+               No obstante, no hay información en las preguntas de vivienda y hogar para estos operativos (valor missing), solo en las de personas.
+01.   Base de microdatos
+
+                                                                                                                  1     Base de microdatos
+
+
+
+
+                                             id_vivienda      tipo_operativo       p4a_mat_paredes
+                                                 123                  1                   NA
+                       Tabla de viviendas        124                  2                       1
+                                                 125                  3                   NA
+
+
+
+
+                                            id_vivienda    id_hogar   tipo_operativo   p12_tenencia_viv
+                                               123            0               1                   NA
+                      Tabla de hogares         124            1               2                   3
+                                               125            0               3                   NA
+
+
+
+                                            id_vivienda    id_hogar   id_persona   tipo_operativo      p24_lug_resid5
+                                               123            0           1               1                  3
+                                               124            1           1               2                  2
+                      Tabla de personas        124            1           2               2                 -99
+                                               125            0           1               3                  2
+                                               125            0           2               3                  2
+01.   Base de microdatos
+
+
+
+
+      ¿Qué análisis se pueden realizar
+      con los microdatos?
+      Algunos ejemplos:
+
+             Uno de los pocos instrumentos que permite análisis a
+      1      menores niveles de desagregación geográfica.
+
+
+             Insumo para la estimación de características en áreas
+      2      pequeñas (Small area estimation). Por ejemplo, actualmente
+             se utiliza para la estimación de la pobreza por ingresos y
+             pobreza multidimensional a nivel comunal por el MDSF.
+
+
+             Diferenciales de la fecundidad: a través de métodos
+      3      indirectos se pueden estimar los niveles de fecundidad de
+             grupos de la población como pueblos originarios, nivel
+             educativo, zona de residencia, entre otros grupos.
+
+
+             Análisis de los efectos de la migración interna sobre la
+      4      composición de la población, en variables como sexo, edad o
+             educación.
+
+
+             Características y factores asociados a la conmutación laboral
+      5      tanto a nivel interregional como intrarregional.
+Control de
+divulgación
+estadística
+02.   Control de divulgación estadística
+
+                                                                        4   Proceso de anonimización
+
+
+
+
+      ¿Cómo protegemos la privacidad
+      de las personas?
+
+
+      • Se utilizan distintas técnicas de anonimización para
+        proteger la privacidad y confidencialidad de las
+        personas que respondieron el Censo.
+
+
+
+
+                  Marco legal que rige la protección de la
+                  confidencialidad
+
+                  Bajo las disposiciones de la Ley 17.374 que
+                  establece el Secreto Estadístico debemos
+                  asegurarnos de que cualquier información producida
+                  por el INE no permita la identificación de las
+                  personas y los hogares censados.
+                  Como INE también estamos mandatados por la Ley
+                  19.628 que protege la vida privada de las personas.
+02.   Control de divulgación estadística
+                                                                                                      Proceso de anonimización
+
+
+
+
+                                                                      La anonimización es necesaria porque:
+
+           Aplicación de métodos de control
+           de divulgación
+                                                                               La reidentificación de una persona podría
+                                                                        1      tener un impacto en sus derechos y
+                                                                               libertades.
+                        El nivel de desagregación de la información
+                        publicada corresponde al máximo detalle
+                        posible que asegura la confidencialidad de             La protección de la confidencialidad es un
+                        los informantes, manteniendo la utilidad de
+                        la información para fines analíticos y de       2      aspecto crucial para la confianza de las
+                                                                               personas.
+                        investigación.
+02.    Control de divulgación estadística
+
+
+
+
+      Desafíos del proceso de anonimización
+
+                   Equilibrio entre riesgo y utilidad: se debe establecer
+                   un compromiso entre riesgo de divulgación y utilidad
+                   de los datos.
+
+                     Máxima protección: datos muy seguros, pero
+                     casi sin utilidad (ej. publicar solo el total
+                     nacional)
+
+                     Mínima protección: datos muy útiles, pero
+                     riesgosos (ej. microdatos sin ningún cambio
+                     respecto de su recolección)
+
+                     Objetivo: encontrar el punto medio óptimo.
+
+
+                    Desafío de la dimensionalidad: a medida que se
+                    agregan más variables (dimensiones), las
+                    combinaciones son potencialmente únicas, lo que
+                    incrementa el riesgo de reidentificación.
+02.        Control de divulgación estadística
+                                                                                                                                                                Proceso de anonimización
+
+
+
+
+         Guía para el control                                                         •   Reglas de confidencialidad estandarizadas para censos y encuestas, publicadas por el INE el 2021.
+         de divulgación
+                                                                                      •   Basadas en metodologías propuestas por el Banco Mundial.
+
+                                                                                      •   Establece una hoja de ruta para el proceso de anonimización.
+
+
+
+
+            Determinar las                                                            Evaluar el riesgo de                Aplicar métodos de                   Evaluar el riesgo de
+            características de los                                                    divulgación (ex ante)               anonimización                        divulgación (ex post)
+            datos y su uso
+
+
+
+
+      Enlace directo: Guía para el control de divulgación estadística en microdatos
+
+         Enlace directo: Guía para el control de divulgación estadística en microdatos
+02.       Control de divulgación estadística
+                                                                                                                                 Proceso de anonimización
+
+
+
+
+          Características de los datos
+
+
+
+
+      Identificadores directos                                 Identificadores indirectos                           Variables sensibles
+
+      ▪     Nombres, direcciones, coordenadas                 ▪   Sexo, edad, nivel educativo, entre otras.         ▪   Definidas en el marco normativo.
+            geográficas.                                      ▪   Sometidas a procesos de                           ▪   Sometidas a procesos de
+      ▪     Eliminadas de la base de datos.                       anonimización.                                        anonimización.
+
+
+
+
+                  Las variables sensibles son datos que pertenecen al dominio privado de las y los informantes.
+
+                  La Ley 19.628 y la Ley 21.719 que entrará a regir en diciembre de 2026 identifica como variables sensibles a las características de las
+                  personas que revelen el origen étnico o racial, las creencias religiosas y la información relativa a la identidad de género.
+02.   Control de divulgación estadística
+
+                                                                         4   Proceso de anonimización
+
+
+
+      Aplicación de métodos de
+      control de divulgación
+
+      Se utilizaron métodos no perturbativos que reducen el detalle
+      de algunas variables sin alterar la coherencia interna entre las
+      variables ni las relaciones entre ellas.
+      •    Recodificación global: agrupación de categorías
+           detalladas en niveles más amplios de clasificación.
+      •    Codificación superior: transformación de variables
+           continuas u ordinales en rangos o categorías resumidas.
+      •    Supresión parcial de variables: reducción del detalle en
+           variables específicas para comunas o dominios con menor
+           tamaño poblacional. Para el caso de las variables
+           consideradas como datos personales sensibles, se
+           suprime la información para categorías con menos de 50
+           casos a nivel de comuna.
+
+
+
+
+               No se utilizan métodos que introducen ruido a
+               los datos (perturbativos)
+02.   Control de divulgación estadística
+                                                                                                                               Proceso de anonimización
+
+
+
+
+        Tratamiento de variables – microdatos
+                               Variable                     Tamaño comuna                Tratamiento aplicado            Descripción tratamiento
+                                                                                                                 Se privilegia la desagregación a nivel de
+                                                                                                                 comuna-área porque mantiene un
+         Desagregación territorial                                Todas                  Recodificación global
+                                                                                                                 equilibrio adecuado entre riesgo y
+                                                                                                                 utilidad de la información.
+                                                                                                                 Recodificación de edades superiores a
+                                                                >= 6.000                 Codificación superior
+                                                                                                                 85 años o más.
+         Edad
+                                                                 < 6.000            Supresión parcial de variables Edad quinquenal
+
+         Nivel educativo más alto alcanzado                       Todas
+
+         Grados aprobados del nivel más alto                                                                     Recodificación según la Clasificación
+                                                                  Todas                  Recodificación global   Internacional Normalizada de la
+         alcanzado
+                                                                                                                 Educación (CINE 2011).
+         Finalización del nivel más alto alcanzado
+                                                                  Todas
+         declarado
+
+
+                El detalle de todas las variables se encuentra en el Manual de Uso de los Microdatos.
+Diseminación
+03.   Diseminación
+
+
+
+
+      ¿Cómo acceder a
+      los datos?
+
+      Para acceder a los resultados
+      del Censo debes ingresar al sitio
+      web y seleccionar Resultados:
+
+
+         www.censo2024.cl
+03.   Diseminación
+
+
+
+
+  Accesos directos a la
+  descarga de los datos
+03.   Diseminación
+
+
+
+
+      Documentos complementarios
+
+
+               Manual de Uso de Microdatos Censales
+               -     Acceso y solicitud de los datos.
+               -     Estructura de las bases de datos.
+               -     Control de divulgación estadística.
+               -     Diccionario de variables.
+               -     Definición y construcción de indicadores.
+
+
+
+
+               Diccionario de variables
+               -     Archivo en Excel con el listado completo de
+                     variables y sus etiquetas.
+¡Muchas gracias!
+

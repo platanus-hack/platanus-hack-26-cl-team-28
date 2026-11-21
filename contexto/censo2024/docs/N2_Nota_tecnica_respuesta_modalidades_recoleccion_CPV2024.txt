@@ -1,0 +1,235 @@
+                                                                            Nota técnica n° 2
+
+
+Modalidades de recolección en el Censo de Población y Vivienda
+
+
+1. Antecedentes
+
+En Chile el Censo de Población y Vivienda 2024 transitó de un cuestionario en papel como
+modalidad principal a una modalidad mixta secuencial1. Esta combinó entrevistas
+presenciales con dispositivos móviles (CAPI2) y un método autoaplicado con el Censo en Línea
+(CAWI3). La estrategia operativa priorizó CAPI, complementándolo con CAWI y, en casos
+excepcionales, con el cuestionario en papel (PAPI4).
+
+
+La transición desde papel hacia modos digitales de recolección permitió incluir filtros y saltos
+automáticos para guiar la aplicación del cuestionario. En el método CAPI cada entrevista se
+vinculó a su unidad geográfica, facilitando la ubicación en terreno del equipo operativo con
+cartografía digital. Por otro lado, el Censo en Línea fue la primera experiencia masiva de un
+método autoaplicado en un censo en Chile, diseñado para ser accesible para personas con
+diversos niveles de alfabetización digital.
+
+
+Cabe mencionar que en la fase de cierre de la recolección del Censo 2024, se implementaron
+estrategias operativas adicionales. Una de ellas correspondió a los Puntos Censo, que
+contemplo la destinación de personal operativo en lugares de alta concurrencia pública,
+estableciendo puntos de captación de la población que no pudo ser censada en sus lugares
+de residencia. Esta población fue censada por modalidad CAPI o CAWI, registrando la
+dirección de residencia al inicio de la aplicación.
+
+
+
+
+1
+  La adopción de una modalidad mixta secuencial se alinea con una tendencia que ha evolucionado desde fines de
+1980, cuando las encuestas comenzaron a integrar diversas estrategias para mejorar la eficiencia y la cobertura.
+En las últimas décadas, los avances en tecnología y los cambios en la dinámica social han transformado
+significativamente los métodos de recolección de información (De Leeuw, E. D. (2018)).
+2
+  Por la sigla en inglés: Computer Assisted Personal Interviewing.
+3
+  Por la sigla en inglés: Computer Assisted Web Interviewing.
+4
+  Por la sigla en inglés: Paper and Pencil Interview.
+                                                       1
+2. Distribución de personas y viviendas por modalidad de recolección
+
+
+                       Tabla 1. Número de personas censadas por modalidad
+
+              Región                      CAPI                   CAWI              PAPI
+
+Arica y Parinacota                       225.810                18.739              20
+
+Tarapacá                                 349.436                20.329              41
+
+Antofagasta                              591.603                43.778              35
+
+Atacama                                  267.558                31.622              0
+
+Coquimbo                                 761.272                71.592              0
+
+Valparaíso                              1.731.170               164.883             0
+
+Metropolitana de Santiago               6.908.915               487.092            4.734
+Libertador General Bernardo
+                                         948.444                38.784              0
+O’Higgins
+Maule                                   1.070.924               52.084              0
+
+Ñuble                                    485.309                26.980              0
+
+Biobío                                  1.583.250               29.809              0
+
+La Araucanía                             946.183                64.240              0
+
+Los Ríos                                 373.940                24.290              0
+
+Los Lagos                                833.992                56.292              0
+Aysén del General Carlos
+                                         91.870                  8.806              69
+Ibañez del Campo
+Magallanes y de la Antártica
+                                         151.154                15.077             306
+Chilena
+Nacional                               17.320.830              1.154.397           5.205
+                        Fuente: Instituto Nacional de Estadísticas - Censo 2024.
+
+
+
+
+                                                    2
+                     Tabla 2. Porcentaje de personas censadas por modalidad
+
+              Región                   CAPI (%)              CAWI (%)               PAPI (%)
+
+Arica y Parinacota                       92,3                   7,7                   0,0
+
+Tarapacá                                 94,5                   5,5                   0,0
+
+Antofagasta                              93,1                   6,9                   0,0
+
+Atacama                                  89,4                  10,6                   0,0
+
+Coquimbo                                 91,4                   8,6                   0,0
+
+Valparaíso                               91,3                   8,7                   0,0
+
+Metropolitana de Santiago                93,4                   6,6                   0,1
+Libertador General Bernardo
+                                         96,1                   3,9                   0,0
+O’Higgins
+Maule                                    95,4                   4,6                   0,0
+
+Ñuble                                    94,7                   5,3                   0,0
+
+Biobío                                   98,2                   1,8                   0,0
+
+La Araucanía                             93,6                   6,4                   0,0
+
+Los Ríos                                 93,9                   6,1                   0,0
+
+Los Lagos                                93,7                   6,3                   0,0
+Aysén del General Carlos
+                                         91,2                   8,7                   0,1
+Ibañez del Campo
+Magallanes y de la Antártica
+                                         90,8                   9,1                   0,2
+Chilena
+Nacional                                 93,7                   6,2                   0,0
+             Nota: los valores pueden no sumar 100% por efecto de redondeo a un decimal.
+                         Fuente: Instituto Nacional de Estadísticas - Censo 2024.
+
+
+
+
+                                                  3
+                       Tabla 3. Número de viviendas censadas por modalidad
+
+              Región                      CAPI                   CAWI              PAPI
+
+Arica y Parinacota                       82.927                  5.492              82
+
+Tarapacá                                 137.236                 6.014              3
+
+Antofagasta                              217.537                14.281              11
+
+Atacama                                  127.615                11.916              0
+
+Coquimbo                                 346.463                26.322              0
+
+Valparaíso                               852.594                61.481              0
+
+Metropolitana de Santiago               2.593.523               168.970            2.256
+Libertador General Bernardo
+                                         394.166                13.804              0
+O’Higgins
+Maule                                    467.588                19.062              0
+
+Ñuble                                    224.776                10.069              0
+
+Biobío                                   651.775                 9.003              0
+
+La Araucanía                             456.848                24.380              0
+
+Los Ríos                                 174.995                 8.484              0
+
+Los Lagos                                383.210                20.932              0
+Aysén del General Carlos
+                                         48.944                  3.289              61
+Ibañez del Campo
+Magallanes y de la Antártica
+                                         71.063                  5.378             166
+Chilena
+Nacional                                7.231.260               408.877            2.579
+                           Nota: incluye viviendas particulares y colectivas.
+                        Fuente: Instituto Nacional de Estadísticas - Censo 2024.
+
+
+
+
+                                                    4
+                     Tabla 4. Porcentaje de viviendas censadas por modalidad
+
+              Región                    CAPI (%)              CAWI (%)               PAPI (%)
+
+Arica y Parinacota                        93,7                   6,2                   0,1
+
+Tarapacá                                  95,8                   4,2                   0,0
+
+Antofagasta                               93,8                   6,2                   0,0
+
+Atacama                                   91,5                   8,5                   0,0
+
+Coquimbo                                  92,9                   7,1                   0,0
+
+Valparaíso                                93,3                   6,7                   0,0
+
+Metropolitana de Santiago                 93,8                   6,1                   0,1
+Libertador General Bernardo
+                                          96,6                   3,4                   0,0
+O’Higgins
+Maule                                     96,1                   3,9                   0,0
+
+Ñuble                                     95,7                   4,3                   0,0
+
+Biobío                                    98,6                   1,4                   0,0
+
+La Araucanía                              94,9                   5,1                   0,0
+
+Los Ríos                                  95,4                   4,6                   0,0
+
+Los Lagos                                 94,8                   5,2                   0,0
+Aysén del General Carlos
+                                          93,6                   6,3                   0,1
+Ibañez del Campo
+Magallanes y de la Antártica
+                                          92,8                   7,0                   0,2
+Chilena
+Nacional                                  94,6                   5,3                   0,0
+                             Nota 1: incluye viviendas particulares y colectivas.
+             Nota 2: los valores pueden no sumar 100% por efecto de redondeo a un decimal.
+                          Fuente: Instituto Nacional de Estadísticas - Censo 2024.
+
+
+
+3. Referencias
+De Leeuw, E. D. (2018). Mixed-Mode: Past, Present, and Future. Survey Research Methods,
+12(2), 75–89. https://doi.org/10.18148/srm/2018.v12i2.7402
+
+
+
+
+                                                   5
+

@@ -1,0 +1,321 @@
+                                                                         Nota técnica n° 6
+
+
+    Tratamiento de la no respuesta al ítem para las variables de sexo y edad
+
+1. Introducción
+Las variables de sexo y edad, junto con la cantidad de personas y las relaciones de parentesco,
+constituyen componentes estructurantes de la información demográfica que recopila un censo de
+población. En este contexto, disponer de estos datos con el mayor nivel de calidad posible constituye
+uno de los principales objetivos del proceso censal (CEPAL, 2021, págs. 48-49). Las recomendaciones
+internacionales señalan que, en aquellos casos en que la información de sexo y edad no se encuentre
+completa, se deben aplicar técnicas de imputación para estimar sus valores, en lugar de clasificar los
+registros como “no declarados” (Naciones Unidas, 2017). Esta práctica tiene por finalidad asegurar
+la completitud de los datos y permitir el uso pleno de la información censal, especialmente en los
+procesos de análisis, generación de indicadores y diseño de políticas públicas.
+
+Durante el procesamiento del Censo de Población y Vivienda 2024 se identificaron casos de no
+respuesta en los ítems correspondientes a las variables sexo y edad. Con el propósito de completar
+esta información, se implementó una estrategia de imputación basada en métodos estadísticos
+ampliamente utilizados en censos y encuestas, diferenciando el tratamiento aplicado a cada variable
+según la información disponible en el cuestionario censal1.
+
+El presente documento describe el tratamiento aplicado a la no respuesta al ítem de las variables de
+sexo y edad en el Censo 2024.
+
+
+2. Tipos de no respuesta
+Hay dos tipos de no respuesta en censos y encuestas (United States Census Bureau, 2021):
+
+    -   No respuesta a la unidad (NRU): ocurre cuando no hay respuesta de todas las personas que
+        residen en una vivienda o dirección en particular.
+    -   No respuesta al ítem (NRI): ocurre cuando la persona informante provee información, pero
+        no responde algunas de las preguntas del cuestionario. La no respuesta al ítem puede
+        producirse ya sea porque la persona informante no desea entregar la información, porque
+        desconoce la respuesta o porque se omitió la pregunta durante la aplicación del
+        cuestionario.
+
+    2.1. Alcance del tratamiento a la no respuesta
+En el Censo de Población y Vivienda 2024, las correcciones realizadas se limitaron a la no respuesta
+al ítem (NRI), no contemplándose ajustes asociados a la no respuesta a la unidad (NRU). Cabe
+destacar que no se consideraron como cuestionarios logrados aquellos casos excepcionales en que
+faltaba simultáneamente la información de las variables de sexo y edad, por no contar con
+información suficiente para su validación e integración al conjunto de datos de personas. Dichos
+
+1
+ Entre los métodos utilizados se consideran enfoques de imputación determinística y de donantes (Hot deck
+y K-Nearest Neighbors), de uso extendido en operaciones censales y encuestas de hogares.
+
+
+                                                                                                       1
+                                                                          Nota técnica n° 6
+
+
+registros fueron clasificados como no respuesta a la unidad y excluidos de los registros como parte
+del proceso de validación de la base de datos2, por lo que no formaron parte del proceso de
+imputación de la no respuesta al ítem.
+
+En consecuencia, el presente documento aborda exclusivamente los casos en los que falta la
+información de sexo o edad, pero no ambas variables simultáneamente.
+
+    2.2. Magnitud de la no respuesta al ítem de sexo y edad
+La no respuesta al ítem de sexo y edad son parte de los indicadores que se utilizan para medir la
+calidad de un censo. En particular, evalúan la exhaustividad o completitud con que las estadísticas
+abarcan un fenómeno que se intenta describir (Naciones Unidas, 2017, pág. 83).
+
+De acuerdo con la Guía para asegurar la calidad de los datos censales (CEPAL, 2011), para variables
+como sexo o edad, el nivel de tolerancia para la no respuesta al ítem debiese ser menor a 2%.
+
+La Tabla 1 presenta los niveles de no respuesta al ítem para las variables de sexo y edad en el Censo
+2024, previo a la imputación. Como se observa, la no respuesta registrada para ambas variables se
+sitúa por debajo del margen de tolerancia del 2% sugerido por CEPAL.
+             Tabla 1. No respuesta al ítem para sexo y edad previo a la imputación, CPV 2024
+                       Atributo             N° de casos            Porcentaje
+                       Sexo                     278                   0,002%
+                       Edad                    8.215                  0,04%
+                       Fuente: Instituto Nacional de Estadísticas
+
+
+La Tabla 2 presenta una comparación de la no respuesta al ítem entre el Censo 2017 y el Censo 2024.
+En ambos censos, las tasas de no respuesta se sitúan por debajo el umbral del 2%. Adicionalmente,
+en los resultados del Censo 2024 se observa una disminución en la tasa de no respuesta en ambas
+variables respecto al Censo 2017.
+                 Tabla 2. No respuesta al ítem para sexo y edad, Censo 2017 y Censo 2024
+                    Atributo                Censo 2017               Censo 2024
+                    Sexo                      0,13%                    0,002%
+                    Edad                      0,88%                    0,04%
+                    Fuente: Instituto Nacional de Estadísticas
+
+
+
+
+2
+  Esta situación puede producirse, por ejemplo, cuando el informante interrumpe la entrevista antes de
+completarla o se inicia una entrevista por error, lo que impide disponer de la información mínima requerida
+para la validación del registro.
+
+                                                                                                         2
+                                                                        Nota técnica n° 6
+
+
+3. Tratamiento de la no respuesta al ítem
+A continuación, se describe el tratamiento implementado para abordar la no respuesta al ítem de
+las variables sexo y edad. El proceso tiene por objetivo asegurar la completitud y coherencia interna
+de los datos censales, manteniendo la estructura observada durante la recolección y garantizando
+la calidad de los resultados finales.
+
+    3.1. Tratamiento de la no respuesta al ítem para sexo
+Para el tratamiento de la variable de sexo, se aplicó una estrategia de imputación basada en el
+nombre declarado de la persona censada. Este enfoque se sustentó en el uso de una base de datos
+construida a partir de los registros de Censo 2024, que asocian nombres propios con el sexo más
+frecuentemente observado.
+
+A partir de esta base, se clasificaron los nombres según el sexo más frecuente y se imputó el valor
+correspondiente a las personas con sexo no declarado. Esto permitió completar el dato de sexo con
+altos niveles de confiabilidad, minimizando la introducción de sesgos y manteniendo la coherencia
+interna de los hogares.
+
+Cabe destacar que este tipo de imputación basada en el nombre ha sido utilizado en otras
+operaciones estadísticas y censales, tanto en Chile como a nivel internacional, y constituye una
+alternativa metodológica adecuada para inferir este atributo.
+
+    3.2. Tratamiento de la no respuesta al ítem para edad
+Para abordar la no respuesta al ítem de edad, se aplicaron dos métodos estadísticos comúnmente
+utilizados en censos y encuestas: Hot-Deck y k vecinos más cercanos (k-nearest neighbors, KNN), los
+que fueron seleccionados según las características de la no respuesta3.
+
+En particular, se presentaron dos escenarios de falta de respuesta:
+
+    1) Casos en los que solo se contaba con información básica del hogar, como número de
+       personas, el sexo de sus integrantes y características de la vivienda, sin datos adicionales
+       sobre los integrantes del hogar.
+    2) Casos en los que, además de la información anterior, se disponía de atributos individuales
+       como parentesco, nivel educativo u otras características tanto de las personas a imputar
+       como de otros integrantes del hogar.
+
+Para el primer caso se utilizó el método Hot-Deck, que permite imputar atributos faltantes de un
+registro a partir de casos reales con información completa, denominados “donantes”, los que
+presentan características similares al registro con datos faltantes, denominado “receptor”. En este
+procedimiento, los donantes se definieron a nivel de hogar seleccionándose hogares con
+
+3
+  Ambos métodos fueron evaluados previamente mediante simulaciones de no respuesta. Los resultados
+mostraron que el método KNN proporciona mejores resultados cuando se cuenta con una mayor cantidad de
+atributos para establecer similitudes, mientras que Hot-Deck es una opción robusta cuando la información
+individual es escasa.
+
+
+
+                                                                                                      3
+                                                                          Nota técnica n° 6
+
+
+información disponible y similares en términos del número de personas, la distribución por sexo y la
+localización geográfica. A partir de estos hogares, se seleccionó aleatoriamente un hogar donante
+para imputar las edades faltantes al hogar receptor. Este enfoque permite imputar edades plausibles
+y coherentes con el contexto del hogar receptor, asegurando la consistencia interna de la
+información a nivel de hogar.
+
+Para el segundo caso se utilizó el método KNN, que identifica los k casos más similares al individuo
+con edad faltante a partir de un conjunto de variables relevantes para establecer dicha similitud.
+Entre estas variables se consideraron el sexo, el parentesco, el nivel educacional y otros atributos
+individuales y del hogar disponibles en el cuestionario censal. La edad se imputó a partir de las
+edades observadas en los “vecinos” seleccionados, mediante un promedio ponderado, utilizando
+como ponderador el inverso de la distancia euclidiana, medida que capta la cercanía entre individuos
+en función de múltiples variables4. Este enfoque permite realizar imputaciones más precisas y
+adaptadas a cada caso individual, sin necesidad de asumir estructuras homogéneas al interior del
+hogar.
+
+    3.3. Evaluación del efecto del tratamiento de no respuesta
+Para evaluar el efecto del proceso de imputación sobre la calidad de los datos, se realizó una
+comparación detallada de la distribución de las variables sexo y edad, así como de los principales
+indicadores demográficos derivados, antes y después del tratamiento de la no respuesta,
+considerando distintos niveles de desagregación geográfica.
+
+Como se observa en la Tabla 3, la imputación de la variable sexo no genera efectos sobre la razón
+hombre-mujer obtenida, tanto a nivel nacional como en cada una de las regiones del país. Este
+resultado confirma que el procedimiento de imputación preservó adecuadamente la distribución
+por sexo originalmente observada.
+
+
+
+
+4
+  Se consideran variables de comuna, parentesco, nivel educacional, discapacidad, situación laboral, estado
+civil y total de hijos nacidos vivos.
+
+                                                                                                         4
+                                                                      Nota técnica n° 6
+
+
+                 Tabla 3. Indicadores demográficos de Sexo, Censo 2017 y Censo 2024
+                                              Razón hombre-       Razón hombre-
+                        Región               mujer antes de la   mujer después de
+                                                imputación         la imputación
+                 Nacional                          94,3                 94,3
+                 Arica y Parinacota                96,9                 96,9
+                 Tarapacá                          98,3                 98,3
+                 Antofagasta                       97,7                 97,7
+                 Atacama                           98,2                 98,2
+                 Coquimbo                          94,4                 94,4
+                 Metropolitana                     93,8                 93,8
+                 Valparaíso                        93,0                 93,0
+                 O'Higgins                         96,2                 96,2
+                 Maule                             94,4                 94,4
+                 Ñuble                             92,7                 92,7
+                 Biobío                            92,6                 92,6
+                 La Araucanía                      92,9                 92,9
+                 Los Ríos                          93,8                 93,8
+                 Los Lagos                         96,5                 96,5
+                 Aysén                             97,9                 97,9
+                 Magallanes                        98,1                 98,1
+                 Fuente: Instituto Nacional de Estadísticas
+
+
+La Tabla 4 presenta los principales indicadores de edad antes y después de la imputación. No se
+observan cambios en la mediana, ni a nivel nacional ni regional, lo que indica que el 50% central de
+la distribución etaria se mantuvo inalterado. En cuanto al promedio de edad, se registra un
+incremento de 0,1 años a nivel nacional; mientras que, a nivel regional, dicho aumento se observa
+en 6 de las 16 regiones.
+
+Por su parte, los índices de Whipple y Myers, utilizados para evaluar preferencias de dígitos en la
+declaración de edad, presentaron variaciones que no modifican la interpretación general sobre la
+calidad de los datos.
+
+
+
+
+                                                                                                  5
+                                                                              Nota técnica n° 6
+
+
+                        Tabla 4. Indicadores de edad antes y después de imputación, por región
+                               Mediana               Promedio           Índice de Whipple      Índice de Myers
+      Región
+                           Pre         Post        Pre        Post        Pre        Post       Pre       Post
+Nacional                   36,0        36,0       38,0        38,1       101,2      101,2       0,9        1,0
+Arica y Parinacota         34,0         34        36,4        36,4       101,5      101,6       1,2        1,2
+Tarapacá                   32,0        32,0       34,0        34,0       101,5      101,5       1,0        1,1
+Antofagasta                33,0        33,0       35,0        35,0       100,6      100,8       0,8        0,8
+Atacama                    35,0        35,0       36,7        36,8       100,2      100,2       1,1        1,1
+Coquimbo                   36,0        36,0       38,0        38,0       101,0      101,0       0,7        0,7
+Valparaíso                 38,0        38,0       39,5        39,5       101,8      101,9       1,0        1,1
+Metropolitana              36,0        36,0       37,7        37,7       101,4      101,4       1,3        1,4
+O’Higgins                  38,0        38,0       38,7        38,8       100,7      100,8       0,5        0,5
+Maule                      38,0        38,0       38,7        38,8       100,9      101,0       0,5        0,6
+Ñuble                       39          39         40          40        100,6      100,6       0,5        0,6
+Biobío                     37,0        37,0       38,6        38,6       100,7      100,7       1,5        1,6
+La Araucanía               37,0        37,0       38,5        38,6       100,8      100,8       1,0        1,0
+Los Ríos                   38,0        38,0       39,0        39,0       101,0      101,1       1,1        1,1
+Los Lagos                  37,0        37,0       38,1        38,2       100,9      101,0       0,5        0,5
+Aysén                      36,0        36,0       37,4        37,4       101,3      101,4       2,1        2,1
+Magallanes                 38,0        38,0       38,8        38,9       102,5      102,5       1,5        1,5
+Fuente: Instituto Nacional de Estadísticas
+
+
+   Los análisis realizados confirman que no se observan diferencias significativas ni en la distribución
+   general de las variables ni en los indicadores demográficos clave. Ello valida que el procedimiento
+   de imputación no alteró los patrones originalmente observados durante la recolección de la
+   información.
+
+   Las imputaciones introdujeron únicamente las modificaciones mínimas necesarias para completar
+   los registros faltantes y permitir un análisis coherente y metodológicamente riguroso de los datos,
+   preservando la estructura poblacional reportada durante el levantamiento censal.
+
+
+
+
+                                                                                                            6
+                                                                     Nota técnica n° 6
+
+
+4. Conclusiones
+El tratamiento de la no respuesta al ítem para las variables de sexo y edad en el Censo de Población
+y Vivienda 2024 se realizó conforme a estándares internacionales, mediante la aplicación de
+métodos estadísticos robustos y ampliamente reconocidos.
+
+Los principales atributos del proceso fueron los siguientes:
+
+    1. Alta calidad inicial de los datos: la no respuesta al ítem fue reducida (0,002% para sexo y
+       0,04% para edad), situándose muy por debajo del umbral de tolerancia internacional del 2%.
+    2. Métodos apropiados: se utilizaron técnicas de imputación adecuadas al tipo y cantidad de
+       información disponible en cada caso.
+    3. Impacto mínimo: la evaluación evidenció que el proceso de imputación no alteró de manera
+       significativa la distribución de las variables ni los principales indicadores demográficos
+       derivados.
+    4. Preservación de la estructura poblacional: se mantuvo la coherencia interna de los hogares
+       y los patrones demográficos observados durante el levantamiento censal.
+
+En conjunto, estos resultados permiten disponer de una base de datos censal con información
+completa para las variables de sexo y edad, de alta calidad y apta para su uso en análisis
+demográficos, generación de indicadores y diseño de políticas públicas.
+
+
+
+
+                                                                                                  7
+                                                                     Nota técnica n° 6
+
+
+    5. Bibliografía
+CEPAL. (2011). Guía para asegurar la calidad de los datos censales. Santiago.
+
+CEPAL. (2021). Recomendaciones para los censos de población y vivienda en América Latina. Revisión
+        2020.                       Santiago.                    Obtenido                       de
+        https://repositorio.cepal.org/server/api/core/bitstreams/9f9ca2fa-27a0-41d6-92c8-
+        60de446fc2ce/content
+
+Naciones Unidas. (2017). Principles and Recommendations for Population and Housing Censuses.
+       Revision 3. New York. Obtenido de https://unstats.un.org/unsd/demographic-
+       social/Standards-and-Methods/files/Principles_and_Recommendations/Population-and-
+       Housing-Censuses/Series_M67rev3-E.pdf
+
+United States Census Bureau. (25 de Agosto de 2021). 2020 Census Operational Quaility Metrics:
+        Item Nonresponse Rates. Obtenido de https://www.census.gov/newsroom/blogs/random-
+        samplings/2021/08/2020-census-operational-quality-metrics-item-nonresponse-rates.html
+
+
+
+
+                                                                                                8
+

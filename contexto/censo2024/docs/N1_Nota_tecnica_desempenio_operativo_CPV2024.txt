@@ -1,0 +1,259 @@
+                                                                Nota técnica n° 1
+
+
+Desempeño del Trabajo de Campo
+Viviendas Particulares
+
+
+1. Antecedentes
+Una de las innovaciones del Censo de Población y Vivienda 2024 fue contar con herramientas
+de monitoreo del avance diario del trabajo de campo y del desempeño de los equipos
+encargados de la recolección de datos.
+Para ello, se utilizó un modelo de ordenamiento de la información basado en códigos de
+disposición, los que permitieron categorizar las gestiones efectuadas por las y los censistas.
+Estos códigos, como señala Courser (2008, pág. 887), proporcionan un registro de lo que
+ocurrió durante cada intento de contacto. De esta manera, los códigos de disposición
+entregan información crucial sobre el historial de gestiones realizadas en cada caso activo
+durante el proceso de recolección censal.
+Una de las referencias más citadas para la elaboración de este sistema de códigos es
+la estandarización desarrollada por la Asociación Americana de Investigación sobre Opinión
+Pública (AAPOR). Este estándar permite sintetizar el resultado de las gestiones para realizar
+una entrevista, agrupando los códigos de disposición en categorías que facilitan la
+comparabilidad y el cálculo de tasas de resultados (AAPOR, 2016).
+En tanto la clasificación estandarizada de AAPOR fue diseñada para los procesos de
+recolección de encuestas, las que presentan diferencias metodológicas con los censos, fue
+necesario adaptar el modelo estandarizado de los códigos de disposición para adecuarlos a
+las necesidades específicas de un censo de derecho. Este proceso implicó modificar y ampliar
+el estándar de AAPOR para garantizar que el sistema de códigos fuera compatible con las
+particularidades de un censo, que requiere un seguimiento tanto del resultado de las visitas
+en todos los tipos de edificación, así como de la aplicación de los cuestionarios censales.
+
+
+
+
+                                              1
+La adaptación del modelo se puede resumir en los siguientes puntos:
+   •   Mayor desagregación de las categorías: el modelo adaptado incluye una mayor
+       desagregación de las categorías para los sitios y edificaciones que no necesariamente
+       son viviendas particulares, lo que permite un seguimiento y caracterización más
+       precisa de estos, así como de las viviendas donde correspondía aplicar el cuestionario
+       censal.
+   •   Reemplazo de la categoría de elegibilidad: dado que en un censo se recopila
+       información de todos los sitios y edificaciones del territorio nacional, se realizó un
+       reemplazo en la clasificación de elegibilidad, estableciendo la distinción entre tres
+       tipos de edificaciones: aquellas donde correspondía aplicar un cuestionario censal
+       (Dirección con vivienda), aquellas donde no se debía aplicar el cuestionario (Dirección
+       sin vivienda) y en las que no era posible determinar si correspondía o no aplicar el
+       cuestionario censal (Dirección con problema de acceso).
+   •   Niveles de resultado de contacto y disposición: las edificaciones dentro de la
+       categoría Dirección con vivienda que fueron clasificadas como viviendas particulares
+       se desagregaron en los niveles de resultado de contacto y disposición. Estas
+       categorías estaban vinculadas con el resultado de la entrevista con las y los
+       informantes y la aplicación efectiva de los cuestionarios censales.
+
+
+2. Indicadores para la medición del trabajo de campo
+Durante el trabajo de campo, las y los censistas recolectaron los datos utilizando
+principalmente dispositivos móviles de captura (DMC). En ellos fueron registrando el resultado
+de cada visita, el tipo de edificación y, en el caso las viviendas particulares, el estado de
+ocupación de la vivienda y el resultado del contacto con informantes, utilizando los códigos
+de disposición adaptados.
+La clasificación de los resultados de contacto y disposición en viviendas particulares se
+organizó en grupos que reflejaban el estado de cada caso durante el proceso de recolección
+de datos. Los códigos utilizados en este caso se pueden agrupar en cuatro grandes categorías:
+viviendas ocupadas con personas censadas, viviendas ocupadas sin personas censadas,
+moradores ausentes y viviendas desocupadas. En la Tabla 1 se presenta una síntesis de las
+categorías usadas.
+                                              2
+          Tabla 1. Clasificación de resultados de contacto en viviendas particulares
+
+              Grupo                                           Definición
+
+Ocupadas con personas censadas Corresponde a todos los casos en los que se aplicó el cuestionario
+                               censal, ya sea de manera completa (1111) o parcial (1112).
+(1110)
+
+                                   Incluye las viviendas donde se logró contactar al informante, pero
+Ocupadas sin personas censadas     no se completó la entrevista. Aquí se clasifican los rechazos del
+                                   informante (1122), los impedimentos para responder (1123), los
+(1120)                             informantes que no hablan español (1124) y las otras razones de
+                                   no entrevista (1125).
+
+
+Con moradores ausentes             Comprende los casos de viviendas ocupadas donde no se logró
+                                   establecer contacto con un residente, por lo que no se aplicó el
+(1130)                             cuestionario del censo (1130).
+
+                                   Corresponde a las viviendas particulares que se encuentran
+Desocupada (1140)                  momentáneamente sin residentes (abandonadas, en venta o en
+                                   arriendo) o que tienen un uso de temporada (1140).
+                      Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+Además, siguiendo las recomendaciones del modelo estándar propuesto por AAPOR (pág. 9,
+2023), se calcularon indicadores de desempeño para evaluar los resultados del operativo
+censal. Para ello, se consideraron indicadores clave como la tasa de respuesta, la tasa de
+contacto, la tasa de rechazo y la tasa de cooperación. En la Tabla 2 se presentan las
+definiciones y fórmulas utilizadas.
+
+
+
+
+                                                3
+                  Tabla 2. Fórmulas de cálculo de los indicadores de desempeño
+
+     Indicador                            Definición                         Fórmula de cálculo
+
+
+Tasa de respuesta     Corresponde al número de viviendas con
+                                                                                    1110
+                      cuestionarios completos y parciales dividido por
+                                                                             1110 + 1120 + 1130
+                      el total de viviendas particulares ocupadas.
+
+                    Corresponde a la proporción de casos con
+Tasa de cooperación cuestionarios completos y parciales, en relación                 1110
+                      con las viviendas particulares ocupadas                     1110 + 1120
+                      contactadas (censadas y no censadas)
+
+
+Tasa de rechazo       Corresponde al número de casos en los que el/la
+                                                                                    1122
+                      informante se negó a ser entrevistado/a dividido
+                                                                             1110 + 1120 + 1130
+                      por el total de viviendas particulares ocupadas.
+
+                      Corresponde a los casos en los que un/a censista
+Tasa de contacto      logró contactar a los/as residentes de la vivienda,
+                                                                                1110 + 1120
+                      independientemente del resultado del contacto,
+                                                                             1110 + 1120 + 1130
+                      dividido por el total de viviendas particulares
+                      ocupadas.
+                        Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+ 3. Resultados del trabajo de campo del Censo 2024
+ Los indicadores mencionados se utilizaron para monitorear el desempeño operativo tanto
+ durante el periodo de recolección como en los controles de calidad, con el fin de evaluar los
+ resultados del proceso.
+ A continuación, se presentan los resultados del operativo regular de viviendas particulares,
+ cuyo trabajo de campo se realizó entre el 9 de marzo y el 31 de julio. Cabe destacar que estos
+ resultados integran el trabajo realizado a través de las diferentes modalidades de recolección.
+ A nivel nacional (Tabla 3), la tasa de contacto del Censo de Población y Vivienda 2024 (CPV
+ 2024) alcanzó un 96,9% de las viviendas particulares ocupadas. En cuanto a la tasa de
+ respuesta, el indicador alcanzó un 95,2%, reflejando el porcentaje de entrevistas que
+ concluyeron con información suficiente sobre el total de viviendas particulares ocupadas.
+ La tasa de cooperación, que corresponde al porcentaje de viviendas con residentes habituales
+ que accedieron a entregar información, independientemente del resultado de la entrevista,
+ alcanzó un 98,2% del total de viviendas particulares contactadas.
+                                               4
+Finalmente, la tasa de rechazo, entendida como el porcentaje de viviendas particulares
+ocupadas cuyos informantes decidieron no proporcionar información por motivos de tiempo,
+seguridad o confianza, fue del 0,9% a nivel nacional.
+
+
+                     Tabla 3. Indicadores de desempeño a nivel nacional
+                              Tasa de          Tasa de             Tasa de         Tasa de
+           Nivel
+                           respuesta (%)    cooperación (%)      rechazo (%)     contacto (%)
+
+Nacional                        95,2                98,2              0,9            96,9
+                     Fuente: Instituto Nacional de Estadísticas - Censo 2024.
+
+A nivel regional (Tabla 4), la tasa de contacto fluctuó entre 94,7% en la Región de Magallanes y
+de la Antártica Chilena y 98,0% en las Región de Biobío.
+En cuanto a la tasa de respuesta a nivel regional, los valores oscilaron entre 92,5% en la Región
+de Magallanes y de la Antártica Chilena y 97,0% en la Región del Biobío.
+Respecto de la tasa de cooperación, esta fluctuó entre 96,5% en la Región de Aysén del
+General Carlos Ibáñez del Campo y 99,0% en la Región del Biobío.
+Finalmente, la tasa de rechazo a nivel regional presentó valores que oscilaron entre 0,6% en
+las regiones del Biobío y del Libertador General Bernardo O’Higgins, y 1,6% en la región de
+Aysén del General Carlos Ibáñez del Campo.
+
+
+
+
+                                                5
+           Tabla 4. Indicadores de desempeño del Censo 2024 desagregados por región
+                                                Tasa de        Tasa de        Tasa de    Tasa de
+                     Región                    respuesta     cooperación      rechazo   contacto
+                                                  (%)            (%)             (%)       (%)
+Arica y Parinacota                                 95,8          98,0           0,9       97,8
+Tarapacá                                           95,1          98,6           0,7       96,4
+Antofagasta                                        95,1          98,1           1,0       96,9
+Atacama                                            94,2          97,2           1,5       96,9
+Coquimbo                                           95,4          97,8           1,3       97,5
+Valparaíso                                          94           97,7           1,3       96,2
+Metropolitana                                      95,4          98,6           0,7       96,8
+Del Libertador General Bernardo O’Higgins          95,9          98,9           0,6       97,0
+Maule                                              95,8          98,6           0,9       97,2
+Ñuble                                              95,6          97,9           1,3       97,7
+Biobío                                             97,0          99,0           0,6       98,0
+La Araucanía                                       94,0          97,2           1,5       96,7
+Los Ríos                                           94,3          97,2           1,5       97,0
+Los Lagos                                          94,3          97,6           1,4       96,6
+Aysén del General Carlos Ibáñez del Campo          93,0          96,5           1,6       96,4
+Magallanes y de la Antártica Chilena               92,5          97,7           1,1       94,7
+Nacional                                           95,2           98,2           0,9      96,9
+                         Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+                                                    6
+Anexo 1: Tasa de respuesta 2017 - 2024
+Debido a las diferencias metodológicas entre el Censo de Población y Vivienda 2024 y el
+realizado el 2017, solo es posible replicar la tasa de respuesta. Sus resultados se presentan
+en las Tablas 5 y 6.
+
+
+                  Tabla 5. Tasa de respuesta a nivel nacional según año del Censo
+                                   Tasa de respuesta (%)    Tasa de respuesta (%)
+                        Nivel
+                                         CPV2017                  CPV2024
+
+                    Nacional                95,1                       95,2
+                         Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+                  Tabla 6. Tasa de respuesta a nivel regional según año del Censo
+                                                              Tasa de            Tasa de
+                                Región                     respuesta (%)      respuesta (%)
+                                                             CPV2017            CPV2024
+         Arica y Parinacota                                     92,7               95,8
+         Tarapacá                                               93,4               95,1
+         Antofagasta                                            93,0               95,1
+         Atacama                                                91,4               94,2
+         Coquimbo                                               93,0               95,4
+         Valparaíso                                             94,8               94,0
+         Metropolitana                                          95,9               95,4
+         Del Libertador General Bernardo O’Higgins              96,0               95,9
+         Maule                                                  95,9               95,8
+         Ñuble                                                  95,8               95,6
+         Biobío                                                 95,9               97,0
+         La Araucanía                                           94,2               94,0
+         Los Ríos                                               94,5               94,3
+         Los Lagos                                              93,7               94,3
+         Aysén del General Carlos Ibáñez del Campo              89,0               93,0
+         Magallanes y de la Antártica Chilena                   93,3               92,5
+         Nacional                                                95,1              95,2
+                         Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+                                                   7
+4. Referencias
+Courser, M. (2008). Temporary dispositions. En P. Lavrakas, Encyclopedia of survey research
+methods (Vol. 1 & 2, págs. 887-888). SAGE Publications.
+
+
+The American Association for Public Opinion Research. 2016. Standard Definitions: Final
+Dispositions of Case Codes and Outcome Rates for Surveys. 9th edition. AAPOR.
+
+
+
+
+                                             8
+

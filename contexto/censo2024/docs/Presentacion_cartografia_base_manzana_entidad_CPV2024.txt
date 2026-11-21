@@ -1,0 +1,496 @@
+Publicación cartografía censal
+y base manzana-entidad
+Antecedentes
+Antecedentes
+
+
+
+
+               Censo de derecho: basado en la
+               residencia habitual
+
+
+
+
+               Uso de dispositivos móviles
+               de captura
+
+
+
+
+               Marzo a julio de 2024
+Antecedentes
+
+
+
+
+Objetivos del Censo de Población y
+Vivienda 2024:
+
+
+           Proveer información para actualizar las
+ 1         estimaciones y proyecciones de población a
+           nivel país, región y comuna.
+
+           Actualizar el marco muestral para diseñar las
+ 2         encuestas de hogares.
+
+           Proveer información para la definición y
+ 3         seguimiento de políticas públicas.
+
+           Generar información estadística sobre áreas
+ 4         geográficas específicas y subgrupos de
+           población.
+Antecedentes
+
+
+
+                                                                   Productos ya publicados
+
+
+Dashboard de indicadores   Visualizador de datos con los principales
+                           resultados del Censo 2024.
+
+
+
+Geoportal                  Principales indicadores a nivel geográfico.
+
+
+                           Viviendas y hogares censados, población censada,
+                           fecundidad, migración interna, inmigración internacional,
+Tabulados temáticos
+                           pueblos originarios y afrodescendientes, discapacidad,
+                           entre otros.
+
+
+                           Documento que presenta el detalle de la planificación,
+Memoria censal
+                           vinculación, gestión logística, administrativa y
+                           comunicacional, así como modelo de recolección.
+Bases de datos
+publicadas
+Bases de datos publicadas
+
+
+
+
+        1                             2                                     3
+  Base de microdatos               Base manzana - entidad                Bases cartográficas
+  Tres tablas relacionales de      Bases para distintos niveles          Dieciséis bases cartográficas
+  viviendas, hogares y personas.   geográficos con datos                 a nivel regional y una base a
+                                   agregados.                            nivel nacional.
+
+
+
+
+    Publicación 4 de diciembre                             Publicación 16 de diciembre
+    Base manzana -
+2   entidad
+02.   Base manzana - entidad
+
+                                                                                             2    Base manzana-entidad
+
+
+
+                               Comuna
+
+
+      Área urbana                             Área rural             Bases:
+                               Distrito
+                                                                         • Manzana urbana / entidad rural /
+                                                                           manzana aldea
+                                                                         • Zona urbana / localidad rural
+                                           Localidad                     • Aldea
+                                                                         • Urbano
+
+         Urbanos                          Entidad rural     Aldea
+                                                                     189 variables que conforman 60 indicadores de
+                                                                     personas, hogares y viviendas.
+
+          Zona
+                                                                     Datos que pueden ser vinculados a la
+                                                                     cartografía censal para análisis sobre patrones
+        Manzana                                            Manzana   territoriales.
+         urbana                                             aldea
+
+                                                                     Archivos en formato CSV
+
+
+        Tabulados publicados
+01.   Base de microdatos
+
+                                                                                             1      Base de microdatos
+
+
+
+
+            Área urbana                                           Área rural
+
+            Asentamiento     humano       con    continuidad  y   Asentamiento humano con población menor o igual
+            concentración     de     construcciones      en  un   a 1.000 habitantes, o entre 1.001 y 2.000 habitantes
+            amanzanamiento con población mayor a 2.000            donde más del 50% de la población que declara
+            habitantes, o entre 1.001 y 2.000 habitantes donde    haber trabajado se dedica a actividades primarias.
+            menos del 50% de la población que declara haber
+            trabajado se dedica a actividades primarias.
+02.   Base manzana - entidad
+
+                                                                                                 2      Base manzana-entidad
+
+
+
+
+      Temática                               N° variables
+                                                                Algunos ejemplos:
+      Características generales                             3
+                                                                    Número de viviendas, número de hogares,
+      Características de las viviendas                  34
+                                                                    número de personas
+      Servicios básicos de la vivienda                  27          Tipo de vivienda, materialidad
+      Déficit habitacional cuantitativo                     6
+                                                                    Fuente y distribución del agua, acceso a energía
+      Características de los hogares                    12          eléctrica, sistema higiénico
+
+      Tecnologías de la información                         7       Viviendas irrecuperables, hogares allegados, núcleos
+                                                                    hacinados allegados, hogares que residen en viviendas
+      Uso de energía o combustible                      16          hacinadas no ampliables
+      Características demográficas básicas              18          Grupos de edad, discapacidad, pueblos originarios,
+                                                                    afrodescendencia, nivel educativo, grupos ocupacionales,
+      Grupos de la población                            11          rama de actividad económica
+      Características socioeconómicas                   55
+    Bases
+3   cartográficas
+03.   Bases cartográficas
+
+                                                                                                           3          Bases cartográficas
+
+
+
+
+      Bases cartográficas
+      • 17 bases, una para cada región del país y una a nivel
+        nacional.
+                                                                                         Capas de información territorial
+                                                                              Nombre de capa                       Total registros
+                                                                              Regional_CPV24                               16
+      • Distintas capas de información, considerando tanto los
+                                                                             Provincial_CPV24                              56
+        límites administrativos (región, provincia, comuna), como             Comunal_CPV24                               345
+        las divisiones censales, que son de carácter operativo. Los           Distrital_CPV24                            2.762
+        límites censales son definidos por el INE, por lo que no           Limite_Urbano_CPV24                            592
+                                                                               Zonal_CPV24                                4.911
+        tienen un carácter legal.
+                                                                             Manzanas_CPV24                            168.295
+                                                                            Localidades_CPV24                            9.736
+                                                                             Entidades_CPV24                            28.354
+                                                                               Aldeas_CPV24                               725
+      • La división censal considera:
+
+            • Una división entre área urbana y rural.
+
+            • Para el área urbana, considera los niveles de
+              desagregación de zona y manzana.
+
+            • Para el área rural, considera los niveles de desagregación
+              de localidad y entidad. Para el caso de las entidades
+              aldea, también considera las manzanas aldea.
+03.   Bases cartográficas
+
+                                                                                 3         Bases cartográficas
+
+
+
+
+                            Indeterminación cartográfica
+
+
+                            • Con el objetivo de garantizar el resguardo de la confidencialidad, toda la información
+                              censal, incluida aquella de carácter geográfico, debe difundirse con un nivel de
+                              agregación que impida la identificación directa o indirecta de personas o viviendas.
+                              Para ello, la información geográfica es publicada de manera indeterminada en las
+                              unidades territoriales que, por su tamaño o composición, presenten riesgos de
+                              identificación.
+03.   Bases cartográficas
+
+                                                                                 3         Bases cartográficas
+
+
+
+
+                            Indeterminación cartográfica
+
+                            • Consiste en el agrupamiento de manzanas censales del área urbana, aldeas y área
+                              rural (entidades pobladas), a nivel cartográfico y de base de datos.
+
+                            • Todas las manzanas o entidades deben tener al menos cuatro viviendas particulares
+                              ocupadas con moradores presentes.
+
+                            • Si no se cumple con este criterio, las manzanas o entidades fueron agrupadas con
+                              otras, resguardando al mismo tiempo:
+
+                            • Que la manzana o entidad con que se agrupe sea su vecino más cercano.
+
+                            • Que la manzana o entidad tenga la menor cantidad de viviendas particulares
+                              ocupadas con moradores presentes dentro de las que se encuentran más cercanas.
+
+                            • Que la agrupación se realice, en primera instancia, dentro del mismo nivel geográfico
+                              (misma zona censal, localidad). De no existir candidatos válidos dentro de la misma
+                              zona o localidad, la manzana o entidad se indetermina con manzanas o entidades de
+                              la zona y localidad vecina.
+03.   Bases cartográficas
+
+                                                                                          3           Bases cartográficas
+
+
+
+      Indeterminación cartográfica                             CUT                   11101
+                                                               REGION                AYSÉN DEL GENERAL CARLOS IBÁÑEZ DEL CAMPO
+                                                               PROVINCIA             COYHAIQUE
+      Indeterminación Censo 2017: Búsqueda aleatoria en zona
+                                                               COMUNA                COYHAIQUE
+                                                               AREA_C                1
+                                                               MANZENT               11101011001001
+                                                               DISTRITO              COYHAIQUE
+                                                               COD_DISTRITO          1
+                                                               COD_LOCALIDAD_ZONA    1
+                                                               LOCALIDAD             COYHAIQUE
+                                                               COD_ENTIDAD_MANZANA   1
+                                                               ENTIDAD               COYHAIQUE
+                                                               TIPO_MZ               URBANO
+                                                               COD_CATEGORIA         1
+                                                               CATEGORIA             Ciudad
+                                                               n_per                 99
+                                                               n_hombres             99
+                                                               n_mujeres             99
+      Indeterminación Censo 2024: Vecino más cercano en zona   n_edad_0_5            99
+                                                               n_edad_6_13           99
+                                                               n_edad_14_17          99
+                                                               n_edad_18_24          99
+                                                               n_edad_25_44          99
+                                                               n_edad_45_59          99
+                                                               n_edad_60_mas         99
+                                                               prom_edad             99,9
+                                                               n_inmigrantes         9
+                                                               n_nacionalidad        9
+                                                               n_pueblos_orig        9
+                                                               n_afrodescendencia    9
+03.   Bases cartográficas
+
+                                                                      3     Bases cartográficas
+
+
+
+
+                                         Interoperabilidad para la gestión de
+      Cartografía descargable            datos espaciales
+
+
+
+
+      Cartografía           3 formatos
+      descargable
+Control de
+divulgación
+estadística
+04.   Control de divulgación estadística
+
+                                                                                                                         4        Proceso de anonimización
+
+
+
+
+                                                                                       La anonimización es necesaria porque:
+           Aplicación de métodos de control
+           de divulgación
+
+                                                                                                      La reidentificación de una persona podría
+                        El nivel de desagregación de la información                       1           tener un impacto en sus derechos y
+                                                                                                      libertades.
+                        publicada corresponde al máximo detalle
+                        posible que asegura la confidencialidad de
+                        los informantes, manteniendo la utilidad de
+                        la información para fines analíticos y de                                     La protección de la confidencialidad es un
+                        investigación.                                                    2           aspecto crucial para la confianza de las
+                                                                                                      personas.
+
+
+
+
+      Marco legal que rige la protección de la confidencialidad
+
+      Bajo las disposiciones que establece el Secreto Estadístico debemos asegurarnos de que cualquier información producida por el INE no permita la
+      identificación de las personas y los hogares censados.
+      Como INE también estamos mandatados por la Ley 19.628 que protege la vida privada de las personas.
+04.   Control de divulgación estadística
+
+                                                                                          4        Proceso de anonimización
+
+
+
+
+                                           Tratamiento de variables –
+                                           base manzana-entidad
+
+                                            Celdas con un bajo número de casos presentan un riesgo más elevado de
+                                            reidentificación.
+                                            Regla de frecuencia mínima:
+                                                         • El número de casos de cada celda debe ser 4 o superior. De lo
+                                                            contrario, se suprimen.
+                                                         • Esta regla solo aplica a las variables que caracterizan a las
+                                                            personas. No se aplica a variables de hogares y viviendas.
+
+
+                                            Regla de concentración:
+                                                         •   Las celdas que concentran la totalidad de los casos que se
+                                                             observan a nivel comuna-área son suprimidas.
+Visualización
+Cartografía Censal
+Qué análisis se
+pueden realizar con la
+cartografía y bases a
+nivel de manzana
+Tipos de análisis
+
+
+
+
+         Cuantificación de población, hogares y viviendas en áreas subcomunales como barrios, unidades vecinales,
+ 1       áreas de planificación comunal, áreas de riesgo, entre otros.
+
+
+ 2       Caracterización de áreas subcomunales en base a características de la población como: sexo, edad,
+         personas mayores, niños, niñas y adolescentes, personas con discapacidad, entre otros grupos de la población.
+
+         Caracterización de áreas subcomunales en base a características de las viviendas como: tipo y materialidad de la
+ 3       vivienda, número de dormitorios, acceso a servicios básicos (agua, electricidad, servicios higiénicos,
+         eliminación de basura, entre otros).
+    Uso de los datos
+    censales: Sistema de
+4   Indicadores y Estándares
+    Territoriales
+    (SIET)
+SIET: Sistema de Indicadores y Estándares Territoriales
+                                                          https://www.siet-chile.cl/
+ MENÚS PRINCIPALES: Indicadores Territoriales, Visor Territorial, Descargables
+     SIET: Sistema de Indicadores y Estándares Territoriales
+                                                                https://www.siet-chile.cl/
+         27 INDICADORES DESCARGABLES
+         17 indicadores calculados con la cartografía censal
+
+
+                                                       CÓDIGO   NOMBRE ACTUALIZACIÓN
+CÓDIGO     NOMBRE ACTUALIZACIÓN                        SOC_12   Áreas verdes por habitante en zonas urbanas
+                                                                Red vial pavimentada bajo administración
+AMB_01     Residuos municipales por habitante          SOC_17
+                                                                ministerial
+AMB_08     Generación residencial de energía solar     SOC_22   Cobertura móvil 3G
+           Población expuesta a amenazas por           SOC_23   Cobertura móvil 4G
+AMB_13
+           erupciones volcánicas
+                                                       SOC_24   Cobertura móvil 5G
+           Población expuesta a amenazas por
+AMB_14                                                 SOC_25   Conexiones residenciales fijas de internet
+           incendios forestales
+                                                       SOC_28   Viviendas sin conexión a la red de agua potable
+           Población expuesta a amenazas por
+AMB_15                                                 SOC_33   Distancia a centros de salud primaria
+           inundación por tsunami
+AMB_24     Plan regulador comunal actualizado          SOC_34   Traslado vehicular a centros de salud primaria
+                                                                Distancia a establecimientos de enseñanza
+                                                       SOC_35
+CLT_04     Espacios culturales cada 1.000 habitantes            parvularia
+                                                                Traslado vehicular a establecimientos de
+ECO_12     Tasa de desocupación                        SOC_36
+                                                                enseñanza parvularia
+ECO_13     Dependencia del Fondo Común Municipal       SOC_37   Distancia a establecimientos de enseñanza básica
+                                                                Traslado vehicular a establecimientos de
+                                                       SOC_38
+                                                                enseñanza básica
+                                                       SOC_39   Distancia a establecimientos de enseñanza media
+                                                                Traslado vehicular a establecimientos de
+                                                       SOC_40
+                                                                enseñanza media
+                                                       SOC_41   Distancia a servicios operativos de carabineros
+                                                                Traslado vehicular a servicios operativos de
+                                                       SOC_42
+                                                                carabineros
+                                                       SOC_43   Distancia a áreas verdes en zonas urbanas
+SIET: Sistema de Indicadores y Estándares Territoriales
+                                                           https://www.siet-chile.cl/
+ Distancia a áreas verdes en
+ zonas urbanas
+                                                                                       Procesado en base a:
+
+                                                                                       •   Catastro de áreas verdes, INE, 2024.
+
+                                                                                       •   Censo de Población y Vivienda 2024, INE
+
+
+
+                                                                                       Criterios (para definición de catastro de áreas verdes)
+                                                                                       consensuados en mesa técnica conformada por:
+
+                                                                                       •   Ministerio de Vivienda y Urbanismo (MINVU).
+
+                                                                                       •   Corporación Ciudad Accesible.
+
+                                                                                       •   Fundación Mi Parque.
+
+                                                                                       •   Consejo Nacional de Desarrollo Territorial (CNDT).
+
+                                                                                       •   Centro de Desarrollo Urbano Sustentable (CEDEUS).
+
+                                                                                       •   Consultora Compañía Verde.
+
+                                                                                       •   Centro de Políticas Públicas UC.
+
+                                                                                       •   Observatorio de Ciudades UC.
+
+
+
+                                                   Resultados para 318 comunas del país:
+                                                   Mediana: 313,7 m.
+                                                   Promedio: 357,5 m.
+                                                   Desviación estándar: 181,1 m.
+                                                   Min: Ránquil 122,0 m.
+                                                   Máx: Isla de Pascua: 1.411,9 m.
+Diseminación
+05.   Diseminación
+
+
+
+
+      ¿Cómo acceder
+      a los datos?
+      Para acceder a los resultados
+      del Censo debes ingresar al sitio
+      web y seleccionar Resultados:
+
+
+         www.censo2024.cl
+05.   Diseminación
+
+
+
+
+  Podrás visualizar los datos por
+  medio de accesos directos al
+  Dashboard de resultados y
+  Geoportal o a la descarga
+  directa de los datos
+05.   Diseminación
+
+
+
+
+      Documentos complementarios
+
+
+               Manual de uso de la cartografía
+
+               Diccionario de variables
+
+               Totalizador de población y vivienda para
+               ciudades, pueblos, aldeas y caseríos
+Comentarios finales
+¡Muchas gracias!
+
