@@ -165,7 +165,7 @@ export function AppEnjambre() {
             {caso.iteracion?.cambio && <small>{sinCorte(caso.iteracion.cambio)}</small>}
           </h1>
         ) : (
-          <h1 className={estilos.titular}>¿Cómo respondería Chile?</h1>
+          <h1 className={estilos.titular}>What If Chile ...</h1>
         )}
         {caso && caso.texto !== caso.titulo && caso.texto && (
           <details className={estilos.completo}>

@@ -66,7 +66,7 @@
 }
 
 .titular {
-  font: 500 clamp(1.8rem, min(1rem + 3.4vw, 9vh), 4.4rem) / 1 var(--fuente-voz);
+  font: 500 clamp(2.8rem, min(1.5rem + 5vw, 13vh), 6.5rem) / 1 var(--fuente-voz);
   letter-spacing: -0.025em;
   text-wrap: balance;
 }
@@ -272,7 +272,7 @@
 
   .titular {
     margin-top: var(--e2);
-    font-size: 2rem;
+    font-size: clamp(2.6rem, 6vw, 3.4rem);
   }
 
   .pregunta {
