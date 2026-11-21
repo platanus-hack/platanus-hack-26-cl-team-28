@@ -33,6 +33,12 @@ const DPR_MAXIMO = 2;
 const VUELO = 1.15;
 /** Al cambiar la muestra los puntos solo se reacomodan: un vuelo corto, sin la entrada completa. */
 const VUELO_REACOMODO = 0.45;
+/** Un punto nuevo sin ninguno cerca no viaja: crece en su lugar durante este tiempo. */
+const APARECER = 0.3;
+/** Y uno que sobra sin ningún lugar cerca se encoge donde está. */
+const DESAPARECER = 0.25;
+/** Lado de las celdas con que se busca el punto libre más cercano (píxeles). */
+const CELDA = 26;
 const DESTELLO = 0.45;
 /** Desde este ancho las cifras gigantes van a los costados del lienzo. */
 const ANCHO_CON_CIFRAS = 900;
@@ -68,6 +74,11 @@ export class EscenaEnjambre {
   private dura!: Float32Array;
   /** Momento en que cada punto se encendió, para el destello de llegada. */
   private llega!: Float32Array;
+  /** Momento en que cada punto apareció en su lugar sin venir de otro lado. */
+  private nace!: Float32Array;
+  /** Puntos que salieron de la muestra y se están encogiendo: x, y y color de cada uno. */
+  private idos: number[] = [];
+  private inicioIdos = 0;
   private color!: Uint8Array;
   private estados!: Uint8Array;
   private burbujas: Burbuja[] = [];
@@ -125,17 +136,19 @@ export class EscenaEnjambre {
       crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear().fill(-10),
     ];
     this.dura = crear().fill(VUELO);
+    this.nace = crear().fill(-10);
     this.color = new Uint8Array(n).fill(PUNTO.neutra);
     this.estados = new Uint8Array(n).fill(PUNTO.neutra);
   }
 
   /**
    * Cambia a quiénes se dibuja sin volver a armar la escena: quien sigue en la muestra se queda
-   * donde está, y los puntos que sobran se van a ocupar el lugar de los que llegan. No repite la
-   * entrada ni toca el acercamiento.
+   * donde está, y cada lugar nuevo lo ocupa el punto libre más cercano. Nadie cruza el mapa: si
+   * no hay ninguno cerca, el punto nuevo crece en su lugar, y los que sobran lejos desaparecen.
+   * No repite la entrada ni toca el acercamiento.
    */
   reemplazar(personas: Persona[]): void {
-    const antes = { n: this.n, x: this.x, y: this.y, personas: this.personas };
+    const antes = { n: this.n, x: this.x, y: this.y, color: this.color, personas: this.personas };
     this.personas = personas;
     this.reservar(personas.length);
     this.burbujas = [];
@@ -159,22 +172,66 @@ export class EscenaEnjambre {
       origen[i] = j;
       sigue[j] = 1;
     }
-    // Los puntos que ya no están se reparten entre los nuevos, para que el cambio se vea como un traslado.
-    const libres: number[] = [];
-    for (let j = 0; j < antes.n; j++) if (!sigue[j]) libres.push(j);
-    let usados = 0;
+    // Los puntos que ya no están quedan libres, repartidos en celdas para encontrarlos por cercanía.
+    const columnas = Math.ceil(this.ancho / CELDA) + 1;
+    const filas = Math.ceil(this.alto / CELDA) + 1;
+    const celda = (x: number, y: number) =>
+      Math.max(0, Math.min(filas - 1, Math.floor(y / CELDA))) * columnas + Math.max(0, Math.min(columnas - 1, Math.floor(x / CELDA)));
+    const libres: number[][] = [];
+    for (let j = 0; j < antes.n; j++) {
+      if (sigue[j]) continue;
+      (libres[celda(antes.x[j], antes.y[j])] ??= []).push(j);
+    }
+    // Hasta dónde puede viajar un punto: más o menos el alto de una región en pantalla.
+    const alcance = Math.max(48, this.alto * 0.07);
+    const anillos = Math.ceil(alcance / CELDA);
+    const tomado = new Uint8Array(antes.n);
+    const masCercano = (x: number, y: number): number => {
+      const cx = Math.max(0, Math.min(columnas - 1, Math.floor(x / CELDA)));
+      const cy = Math.max(0, Math.min(filas - 1, Math.floor(y / CELDA)));
+      let mejor = -1;
+      let distancia = alcance * alcance;
+      for (let fy = Math.max(0, cy - anillos); fy <= Math.min(filas - 1, cy + anillos); fy++) {
+        for (let fx = Math.max(0, cx - anillos); fx <= Math.min(columnas - 1, cx + anillos); fx++) {
+          const lista = libres[fy * columnas + fx];
+          if (!lista) continue;
+          for (const j of lista) {
+            if (tomado[j]) continue;
+            const d = (antes.x[j] - x) ** 2 + (antes.y[j] - y) ** 2;
+            if (d < distancia) {
+              distancia = d;
+              mejor = j;
+            }
+          }
+        }
+      }
+      return mejor;
+    };
     const ahora = performance.now() / 1000;
     const quieto = this.reducir.matches;
     for (let i = 0; i < this.n; i++) {
-      const j = origen[i] >= 0 ? origen[i] : usados < libres.length ? libres[usados++] : -1;
-      const parteX = j >= 0 && !quieto ? antes.x[j] : this.casaX[i];
-      const parteY = j >= 0 && !quieto ? antes.y[j] : this.casaY[i];
-      this.x[i] = this.desdeX[i] = parteX;
-      this.y[i] = this.desdeY[i] = parteY;
+      let j = origen[i];
+      if (j < 0 && !quieto) {
+        j = masCercano(this.casaX[i], this.casaY[i]);
+        if (j >= 0) tomado[j] = 1;
+        // Sin nadie cerca, crece en su lugar en vez de llegar volando desde lejos.
+        else this.nace[i] = ahora + Math.abs(azar(i, 6)) * 0.12;
+      }
+      const viene = j >= 0 && !quieto;
+      this.x[i] = this.desdeX[i] = viene ? antes.x[j] : this.casaX[i];
+      this.y[i] = this.desdeY[i] = viene ? antes.y[j] : this.casaY[i];
       this.haciaX[i] = this.casaX[i];
       this.haciaY[i] = this.casaY[i];
       this.sale[i] = ahora + Math.abs(azar(i, 4)) * 0.08;
       this.dura[i] = VUELO_REACOMODO;
+    }
+    // Los que sobran y nadie fue a buscar se encogen donde están.
+    this.idos = [];
+    this.inicioIdos = ahora;
+    if (!quieto) {
+      for (let j = 0; j < antes.n; j++) {
+        if (!sigue[j] && !tomado[j]) this.idos.push(antes.x[j], antes.y[j], antes.color[j]);
+      }
     }
     this.finVuelo = ahora + 0.08 + VUELO_REACOMODO;
     this.sucio = true;
@@ -591,8 +648,16 @@ export class EscenaEnjambre {
     ctx.stroke(this.silueta);
     // Al acercar, los puntos crecen menos que el mapa: así se separan y se ve a cada persona.
     const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66) / this.zoom ** 0.3;
+    const ido = this.idos.length ? (ahora - this.inicioIdos) / DESAPARECER : 1;
+    if (ido >= 1) this.idos = [];
     for (const estado of [PUNTO.fuera, PUNTO.pendiente, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
       ctx.fillStyle = this.colores[estado];
+      if (ido < 1) {
+        const tamano = lado * (1 - suave(Math.max(0, ido)));
+        for (let k = 0; k < this.idos.length; k += 3) {
+          if (this.idos[k + 2] === estado) ctx.fillRect(this.idos[k] - tamano / 2, this.idos[k + 1] - tamano / 2, tamano, tamano);
+        }
+      }
       for (let i = 0; i < this.n; i++) {
         if (this.color[i] !== estado) continue;
         // Los que siguen pensando laten en ondas que bajan por el país.
@@ -601,7 +666,13 @@ export class EscenaEnjambre {
         }
         // Destello de llegada: el punto nace grande y se asienta.
         const recien = (ahora - this.llega[i]) / DESTELLO;
-        const tamano = recien < 1 ? lado * (1 + 2.2 * (1 - recien) ** 2) : lado;
+        let tamano = recien < 1 ? lado * (1 + 2.2 * (1 - recien) ** 2) : lado;
+        // Quien apareció en su lugar crece desde nada.
+        const crecido = (ahora - this.nace[i]) / APARECER;
+        if (crecido < 1) {
+          if (crecido <= 0) continue;
+          tamano *= suave(crecido);
+        }
         ctx.fillRect(this.x[i] - tamano / 2, this.y[i] - tamano / 2, tamano, tamano);
       }
       ctx.globalAlpha = 1;
