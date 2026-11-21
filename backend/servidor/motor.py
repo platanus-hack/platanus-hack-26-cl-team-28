@@ -28,6 +28,7 @@ import json
 import os
 import shutil
 import subprocess
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -86,6 +87,12 @@ ESQUEMA_VOCES = {
     "required": ["r"],
     "additionalProperties": False,
 }
+
+
+#: Cada hilo dice aquí si su llamada puede esperar (`baja = True`). Al partir una corrida se lanzan
+#: cien procesos a la vez y todos compiten por la CPU: los primeros lotes, que son los que hacen
+#: aparecer respuestas en pantalla, van con prioridad normal y el resto cede el paso.
+PRIORIDAD = threading.local()
 
 
 @dataclass
@@ -242,6 +249,8 @@ class ClaudeCodigo(Motor):
             "--no-session-persistence", "--output-format", "json",
             "--system-prompt", sistema, "--json-schema", json.dumps(esquema),
         ]
+        if getattr(PRIORIDAD, "baja", False) and shutil.which("nice"):
+            orden = ["nice", "-n", "10", *orden]
         # El prompt va por la entrada estándar: una ley completa no cabe como argumento de un proceso.
         salida = subprocess.run(
             orden, cwd=self._carpeta, input=prompt, capture_output=True,

@@ -17,7 +17,7 @@ from pathlib import Path
 
 from .agentes import Agente
 from .metodo import tema_de, temas_de
-from .motor import Consumo, Motor, Respuesta
+from .motor import PRIORIDAD, Consumo, Motor, Respuesta
 
 CARPETA_CACHE = Path(__file__).resolve().parent.parent / "data" / "cache"
 
@@ -179,9 +179,10 @@ class Corrida:
 
     # Trabajo ------------------------------------------------------------------------------
 
-    def _lote(self, numero: int, caso: Caso, huella: str, agentes: list[Agente]) -> None:
+    def _lote(self, numero: int, caso: Caso, huella: str, agentes: list[Agente], urgente: bool = False) -> None:
         if self.cancelada:
             return
+        PRIORIDAD.baja = not urgente
         respuestas: list[Respuesta] = []
         for intento in range(3):
             try:
@@ -236,6 +237,7 @@ class Corrida:
         self._voces.append(self._grupo.submit(self._voces_de, numero, caso, huella, elegidas))
 
     def _voces_de(self, numero: int, caso: Caso, huella: str, elegidas: list[Respuesta]) -> None:
+        PRIORIDAD.baja = True
         try:
             pares = [(self.por_indice[r.agente], r) for r in elegidas]
             frases, consumo = self.motor.comentar(caso.politica(), pares, self.preguntas)
@@ -278,7 +280,7 @@ class Corrida:
             tramo = avanzada[desde:desde + personas]
             desde += personas
             for k in range(0, len(tramo), tamano):
-                tareas.append(grupo.submit(self._lote, numero, caso, huella, tramo[k:k + tamano]))
+                tareas.append(grupo.submit(self._lote, numero, caso, huella, tramo[k:k + tamano], True))
         resto = pendientes[len(avanzada):]
         for k in range(0, len(resto), self.lote):
             tareas.append(grupo.submit(self._lote, numero, caso, huella, resto[k:k + self.lote]))
