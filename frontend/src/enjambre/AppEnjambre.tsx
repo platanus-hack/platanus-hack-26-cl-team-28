@@ -49,6 +49,7 @@ export function AppEnjambre() {
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
+  const [zoom, setZoom] = useState(1);
   const mostrar = useRef<HTMLDivElement>(null);
 
   const puntos = conexion?.puntos;
@@ -75,6 +76,10 @@ export function AppEnjambre() {
   useEffect(() => {
     if (!puntos) return;
     const nueva = new EscenaEnjambre(lienzo.current!, puntos);
+    nueva.alCambiarVista = (nivel) => {
+      setZoom(nivel);
+      setFicha(null);
+    };
     nueva.montar();
     escena.current = nueva;
     return () => nueva.destruir();
@@ -98,7 +103,7 @@ export function AppEnjambre() {
   }, [ficha, fase, puntosDe]);
 
   const tocar = (e: MouseEvent) => {
-    if (!escena.current || !puntos || fase === 'preparar' || fase === 'cargando') return;
+    if (!escena.current || !puntos || escena.current.huboArrastre() || fase === 'preparar' || fase === 'cargando') return;
     const caja = lienzo.current!.getBoundingClientRect();
     const i = escena.current.cercano(e.clientX - caja.left, e.clientY - caja.top);
     const agente = i >= 0 ? puntos[i].agente : undefined;
@@ -130,7 +135,7 @@ export function AppEnjambre() {
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined}>
+    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -216,6 +221,23 @@ export function AppEnjambre() {
       {puntos && (fase === 'corriendo' || fase === 'resultados') && conexion && (
         <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
       )}
+      <div className={estilos.zoom} role="group" aria-label="Acercamiento del mapa">
+        <button type="button" aria-label="Alejar" disabled={zoom <= 1} onClick={() => escena.current?.acercar(1 / 1.5)}>
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 6h8" />
+          </svg>
+        </button>
+        <button type="button" aria-label="Acercar" disabled={zoom >= 8} onClick={() => escena.current?.acercar(1.5)}>
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 6h8M6 2v8" />
+          </svg>
+        </button>
+        {zoom > 1 && (
+          <button type="button" onClick={() => escena.current?.restablecer()}>
+            Ver todo
+          </button>
+        )}
+      </div>
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
       )}

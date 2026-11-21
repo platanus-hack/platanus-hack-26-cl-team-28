@@ -41,6 +41,8 @@ const ENTRE_FILAS = 4;
 const ENTRE_FILAS_MAXIMO = 16;
 const SEPARA_ROTULO = 9;
 
+const ZOOM_MAXIMO = 8;
+
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
 
@@ -86,6 +88,13 @@ export class EscenaEnjambre {
   private finVuelo = 0;
   private inicioRotulos = 0;
   private sucio = true;
+  private zoom = 1;
+  private ox = 0;
+  private oy = 0;
+  private agarre: [number, number] | null = null;
+  private arrastro = false;
+  /** Aviso a la interfaz cuando cambia el acercamiento. */
+  alCambiarVista?: (zoom: number) => void;
   /** Verdadero cuando los puntos ya volaron a sus burbujas con los estados actuales. */
   private abierta = false;
   /** Mientras hay agentes pensando, la escena se redibuja siempre para que latan. */
@@ -122,6 +131,11 @@ export class EscenaEnjambre {
     }
     this.finVuelo = ahora + 0.7 + VUELO;
     this.observador.observe(this.lienzo);
+    this.lienzo.addEventListener('wheel', this.rueda, { passive: false });
+    this.lienzo.addEventListener('pointerdown', this.baja);
+    this.lienzo.addEventListener('pointermove', this.mueve);
+    this.lienzo.addEventListener('pointerup', this.sube);
+    this.lienzo.addEventListener('pointercancel', this.sube);
     // Los rótulos se dibujan con la fuente de la página: se redibuja cuando termina de cargar.
     void document.fonts.ready.then(() => {
       this.sucio = true;
@@ -132,6 +146,11 @@ export class EscenaEnjambre {
   destruir(): void {
     cancelAnimationFrame(this.cuadro);
     this.observador.disconnect();
+    this.lienzo.removeEventListener('wheel', this.rueda);
+    this.lienzo.removeEventListener('pointerdown', this.baja);
+    this.lienzo.removeEventListener('pointermove', this.mueve);
+    this.lienzo.removeEventListener('pointerup', this.sube);
+    this.lienzo.removeEventListener('pointercancel', this.sube);
   }
 
   /** Vuelve a leer los colores de los tokens (al cambiar de tema). */
@@ -149,8 +168,72 @@ export class EscenaEnjambre {
 
   /** Dónde está dibujado ahora un punto, en píxeles del lienzo. */
   posicion(i: number): [number, number] {
-    return [this.x[i], this.y[i]];
+    return [this.x[i] * this.zoom + this.ox, this.y[i] * this.zoom + this.oy];
   }
+
+  /** Acerca o aleja la vista manteniendo fijo el punto (cx, cy) de la pantalla; sin punto, el centro. */
+  acercar(factor: number, cx = this.ancho / 2, cy = this.alto / 2): void {
+    const nuevo = Math.max(1, Math.min(ZOOM_MAXIMO, this.zoom * factor));
+    const razon = nuevo / this.zoom;
+    this.ox = cx - (cx - this.ox) * razon;
+    this.oy = cy - (cy - this.oy) * razon;
+    this.zoom = nuevo;
+    this.acotar();
+  }
+
+  restablecer(): void {
+    this.zoom = 1;
+    this.acotar();
+  }
+
+  /** Cuánto está acercada la vista (1: completa). */
+  nivel(): number {
+    return this.zoom;
+  }
+
+  /** Verdadero una vez si el último gesto fue un arrastre: ese clic no debe abrir una ficha. */
+  huboArrastre(): boolean {
+    const valor = this.arrastro;
+    this.arrastro = false;
+    return valor;
+  }
+
+  /** La vista nunca deja ver más allá de los bordes del lienzo. */
+  private acotar(): void {
+    this.ox = Math.min(0, Math.max(this.ancho * (1 - this.zoom), this.ox));
+    this.oy = Math.min(0, Math.max(this.alto * (1 - this.zoom), this.oy));
+    this.sucio = true;
+    this.alCambiarVista?.(this.zoom);
+  }
+
+  private readonly rueda = (e: WheelEvent): void => {
+    e.preventDefault();
+    const caja = this.lienzo.getBoundingClientRect();
+    this.acercar(Math.exp(-e.deltaY * 0.0016), e.clientX - caja.left, e.clientY - caja.top);
+  };
+
+  private readonly baja = (e: PointerEvent): void => {
+    this.arrastro = false;
+    if (this.zoom === 1) return;
+    this.agarre = [e.clientX, e.clientY];
+    this.lienzo.setPointerCapture(e.pointerId);
+  };
+
+  private readonly mueve = (e: PointerEvent): void => {
+    if (!this.agarre) return;
+    const dx = e.clientX - this.agarre[0];
+    const dy = e.clientY - this.agarre[1];
+    if (!this.arrastro && Math.hypot(dx, dy) < 4) return;
+    this.arrastro = true;
+    this.agarre = [e.clientX, e.clientY];
+    this.ox += dx;
+    this.oy += dy;
+    this.acotar();
+  };
+
+  private readonly sube = (): void => {
+    this.agarre = null;
+  };
 
   /** El punto visible más cercano a una posición, o -1 si no hay ninguno a menos de `radio` píxeles. */
   cercano(px: number, py: number, radio = 16): number {
@@ -158,8 +241,8 @@ export class EscenaEnjambre {
     let distancia = radio * radio;
     for (let i = 0; i < this.n; i++) {
       if (this.color[i] === PUNTO.fuera) continue;
-      const dx = this.x[i] - px;
-      const dy = this.y[i] - py;
+      const dx = this.x[i] * this.zoom + this.ox - px;
+      const dy = this.y[i] * this.zoom + this.oy - py;
       const d = dx * dx + dy * dy;
       if (d < distancia) {
         distancia = d;
@@ -231,6 +314,9 @@ export class EscenaEnjambre {
     this.alto = this.lienzo.clientHeight;
     if (!this.ancho || !this.alto) return;
     this.dpr = Math.min(devicePixelRatio || 1, DPR_MAXIMO);
+    this.zoom = 1;
+    this.ox = 0;
+    this.oy = 0;
     this.lienzo.width = Math.round(this.ancho * this.dpr);
     this.lienzo.height = Math.round(this.alto * this.dpr);
     this.u = (this.alto - this.margen() * 2) / GRADOS;
@@ -413,12 +499,15 @@ export class EscenaEnjambre {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = this.fondo;
     ctx.fillRect(0, 0, this.ancho, this.alto);
+    ctx.translate(this.ox, this.oy);
+    ctx.scale(this.zoom, this.zoom);
     ctx.fillStyle = this.chile;
     ctx.fill(this.silueta);
     ctx.strokeStyle = this.chileBorde;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1 / this.zoom;
     ctx.stroke(this.silueta);
-    const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66);
+    // Al acercar, los puntos crecen menos que el mapa: así se separan y se ve a cada persona.
+    const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66) / Math.sqrt(this.zoom);
     for (const estado of [PUNTO.fuera, PUNTO.pendiente, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
       ctx.fillStyle = this.colores[estado];
       for (let i = 0; i < this.n; i++) {
@@ -443,16 +532,16 @@ export class EscenaEnjambre {
     if (!this.foco.length) return;
     const { ctx } = this;
     const pulso = 0.5 + 0.5 * Math.sin(ahora * 4);
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2 / this.zoom;
     for (const i of this.foco) {
       ctx.strokeStyle = this.colores[this.color[i]] || this.tinta;
       ctx.globalAlpha = 0.9;
       ctx.beginPath();
-      ctx.arc(this.x[i], this.y[i], 7 + pulso * 3, 0, Math.PI * 2);
+      ctx.arc(this.x[i], this.y[i], (7 + pulso * 3) / this.zoom, 0, Math.PI * 2);
       ctx.stroke();
       ctx.globalAlpha = 0.25 * (1 - pulso);
       ctx.beginPath();
-      ctx.arc(this.x[i], this.y[i], 14 + pulso * 10, 0, Math.PI * 2);
+      ctx.arc(this.x[i], this.y[i], (14 + pulso * 10) / this.zoom, 0, Math.PI * 2);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
@@ -461,20 +550,22 @@ export class EscenaEnjambre {
   /** Los rótulos van siempre junto a su burbuja, del lado de afuera, en una sola línea. */
   private rotulos(visible: number): void {
     const { ctx } = this;
+    // Al acercar, la letra crece menos que el mapa para no tapar las burbujas.
+    const letra = this.letra / Math.sqrt(this.zoom);
     ctx.globalAlpha = visible;
     ctx.textBaseline = 'middle';
     for (const e of this.etiquetas) {
       const corte = e.texto.indexOf(' ', REGIONES[e.region].corto.length);
       const nombre = e.texto.slice(0, corte);
       const valor = e.texto.slice(corte);
-      ctx.font = `650 ${this.letra}px ${this.fuente}`;
+      ctx.font = `650 ${letra}px ${this.fuente}`;
       const anchoNombre = ctx.measureText(nombre).width;
       const anchoTotal = ctx.measureText(e.texto).width;
       const inicio = e.lado === 1 ? e.x : e.x - anchoTotal;
       ctx.textAlign = 'left';
       ctx.fillStyle = this.tinta;
       ctx.fillText(nombre, inicio, e.y);
-      ctx.font = `500 ${this.letra}px ${this.fuente}`;
+      ctx.font = `500 ${letra}px ${this.fuente}`;
       ctx.globalAlpha = visible * 0.72;
       ctx.fillText(valor, inicio + anchoNombre, e.y);
       ctx.globalAlpha = visible;

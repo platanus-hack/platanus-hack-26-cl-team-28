@@ -363,3 +363,72 @@
     overflow: visible;
   }
 }
+
+/* Acercar, alejar y volver a la vista completa. También con la rueda; al acercar se arrastra para mover. */
+.zoom {
+  position: absolute;
+  bottom: var(--e5);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  gap: var(--e1);
+  translate: -50% 0;
+  transition: opacity var(--medio);
+}
+
+.zoom button {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel-velo);
+  color: var(--tinta);
+  font: 600 var(--texto-s) / 1 var(--fuente-ui);
+}
+
+.zoom button:disabled {
+  color: var(--linea-suave);
+}
+
+.zoom svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.app[data-oculta] .zoom {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .zoom button:not(:disabled):hover {
+    border-color: var(--tinta-suave);
+  }
+}
+
+@media (max-width: 899px) {
+  .zoom {
+    display: none;
+  }
+}
+
+/* Con el mapa acercado, los textos de los costados se retiran: queda el mapa solo, sin nada encima. */
+@media (min-width: 900px) {
+  .app[data-acercado] .izquierda,
+  .app[data-acercado] .derecha {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--medio), visibility 0s var(--medio);
+  }
+
+  .app[data-acercado] .lienzo {
+    cursor: grab;
+  }
+}

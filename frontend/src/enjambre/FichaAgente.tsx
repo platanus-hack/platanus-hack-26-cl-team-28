@@ -35,12 +35,13 @@ export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
   // Se abre hacia el centro de la pantalla, para no tapar las cifras de los costados.
   const haciaIzquierda = x > window.innerWidth / 2;
   const izquierda = Math.max(16, Math.min(window.innerWidth - ANCHO - 16, haciaIzquierda ? x - ANCHO - 28 : x + 28));
-  const arriba = Math.max(16, Math.min(window.innerHeight - 460, y - 60));
+  // Nunca se sale por abajo: sube lo necesario y, si aun así no cabe, se desplaza por dentro.
+  const arriba = Math.max(16, Math.min(window.innerHeight - 540, y - 60));
   const caso = casos[viendo];
   const acuerdo = caso?.acuerdo[agente.i] ?? 0;
   const frase = caso?.frase[agente.i];
   return (
-    <aside ref={caja} tabIndex={-1} className={estilos.ficha} style={{ left: izquierda, top: arriba, width: ANCHO }} aria-label={`Agente: ${quienEs(agente)}`}>
+    <aside ref={caja} tabIndex={-1} className={estilos.ficha} style={{ left: izquierda, top: arriba, width: ANCHO, maxHeight: window.innerHeight - arriba - 16 }} aria-label={`Agente: ${quienEs(agente)}`}>
       <header>
         <p className={estilos.quien}>{quienEs(agente)}</p>
         <p className={estilos.donde}>{REGIONES[agente.region].nombre}</p>
