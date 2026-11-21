@@ -44,9 +44,10 @@ export function calcularMuestra(personas: Persona[], filtros: Filtros): Muestra 
 /**
  * Cuántos van de cada región: `tamano` repartido en proporción a `pesos` (las personas que
  * representa cada región) por el método del resto mayor. Ninguna región recibe más de sus
- * `disponibles`; lo que no cabe en una se reparte entre las demás. Es el mismo reparto que hace
- * el motor (`repartir` en backend/servidor/poblacion.py). Sin mínimo por región: la que pesa
- * menos de media persona de la muestra puede quedar en 0, que es lo proporcional.
+ * `disponibles`; lo que no cabe en una se reparte entre las demás. Sin mínimo por región: la que
+ * pesa menos de media persona de la muestra puede quedar en 0, que es lo proporcional. Lo usa la
+ * demo, cuyos agentes no traen comuna ni zona; el motor reparte además por comuna y zona
+ * (`repartir` en backend/servidor/poblacion.py).
  */
 export function repartirPorRegion(tamano: number, pesos: number[], disponibles: number[]): number[] {
   const cuotas = pesos.map(() => 0);

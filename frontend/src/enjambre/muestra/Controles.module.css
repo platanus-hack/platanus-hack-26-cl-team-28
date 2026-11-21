@@ -1,0 +1,379 @@
+/*
+ * Los filtros del cajón. Cada control es a la vez un gráfico: el largo o el alto de cada opción
+ * es la parte de la población que cae en ella. Sin nada elegido todo va en tono medio; con algo
+ * elegido, eso va en tinta y el resto se apaga (`--apagado` lo define el cajón).
+ *
+ * El cuadrado de cada opción es el mismo de la cuenta de la cabeza: vacío, no elegida; lleno, elegida.
+ */
+.filas button,
+.partida button,
+.columnas button {
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  line-height: 1.1;
+  text-align: left;
+}
+
+.filas i,
+.partida i {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--tinta-suave);
+  transition:
+    background var(--rapido),
+    border-color var(--rapido);
+}
+
+.filas button[aria-pressed='true'] i,
+.partida button[aria-pressed='true'] i {
+  border-color: var(--tinta);
+  background: var(--tinta);
+}
+
+.parte {
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+[data-eligiendo] button[aria-pressed='false'] .nombre {
+  color: var(--tinta-suave);
+}
+
+button[aria-pressed='true'] .nombre {
+  font-weight: 650;
+}
+
+button[aria-pressed='true'] .parte {
+  color: var(--tinta);
+}
+
+/* Filas: nombre, barra y cifra. */
+.filas {
+  display: grid;
+}
+
+.filas button {
+  display: grid;
+  /* El nombre ocupa lo que pide el más largo del grupo (`--letras`), para que las barras partan juntas. */
+  grid-template-columns: 9px clamp(7rem, calc(var(--letras, 14) * 0.52em), 11.5rem) minmax(2rem, 1fr) 2.6rem;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 30px;
+  margin-inline: calc(-1 * var(--e2));
+  padding: 0 var(--e2);
+  border-radius: var(--radio-fino);
+}
+
+.filas .nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filas .parte {
+  text-align: right;
+}
+
+.barra {
+  height: 8px;
+  background: var(--relleno-suave);
+}
+
+.barra b {
+  display: block;
+  width: max(var(--parte), 2px);
+  height: 100%;
+  background: var(--tinta-suave);
+  transition:
+    width 240ms var(--curva-salida),
+    background var(--rapido);
+}
+
+.filas[data-eligiendo] .barra b {
+  background: var(--apagado);
+}
+
+.filas button[aria-pressed='true'] .barra b {
+  background: var(--tinta);
+}
+
+/* Las regiones: dos columnas que se leen de norte a sur, primero la de la izquierda. */
+.filas[data-doble] {
+  grid-template-rows: repeat(var(--filas), auto);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  column-gap: var(--e5);
+}
+
+/* Aquí no cabe la barra entre el nombre y la cifra: va debajo, a todo el ancho de la fila. */
+.filas[data-doble] button {
+  grid-template-columns: 9px minmax(0, 1fr) auto;
+  grid-template-rows: 1fr 3px;
+  row-gap: 0;
+  min-height: 29px;
+  padding-bottom: 3px;
+}
+
+.filas[data-doble] .barra {
+  grid-area: 2 / 1 / 3 / -1;
+  height: 3px;
+}
+
+.filas[data-doble] .parte {
+  grid-area: 1 / 3;
+}
+
+/* Barra partida: una opción a cada lado y una sola barra cortada donde corresponde. */
+.partida {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 2px;
+}
+
+.partida button {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 30px;
+  padding: 0;
+}
+
+.partida button:nth-of-type(2) {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.reparto {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 2px;
+  height: 10px;
+}
+
+.reparto b {
+  flex: 1;
+  min-width: 3px;
+  background: var(--tinta-suave);
+  cursor: pointer;
+  transition:
+    flex-basis 240ms var(--curva-salida),
+    background var(--rapido);
+}
+
+.reparto b:first-child {
+  flex: 0 0 calc(var(--corte) - 1px);
+}
+
+.partida[data-eligiendo] .reparto b {
+  background: var(--apagado);
+}
+
+.partida .reparto b[data-elegida] {
+  background: var(--tinta);
+}
+
+/* Columnas: la cifra arriba, la columna con su alto y el nombre del tramo abajo. */
+.columnas {
+  display: grid;
+  gap: 4px;
+}
+
+.columnas button {
+  display: grid;
+  grid-template-rows: auto 52px auto;
+  gap: 4px;
+  padding: 0;
+  font-size: var(--texto-xs);
+  text-align: center;
+}
+
+.columna {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 2px solid var(--linea-suave);
+}
+
+.columna b {
+  width: 100%;
+  height: max(var(--alto), 2px);
+  background: var(--tinta-suave);
+  transition:
+    height 240ms var(--curva-salida),
+    background var(--rapido);
+}
+
+.columnas[data-eligiendo] .columna b {
+  background: var(--apagado);
+}
+
+.columnas button[aria-pressed='true'] .columna {
+  border-color: var(--tinta);
+}
+
+.columnas button[aria-pressed='true'] .columna b {
+  background: var(--tinta);
+}
+
+.columnas + .filas {
+  margin-top: var(--e1);
+}
+
+/* Edad: la gente de cada año y, debajo, la regla con dos topes. */
+.edad {
+  display: grid;
+  --tope: 16px;
+  --recorrido: calc(100% - var(--tope));
+}
+
+.histograma {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 44px;
+  /* Cada barra queda centrada donde se detiene el tope de su edad. */
+  margin-inline: calc(var(--tope) / 2 - var(--recorrido) / 142);
+}
+
+.histograma i {
+  flex: 1;
+  height: max(var(--alto), 1px);
+  background: var(--tinta-suave);
+  transition: background var(--rapido);
+}
+
+.edad[data-eligiendo] .histograma i {
+  background: var(--tinta);
+}
+
+.edad .histograma i[data-fuera] {
+  background: var(--apagado);
+}
+
+.regla {
+  position: relative;
+  height: 26px;
+}
+
+.regla::before,
+.regla::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.regla::before {
+  left: calc(var(--tope) / 2);
+  right: calc(var(--tope) / 2);
+  background: var(--linea-suave);
+}
+
+.regla::after {
+  left: calc(var(--tope) / 2 + var(--recorrido) * var(--desde));
+  right: calc(var(--tope) / 2 + var(--recorrido) * (1 - var(--hasta)));
+  background: var(--tinta);
+}
+
+.regla input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.regla input::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--tope);
+  height: 22px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--tinta);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.regla input::-moz-range-thumb {
+  width: var(--tope);
+  height: 22px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--tinta);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.regla input:focus-visible {
+  outline: 0;
+}
+
+.regla input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.regla input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.marcas {
+  position: relative;
+  height: 1em;
+  font-size: var(--texto-xxs);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+}
+
+.marcas span {
+  position: absolute;
+  left: calc(var(--tope) / 2 + var(--recorrido) * var(--en) / 100%);
+  translate: -50% 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .filas button:hover {
+    background: var(--relleno-suave);
+  }
+
+  .filas button:hover .barra {
+    background: var(--linea-suave);
+  }
+
+  .partida button:hover .nombre,
+  .columnas button:hover .nombre {
+    color: var(--tinta);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+/* Ventanas bajas: las filas se aprietan. */
+@media (max-height: 760px) {
+  .filas button,
+  .partida button {
+    min-height: 26px;
+  }
+
+  .filas[data-doble] button {
+    min-height: 25px;
+  }
+
+  .columnas button {
+    grid-template-rows: auto 40px auto;
+  }
+
+  .histograma {
+    height: 34px;
+  }
+}

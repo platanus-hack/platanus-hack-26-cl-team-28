@@ -100,16 +100,18 @@ El hallazgo central: los rasgos "objetivos" de una persona, como la edad o tener
 
 ## 4. Encuesta a los agentes
 
-Regla: todas las escalas cerradas van de 1 a 7 (1 = totalmente en desacuerdo, 7 = totalmente de acuerdo).
+Regla: la encuesta es fija. Son cinco preguntas cerradas, todas de 1 a 7, y cada una con su propia escala, que el modelo lee al lado de la pregunta.
 
 ### 4.1 Preguntas cerradas
-1. ¿Estarías de acuerdo con que se implemente esta política en tu región?
-2. Si esta política se implementara tal como está descrita, ¿estarías satisfecho con ella?
-3. ¿Te parece justa la forma en que esta política reparte costos y beneficios?
-4. ¿Confías en que el Estado chileno sea capaz de implementar bien esta política?
-5. Si esta política fuera obligatoria, ¿la cumplirías?
+1. **Apoyo.** ¿Estarías de acuerdo con que se implemente esta política en tu región? (1 = totalmente en desacuerdo, 7 = totalmente de acuerdo)
+2. **Justicia.** ¿Te parece justa la forma en que esta política reparte costos y beneficios? (1 = muy injusto, 7 = muy justo)
+3. **Confianza.** ¿Confías en que el Estado chileno sea capaz de implementar bien esta política? (1 = muy desconfiado, 7 = muy confiado)
+4. **Efectividad.** ¿Qué tan efectiva crees que es esta política en lograr lo que propone? (1 = muy inefectivo, 7 = muy efectivo)
+5. **Influencia.** ¿Qué tan influyente es esta política en tu situación personal o la de tu hogar? (1 = nada influyente, 7 = muy influyente)
 
-La pregunta 3 mide justicia percibida, uno de los dos determinantes más fuertes [15]. La 4 mide confianza [21]. La 5 mide cumplimiento, que la literatura conecta con la confianza [21] y que es la etapa final del camino de la aceptación a la conducta [25].
+La pregunta 2 mide justicia percibida y la 4 efectividad percibida, los dos determinantes más fuertes [15]. La 3 mide confianza [21]. La 5 no mide apoyo: dice cuánto le toca la política a la persona, para separar a quienes opinan con algo en juego de quienes opinan de lejos.
+
+Los resultados anteriores a esta encuesta (hasta el 21-11-2026) usaban otras preguntas y una sola escala de acuerdo: p2 era satisfacción, p5 cumplimiento y p6 «¿va a lograr lo que se propone?». Solo p1 es la misma pregunta con la misma escala. No compares esos archivos clave a clave con los nuevos.
 
 ### 4.2 Preguntas abiertas
 1. ¿Cómo crees que esta política afectaría tu situación personal o la de tu hogar?
@@ -117,10 +119,10 @@ La pregunta 3 mide justicia percibida, uno de los dos determinantes más fuertes
 3. ¿Qué cambiarías de esta política para apoyarla más, o cuál es tu principal preocupación?
 4. ¿Qué estarías dispuesto a hacer frente a esta política?
 
-**Decisión de diseño:** agregar una pregunta cerrada de efectividad percibida ("¿Qué tan probable es que esta política logre su objetivo?"). Es el otro determinante principal [15] y hoy no está en la encuesta.
+La efectividad percibida, el otro determinante principal [15], ya es la pregunta cerrada 4.
 
 ### 4.3 Métricas
-- **Índice de aceptación:** promedio de las preguntas cerradas 1 a 4, por variante, región y perfil.
+- **Índice de aceptación:** promedio de las preguntas cerradas 1 a 4 (apoyo, justicia, confianza y efectividad), por variante, región y perfil. Influencia no entra.
 - **Justificación breve** (1 o 2 frases) después de cada respuesta cerrada, para auditar la coherencia de cada agente con su perfil.
 - **Medición antes y después:** las preguntas 1 y 4 se hacen también antes de mostrar la política, como línea base.
 

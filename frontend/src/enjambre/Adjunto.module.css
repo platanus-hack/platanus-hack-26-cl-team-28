@@ -1,3 +1,31 @@
+.subir {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 600 var(--texto-s) / 1.2 var(--fuente-ui);
+  text-align: left;
+  cursor: pointer;
+}
+.subir svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.subir:hover span:first-of-type { text-decoration: underline; text-underline-offset: 3px; }
+.formatos { margin-left: auto; color: var(--tinta-suave); font-size: var(--texto-xxs); font-weight: 400; text-align: right; }
+@media (max-width: 420px) { .formatos { display: none; } }
+
 .adjunto {
   min-width: 0;
 }

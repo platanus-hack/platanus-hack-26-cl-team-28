@@ -1,12 +1,12 @@
 /** Cliente del motor de simulación (backend/servidor). En desarrollo Vite lo atiende en /api. */
-import type { Filtros } from '../dominio/tipos';
+import { paraElMotor, rasgosDe, type FiltrosVivo } from './sociedad';
+import type { EntradaHistorial } from './historial';
 
 export interface MotorInfo {
   nombre: string;
   modelo: string;
-  grabado: boolean;
-  /** Falso si el motor solo responde sus preguntas de partida (la corrida grabada). */
-  preguntas_editables?: boolean;
+  /** Solo en la demostración del navegador, que sortea las respuestas. */
+  grabado?: boolean;
 }
 
 /** La población de la que el motor sortea a los agentes. */
@@ -18,8 +18,10 @@ export interface PoblacionInfo {
   personas: number;
   /** A cuántas personas representa cada agente, en promedio. */
   representa: number;
-  /** Niveles de clusterización que ofrece el motor: personas por agente (10, 100, 1.000). */
+  /** Niveles de clusterización que ofrece el motor: personas por agente (10, 100, 1.000 y 10.000). */
   niveles?: number[];
+  /** Los parámetros por los que el motor deja filtrar, con sus opciones (ver vivo/sociedad.ts). */
+  parametros?: { clave: string; opciones: string[] }[];
 }
 
 export interface EstadoMotor {
@@ -28,11 +30,11 @@ export interface EstadoMotor {
   poblacion?: PoblacionInfo;
   lote: number;
   concurrencia: number;
-  /** Las preguntas de partida de la encuesta, en el orden de las notas. */
+  /** La encuesta, fija, en el orden de las notas. */
   preguntas?: string[];
-  /** Cuántas preguntas acepta una encuesta y el largo máximo de cada una. */
-  maximo_preguntas?: number;
-  largo_pregunta?: number;
+  /** El nombre corto de cada pregunta y lo que significan el 1 y el 7 en ella. */
+  nombres?: string[];
+  escalas?: [string, string][];
 }
 
 export interface AgenteRemoto {
@@ -52,6 +54,8 @@ export interface AgenteRemoto {
   politica?: number;
   /** A cuántas personas representa en esta muestra. */
   representa?: number;
+  /** Su opción en cada parámetro de vivo/sociedad.ts, en ese orden (-1 si no tiene el dato). */
+  s?: number[];
   atributos: Record<string, string>;
 }
 
@@ -62,6 +66,10 @@ export interface MuestraRemota {
   disponibles: number;
   /** Personas a las que representan esos agentes. */
   representadas: number;
+  /** El orden en que el motor manda los rasgos de cada agente. */
+  dimensiones?: string[];
+  /** Personas por opción de cada parámetro, entre quienes cumplen los demás filtros; y por edad. */
+  retrato?: Record<string, number[]>;
   agentes: AgenteRemoto[];
 }
 
@@ -119,6 +127,12 @@ async function leer<T>(respuesta: Response): Promise<T> {
   return datos as T;
 }
 
+/** Las últimas simulaciones que guardó el motor, de la más nueva a la más antigua. */
+export async function pedirHistorial(senal?: AbortSignal): Promise<EntradaHistorial[]> {
+  const datos = await leer<{ corridas?: EntradaHistorial[] }>(await fetch(`${BASE}/historial`, { signal: senal }));
+  return datos.corridas ?? [];
+}
+
 export async function pedirEstado(): Promise<EstadoMotor> {
   const control = new AbortController();
   const plazo = window.setTimeout(() => control.abort(), ESPERA_ESTADO);
@@ -130,15 +144,17 @@ export async function pedirEstado(): Promise<EstadoMotor> {
 }
 
 /** Pide al motor que filtre la población y sortee hasta `filtros.tamano` agentes. */
-export async function pedirMuestra(filtros: Filtros, senal?: AbortSignal): Promise<MuestraRemota> {
-  const { tamano, ...resto } = filtros;
+export async function pedirMuestra(filtros: FiltrosVivo, senal?: AbortSignal): Promise<MuestraRemota> {
   const respuesta = await fetch(`${BASE}/muestra`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filtros: resto, tamano }),
+    body: JSON.stringify({ filtros: paraElMotor(filtros), tamano: filtros.tamano }),
     signal: senal,
   });
-  return leer<MuestraRemota>(respuesta);
+  const remota = await leer<MuestraRemota>(respuesta);
+  // Los rasgos quedan en el orden de la interfaz, venga como venga el del motor.
+  for (const agente of remota.agentes) agente.s = rasgosDe(agente, remota.dimensiones);
+  return remota;
 }
 
 export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
@@ -152,7 +168,7 @@ export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
 
 /** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
 export async function correrRemoto(
-  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; preguntas?: string[] },
+  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number },
   alEvento: (evento: Evento) => void,
 ): Promise<() => void> {
   const { id } = await leer<{ id: string }>(

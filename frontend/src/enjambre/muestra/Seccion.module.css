@@ -1,0 +1,84 @@
+/* Sección plegable del cajón: un filete arriba, el título como botón y el contenido debajo. */
+.seccion {
+  border-top: 1px solid var(--linea-suave);
+}
+
+.seccion h3 {
+  font: inherit;
+}
+
+.seccion h3 button {
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  width: 100%;
+  min-height: 46px;
+  padding: 0 var(--e5);
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 650 var(--texto-m) / 1 var(--fuente-voz);
+  text-align: left;
+}
+
+.seccion h3 button:focus-visible {
+  outline-offset: -3px;
+}
+
+.seccion h3 span {
+  flex: 1;
+}
+
+.seccion h3 small {
+  font: 500 var(--texto-s) / 1 var(--fuente-ui);
+  color: var(--tinta-suave);
+}
+
+.seccion h3 svg {
+  flex: none;
+  width: 11px;
+  height: 8px;
+  fill: none;
+  stroke: var(--tinta-suave);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate var(--rapido);
+}
+
+.seccion h3 button[aria-expanded='true'] svg {
+  rotate: 180deg;
+}
+
+.contenido {
+  display: grid;
+  gap: var(--e4);
+  padding: var(--e1) var(--e5) var(--e5);
+}
+
+.contenido[hidden] {
+  display: none;
+}
+
+.fuente {
+  font-size: var(--texto-xs);
+  line-height: 1.3;
+  color: var(--tinta-suave);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .seccion h3 button:hover {
+    background: var(--relleno-suave);
+  }
+}
+
+@media (max-height: 760px) {
+  .seccion h3 button {
+    min-height: 40px;
+  }
+
+  .contenido {
+    gap: var(--e3);
+    padding-bottom: var(--e4);
+  }
+}

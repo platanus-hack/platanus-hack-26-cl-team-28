@@ -1,15 +1,16 @@
 """Servidor HTTP del simulador. Solo biblioteca estándar (la API de Anthropic es opcional).
 
     cd backend && python3 -m servidor            # puerto 8787
-    MOTOR=grabado python3 -m servidor            # sin red: repite una corrida real guardada
+    MOTOR=claude python3 -m servidor             # fuerza un motor: local, api o claude
 
 Rutas:
-    GET  /api/estado                  motor, modelo, población disponible y las preguntas de partida
+    GET  /api/estado                  motor, modelo, población disponible y la encuesta (fija): preguntas,
+                                      nombres y escalas ([1, 7]: qué significa cada extremo)
     POST /api/muestra                 {filtros, tamano}: filtra la población y sortea hasta `tamano` agentes
     GET  /api/agentes                 la muestra por defecto (sin filtros), como lista
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre. Devuelve texto o resumen
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones,
-                                      preguntas?:[texto]}: la encuesta de la corrida; sin ella, la de partida
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones}
+    GET  /api/historial               las últimas simulaciones: hora, propuestas y resultado de cada variante
     GET  /api/corridas/<id>/eventos   eventos de la corrida (text/event-stream)
     POST /api/corridas/<id>/cancelar
 """
@@ -24,9 +25,10 @@ from collections import OrderedDict
 
 from . import metodo
 from .corridas import Cache, Caso, Corrida, resumir_documento
+from .historial import Historial
 from .documentos import DocumentoIlegible, extraer_texto
 from .motor import elegir_motor
-from .poblacion import ArchivoFijo, Muestra, elegir_poblacion, identificador, limpiar
+from .poblacion import Muestra, elegir_poblacion, identificador, limpiar
 
 LETRAS = "ABCDEFGH"
 MAXIMO_DOCUMENTO = 25 * 1024 * 1024
@@ -38,17 +40,14 @@ TAMANO_POR_DEFECTO = 2000
 # El tamaño con que parte la interfaz (TAMANO_INICIAL en frontend/src/vivo/useEnVivo.ts).
 TAMANO_AL_ABRIR = 1000
 # En un servidor con memoria de sobra se puede subir con MAXIMO_MUESTRA (cada lote es un proceso de 240 MB).
-MAXIMO_MUESTRA = int(os.environ.get("MAXIMO_MUESTRA", "5000"))
+MAXIMO_MUESTRA = int(os.environ.get("MAXIMO_MUESTRA", "10000"))
 MUESTRAS_GUARDADAS = 24
 
-# La corrida grabada solo tiene respuestas de las personas del archivo fijo: con ella se usa ese archivo.
-GRABADO = os.environ.get("MOTOR", "").lower() == "grabado"
-POBLACION = elegir_poblacion(fija=GRABADO)
-FIJOS = POBLACION.agentes if isinstance(POBLACION, ArchivoFijo) else ArchivoFijo().agentes
-MOTOR = elegir_motor(FIJOS)
-if MOTOR.grabado and not isinstance(POBLACION, ArchivoFijo):
-    POBLACION = ArchivoFijo()
+# El motor primero: sin uno disponible no tiene sentido leer la población.
+MOTOR = elegir_motor()
+POBLACION = elegir_poblacion()
 CACHE = Cache()
+HISTORIAL = Historial()
 CORRIDAS: dict[str, Corrida] = {}
 MUESTRAS: OrderedDict[str, Muestra] = OrderedDict()
 CERROJO_MUESTRAS = threading.Lock()
@@ -107,8 +106,10 @@ class Manejador(BaseHTTPRequestHandler):
         ruta = urlparse(self.path).path
         if ruta == "/api/estado":
             poblacion = POBLACION.describir()
-            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas,
-                                    "maximo_preguntas": metodo.MAXIMO_PREGUNTAS, "largo_pregunta": metodo.LARGO_PREGUNTA})
+            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": metodo.PREGUNTAS,
+                                    "nombres": metodo.NOMBRES, "escalas": metodo.ESCALAS})
+        if ruta == "/api/historial":
+            return self._json(200, {"corridas": HISTORIAL.ultimas()})
         if ruta == "/api/agentes":
             return self._json(200, [a.publico() for a in sacar_muestra(None, TAMANO_POR_DEFECTO).agentes])
         partes = ruta.strip("/").split("/")
@@ -168,13 +169,13 @@ class Manejador(BaseHTTPRequestHandler):
         elegidos = [muestra.agentes[i] for i in indices if 0 <= i < len(muestra.agentes)] if indices else muestra.agentes
         if not elegidos:
             raise ValueError("La muestra quedó vacía")
-        iteraciones = 0 if MOTOR.grabado else max(0, min(MAXIMO_ITERACIONES, int(pedido.get("iteraciones", 0))))
+        iteraciones = max(0, min(MAXIMO_ITERACIONES, int(pedido.get("iteraciones", 0))))
         lote = max(1, min(25, int(pedido.get("lote", LOTE))))
-        preguntas = MOTOR.preguntas_de(pedido.get("preguntas"))
-        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS, preguntas)
+        # La encuesta es fija: si el pedido trae preguntas, no se usan.
+        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS)
         CORRIDAS[corrida.id] = corrida
-        threading.Thread(target=corrida.correr, daemon=True).start()
-        self._json(201, {"id": corrida.id, "motor": MOTOR.describir(), "agentes": len(elegidos), "preguntas": preguntas})
+        threading.Thread(target=HISTORIAL.guardar_al_terminar, args=(corrida,), daemon=True).start()
+        self._json(201, {"id": corrida.id, "motor": MOTOR.describir(), "agentes": len(elegidos), "preguntas": corrida.preguntas})
 
     def _eventos(self, identificador: str):
         corrida = CORRIDAS.get(identificador)

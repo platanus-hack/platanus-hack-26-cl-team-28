@@ -33,7 +33,6 @@ Opciones de preparar:
     --redaccion N        redacción de las instrucciones, como en probar_modelo.py
     --etiqueta TEXTO     agrega quién propone la política, por ejemplo "del Gobierno"
     --juntas             POLITICA es una carpeta y cada lote trae todas sus variantes
-    --encuesta RUTA      preguntas del caso; por defecto, encuesta.json en la carpeta del caso
     --alternativas RUTA  en vez de la encuesta, una pregunta de alternativas (JSON). En la
                          mitad de los lotes las alternativas van en orden inverso
 """
@@ -46,7 +45,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import probar_modelo as encuesta  # noqa: E402
-from probar_modelo import REDACCIONES, cargar_politicas, carpeta_del_caso  # noqa: E402
+from probar_modelo import REDACCIONES, cargar_politicas  # noqa: E402
 
 VARIAS = (
     "Vas a contestar la misma encuesta {n} veces, cada vez en el lugar de una persona distinta. "
@@ -54,10 +53,7 @@ VARIAS = (
     "ni un programa para generar las respuestas, y no ajustes una respuesta para que se parezca o se "
     "diferencie de las anteriores: lo que importa es lo que contestaría esa persona."
 )
-ESCALA = (
-    "Todas las preguntas usan una escala de 1 a 7, donde 1 es totalmente en desacuerdo y 7 es "
-    "totalmente de acuerdo."
-)
+ESCALA = encuesta.ESCALA
 
 
 VERSIONES = (
@@ -72,7 +68,7 @@ def texto_juntas(variantes, personas, salida, args):
     cola = f"\n\nEsta política es una propuesta {args.etiqueta}." if args.etiqueta else ""
     versiones = "\n\n".join(f"## Versión {nombre}\n\n{texto.strip()}{cola}" for nombre, texto in variantes)
     partes.append(f"# Tema de la encuesta, en varias versiones\n\n{versiones}")
-    preguntas = "\n".join(f"{i}. {p}" for i, p in enumerate(encuesta.PREGUNTAS, start=1))
+    preguntas = encuesta.lineas_preguntas(encuesta.PREGUNTAS, encuesta.ESCALAS)
     partes.append(f"# Preguntas\n\n{ESCALA}\n\n{preguntas}")
     ejemplo = '{"id": "m123", "v": "' + variantes[0][0] + '", "r": [' + ", ".join(encuesta.CLAVES) + "]}"
     orden = ", ".join(nombre for nombre, _ in variantes)
@@ -100,7 +96,7 @@ def texto_lote(politica, personas, salida, args, alternativas):
         ejemplo = '{"id": "m123", "r": 1}'
         valor = "el número de la alternativa que elige esa persona"
     else:
-        preguntas = "\n".join(f"{i}. {p}" for i, p in enumerate(encuesta.PREGUNTAS, start=1))
+        preguntas = encuesta.lineas_preguntas(encuesta.PREGUNTAS, encuesta.ESCALAS)
         partes.append(f"# Preguntas\n\n{ESCALA}\n\n{preguntas}")
         ejemplo = '{"id": "m123", "r": [' + ", ".join(encuesta.CLAVES) + "]}"
         valor = f"sus {len(encuesta.CLAVES)} respuestas, enteros de 1 a 7 en el orden de las preguntas"
@@ -116,8 +112,6 @@ def texto_lote(politica, personas, salida, args, alternativas):
 
 
 def preparar(args):
-    ruta_encuesta = args.encuesta or carpeta_del_caso(args.politica) / "encuesta.json"
-    propia = encuesta.usar_encuesta(ruta_encuesta)
     with open(args.personas, encoding="utf-8") as f:
         personas = [json.loads(linea) for linea in f if linea.strip()]
     random.Random(args.semilla).shuffle(personas)
@@ -140,7 +134,6 @@ def preparar(args):
                 "condicion": "juntas", "variante": None, "variantes": [nombre for nombre, _ in variantes], "lote": k,
                 "entrada": str(entrada.resolve()), "salida": str(salida.resolve()), "ids": [p["id"] for p in lote],
                 "alternativas": None, "redaccion": args.redaccion, "etiqueta": args.etiqueta,
-                "encuesta": str(ruta_encuesta.resolve()) if propia else None,
             })
         politicas = []
     for variante, politica in politicas:
@@ -165,7 +158,6 @@ def preparar(args):
                 "alternativas": [clave for clave, _ in alternativas["orden"]] if alternativas else None,
                 "redaccion": args.redaccion,
                 "etiqueta": args.etiqueta,
-                "encuesta": str(ruta_encuesta.resolve()) if propia else None,
             })
     ruta = args.carpeta / "lotes.json"
     previos = json.loads(ruta.read_text(encoding="utf-8")) if ruta.exists() else []
@@ -213,8 +205,6 @@ def leer_lote(lote):
 
 def reunir(args):
     lotes = json.loads((args.carpeta / "lotes.json").read_text(encoding="utf-8"))
-    if lotes and lotes[0].get("encuesta"):
-        encuesta.usar_encuesta(Path(lotes[0]["encuesta"]))
     if args.condicion:
         lotes = [m for m in lotes if m["condicion"] in args.condicion]
     escritos, con_problemas = 0, 0
@@ -261,7 +251,6 @@ def main():
     p.add_argument("--redaccion", type=int, choices=sorted(REDACCIONES), default=1)
     p.add_argument("--etiqueta")
     p.add_argument("--juntas", action="store_true")
-    p.add_argument("--encuesta", type=Path)
     p.add_argument("--alternativas", type=Path)
     r = sub.add_parser("reunir")
     r.add_argument("carpeta", type=Path)

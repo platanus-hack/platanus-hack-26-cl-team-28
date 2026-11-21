@@ -1,6 +1,8 @@
 import { hashTexto, mezclar } from '../dominio/azar';
 import { crearPoblacion } from '../dominio/poblacion';
 import type { AgenteRemoto, CasoPedido, Evento, Metricas } from './api';
+import { PREGUNTAS } from './encuesta';
+import { rasgosDe } from './sociedad';
 
 type Anillo = number[][];
 
@@ -21,6 +23,8 @@ export function agentesDeDemostracion(regiones: Anillo[][]): AgenteRemoto[] {
     genero: p.genero,
     quintil: p.quintil,
     educacion: p.educacion,
+    politica: p.politica,
+    s: rasgosDe(p),
     atributos: { Edad: `${p.edad} años`, Zona: 'Urbana' },
   }));
 }
@@ -30,14 +34,14 @@ export function agentesDeDemostracion(regiones: Anillo[][]): AgenteRemoto[] {
  * según el texto y sin frases. La interfaz lo rotula como demostración.
  */
 export function correrDemostracion(
-  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number; preguntas?: string[] },
+  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number },
   alEvento: (evento: Evento) => void,
 ): () => void {
   let cancelado = false;
   const inicio = performance.now();
   const metricas = (): Metricas => ({ llamadas: 0, costo_usd: 0, tokens: 0, segundos: Math.round((performance.now() - inicio) / 100) / 10 });
   const casos = pedido.casos.map((c) => ({ id: c.id, letra: c.letra, texto: c.texto, titulo: c.texto, documento: null, iteracion: null }));
-  const preguntas = pedido.preguntas ?? [];
+  const preguntas = [...PREGUNTAS];
   alEvento({ tipo: 'inicio', motor: { nombre: 'Demostración', modelo: 'sin motor', grabado: true }, agentes: pedido.agentes.length, casos, preguntas });
   const tareas: { caso: number; agentes: number[] }[] = [];
   casos.forEach((_, k) => {

@@ -16,13 +16,13 @@ interface Props {
 export function Insignia({ conexion, agentes, indecisas }: Props) {
   if (!conexion) return null;
   const motor = conexion.estado?.motor;
-  const aviso = conexion.demo || !motor ? 'Demostración sin motor' : motor.grabado ? 'Corrida grabada' : null;
+  const aviso = conexion.demo || !motor || motor.grabado ? 'Demostración sin motor' : null;
   return (
     <dl className={estilos.ficha}>
       <div>
         <dt>Muestra</dt>
         <dd>
-          <b>{formatear(agentes)}</b> personas del Censo 2024
+          <b>{formatear(agentes)}</b> agentes basados en el Censo 2024
         </dd>
       </div>
       {indecisas !== undefined && (

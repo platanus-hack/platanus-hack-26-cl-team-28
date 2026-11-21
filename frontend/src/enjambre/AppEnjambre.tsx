@@ -11,7 +11,9 @@ import { BloquePostura } from './BloquePostura';
 import { CajonEncuesta } from './CajonEncuesta';
 import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
+import { FiguraWati } from './FiguraWati';
 import { Insignia } from './Insignia';
+import { MenuHistorial } from './MenuHistorial';
 import { MenuOpciones } from './MenuOpciones';
 import { Propuesta } from './Propuesta';
 import { Redactando } from './Redactando';
@@ -49,6 +51,7 @@ export function AppEnjambre() {
   const lienzo = useRef<HTMLCanvasElement>(null);
   const escena = useRef<EscenaEnjambre | null>(null);
   const [editando, setEditando] = useState(0);
+  const watiSaludo = useRef<HTMLSpanElement>(null);
   const [oculta, setOculta] = useState(false);
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
@@ -225,11 +228,11 @@ export function AppEnjambre() {
             {caso.iteracion?.cambio && <small>{sinCorte(caso.iteracion.cambio)}</small>}
           </h1>
         ) : (
-          <h1 className={estilos.titular}>What If Chile ...</h1>
+          <h1 className={estilos.titular}>What If Chile...</h1>
         )}
         {fase === 'corriendo' && caso && !listo && (
           <div className={estilos.avance}>
-            <BloqueAvance caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
+            <BloqueAvance key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
           </div>
         )}
       </header>
@@ -246,7 +249,22 @@ export function AppEnjambre() {
       <div className={estilos.mando}>
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
-          <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+          <div className={estilos.panelMando}>
+            <button type="button" className={estilos.asomo} aria-label="Saludar al wati" onClick={() => {
+              const figura = watiSaludo.current;
+              if (!figura || matchMedia('(prefers-reduced-motion: reduce)').matches || figura.getAnimations().some((animacion) => animacion.playState === 'running')) return;
+              figura.animate([
+                { transform: 'translateY(0) rotate(0)' },
+                { transform: 'translateY(-7px) rotate(-10deg)', offset: 0.25 },
+                { transform: 'translateY(-4px) rotate(10deg)', offset: 0.55 },
+                { transform: 'rotate(-5deg)', offset: 0.8 },
+                { transform: 'translateY(0) rotate(0)' },
+              ], { duration: 500, easing: 'ease-in-out' });
+            }}>
+              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} /></span></span>
+            </button>
+            <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+          </div>
         )}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
           <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
@@ -257,8 +275,8 @@ export function AppEnjambre() {
       <div ref={derecha} className={estilos.derecha}>
       <div className={estilos.nota}>
         <Insignia conexion={conexion} agentes={muestra.total} indecisas={pct?.indecisa} />
-        {/* La encuesta real preguntó por el acuerdo: solo se compara si la primera pregunta sigue siendo esa. */}
-        {caso && !conexion?.demo && !sim.filtrada && sim.encuesta[0] === sim.preguntasBase[0] && <Validacion casos={casos} />}
+        {/* La encuesta real preguntó por el acuerdo, que es la primera pregunta (Apoyo). */}
+        {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} />}
         {caso && sim.filtrada && (
           <p className={estilos.filtro}>
             Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes, según los filtros
@@ -285,7 +303,18 @@ export function AppEnjambre() {
             Detener
           </Boton>
         ) : (
-          <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
+          <>
+            {/* El historial lo guarda el motor: en la demostración no hay. */}
+            {conexion && !conexion.demo && (
+              <MenuHistorial
+                alUsar={(textos) => {
+                  sim.cargar(textos);
+                  sim.volver();
+                }}
+              />
+            )}
+            <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
+          </>
         )}
       </div>
       </div>
@@ -333,7 +362,7 @@ export function AppEnjambre() {
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} preguntas={sim.encuesta} alCerrar={() => setFicha(null)} />
       )}
-      {encuestaAbierta && fase === 'preparar' && <CajonEncuesta sim={sim} alCerrar={cerrarEncuesta} />}
+      {encuestaAbierta && fase === 'preparar' && <CajonEncuesta alCerrar={cerrarEncuesta} />}
       {oculta && (
         <div className={estilos.mostrar} ref={mostrar}>
           <Boton variante="texto" onClick={() => setOculta(false)}>

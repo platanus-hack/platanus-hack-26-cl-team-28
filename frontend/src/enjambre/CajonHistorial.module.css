@@ -1,0 +1,202 @@
+/*
+ * Cajón del historial: la misma hoja a todo el alto del cajón de la muestra, pegada al borde
+ * derecho. Cada simulación es un bloque separado por una línea: cuándo, qué se preguntó y cómo quedó.
+ */
+.cajon {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 6;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(100vw, 27rem);
+  border-left: 1px solid var(--linea-suave);
+  background: var(--papel);
+  color: var(--tinta);
+  animation: entrar 360ms var(--curva-salida) both;
+}
+
+.cajon:focus {
+  outline: none;
+}
+
+@keyframes entrar {
+  from {
+    translate: 100% 0;
+  }
+}
+
+.cabeza {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--e3);
+  padding: var(--e5) var(--e5) var(--e4);
+  border-bottom: 1px solid var(--linea-suave);
+}
+
+.cabeza h2 {
+  margin: 0;
+  font: 600 clamp(1.8rem, 1.4rem + 1.2vh, 2.4rem) / 1 var(--fuente-voz);
+  letter-spacing: -0.02em;
+}
+
+.cabeza p {
+  margin: 0;
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+.cerrar {
+  position: absolute;
+  top: var(--e3);
+  right: var(--e3);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--tinta-suave);
+}
+
+.cerrar svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.cuerpo {
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.aviso {
+  margin: 0;
+  padding: var(--e5);
+  font-size: var(--texto-s);
+  line-height: 1.4;
+  color: var(--tinta-suave);
+}
+
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista > li {
+  display: grid;
+  gap: var(--e3);
+  padding: var(--e4) var(--e5);
+  border-bottom: 1px solid var(--linea-suave);
+}
+
+.cuando {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  margin: 0;
+  font: 650 var(--texto-xs) / 1.2 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.cuando span {
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: right;
+}
+
+.caso {
+  display: grid;
+  gap: var(--e2);
+}
+
+.pregunta {
+  display: flex;
+  gap: var(--e2);
+  margin: 0;
+  font-size: var(--texto-s);
+  line-height: 1.35;
+}
+
+.pregunta b {
+  flex: none;
+  font-weight: 700;
+}
+
+/* La propuesta completa cabe en el título; aquí van tres líneas. */
+.pregunta span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.origen {
+  margin: 0;
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+}
+
+/* En el mismo orden del mapa: en contra a la izquierda, a favor a la derecha. */
+.barra {
+  display: flex;
+  gap: 2px;
+  height: 8px;
+}
+
+.barra i {
+  min-width: 0;
+  background: var(--color);
+}
+
+.caso [data-postura='favor'] {
+  --color: var(--favor);
+  --texto: var(--favor-texto);
+}
+
+.caso [data-postura='contra'] {
+  --color: var(--contra);
+  --texto: var(--contra-texto);
+}
+
+.caso [data-postura='indecisa'] {
+  --color: var(--indecisa);
+  --texto: var(--indecisa-texto);
+}
+
+.resultado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e1) var(--e3);
+  margin: 0;
+  font: 600 var(--texto-xs) / 1.3 var(--fuente-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.resultado span {
+  color: var(--texto);
+}
+
+.usar {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font: 600 var(--texto-xs) / 1.2 var(--fuente-ui);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.usar:hover {
+  color: var(--tinta-suave);
+}

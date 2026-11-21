@@ -55,7 +55,7 @@ export interface Filtros {
   quintil: number;
   educacion: number;
   politica: number;
-  /** Clusterización: a cuántas personas representa cada agente (10, 100 o 1.000). */
+  /** Clusterización: a cuántas personas representa cada agente (10, 100, 1.000 o 10.000). */
   reduccion: number;
 }
 

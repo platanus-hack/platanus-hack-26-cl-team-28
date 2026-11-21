@@ -1,24 +1,18 @@
 import { useEffect, useRef } from 'react';
-import { limpiarPreguntas, mismasPreguntas } from '../vivo/encuesta';
-import type { EnVivo } from '../vivo/useEnVivo';
+import { ENCUESTA } from '../vivo/encuesta';
 import estilos from './CajonEncuesta.module.css';
 
 interface Props {
-  sim: EnVivo;
   alCerrar(): void;
 }
 
 /**
- * La encuesta que responde cada agente, para leerla y cambiarla: qué se pregunta y en qué orden.
- * Un cajón a todo el alto, como el de la muestra. Lo escrito queda guardado en este navegador.
+ * La encuesta que responde cada agente, para leerla: qué se pregunta, en qué orden y qué
+ * significan el 1 y el 7 en cada pregunta. Es fija: no se edita. Un cajón a todo el alto, como
+ * el de la muestra.
  */
-export function CajonEncuesta({ sim, alCerrar }: Props) {
-  const { preguntas, setPreguntas, preguntasBase, maximoPreguntas, largoPregunta } = sim;
-  const editable = sim.encuestaEditable;
+export function CajonEncuesta({ alCerrar }: Props) {
   const caja = useRef<HTMLElement>(null);
-  const lista = useRef<HTMLOListElement>(null);
-  /** Tras agregar una pregunta, el cursor queda en ella. */
-  const enfocarUltima = useRef(false);
 
   useEffect(() => {
     caja.current?.focus();
@@ -34,39 +28,14 @@ export function CajonEncuesta({ sim, alCerrar }: Props) {
     };
   }, [alCerrar]);
 
-  useEffect(() => {
-    if (!enfocarUltima.current) return;
-    enfocarUltima.current = false;
-    lista.current?.querySelector<HTMLTextAreaElement>('li:last-child textarea')?.focus();
-  }, [preguntas.length]);
-
-  const cambiar = (k: number, texto: string) => setPreguntas(preguntas.map((p, i) => (i === k ? texto : p)));
-  const quitar = (k: number) => setPreguntas(preguntas.filter((_, i) => i !== k));
-  const subir = (k: number) => {
-    const nuevas = [...preguntas];
-    [nuevas[k - 1], nuevas[k]] = [nuevas[k], nuevas[k - 1]];
-    setPreguntas(nuevas);
-  };
-  const agregar = () => {
-    enfocarUltima.current = true;
-    setPreguntas([...preguntas, '']);
-  };
-  const cambiada = !mismasPreguntas(limpiarPreguntas(preguntas), preguntasBase);
-  const repetida = (k: number) => {
-    const texto = preguntas[k].replace(/\s+/g, ' ').trim();
-    return texto !== '' && preguntas.some((p, i) => i < k && p.replace(/\s+/g, ' ').trim() === texto);
-  };
-
   return (
     <aside ref={caja} tabIndex={-1} className={estilos.cajon} id="cajon-encuesta" aria-label="Encuesta">
       <header className={estilos.cabeza}>
-        <p className={estilos.cuenta}>
-          <b>{sim.porPreguntar}</b>
-          <span>
-            {sim.porPreguntar === 1 ? 'pregunta responde' : 'preguntas responde'} cada persona, con una nota de 1 (totalmente en desacuerdo) a 7
-            (totalmente de acuerdo)
-          </span>
-        </p>
+        <div className={estilos.cuenta}>
+          <span>ENCUESTA · {ENCUESTA.length} PREGUNTAS</span>
+          <h2>Lo que preguntamos</h2>
+          <p>Cada persona responde cada pregunta con un número del 1 al 7. Cada pregunta tiene su propia escala.</p>
+        </div>
         <button type="button" className={estilos.cerrar} onClick={alCerrar} aria-label="Cerrar">
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 2l8 8M10 2l-8 8" />
@@ -75,63 +44,32 @@ export function CajonEncuesta({ sim, alCerrar }: Props) {
       </header>
 
       <div className={estilos.cuerpo}>
-        <ol ref={lista} className={estilos.preguntas}>
-          {preguntas.map((pregunta, k) => (
-            // El lugar es la identidad de cada fila: al subir una pregunta, cambian los textos y no las filas.
-            <li key={k}>
-              <span className={estilos.numero} aria-hidden="true">
-                {k + 1}
-              </span>
-              <textarea
-                rows={2}
-                value={pregunta}
-                maxLength={largoPregunta}
-                readOnly={!editable}
-                aria-label={`Pregunta ${k + 1}`}
-                aria-invalid={repetida(k) || undefined}
-                placeholder="Escribe la pregunta"
-                onChange={(e) => cambiar(k, e.target.value)}
-                // Una pregunta es una sola línea: Enter no agrega saltos.
-                onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
-              />
-              <div className={estilos.pie}>
-                <p>{repetida(k) ? 'Está repetida: se pregunta una sola vez' : k === 0 ? 'Decide el color de cada punto en el mapa' : ''}</p>
-                {editable && k > 0 && (
-                  <button type="button" onClick={() => subir(k)} aria-label={`Subir la pregunta ${k + 1}`}>
-                    Subir
-                  </button>
-                )}
-                {editable && preguntas.length > 1 && (
-                  <button type="button" onClick={() => quitar(k)} aria-label={`Quitar la pregunta ${k + 1}`}>
-                    Quitar
-                  </button>
-                )}
+        <ol className={estilos.preguntas}>
+          {ENCUESTA.map((pregunta, k) => (
+            <li key={pregunta.texto}>
+              <span className={estilos.numero} aria-hidden="true">{k + 1}</span>
+              <div className={estilos.pregunta}>
+                <h3>{pregunta.nombre}</h3>
+                <p>{pregunta.texto}</p>
+                <dl className={estilos.escala} aria-label="Escala">
+                  <div>
+                    <dt>1</dt>
+                    <dd>{pregunta.minimo}</dd>
+                  </div>
+                  <div>
+                    <dt>7</dt>
+                    <dd>{pregunta.maximo}</dd>
+                  </div>
+                </dl>
               </div>
             </li>
           ))}
         </ol>
-        {editable ? (
-          <>
-            <button type="button" className={estilos.agregar} disabled={preguntas.length >= maximoPreguntas} onClick={agregar}>
-              {preguntas.length >= maximoPreguntas ? `Máximo ${maximoPreguntas} preguntas` : 'Agregar una pregunta'}
-            </button>
-            <p className={estilos.ayuda}>
-              Escribe cada pregunta de modo que se conteste con qué tan de acuerdo está la persona. La primera es la que separa a quienes
-              están a favor de quienes están en contra.
-            </p>
-          </>
-        ) : (
-          <p className={estilos.ayuda}>La corrida grabada solo tiene respuestas para estas preguntas: no se pueden cambiar.</p>
-        )}
+        <p className={estilos.ayuda}>
+          La encuesta es fija: todas las personas responden estas cinco preguntas en cada corrida. La primera es la que separa a quienes
+          están a favor de quienes están en contra, y el índice de aceptación es la media de las cuatro primeras.
+        </p>
       </div>
-
-      {editable && cambiada && (
-        <footer className={estilos.final}>
-          <button type="button" className={estilos.restablecer} onClick={() => setPreguntas(preguntasBase)}>
-            Volver a las preguntas originales
-          </button>
-        </footer>
-      )}
     </aside>
   );
 }

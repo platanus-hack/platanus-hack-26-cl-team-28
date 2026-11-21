@@ -66,9 +66,40 @@
 }
 
 .titular {
+  isolation: isolate;
   font: 500 clamp(2.8rem, min(1.5rem + 5vw, 13vh), 6.5rem) / 1 var(--fuente-voz);
   letter-spacing: -0.025em;
   text-wrap: balance;
+}
+
+.panelMando { position: relative; padding-top: 110px; }
+.asomo {
+  position: absolute;
+  left: 1.5rem;
+  top: 0;
+  width: 90px;
+  height: 110px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+  cursor: pointer;
+}
+.asomo:focus-visible { outline: 2px solid var(--foco); outline-offset: 2px; }
+.asomo > span {
+  position: absolute;
+  inset: auto 0 0;
+  display: block;
+  animation: asomarse 900ms ease-in-out 3s both;
+}
+.asomo canvas { display: block; width: 100% !important; height: auto !important; }
+.figuraSaludo { display: block; transform-origin: bottom center; }
+@keyframes asomarse {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .asomo > span { animation: none; }
 }
 
 .bajada {
@@ -196,7 +227,9 @@
 
 .mando,
 .utiles {
+  display: flex;
   flex: none;
+  gap: var(--e2);
   margin-top: auto;
 }
 

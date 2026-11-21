@@ -182,6 +182,19 @@
   background: var(--color);
 }
 
+/* Una pregunta que no mide postura (Influencia): del 1 al 7 en un solo tono, más intenso hacia el 7. */
+.encuesta li[data-neutra] [data-postura='contra'] {
+  --color: color-mix(in srgb, var(--tinta-suave) 30%, transparent);
+}
+
+.encuesta li[data-neutra] [data-postura='indecisa'] {
+  --color: color-mix(in srgb, var(--tinta-suave) 60%, transparent);
+}
+
+.encuesta li[data-neutra] [data-postura='favor'] {
+  --color: var(--tinta-suave);
+}
+
 .encuesta li b {
   display: grid;
   justify-items: end;

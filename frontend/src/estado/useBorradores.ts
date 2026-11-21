@@ -29,6 +29,8 @@ export function useBorradores(iniciales: readonly Omit<Borrador, 'id'>[] = CASOS
     // Escribir a mano deja de ser el caso de validación: la encuesta ya no corresponde.
     cambiarTexto: (id: number, texto: string) => fijar(id, { texto, referencia: undefined }),
     adjuntar: (id: number, documento: Documento | undefined) => fijar(id, { documento, leido: undefined, errorDocumento: undefined }),
+    /** Reemplaza todas las variantes por estos textos (al volver a una pregunta del historial). */
+    cargar: (textos: string[]) => setBorradores(textos.map((texto) => ({ id: siguienteId.current++, texto }))),
     agregar: () => setBorradores((lista) => [...lista, { id: siguienteId.current++, texto: '' }]),
     quitar: (id: number) => setBorradores((lista) => lista.filter((b) => b.id !== id)),
   };

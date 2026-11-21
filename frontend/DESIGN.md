@@ -45,14 +45,39 @@ algo que se ve: personas con nombre de comuna, frases propias, el costo medido y
 7. *Conocer a alguien.* En resultados, tocar un punto abre la ficha de esa persona: quién es según el censo, su frase y
    cuánto apoyó cada variante.
 
-**Honestidad en pantalla.** La esquina superior derecha dice siempre qué responde: "En vivo" con el modelo, "Corrida
-grabada" o "Demostración sin motor". Lo que viene de caché se reproduce en seis segundos y lo dice. Sin motor no se
+**Honestidad en pantalla.** La esquina superior derecha dice siempre qué responde: "En vivo" con el modelo o
+"Demostración sin motor". Lo que viene de caché se reproduce en seis segundos y lo dice. Sin motor no se
 ofrece la comparación con Cadem.
 
 **Interfaz mínima y ocultable.** Abajo a la izquierda, el mando: variantes, texto, casos con encuesta real, subir una
 ley (o soltarla encima), iteraciones del agente y el botón de preguntar. Con resultados, pestañas por variante con su
 porcentaje y la diferencia contra la A. Abajo a la derecha, Opciones (agentes a consultar y filtros, fondo claro u
 oscuro, ocultar). La tecla H oculta todo; las flechas cambian de variante.
+
+**El cajón de la muestra (Opciones).** Una hoja a todo el alto, pegada a la derecha, donde se elige a quiénes se
+pregunta; con un resultado en pantalla, a quiénes se mira. La idea: cada filtro es a la vez un gráfico de la
+sociedad. El largo o el alto de cada opción es la parte de la población que cae en ella entre quienes cumplen los
+*demás* filtros, y la cifra va siempre escrita al lado; así se ve de antemano cuánta gente suma o quita cada
+opción. Al preparar, esa distribución la calcula el motor sobre toda la población; con una corrida en pantalla, o
+sin motor, se cuenta en el navegador entre los agentes que hay.
+
+- *Cabeza, fija.* Cuánta gente queda, en grande, y la misma cuenta en cuadrados. Debajo, los filtros puestos como
+  fichas que se quitan con un toque, y «Quitar todo».
+- *Cuerpo, lo único que se desplaza.* Secciones plegables: Muestra (cuántas preguntar y clusterización), Territorio
+  (región), Personas (edad, género, educación, nacionalidad), Hogar y trabajo (situación laboral, niños en el hogar,
+  vivienda, previsión de salud, ingreso) y Opinión (posición política, aprobación del gobierno, voto en la segunda
+  vuelta de 2025, confianza en el gobierno). Abren Muestra, Territorio y las que tengan filtros; cada título resume
+  cuántos hay puestos. Cada sección dice de dónde vienen sus datos; Opinión, que es imputada y solo de adultos.
+- *Cuatro formas de control.* Filas con barra (varias opciones), barra partida (dos opciones), columnas (escalas
+  ordenadas: quintiles, izquierda a derecha) y la edad como histograma por año con dos topes. El cuadrado de cada
+  opción es el mismo de la cuenta: vacío, no elegida; lleno, elegida.
+- *Cómo se elige.* Tocar una opción la suma y tocarla de nuevo la quita; con dos opciones, la otra reemplaza a la
+  elegida. Con todas elegidas el parámetro deja de filtrar.
+- *Color.* Sin nada elegido las barras van en tono medio; con algo elegido, eso va en tinta y el resto se apaga.
+  Ningún color nuevo: tinta, papel y sus tonos.
+
+Un parámetro que la población no trae (la demostración sin motor) no se dibuja. La edad llega hasta «85+» porque el
+censo la publica con ese tope. Catálogo y reglas en `src/vivo/sociedad.ts`; piezas en `src/enjambre/muestra/`.
 
 **Pantallas angostas y bajas.** En angostas todo va en una columna; en bajas (hasta 800 px de alto) las cifras bajan
 para no chocar con la tarjeta de la encuesta.

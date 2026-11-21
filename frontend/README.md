@@ -31,6 +31,9 @@ demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la e
   guardadas en el navegador y viajan en cada corrida. `resumirEncuesta` saca el resultado de cada pregunta, que
   se muestra junto a las cifras (`enjambre/ResultadoEncuesta.tsx`): reparto entre en desacuerdo, al medio y de
   acuerdo, y la diferencia con la variante A. La primera pregunta decide el color de cada punto.
+- `historial.ts`: el historial de simulaciones que guarda el motor (`GET /api/historial`): hora, propuesta de cada variante y
+  cuántos quedaron a favor, en contra y sin decidir. Se abre con el botón «Historial» (`enjambre/CajonHistorial.tsx`), y
+  «Volver a preguntar» deja esos textos como variantes.
 - `validacion.ts`: políticas con encuesta Cadem publicada, para comparar en pantalla lo que dijeron los agentes
   con lo que dijo la gente.
 

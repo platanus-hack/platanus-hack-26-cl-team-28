@@ -1,13 +1,13 @@
 /*
  * Cajón de la encuesta: la misma hoja a todo el alto del cajón de la muestra, pegada al borde
- * derecho. Arriba cuántas preguntas son; debajo, cada una en su campo.
+ * derecho. Arriba cuántas preguntas son; debajo, cada una con su escala.
  */
 .cajon {
   position: fixed;
   inset: 0 0 0 auto;
   z-index: 6;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   width: min(100vw, 25.5rem);
   border-left: 1px solid var(--linea-suave);
   background: var(--papel);
@@ -30,24 +30,15 @@
   padding: var(--e5) var(--e5) var(--e4);
 }
 
-.cuenta {
-  display: flex;
-  align-items: baseline;
-  gap: var(--e3);
-  padding-right: 44px;
-}
-
-.cuenta b {
-  font: 600 clamp(2.6rem, 1.8rem + 2.4vh, 3.6rem) / 0.9 var(--fuente-voz);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
-}
-
-.cuenta span {
-  font-size: var(--texto-s);
-  line-height: 1.25;
+.cuenta { display: grid; gap: 10px; padding-right: 40px; }
+.cuenta > span {
   color: var(--tinta-suave);
+  font-size: var(--texto-xxs);
+  font-weight: 650;
+  letter-spacing: 0.07em;
 }
+.cuenta h2 { margin: 0; font: 650 1.65rem/1.1 var(--fuente-voz); letter-spacing: -0.025em; }
+.cuenta p { color: var(--tinta-suave); font-size: var(--texto-s); line-height: 1.4; }
 
 .cerrar {
   position: absolute;
@@ -87,117 +78,60 @@
   list-style: none;
 }
 
-/* Cada pregunta: su número a la izquierda, el campo y, debajo, su nota y sus acciones. */
+/* Cada pregunta: su número a la izquierda; a la derecha, su nombre, el texto y su escala. */
 .preguntas li {
   display: grid;
-  grid-template-columns: 1.4rem minmax(0, 1fr);
+  grid-template-columns: 2.4rem minmax(0, 1fr);
   column-gap: var(--e2);
+  padding-bottom: var(--e3);
+  border-bottom: 1px solid var(--linea-suave);
 }
+.preguntas li:last-child { border-bottom: 0; padding-bottom: 0; }
 
 .numero {
-  padding-top: var(--e2);
   font: 600 1.25rem/1.2 var(--fuente-voz);
   font-variant-numeric: tabular-nums;
   color: var(--tinta-suave);
 }
 
-.preguntas textarea {
-  display: block;
-  width: 100%;
-  min-height: 3.3rem;
-  padding: var(--e2) var(--e3);
-  border: 0;
-  border-bottom: 2px solid var(--tinta-suave);
-  border-radius: 0;
-  background: var(--mar);
-  color: var(--tinta);
-  font-size: var(--texto-m);
-  line-height: 1.35;
-  resize: none;
-  field-sizing: content;
-}
+.pregunta { display: grid; gap: 6px; }
+.pregunta h3 { margin: 0; font-size: var(--texto-s); font-weight: 650; }
+.pregunta p { margin: 0; font-size: var(--texto-m); line-height: 1.35; text-wrap: pretty; }
 
-.preguntas textarea[aria-invalid] {
-  border-bottom-color: var(--indecisa);
-}
-
-.preguntas textarea[readonly] {
-  border-bottom-color: var(--linea-suave);
-  color: var(--tinta-suave);
-}
-
-.pie {
-  grid-column: 2;
+.escala {
   display: flex;
-  align-items: center;
-  gap: var(--e3);
-  min-height: 32px;
-}
-
-.pie p {
-  flex: 1;
+  flex-wrap: wrap;
+  gap: 4px var(--e3);
+  margin: 2px 0 0;
+  color: var(--tinta-suave);
   font-size: var(--texto-xs);
-  line-height: 1.25;
-  color: var(--tinta-suave);
+  line-height: 1.3;
 }
-
-.pie button,
-.restablecer {
-  min-height: 32px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--tinta);
-  font-size: var(--texto-s);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-
-.agregar {
-  justify-self: start;
-  min-height: 40px;
-  margin-left: calc(1.4rem + var(--e2));
-  padding: 0 var(--e4);
-  border: 0;
-  border-radius: 999px;
-  background: var(--tinta);
-  color: var(--papel);
-  font-size: var(--texto-s);
-  font-weight: 650;
-}
-
-.agregar:disabled {
+.escala div { display: flex; align-items: baseline; gap: 6px; }
+.escala dt {
+  display: grid;
+  place-items: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  border-radius: 4px;
   background: var(--relleno-suave);
-  color: var(--tinta-suave);
+  color: var(--tinta);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
 }
+.escala dd { margin: 0; }
 
 .ayuda {
-  margin-left: calc(1.4rem + var(--e2));
+  margin-left: calc(2.4rem + var(--e2));
   font-size: var(--texto-s);
   line-height: 1.4;
   color: var(--tinta-suave);
   text-wrap: pretty;
 }
 
-.final {
-  padding: var(--e3) var(--e5) var(--e4);
-  border-top: 1px solid var(--linea-suave);
-}
-
-.restablecer {
-  min-height: 36px;
-  font-weight: 650;
-}
-
 @media (hover: hover) and (pointer: fine) {
   .cerrar:hover {
     color: var(--tinta);
-  }
-
-  .pie button:hover,
-  .restablecer:hover {
-    text-decoration-thickness: 2px;
   }
 }
 

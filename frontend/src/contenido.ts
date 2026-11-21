@@ -8,7 +8,7 @@ export const CASOS_INICIALES = [
 ];
 
 export const PREPARAR = {
-  titular: 'What If Chile ...',
+  titular: 'What If Chile...',
   bajada: 'Escribe una política pública y sus variantes. Una población simulada responde qué opina y qué haría.',
   casos: 'Qué se pregunta',
   casosAyuda: 'Cada variante se pregunta a las mismas personas.',

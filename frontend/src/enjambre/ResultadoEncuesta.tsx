@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { porcentajes } from '../dominio/metricas';
-import { resumirEncuesta } from '../vivo/encuesta';
+import { midePostura, preguntaDe, resumirEncuesta } from '../vivo/encuesta';
 import type { CasoVivo } from '../vivo/useEnVivo';
 import estilos from './ResultadoEncuesta.module.css';
 
@@ -8,7 +8,7 @@ interface Props {
   casos: CasoVivo[];
   viendo: number;
   /** Las preguntas de la corrida, en el orden de las notas de cada agente. */
-  preguntas: string[];
+  preguntas: readonly string[];
   /** Los agentes que se están mirando (la muestra, o quienes pasan los filtros). */
   agentes: number[];
   /** Cambia cada vez que llegan respuestas. */
@@ -19,9 +19,10 @@ const decimal = (valor: number) => valor.toFixed(1).replace('.', ',');
 
 /**
  * Cómo respondieron cada pregunta de la encuesta en la variante que se mira: la pregunta, el
- * reparto entre en desacuerdo, al medio y de acuerdo, y cuántos están de acuerdo. Con más de
- * una variante, también cuánto cambia cada pregunta contra la A. Al tocar una pregunta se lee
- * completa, con su desglose y su nota media.
+ * reparto entre el lado bajo (1 a 3), el medio (4) y el lado alto (5 a 7) de su escala, y cuántos
+ * quedan en el lado alto. Cada pregunta tiene su escala: en Justicia el 7 es «muy justo», en
+ * Influencia «muy influyente». Con más de una variante, también cuánto cambia cada pregunta
+ * contra la A. Al tocar una pregunta se lee completa, con su desglose y su nota media.
  */
 export function ResultadoEncuesta({ casos, viendo, preguntas, agentes, version }: Props) {
   const caso = casos[viendo];
@@ -45,16 +46,19 @@ export function ResultadoEncuesta({ casos, viendo, preguntas, agentes, version }
         <h2>
           Encuesta · {preguntas.length} {preguntas.length === 1 ? 'pregunta' : 'preguntas'}
         </h2>
-        <span>De acuerdo</span>
+        <span>5 a 7</span>
       </header>
       <ol>
         {preguntas.map((pregunta, k) => {
           const { conteo, media } = filas[k];
           const pct = porcentajes(conteo);
           const delta = deLaA && deLaA[k].conteo.total ? pct.favor - porcentajes(deLaA[k].conteo).favor : null;
-          const detalle = `${pct.favor} % de acuerdo, ${pct.indecisa} % al medio y ${pct.contra} % en desacuerdo. Nota media ${decimal(media)} de 7`;
+          const escala = preguntaDe(pregunta);
+          const alto = escala ? `hacia «${escala.maximo}» (5 a 7)` : 'entre 5 y 7';
+          const bajo = escala ? `hacia «${escala.minimo}» (1 a 3)` : 'entre 1 y 3';
+          const detalle = `${pct.favor} % ${alto}, ${pct.indecisa} % al medio y ${pct.contra} % ${bajo}. Nota media ${decimal(media)} de 7`;
           return (
-            <li key={pregunta} data-abierta={abierta === k || undefined}>
+            <li key={pregunta} data-abierta={abierta === k || undefined} data-neutra={!midePostura(pregunta) || undefined}>
               <button type="button" aria-expanded={abierta === k} title={abierta === k ? undefined : pregunta} onClick={() => setAbierta(abierta === k ? null : k)}>
                 <span>
                   <i aria-hidden="true">{k + 1}</i>
@@ -85,9 +89,9 @@ export function ResultadoEncuesta({ casos, viendo, preguntas, agentes, version }
         })}
       </ol>
       <footer>
-        <span data-postura="contra">En desacuerdo 1 a 3</span>
-        <span data-postura="indecisa">Al medio 4</span>
-        <span data-postura="favor">De acuerdo 5 a 7</span>
+        <span data-postura="contra">1 a 3</span>
+        <span data-postura="indecisa">Al medio (4)</span>
+        <span data-postura="favor">5 a 7</span>
       </footer>
     </section>
   );

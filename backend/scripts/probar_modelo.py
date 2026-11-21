@@ -7,11 +7,10 @@ Uso:
     uv run python -I scripts/probar_modelo.py data/pruebas/poblacion/regiones_50.jsonl data/pruebas/sala_cuna/variantes
 
 Las personas son generales y sirven para cualquier caso. Un caso es una carpeta (ver
-data/pruebas/README.md) con sus textos y, si quiere preguntas propias, un encuesta.json:
-    {"preguntas": ["...", "..."], "indice": [1, 2], "abiertas": {"clave": "pregunta"}}
-"indice" dice qué preguntas se promedian en el índice de aceptación. Sin ese archivo se usan
-las seis preguntas sobre una política que están más abajo. La escala es siempre de 1 a 7.
-Los resultados se guardan en la carpeta del caso.
+data/pruebas/README.md) con sus textos. La encuesta es fija: las cinco preguntas de más abajo
+(apoyo, justicia, confianza, efectividad e influencia), cada una con un entero de 1 a 7 y su
+propia escala, que se le dice al modelo al lado de cada pregunta. El índice de aceptación es
+la media de las cuatro primeras. Los resultados se guardan en la carpeta del caso.
 
 POLITICA es un archivo o una carpeta. Si es una carpeta, cada .md es una variante: se
 encuesta a las mismas personas con la misma semilla en cada una, para que la diferencia
@@ -39,14 +38,13 @@ Opciones:
     --salida RUTA        archivo de resultados
     --perfil FORMA       "prosa" (por defecto, si las personas la traen) o "lista"
     --redaccion N        redacción de las instrucciones: 1 (por defecto) o 2
-    --orden LISTA        orden en que se hacen las preguntas, por ejemplo 2,3,4,5,6,1.
-                         Las respuestas se guardan siempre como p1..p6
+    --orden LISTA        orden en que se hacen las preguntas, por ejemplo 2,3,4,5,1.
+                         Las respuestas se guardan siempre como p1..p5
     --sin-control        no hace la pregunta de control: p1 vuelve a ser la primera respuesta
     --etiqueta TEXTO     agrega quién propone la política, por ejemplo "del Gobierno"
     --alternativas RUTA  en vez de la encuesta, hace una sola pregunta de alternativas (un JSON
                          con "pregunta" y "alternativas"). El orden de las alternativas se
                          sortea por persona para que no gane la que va primero
-    --encuesta RUTA      preguntas del caso; por defecto, encuesta.json en la carpeta del caso
     --abiertas N         después de la encuesta, pide a N personas repartidas en la lista que
                          justifiquen cada respuesta y contesten las preguntas abiertas.
                          Son unos 400 tokens de salida por persona: sirve el modelo con CTX=32768
@@ -69,17 +67,21 @@ from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-PREGUNTAS = [
-    "¿Estarías de acuerdo con que se implemente esta política en tu región?",
-    "Si esta política se implementara tal como está descrita, ¿estarías satisfecho con ella?",
-    "¿Te parece justa la forma en que esta política reparte costos y beneficios?",
-    "¿Confías en que el Estado chileno sea capaz de implementar bien esta política?",
-    "Si esta política fuera obligatoria, ¿la cumplirías?",
-    "¿Crees que esta política va a lograr lo que se propone?",
+# La encuesta, fija: (nombre, pregunta, qué significa el 1, qué significa el 7).
+ENCUESTA = [
+    ("Apoyo", "¿Estarías de acuerdo con que se implemente esta política en tu región?", "totalmente en desacuerdo", "totalmente de acuerdo"),
+    ("Justicia", "¿Te parece justa la forma en que esta política reparte costos y beneficios?", "muy injusto", "muy justo"),
+    ("Confianza", "¿Confías en que el Estado chileno sea capaz de implementar bien esta política?", "muy desconfiado", "muy confiado"),
+    ("Efectividad", "¿Qué tan efectiva crees que es esta política en lograr lo que propone?", "muy inefectivo", "muy efectivo"),
+    ("Influencia", "¿Qué tan influyente es esta política en tu situación personal o la de tu hogar?", "nada influyente", "muy influyente"),
 ]
+NOMBRES = [nombre for nombre, _, _, _ in ENCUESTA]
+PREGUNTAS = [texto for _, texto, _, _ in ENCUESTA]
+ESCALAS = [(minimo, maximo) for _, _, minimo, maximo in ENCUESTA]
 CLAVES = [f"p{i}" for i in range(1, len(PREGUNTAS) + 1)]
 # Va primero y no mide nada: recibe la primera respuesta, que el modelo da casi sin mirar el perfil.
 CONTROL = "¿Entiendes las instrucciones de esta encuesta?"
+ESCALA_CONTROL = ("no las entiendo", "las entiendo por completo")
 # Índice de aceptación: promedio de las preguntas 1 a 4.
 INDICE = CLAVES[:4]
 ESCALA = list(range(1, 8))
@@ -105,12 +107,21 @@ REDACCIONES = {
         "gente opina distinto: si algo te conviene o te perjudica, que se note en tus respuestas."
     ),
 }
-FORMATO = (
-    "Todas las preguntas usan una escala de 1 a 7, donde 1 es totalmente en desacuerdo y 7 es "
-    "totalmente de acuerdo.\n"
-    "Responde solo con {n} enteros de 1 a 7, uno por pregunta y en el mismo orden, "
-    "con el formato [{claves}]."
+#: Cómo se dice la escala de las preguntas; lo que significan el 1 y el 7 va al lado de cada una.
+# La aclaración del 4 está desde el 21-11-2026: sin ella el modelo se refugia en el centro. Con Haiku y la rebaja
+# del TAG, 44 % de 200 personas respondía 4 a la primera pregunta; con ella, 4,5 % (en Cadem, 5 % no toma posición).
+ESCALA = (
+    "Cada pregunta se responde con un entero de 1 a 7. Al lado de cada una dice qué significan "
+    "el 1 y el 7 en esa pregunta; los valores intermedios son grados entre ambos extremos. "
+    "El 4 es solo para quien de verdad no tiene opinión o no sabe, y en las encuestas reales eso es poca gente. "
+    "Una persona que se inclina aunque sea un poco hacia un lado responde 3 o 5, no 4."
 )
+FORMATO = ESCALA + "\nResponde solo con {n} enteros de 1 a 7, uno por pregunta y en el mismo orden, con el formato [{claves}]."
+
+
+def lineas_preguntas(textos, escalas, inicio=1):
+    """Las preguntas numeradas, cada una con lo que significan el 1 y el 7."""
+    return "\n".join(f"{i}. {texto} (1 = {minimo}, 7 = {maximo})" for i, (texto, (minimo, maximo)) in enumerate(zip(textos, escalas), start=inicio))
 
 
 
@@ -120,42 +131,19 @@ def gramatica(n):
     return 'root ::= "[" ' + ' "," '.join("d" for _ in range(n)) + ' "]"\nd ::= [1-7]'
 
 
-def preguntas_de(cfg):
-    """Las preguntas de esta corrida: las de `cfg` si las trae (el servidor deja configurarlas
-    por corrida, sin tocar las del módulo), o las del banco."""
-    return cfg.get("preguntas") or PREGUNTAS
-
-
-def claves_de(cfg):
-    return [f"p{i}" for i in range(1, len(preguntas_de(cfg)) + 1)]
-
-
 def cuantas(cfg):
     """Respuestas que se piden en cada llamada."""
-    return len(preguntas_de(cfg)) + (1 if cfg["control"] else 0)
+    return len(PREGUNTAS) + (1 if cfg["control"] else 0)
 
 
 def carpeta_del_caso(ruta):
     """La carpeta del caso al que pertenece un texto: la más cercana, hacia arriba, que tenga
-    encuesta.json, benchmarks.json o una carpeta variantes."""
+    benchmarks.json o una carpeta variantes."""
     inicio = ruta if ruta.is_dir() else ruta.parent
     for carpeta in [inicio, *inicio.parents][:3]:
-        if (carpeta / "encuesta.json").exists() or (carpeta / "benchmarks.json").exists() or (carpeta / "variantes").is_dir():
+        if (carpeta / "benchmarks.json").exists() or (carpeta / "variantes").is_dir():
             return carpeta
     return inicio
-
-
-def usar_encuesta(ruta):
-    """Reemplaza las preguntas del módulo por las de un encuesta.json. Devuelve True si existe."""
-    global PREGUNTAS, CLAVES, INDICE, ABIERTAS
-    if not ruta or not ruta.exists():
-        return False
-    datos = json.loads(ruta.read_text(encoding="utf-8"))
-    PREGUNTAS = list(datos["preguntas"])
-    CLAVES = [f"p{i}" for i in range(1, len(PREGUNTAS) + 1)]
-    INDICE = [f"p{i}" for i in datos.get("indice") or range(1, len(PREGUNTAS) + 1)]
-    ABIERTAS = datos.get("abiertas", ABIERTAS)
-    return True
 
 
 def atributos(persona):
@@ -180,8 +168,9 @@ def grupos(persona):
 def mensajes(politica, persona, cfg):
     """Todo lo que es igual para todos va en el mensaje de sistema y queda en caché;
     el mensaje de usuario lleva solo el perfil, que es lo único que cambia."""
-    textos = ([CONTROL] if cfg["control"] else []) + [preguntas_de(cfg)[k] for k in cfg["orden"]]
-    preguntas = "\n".join(f"{i}. {texto}" for i, texto in enumerate(textos, start=1))
+    textos = ([CONTROL] if cfg["control"] else []) + [PREGUNTAS[k] for k in cfg["orden"]]
+    escalas = ([ESCALA_CONTROL] if cfg["control"] else []) + [ESCALAS[k] for k in cfg["orden"]]
+    preguntas = lineas_preguntas(textos, escalas)
     formato = FORMATO.format(n=len(textos), claves=",".join(f"r{i}" for i in range(1, len(textos) + 1)))
     texto = politica.strip()
     if cfg["etiqueta"]:
@@ -221,7 +210,7 @@ def distribuciones(logprobs, n):
 
 
 def en_orden_canonico(valores, orden):
-    """La respuesta k contesta la pregunta orden[k]: devuelve los valores como p1..p6."""
+    """La respuesta k contesta la pregunta orden[k]: devuelve los valores como p1..p5."""
     canonico = [None] * len(orden)
     for valor, pregunta in zip(valores, orden):
         canonico[pregunta] = valor
@@ -261,7 +250,7 @@ def encuestar(politica, persona, semilla, cfg):
         if len(respuestas) == cuantas(cfg) and all(type(v) is int and 1 <= v <= 7 for v in respuestas):
             if cfg["control"]:
                 registro["control"] = respuestas.pop(0)
-            registro["respuestas"] = dict(zip(claves_de(cfg), en_orden_canonico(respuestas, cfg["orden"])))
+            registro["respuestas"] = dict(zip(CLAVES, en_orden_canonico(respuestas, cfg["orden"])))
             registro["valida"] = True
     except (TypeError, ValueError):
         pass
@@ -469,7 +458,7 @@ def informe(modelo, personas, registros, segundos, repeticion, agrupar):
         print(f"AVISO: {razonaron} respuestas traen razonamiento; el modelo no lo tiene apagado.")
     if not validos:
         return
-    # Los archivos anteriores a la pregunta 6 traen solo p1..p5.
+    # Solo las claves que trae el archivo (los resultados de antes pueden traer menos).
     claves = [c for c in CLAVES if c in validos[0]["respuestas"]]
     pesos_por_id = {p["id"]: p.get("peso", 1) for p in personas}
     pesos = [pesos_por_id.get(r["id"], 1) for r in validos]
@@ -560,7 +549,7 @@ def leer_orden(texto):
         return list(range(len(CLAVES)))
     orden = [int(x) - 1 for x in texto.split(",")]
     if sorted(orden) != list(range(len(CLAVES))):
-        sys.exit(f"--orden debe traer cada pregunta de 1 a {len(CLAVES)} una vez, por ejemplo 2,3,4,5,6,1")
+        sys.exit(f"--orden debe traer cada pregunta de 1 a {len(CLAVES)} una vez, por ejemplo 2,3,4,5,1")
     return orden
 
 
@@ -583,14 +572,12 @@ def main():
     ap.add_argument("--etiqueta")
     ap.add_argument("--abiertas", type=int, default=0)
     ap.add_argument("--alternativas", type=Path)
-    ap.add_argument("--encuesta", type=Path)
     ap.add_argument("--mostrar-prompt", action="store_true")
     ap.add_argument("--sin-logprobs", action="store_true")
     ap.add_argument("--exportar-prompts", type=Path)
     ap.add_argument("--solo-informe", type=Path)
     args = ap.parse_args()
     caso = carpeta_del_caso(args.solo_informe or args.politica)
-    usar_encuesta(args.encuesta or caso / "encuesta.json")
     with open(args.personas, encoding="utf-8") as f:
         personas = [json.loads(linea) for linea in f if linea.strip()][: args.limite]
     if args.agrupar:

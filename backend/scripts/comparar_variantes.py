@@ -19,7 +19,6 @@ Nada de esto depende del tema. Lo propio de cada caso se lee de su carpeta, que 
 es la del primer archivo de resultados (ver data/pruebas/README.md):
   benchmarks.json          cifras reales para validar
   variantes/atributos.json qué atributos tiene cada variante
-  encuesta.json            preguntas propias y cuáles forman el índice (opcional)
 
 Las diferencias son pareadas: las mismas personas contestaron todas las variantes con la
 misma semilla. El intervalo es un bootstrap de personas dentro de cada región.
@@ -46,7 +45,7 @@ from pathlib import Path
 
 import numpy as np
 
-# Preguntas que forman el índice de aceptación; un encuesta.json en la carpeta del caso las cambia.
+# Preguntas que forman el índice de aceptación: apoyo, justicia, confianza y efectividad.
 INDICE = ["p1", "p2", "p3", "p4"]
 GRUPOS = ["Edad", "Género", "Tramo socioeconómico", "Situación laboral", "Menores en el hogar", "Posición política"]
 MINIMO_GRUPO = 30
@@ -304,10 +303,6 @@ def main():
 
     personas = leer(args.personas)
     caso = args.caso or args.resultados[0].parent
-    ruta_encuesta = caso / "encuesta.json"
-    if ruta_encuesta.exists():
-        propia = json.loads(ruta_encuesta.read_text(encoding="utf-8"))
-        INDICE[:] = [f"p{i}" for i in propia.get("indice") or range(1, len(propia["preguntas"]) + 1)]
     ruta_benchmarks = args.benchmarks or caso / "benchmarks.json"
     benchmarks = json.loads(ruta_benchmarks.read_text(encoding="utf-8")) if ruta_benchmarks.exists() else None
     ruta_atributos = args.atributos or caso / "variantes" / "atributos.json"

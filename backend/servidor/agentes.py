@@ -81,6 +81,8 @@ class Agente:
     #: Sus columnas de la tabla de agentes, para reescribir el perfil con un filtro de datos.
     #: None en los del archivo fijo, que traen el perfil ya escrito. No viaja a la interfaz.
     fila: dict | None = None
+    #: Su opción en cada parámetro de `sociedad.PARAMETROS`, en ese orden (-1 si no tiene el dato).
+    rasgos: tuple = ()
 
     def publico(self) -> dict:
         return {
@@ -97,6 +99,7 @@ class Agente:
             "educacion": self.educacion,
             "politica": self.politica,
             "representa": self.representa,
+            "s": list(self.rasgos),
             "atributos": self.atributos,
         }
 
@@ -110,7 +113,8 @@ def cargar_comunas() -> dict[tuple[int, str], tuple[float, float, int]]:
         }
 
 
-def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos: dict, comunas: dict, fila: dict | None = None) -> Agente:
+def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos: dict, comunas: dict, fila: dict | None = None,
+              rasgos: tuple = ()) -> Agente:
     """Arma un agente con lo que entrega scripts/personas_muestra.py de una persona."""
     region = CODIGO_A_INDICE[datos["region"]]
     comuna = datos.get("comuna") or ""
@@ -140,11 +144,18 @@ def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos
         # La escala de 1 a 10 de la CEP en cinco tramos; los menores de 18 y quienes no se ubican van aparte.
         politica=(datos["posicion_politica"] - 1) // 2 if datos.get("posicion_politica") else 5,
         fila=fila,
+        rasgos=rasgos,
     )
 
 
-def cargar_agentes(archivo: Path = ARCHIVO_AGENTES) -> list[Agente]:
+def cargar_agentes(archivo: Path = ARCHIVO_AGENTES, codificar=None) -> list[Agente]:
+    """Los agentes de un archivo de perfiles. `codificar(grupos, datos)` da los rasgos de cada uno
+    (`sociedad.codigos`); sin ella quedan sin rasgos."""
     comunas = cargar_comunas()
     with open(archivo, encoding="utf-8") as f:
         filas = [json.loads(linea) for linea in f if linea.strip()]
-    return [agente_de(indice, fila["id"], fila["perfil"], fila.get("grupos", {}), fila["datos"], comunas) for indice, fila in enumerate(filas)]
+    return [
+        agente_de(indice, fila["id"], fila["perfil"], fila.get("grupos", {}), fila["datos"], comunas,
+                  rasgos=codificar(fila.get("grupos", {}), fila["datos"]) if codificar else ())
+        for indice, fila in enumerate(filas)
+    ]

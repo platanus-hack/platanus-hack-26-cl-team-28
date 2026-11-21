@@ -11,9 +11,9 @@ Lo que el servidor fija del banco de pruebas:
 - Sin pregunta de control cuando responde Claude: ahí la primera respuesta sí depende del
   perfil. El modelo local la lleva, como en el banco (`CFG_LOCAL`).
 
-Las preguntas son las del banco salvo que la corrida traiga las suyas (`preguntas_de`): la
-interfaz deja editarlas. Todas se responden en la misma escala de 1 a 7, y la primera es la que
-decide la postura de cada persona (a favor, indecisa o en contra).
+La encuesta es fija: las cinco preguntas del banco (apoyo, justicia, confianza, efectividad e
+influencia), cada una con un entero de 1 a 7 y su propia escala (`ESCALAS`: qué significan el 1
+y el 7). La primera es la que decide la postura de cada persona (a favor, indecisa o en contra).
 """
 
 import functools
@@ -47,6 +47,11 @@ filtro = _cargar("filtro_perfil")
 
 PREGUNTAS: list[str] = banco.PREGUNTAS
 CLAVES: list[str] = banco.CLAVES
+#: Qué significan el 1 y el 7 en cada pregunta, en su orden.
+ESCALAS: list[tuple[str, str]] = banco.ESCALAS
+#: El nombre corto de cada pregunta (Apoyo, Justicia...).
+NOMBRES: list[str] = banco.NOMBRES
+lineas_preguntas = banco.lineas_preguntas
 
 #: Cómo arma el banco los mensajes cuando responde Claude, en lotes.
 CFG = {"orden": list(range(len(CLAVES))), "control": False, "etiqueta": None, "redaccion": 1, "perfil": "prosa"}
@@ -65,48 +70,9 @@ _perfiles: OrderedDict[tuple[str, frozenset], dict] = OrderedDict()
 _cerrojo = threading.Lock()
 
 
-#: Límites de una encuesta escrita en la interfaz.
-MAXIMO_PREGUNTAS = 10
-LARGO_PREGUNTA = 300
-
-
-def preguntas_de(pedidas) -> list[str]:
-    """Las preguntas de una corrida: las pedidas, ya limpias, o las del banco si no viene ninguna."""
-    if pedidas is None:
-        return list(PREGUNTAS)
-    if not isinstance(pedidas, list) or not all(isinstance(p, str) for p in pedidas):
-        raise ValueError("Las preguntas deben venir como una lista de textos")
-    limpias = [" ".join(p.split()) for p in pedidas]
-    limpias = [p for p in limpias if p]
-    if not limpias:
-        raise ValueError("La encuesta necesita al menos una pregunta")
-    if len(limpias) > MAXIMO_PREGUNTAS:
-        raise ValueError(f"La encuesta acepta hasta {MAXIMO_PREGUNTAS} preguntas")
-    largas = [k for k, p in enumerate(limpias, start=1) if len(p) > LARGO_PREGUNTA]
-    if largas:
-        raise ValueError(f"La pregunta {largas[0]} es muy larga: el máximo son {LARGO_PREGUNTA} caracteres")
-    if len(set(limpias)) < len(limpias):
-        raise ValueError("Hay preguntas repetidas en la encuesta")
-    return limpias
-
-
-def cfg_de(preguntas: list[str] | None = None) -> dict:
-    """La configuración del banco para estas preguntas (las suyas si no se dan)."""
-    if preguntas is None or list(preguntas) == PREGUNTAS:
-        return CFG
-    return {**CFG, "orden": list(range(len(preguntas))), "preguntas": list(preguntas)}
-
-
-def cfg_local(url: str, temperatura: float, preguntas: list[str] | None = None) -> dict:
+def cfg_local(url: str, temperatura: float) -> dict:
     """Lo que necesita `banco.encuestar` para preguntar al modelo local, una persona por llamada."""
-    return {**cfg_de(preguntas), "control": True, "url": url, "temperatura": temperatura, "logprobs": False}
-
-
-def tema_de(politica: str, preguntas: list[str] | None = None) -> str:
-    """El texto en que el filtro del perfil busca los temas: la política y las preguntas que no
-    son las del banco. Una pregunta nueva puede necesitar datos que la política sola no pide."""
-    propias = [p for p in preguntas or [] if p not in PREGUNTAS]
-    return politica if not propias else politica.rstrip() + "\n\n" + "\n".join(propias)
+    return {**CFG, "control": True, "url": url, "temperatura": temperatura, "logprobs": False}
 
 
 @functools.lru_cache(maxsize=256)
@@ -155,18 +121,13 @@ def persona_de(agente, datos: frozenset | None = None) -> dict:
     return {"id": agente.id, "perfil": perfil_de(agente, datos)}
 
 
-def sistema_con_politica(politica: str, preguntas: list[str] | None = None) -> str:
-    """Mensaje de sistema tal como lo arma el banco: instrucciones, tema y preguntas."""
-    return banco.mensajes(politica, {}, cfg_de(preguntas))[0]["content"]
+def sistema_con_politica(politica: str) -> str:
+    """Mensaje de sistema tal como lo arma el banco: instrucciones, tema y preguntas con su escala."""
+    return banco.mensajes(politica, {}, CFG)[0]["content"]
 
 
 #: Todo lo que el banco le dice al modelo además del tema: si cambia, la caché no se reutiliza.
 VERSION: str = sistema_con_politica("")
-
-
-def version_de(preguntas: list[str] | None = None) -> str:
-    """Lo mismo que `VERSION`, con las preguntas de una corrida."""
-    return VERSION if preguntas is None else sistema_con_politica("", preguntas)
 
 
 def perfil(agente, datos: frozenset | None = None) -> str:

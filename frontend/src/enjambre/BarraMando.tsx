@@ -10,7 +10,7 @@ interface Props {
   /** Variante que se está editando. */
   elegida: number;
   alElegir(indice: number): void;
-  /** Abre el cajón donde se lee y se cambia la encuesta. */
+  /** Abre el cajón donde se lee la encuesta. */
   alAbrirEncuesta(): void;
 }
 
@@ -67,7 +67,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
         )}
       </div>
       <label className={estilos.campo}>
-        <span className="solo-lectores">Propuesta, variante {letraDe(elegida)}</span>
+        <span className={estilos.etiquetaCampo}>Propuesta <span>Variante {letraDe(elegida)}</span></span>
         <textarea
           key={actual.id}
           rows={2}
@@ -101,12 +101,16 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           </select>
         )}
       </label>
-      <button type="button" className={estilos.encuesta} aria-haspopup="dialog" onClick={alAbrirEncuesta}>
-        <span>
-          Encuesta de {sim.porPreguntar} {sim.porPreguntar === 1 ? 'pregunta' : 'preguntas'}
-        </span>
-        <b>{sim.encuestaEditable ? 'Editar' : 'Ver'}</b>
-      </button>
+      <div className={estilos.encuesta}>
+        <div>
+          <strong>Encuesta</strong>
+          <span>{sim.preguntas.length} preguntas para cada persona</span>
+        </div>
+        <button type="button" aria-haspopup="dialog" onClick={alAbrirEncuesta}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.8" /></svg>
+          Ver
+        </button>
+      </div>
       {sim.aviso && <p className={estilos.aviso} role="alert">{sim.aviso}</p>}
       <Boton type="submit" variante="primario" disabled={!sim.puedePreguntar}>
         {leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}

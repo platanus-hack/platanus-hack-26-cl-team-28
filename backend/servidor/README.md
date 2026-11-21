@@ -16,46 +16,64 @@ interfaz lo dibuja al azar dentro del polígono de su comuna (`frontend/src/dato
 De `data/agentes/` (ver `contexto/chile/agentes.md`): 1.546.322 agentes que representan a las 15.463.163
 personas de 14 años o más, uno por cada 10. Esa tabla está en el repositorio. En cada consulta, `poblacion.py`:
 
-1. Elige el nivel de clusterización (`reduccion`): un agente por cada 10, 100 o 1.000 personas. Los niveles
+1. Elige el nivel de clusterización (`reduccion`): un agente por cada 10, 100, 1.000 o 10.000 personas. Los niveles
    vienen marcados en la tabla y son anidados.
-2. Filtra con los filtros de la interfaz (región, edad, género, ingreso, educación, posición política).
-3. Sortea hasta el máximo pedido entre quienes los cumplen, estratificado por región: cada región recibe una
-   cuota proporcional a las personas que representan sus agentes filtrados (`repartir`, por resto mayor), y
-   dentro de ella se sortea en proporción a cuántas personas representa cada uno. Una muestra de 200 lleva así
-   80 personas de la Metropolitana, el 40 % del país, y no un número que cambie de un sorteo a otro.
+2. Filtra con los filtros de la interfaz: el rango de edad y los parámetros de `sociedad.py` (región, género,
+   educación, nacionalidad, situación laboral, niños en el hogar, vivienda, previsión de salud, ingreso, posición
+   política, aprobación del gobierno, voto en 2025 y confianza en el gobierno). En cada parámetro se pueden elegir
+   varias opciones; quien no tiene el dato (los menores de 18 no tienen opinión imputada) queda fuera al filtrar por él.
+3. Sortea hasta el máximo pedido entre quienes los cumplen, estratificado por región, comuna y zona (urbana o
+   rural). Cada estrato recibe una cuota proporcional a las personas que representan sus agentes filtrados, y
+   dentro de él se sortea en proporción a cuántas personas representa cada uno. Las cuotas salen de un
+   redondeo controlado (`repartir`): cada comuna, cada región y cada zona, dentro de su región y en el país,
+   queda a menos de una persona de su parte exacta. Una muestra de 250 lleva así 101 personas de la
+   Metropolitana, el 40 % del país, y 33 de zona rural, el 13 %, y no números que cambien de un sorteo a otro.
 4. Arma el perfil de cada elegido con la misma función del banco de pruebas (`scripts/personas_muestra.py`)
    y le deja al agente su fila de la tabla, con la que después se escribe el perfil reducido que lee el modelo.
 
 El sorteo es fijo: los mismos filtros dan siempre las mismas personas, así que la caché de respuestas sirve, y
-con los tamaños de la interfaz (250, 500, 1.000 y 2.000) cada muestra está contenida en la siguiente. Filtrar una región y pedir 2.000 entrega 2.000 personas de esa
+con los tamaños de la interfaz hasta 2.000 (250, 500, 1.000 y 2.000; también ofrece 5.000 y 10.000, el tope de `MAXIMO_MUESTRA`, que no se midieron) cada muestra queda casi entera (sobre el 95 %) dentro de la
+siguiente: lo que cambia son algunas comunas que pesan menos de una persona y entran en una y no en la otra. Filtrar una región y pedir 2.000 entrega 2.000 personas de esa
 región, no las pocas que le tocarían en una muestra nacional.
+
+Junto con la muestra va el **retrato** de la población: por parámetro, cuántas personas hay en cada opción entre
+quienes cumplen los *demás* filtros (cada parámetro ignora el suyo), y cuántas de cada edad. La interfaz lo dibuja
+en cada filtro, para que se vea cuánta gente suma o quita cada opción antes de tocarla.
+
+`sociedad.py` define cada parámetro una sola vez: sus opciones, la expresión SQL que da la opción de cada agente en
+la tabla y la función que la saca de un perfil ya escrito (para el archivo fijo). `tests/test_sociedad.py`
+comprueba que ambas coincidan. Al partir, la tabla se resume en memoria (`rasgos`: una fila por agente con su
+opción en cada parámetro; 0,3 s) y sobre ese resumen se filtra, se sortea y se saca el retrato (unos 20 ms; leerlo
+de los archivos tardaba 450 ms). La edad llega hasta 85, que es «85 o más»: el censo la publica con ese tope.
 
 Para que cambiar un filtro se sienta inmediato: solo se leen las columnas que el perfil usa, los agentes ya
 armados se guardan (hasta 30.000) y una muestra ya pedida se devuelve sin recalcular. Un cambio de filtro
 tarda entre 30 y 300 ms la primera vez y nada si se repite.
 
-Hoy cada agente es una persona elegida al azar dentro de un grupo de 10 parecidas. Más adelante será el
-arquetipo de un cluster; eso se cambia en `scripts/reducir_poblacion.py` y el servidor no se toca, porque ya
-sortea según la columna `representa`.
+Cada agente representa a un grupo de personas parecidas en lo que más pesa en una opinión: primero su tipo
+político, después su comuna, sexo y edad. De cada grupo se elige a quien mejor mantiene las proporciones de la
+región. Lo hace `scripts/reducir_poblacion.py`; el servidor solo sortea según la columna del nivel elegido. Con
+un agente por cada 10.000 personas quedan unos 1.550 en todo el país: un filtro deja pocos, y hay comunas sin
+ninguno.
 
-Si falta DuckDB o la tabla, y siempre con la corrida grabada, se usan las 2.000 personas de
+Si falta DuckDB o la tabla, se usan las 2.000 personas de
 `data/pruebas/poblacion/al_azar_2000.jsonl`, filtradas en memoria.
 
 ## Motores
 
-Se elige solo, en este orden, o con `MOTOR=local|api|claude|grabado`:
+Se elige solo, en este orden, o con `MOTOR=local|api|claude`. Sin ninguno disponible el servidor no arranca
+y lo dice; la interfaz queda entonces en su demostración, que sortea respuestas en el navegador.
 
 | Motor | Cuándo | Velocidad |
 |---|---|---|
 | Modelo local | `LLAMA_URL` definida (llama-server de `scripts/servir_modelo.sh`). Una persona por llamada. | La del modelo local |
 | API de Anthropic | `ANTHROPIC_API_KEY` definida y paquete `anthropic` instalado. Haiku 5.5 sin razonamiento previo. | La más rápida; para el despliegue |
 | CLI de Claude Code | `claude` en el PATH con sesión iniciada. Haiku por `claude -p`, un proceso por lote. | 1.000 agentes en unos 30 s con 50 procesos (unos 7 GB de RAM) |
-| Corrida grabada | Sin red ni credenciales. Repite respuestas reales de Haiku 5.5 a la política de sala cuna. | Inmediata; se rotula "Corrida grabada" |
 
 ## Cómo responde un agente
 
 El método es el de `scripts/probar_modelo.py`, y no está copiado: `metodo.py` importa de ese script las
-instrucciones, las seis preguntas (`PREGUNTAS`) y la función que arma los mensajes. Si se cambian allá, el
+instrucciones, las cinco preguntas con su escala (`PREGUNTAS`, `ESCALAS`) y la función que arma los mensajes. Si se cambian allá, el
 servidor usa lo nuevo al reiniciar (y la caché se invalida sola).
 
 El perfil general de cada persona son nueve secciones en segunda persona (quién es, educación y trabajo,
@@ -81,21 +99,26 @@ Cada persona responde las preguntas de la encuesta con un entero de 1 a 7, sin t
 con la primera pregunta: 5 a 7 a favor, 4 indecisa, 1 a 3 en contra. El resultado de todas se ve en la
 pantalla de resultados, y las notas de cada persona en su ficha.
 
-### La encuesta se puede cambiar
+### La encuesta es fija
 
-Las seis preguntas del banco son las de partida (`GET /api/estado` las entrega). Cada corrida puede traer
-las suyas en `preguntas`: la interfaz deja editarlas, quitarlas, agregarlas y reordenarlas.
+Son cinco preguntas, las mismas en cada corrida. Cada una tiene su escala, y el modelo la lee al lado de la
+pregunta («(1 = muy injusto, 7 = muy justo)»):
 
-- Límites (`metodo.preguntas_de`): entre 1 y 10 preguntas, de hasta 300 caracteres, sin repetidas. Un
-  pedido que no los cumple se rechaza con un mensaje que la interfaz muestra tal cual.
-- Todas usan la misma escala de acuerdo, de 1 a 7, así que conviene escribirlas para que se contesten así.
-- La primera decide la postura de la persona. Si no es la del banco, la interfaz no compara con Cadem.
-- Las preguntas entran en el mensaje de sistema tal como las del banco (`metodo.sistema_con_politica`) y en
-  la clave de la caché (`Motor.clave_de`): cambiar una pregunta vuelve a preguntar; con las de partida la
-  clave es la de siempre y lo ya respondido sigue sirviendo.
-- El filtro del perfil busca los temas en la política y también en las preguntas que no son del banco
-  (`metodo.tema_de`): una pregunta sobre seguridad trae los datos de seguridad aunque la política no los pida.
-- La corrida grabada solo tiene sus cinco preguntas y no acepta otras (`preguntas_editables: false`).
+| Clave | Nombre | Pregunta | 1 | 7 |
+|---|---|---|---|---|
+| p1 | Apoyo | ¿Estarías de acuerdo con que se implemente esta política en tu región? | totalmente en desacuerdo | totalmente de acuerdo |
+| p2 | Justicia | ¿Te parece justa la forma en que esta política reparte costos y beneficios? | muy injusto | muy justo |
+| p3 | Confianza | ¿Confías en que el Estado chileno sea capaz de implementar bien esta política? | muy desconfiado | muy confiado |
+| p4 | Efectividad | ¿Qué tan efectiva crees que es esta política en lograr lo que propone? | muy inefectivo | muy efectivo |
+| p5 | Influencia | ¿Qué tan influyente es esta política en tu situación personal o la de tu hogar? | nada influyente | muy influyente |
+
+- Están en `ENCUESTA` de `scripts/probar_modelo.py` y, para la interfaz, en `frontend/src/vivo/encuesta.ts`: si
+  se cambian, hay que cambiarlas en los dos lugares. `GET /api/estado` entrega `preguntas`, `nombres` y `escalas`.
+- La primera decide la postura de la persona y es la que se compara con Cadem. El índice de aceptación es la
+  media de p1 a p4. Influencia no mide apoyo: la interfaz la muestra en tono neutro.
+- `POST /api/corridas` no acepta otras preguntas: si el pedido trae `preguntas`, no se usan.
+- La encuesta entra en el mensaje de sistema (`metodo.sistema_con_politica`) y en la clave de la caché
+  (`Motor.clave`): si cambia una pregunta o una escala, lo ya respondido no se reutiliza.
 
 Diferencias con el banco de pruebas, a propósito:
 
@@ -121,18 +144,10 @@ Diferencias con el banco de pruebas, a propósito:
   en una llamada aparte, la frase con que explicarían lo que ya respondieron (`SISTEMA_VOCES`). Las notas no
   se tocan. Llegan a la interfaz como evento `voces`. Con el modelo local no hay frases.
 - **Iteraciones.** Al terminar las variantes escritas, un agente (Sonnet) toma la variante con más apoyo, las
-  medias de las seis preguntas y las frases disponibles, y redacta una versión nueva con un título corto y
+  medias de las cinco preguntas (con su escala) y las frases disponibles, y redacta una versión nueva con un título corto y
   qué cambió. Se pregunta a los mismos agentes con el mismo método.
 - **Documentos.** Un documento subido (`.txt`, `.md`, `.html`, `.docx` o `.pdf` con `pdftotext`) se lee entero;
   si pasa de 3.500 caracteres, Sonnet lo resume en unas 220 palabras y eso es lo que leen los agentes.
-
-## Corrida grabada
-
-La grabación (`data/pruebas/sala_cuna/resultados_haiku55_2000_20x100.jsonl`) es anterior al perfil general:
-Haiku respondió cinco preguntas, con el perfil corto de entonces, y solo había adultos. Se repite tal cual:
-el servidor informa cinco preguntas y responden 1.856 de los 2.000 agentes; los menores de 18 y quienes
-entraron después no tienen respuesta. Para volver a grabar con el método actual hay que hacer una corrida en
-vivo con todos los agentes y guardar sus respuestas con el formato de ese archivo.
 
 ## Validación
 
@@ -156,7 +171,7 @@ de la CEP, Haiku dio 55 % de acuerdo contra 72 a 74 % en Cadem y Criteria: trata
 - Las diferencias por posición política y por niños en el hogar se mantienen. La diferencia por edad pareció
   achicarse (entre los de 18 a 29 y los de 60 o más, de 0,41 a 0,26 puntos), pero la segunda corrida, más abajo,
   no lo repite.
-- No es equivalente pregunta a pregunta: p5 (cumpliría) baja 0,17, p6 (logrará lo que se propone) sube 0,13 y
+- No es equivalente pregunta a pregunta (con la encuesta de entonces, de seis preguntas): p5 (cumpliría) baja 0,17, p6 (logrará lo que se propone) sube 0,13 y
   p4 (confianza en el Estado) sube 0,09; al repetir el completo, ninguna se mueve más de 0,03.
 - Persona a persona, el índice con el temático se correlaciona 0,71 con el del completo; el completo consigo
   mismo, 0,78.
@@ -190,21 +205,25 @@ cada lote lo contesta un subagente distinto y sus niveles no son comparables (en
 
 ## Caché
 
-`data/cache/respuestas.jsonl` guarda las seis notas (y la frase, si la tiene) por política, agente, modelo y versión de las instrucciones
+`data/cache/respuestas.jsonl` guarda las cinco notas (y la frase, si la tiene) por política, agente, modelo y versión de las instrucciones
 y del filtro del perfil. Repetir una pregunta no vuelve a gastar y llega en segundos (la interfaz igual la muestra encenderse). Cambiar
 las instrucciones, el nivel de `PERFIL` o la definición del filtro invalida la caché sola; las respuestas guardadas antes del filtro
 se dieron con el perfil completo y se reutilizan solo con `PERFIL=completo`. `data/` no se versiona.
 
 ## Rutas
 
-    GET  /api/estado                  motor, modelo, población disponible y las preguntas de la encuesta
-    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea. `filtros.reduccion` (10, 100
-                                      o 1000) es el nivel de clusterización. Devuelve id, cuántos cumplen los
-                                      filtros, a cuántas personas representan y los agentes elegidos
+    GET  /api/estado                  motor, modelo, población disponible y la encuesta: preguntas, nombres y escalas
+    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea. `filtros` trae edadMin,
+                                      edadMax, reduccion (10, 100, 1000 o 10000: el nivel de clusterización) y, por
+                                      parámetro de `sociedad.py`, la lista de opciones elegidas: {"region": [5, 6],
+                                      "voto": [1]}. Devuelve id, cuántos cumplen los filtros, a cuántas personas
+                                      representan, el retrato, `dimensiones` (el orden de los parámetros) y los
+                                      agentes elegidos, cada uno con `s`: su opción en cada parámetro
     GET  /api/agentes                 la muestra sin filtros, como lista (por compatibilidad)
+    GET  /api/historial               las últimas 100 simulaciones, de la más nueva a la más antigua: hora, agentes,
+                                      modelo y, por variante, el texto y cuántos quedaron a favor, en contra y sin decidir
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones,
-                                      preguntas?:[texto]}. Sin `preguntas` van las de partida. El evento
-                                      `inicio` devuelve las preguntas con que corre
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones}.
+                                      El evento `inicio` devuelve las preguntas con que corre
     GET  /api/corridas/<id>/eventos   text/event-stream
     POST /api/corridas/<id>/cancelar

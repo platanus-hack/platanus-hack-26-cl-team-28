@@ -1,41 +1,45 @@
 import type { Conteo } from '../dominio/metricas';
 
+/** Una pregunta de la encuesta: se responde con un entero de 1 a 7, con su propia escala. */
+export interface PreguntaEncuesta {
+  /** Cómo se nombra donde hay poco lugar. */
+  nombre: string;
+  texto: string;
+  /** Lo que significan el 1 y el 7 en esta pregunta. */
+  minimo: string;
+  maximo: string;
+  /** Si mide postura frente a la política (a favor o en contra) y se pinta con sus colores. */
+  postura: boolean;
+}
+
 /**
- * La encuesta que responde cada agente: una nota de 1 a 7 por pregunta (1 es totalmente en
- * desacuerdo y 7 totalmente de acuerdo). La primera pregunta decide la postura de la persona,
- * y con ella el color de su punto en el mapa.
+ * La encuesta que responde cada agente. Es fija: las mismas cinco preguntas en cada corrida, cada
+ * una con su escala. La primera decide la postura de la persona, y con ella el color de su punto
+ * en el mapa. Influencia no mide apoyo: dice cuánto le toca la política, y va en tono neutro.
  *
- * Estas son las preguntas de partida del motor (backend/scripts/probar_modelo.py). Se usan sin
- * motor conectado; con motor, las de partida llegan en `/api/estado`.
+ * Son las del motor (backend/scripts/probar_modelo.py, `ENCUESTA`); si cambian allá, cambian aquí.
  */
-export const PREGUNTAS_BASE = [
-  '¿Estarías de acuerdo con que se implemente esta política en tu región?',
-  'Si esta política se implementara tal como está descrita, ¿estarías satisfecho con ella?',
-  '¿Te parece justa la forma en que esta política reparte costos y beneficios?',
-  '¿Confías en que el Estado chileno sea capaz de implementar bien esta política?',
-  'Si esta política fuera obligatoria, ¿la cumplirías?',
-  '¿Crees que esta política va a lograr lo que se propone?',
+export const ENCUESTA: readonly PreguntaEncuesta[] = [
+  { nombre: 'Apoyo', texto: '¿Estarías de acuerdo con que se implemente esta política en tu región?', minimo: 'totalmente en desacuerdo', maximo: 'totalmente de acuerdo', postura: true },
+  { nombre: 'Justicia', texto: '¿Te parece justa la forma en que esta política reparte costos y beneficios?', minimo: 'muy injusto', maximo: 'muy justo', postura: true },
+  { nombre: 'Confianza', texto: '¿Confías en que el Estado chileno sea capaz de implementar bien esta política?', minimo: 'muy desconfiado', maximo: 'muy confiado', postura: true },
+  { nombre: 'Efectividad', texto: '¿Qué tan efectiva crees que es esta política en lograr lo que propone?', minimo: 'muy inefectivo', maximo: 'muy efectivo', postura: true },
+  { nombre: 'Influencia', texto: '¿Qué tan influyente es esta política en tu situación personal o la de tu hogar?', minimo: 'nada influyente', maximo: 'muy influyente', postura: false },
 ];
 
-export const MAXIMO_PREGUNTAS = 10;
-export const LARGO_PREGUNTA = 300;
+/** Los textos de la encuesta, en el orden de las notas. */
+export const PREGUNTAS: readonly string[] = ENCUESTA.map((p) => p.texto);
 
-/** Las preguntas de partida dichas en corto, para la ficha de una persona. */
-const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría', 'Cree que funcionará'];
+/** La pregunta de la encuesta con este texto, si es una de ellas. */
+export const preguntaDe = (texto: string): PreguntaEncuesta | undefined => ENCUESTA.find((p) => p.texto === texto);
 
-/** Cómo se nombra una pregunta donde hay poco lugar: su forma corta si es de las de partida. */
+/** Cómo se nombra una pregunta donde hay poco lugar: su nombre (Apoyo, Justicia...). */
 export function corta(pregunta: string): string {
-  const k = PREGUNTAS_BASE.indexOf(pregunta);
-  return k >= 0 ? CORTAS[k] : pregunta;
+  return preguntaDe(pregunta)?.nombre ?? pregunta;
 }
 
-/** Las preguntas tal como se le mandan al motor: sin espacios de más, sin vacías ni repetidas. */
-export function limpiarPreguntas(lista: readonly string[]): string[] {
-  const limpias = lista.map((p) => p.replace(/\s+/g, ' ').trim()).filter(Boolean);
-  return [...new Set(limpias)];
-}
-
-export const mismasPreguntas = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((p, k) => p === b[k]);
+/** Si la nota de esta pregunta se lee como postura (a favor o en contra). */
+export const midePostura = (pregunta: string) => preguntaDe(pregunta)?.postura ?? true;
 
 export interface ResultadoPregunta {
   /** De acuerdo (5 a 7), en desacuerdo (1 a 3) y al medio (4). */
@@ -62,26 +66,11 @@ export function resumirEncuesta(notas: readonly (readonly number[] | undefined)[
   return filas.map(({ conteo, suma }) => ({ conteo, media: conteo.total ? suma / conteo.total : 0 }));
 }
 
-const CLAVE = 'delphos.encuesta';
-
-/** La encuesta que la persona dejó escrita en este navegador, si la cambió. */
-export function leerEncuestaGuardada(): string[] | null {
+/** Antes la encuesta se podía escribir y quedaba guardada en el navegador: ya no se usa. */
+export function olvidarEncuestaGuardada(): void {
   try {
-    const lista: unknown = JSON.parse(localStorage.getItem(CLAVE) ?? 'null');
-    if (!Array.isArray(lista) || !lista.every((p) => typeof p === 'string')) return null;
-    const limpias = limpiarPreguntas(lista).slice(0, MAXIMO_PREGUNTAS);
-    return limpias.length ? limpias : null;
+    localStorage.removeItem('delphos.encuesta');
   } catch {
-    return null;
-  }
-}
-
-/** Guarda la encuesta escrita; con `null` (volvió a la de partida) la olvida. */
-export function guardarEncuesta(preguntas: readonly string[] | null): void {
-  try {
-    if (preguntas) localStorage.setItem(CLAVE, JSON.stringify(preguntas));
-    else localStorage.removeItem(CLAVE);
-  } catch {
-    // Sin almacenamiento (ventana privada): la encuesta vive solo mientras la página esté abierta.
+    // Sin almacenamiento (ventana privada): no hay nada que borrar.
   }
 }

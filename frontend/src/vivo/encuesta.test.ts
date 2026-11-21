@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { corta, limpiarPreguntas, PREGUNTAS_BASE, resumirEncuesta } from './encuesta';
+import { corta, ENCUESTA, midePostura, PREGUNTAS, resumirEncuesta } from './encuesta';
 
 describe('encuesta', () => {
-  it('limpia espacios, vacías y repetidas', () => {
-    expect(limpiarPreguntas(['  ¿Te   parece bien? ', '', '¿Te parece bien?', '¿Y justa?'])).toEqual(['¿Te parece bien?', '¿Y justa?']);
+  it('son cinco preguntas fijas, cada una con su escala', () => {
+    expect(PREGUNTAS).toHaveLength(5);
+    expect(ENCUESTA.map((p) => p.nombre)).toEqual(['Apoyo', 'Justicia', 'Confianza', 'Efectividad', 'Influencia']);
+    expect(ENCUESTA[1]).toMatchObject({ minimo: 'muy injusto', maximo: 'muy justo' });
   });
 
   it('resume cada pregunta entre los agentes que se miran', () => {
@@ -18,8 +20,10 @@ describe('encuesta', () => {
     expect(resumirEncuesta([], [0, 1], 1)[0]).toEqual({ conteo: { favor: 0, contra: 0, indecisa: 0, total: 0 }, media: 0 });
   });
 
-  it('acorta solo las preguntas de partida', () => {
-    expect(corta(PREGUNTAS_BASE[3])).toBe('Confía en el Estado');
+  it('nombra las preguntas en corto y separa la que no mide postura', () => {
+    expect(corta(PREGUNTAS[2])).toBe('Confianza');
     expect(corta('¿Votarías por esto?')).toBe('¿Votarías por esto?');
+    expect(midePostura(PREGUNTAS[0])).toBe(true);
+    expect(midePostura(PREGUNTAS[4])).toBe(false);
   });
 });

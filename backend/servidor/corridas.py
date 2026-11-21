@@ -16,7 +16,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .agentes import Agente
-from .metodo import tema_de, temas_de
+from . import metodo
+from .metodo import temas_de
 from .motor import PRIORIDAD, Consumo, Motor, Respuesta
 
 CARPETA_CACHE = Path(__file__).resolve().parent.parent / "data" / "cache"
@@ -130,13 +131,13 @@ class Cache:
 
 class Corrida:
     def __init__(self, motor: Motor, cache: Cache, agentes: list[Agente], casos: list[Caso],
-                 iteraciones: int, lote: int, concurrencia: int, letras: str, preguntas: list[str]):
+                 iteraciones: int, lote: int, concurrencia: int, letras: str):
         self.id = uuid.uuid4().hex[:12]
         self.motor = motor
-        #: La encuesta de esta corrida: cada agente pone una nota de 1 a 7 a cada pregunta.
-        self.preguntas = preguntas
+        #: La encuesta, fija: cada agente pone una nota de 1 a 7 a cada pregunta, con su escala.
+        self.preguntas = list(metodo.PREGUNTAS)
         #: Lo que distingue estas respuestas en la caché: el modelo y todo lo que leyó.
-        self.clave = motor.clave_de(preguntas)
+        self.clave = motor.clave()
         self.cache = cache
         self.agentes = agentes
         self.por_indice = {a.indice: a for a in agentes}
@@ -186,7 +187,7 @@ class Corrida:
         respuestas: list[Respuesta] = []
         for intento in range(3):
             try:
-                resultado = self.motor.responder(caso.politica(), agentes, self.preguntas)
+                resultado = self.motor.responder(caso.politica(), agentes)
                 respuestas = resultado.respuestas
                 with self._cerrojo:
                     self.consumo.sumar(resultado.consumo)
@@ -195,7 +196,7 @@ class Corrida:
                     break
                 # Si el modelo se saltó a alguien, se le vuelve a preguntar solo a esas personas.
                 previas = respuestas
-                resultado = self.motor.responder(caso.politica(), faltan, self.preguntas)
+                resultado = self.motor.responder(caso.politica(), faltan)
                 respuestas = previas + resultado.respuestas
                 with self._cerrojo:
                     self.consumo.sumar(resultado.consumo)
@@ -211,7 +212,7 @@ class Corrida:
         with self._cerrojo:
             for r in respuestas:
                 caso.respuestas[r.agente] = r
-        if not desde_cache and not self.motor.grabado:
+        if not desde_cache:
             self.cache.guardar(huella, self.clave, self.por_indice, respuestas)
         self.publicar("respuestas", {
             "caso": numero,
@@ -240,7 +241,7 @@ class Corrida:
         PRIORIDAD.baja = True
         try:
             pares = [(self.por_indice[r.agente], r) for r in elegidas]
-            frases, consumo = self.motor.comentar(caso.politica(), pares, self.preguntas)
+            frases, consumo = self.motor.comentar(caso.politica(), pares)
         except Exception:
             return  # las frases son un adorno: si fallan, la encuesta sigue igual
         if not frases:
@@ -264,7 +265,7 @@ class Corrida:
         pendientes = []
         guardadas = []
         for agente in self.agentes:
-            previa = None if self.motor.grabado else self.cache.buscar(huella, self.clave, agente)
+            previa = self.cache.buscar(huella, self.clave, agente)
             if previa:
                 guardadas.append(Respuesta(agente.indice, previa[0], previa[1]))
             else:
@@ -313,8 +314,8 @@ class Corrida:
             lineas.append(f"- ({a.atributos.get('Edad')}, {a.comuna}, {a.atributos.get('Tramo socioeconómico', '')[:9]}; acuerdo {r.acuerdo}/7) {r.frase}")
         todas = list(base.respuestas.values())
         medias = "\n".join(
-            f"- {texto} Media {sum(r.respuestas[k] for r in todas) / len(todas):.1f} de 7."
-            for k, texto in enumerate(self.preguntas)
+            f"- {texto} (1 = {minimo}, 7 = {maximo}) Media {sum(r.respuestas[k] for r in todas) / len(todas):.1f} de 7."
+            for k, (texto, (minimo, maximo)) in enumerate(zip(self.preguntas, metodo.ESCALAS))
         )
         prompt = (
             f"# Propuesta actual (variante {base.letra}, {round(base.apoyo() * 100)} % a favor)\n\n{base.politica()}\n\n"
@@ -386,13 +387,13 @@ class Corrida:
             "documento": {"nombre": caso.documento["nombre"], "titulo": caso.documento.get("titulo", "")} if caso.documento else None,
             "iteracion": caso.iteracion,
             # Los temas que el filtro del perfil detectó en el texto: deciden qué datos de cada persona lee el modelo.
-            "temas": temas_de(tema_de(caso.politica(), self.preguntas)),
+            "temas": temas_de(caso.politica()),
         }
 
 
 def resumir_documento(motor: Motor, nombre: str, texto: str) -> tuple[dict, Consumo]:
     """Deja el documento en un largo que los agentes puedan leer en cada lote."""
-    if len(texto) <= LARGO_RESUMIR or motor.grabado:
+    if len(texto) <= LARGO_RESUMIR:
         return {"nombre": nombre, "titulo": nombre, "texto": texto[:LARGO_RESUMIR * 3]}, Consumo()
     prompt = (
         f"# Documento: {nombre}\n\n{texto[:400_000]}\n\n"

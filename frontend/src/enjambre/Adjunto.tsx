@@ -59,9 +59,11 @@ export function Adjunto(props: Props) {
           </p>
         </div>
       ) : (
-        <Boton variante="texto" onClick={() => entrada.current?.click()}>
-          Subir una ley o documento
-        </Boton>
+        <button type="button" className={estilos.subir} onClick={() => entrada.current?.click()}>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m-4 4 4-4 4 4M4 16v4h16v-4" /></svg>
+          <span>Subir una ley o documento</span>
+          <span className={estilos.formatos}>PDF, DOCX o texto</span>
+        </button>
       )}
     </div>
   );

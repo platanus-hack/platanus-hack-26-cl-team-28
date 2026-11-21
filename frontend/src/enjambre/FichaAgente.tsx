@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { REGIONES } from '../dominio/catalogos';
 import type { AgenteRemoto } from '../vivo/api';
-import { corta } from '../vivo/encuesta';
+import { corta, midePostura } from '../vivo/encuesta';
 import { posturaDe, type CasoVivo } from '../vivo/useEnVivo';
 import { FiguraWati } from './FiguraWati';
 import { rasgosDe } from './wati';
@@ -15,7 +15,7 @@ interface Props {
   x: number;
   y: number;
   /** Las preguntas de la encuesta, en el orden de las notas. */
-  preguntas?: string[];
+  preguntas?: readonly string[];
   alCerrar(): void;
 }
 
@@ -23,25 +23,20 @@ const ANCHO = 380;
 const POSTURA = { favor: 'A favor', contra: 'En contra', indecisa: 'No se decide' } as const;
 const ESCALA = [1, 2, 3, 4, 5, 6, 7];
 
-/** Cómo se dice en la ficha cada dato que manda el motor (los grupos del perfil general). */
-const DATOS: [string, (valor: string) => string][] = [
-  ['Nivel educacional', (v) => `Educación ${v.toLowerCase()}`],
-  ['Situación laboral', (v) => v],
-  ['Tipo de colegio', (v) => `Va a un colegio ${v.toLowerCase()}`],
-  ['Tramo socioeconómico', (v) => `${v} de ingreso`],
-  ['Previsión de salud', (v) => v],
-  ['Tipo de hogar', (v) => `Hogar ${v.toLowerCase()}`],
-  ['Menores en el hogar', (v) => v],
-  ['Tenencia de la vivienda', (v) => `Vivienda ${v.toLowerCase()}`],
-  ['Religión', (v) => (v === 'Ninguna' ? 'Sin religión' : `Religión ${v.toLowerCase()}`)],
-  ['Posición política', (v) => (v === 'No se ubica' ? 'No se ubica en izquierda ni derecha' : v.replace(/ \(.*\)$/, ''))],
-  ['Evaluación del gobierno', (v) => (v === 'Sin respuesta' ? '' : `${v} al gobierno`)],
+/** Etiquetas e iconos para dar contexto a cada atributo del perfil. */
+const DATOS: { clave: string; etiqueta: string; icono: string }[] = [
+  { clave: 'Nivel educacional', etiqueta: 'Educación', icono: 'M2 8l10-5 10 5-10 5L2 8zm4 2.5V15c3 2 9 2 12 0v-4.5M22 8v6' },
+  { clave: 'Situación laboral', etiqueta: 'Trabajo', icono: 'M3 8h18v12H3zM8 8V5h8v3M3 13h18' },
+  { clave: 'Tipo de colegio', etiqueta: 'Colegio', icono: 'M3 21V8l9-5 9 5v13M2 21h20M9 21v-6h6v6M9 10h.01M15 10h.01' },
+  { clave: 'Tramo socioeconómico', etiqueta: 'Ingresos', icono: 'M3 6h18v12H3zM3 10h18M7 15h4' },
+  { clave: 'Previsión de salud', etiqueta: 'Salud', icono: 'M12 3v18M3 12h18' },
+  { clave: 'Tipo de hogar', etiqueta: 'Hogar', icono: 'M3 11l9-8 9 8M5 10v11h14V10M9 21v-6h6v6' },
+  { clave: 'Menores en el hogar', etiqueta: 'Menores en el hogar', icono: 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 10a7 7 0 0 1 14 0' },
+  { clave: 'Tenencia de la vivienda', etiqueta: 'Vivienda', icono: 'M3 11l9-8 9 8M5 10v11h14V10M9 21v-6h6v6' },
+  { clave: 'Religión', etiqueta: 'Religión', icono: 'M12 3v18M7 8h10M5 21h14' },
+  { clave: 'Posición política', etiqueta: 'Posición política', icono: 'M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4' },
+  { clave: 'Evaluación del gobierno', etiqueta: 'Gobierno', icono: 'M3 9l9-6 9 6H3zm2 2v7m5-7v7m4-7v7m5-7v7M3 21h18' },
 ];
-
-/** Lo que se sabe de la persona, dicho corto: sirve para leerlo de un vistazo. */
-function datos(a: Record<string, string>): string[] {
-  return DATOS.map(([clave, decir]) => (a[clave] ? decir(a[clave]) : '')).filter(Boolean);
-}
 
 /**
  * La persona detrás de un punto, como una credencial: su wati y su postura en la franja
@@ -122,7 +117,7 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
         {notas && preguntas && preguntas.length > 0 && (
           <ol className={estilos.encuesta} aria-label={`Sus respuestas a la encuesta${casos.length > 1 ? `, variante ${caso.letra}` : ''}`}>
             {preguntas.map((pregunta, k) => (
-              <li key={pregunta} data-postura={posturaDe(notas[k])} title={pregunta}>
+              <li key={pregunta} data-postura={midePostura(pregunta) ? posturaDe(notas[k]) : undefined} title={pregunta}>
                 {/* Las preguntas de partida van dichas en corto; la completa aparece al pasar el cursor. */}
                 <p>{corta(pregunta)}</p>
                 <span aria-hidden="true">
@@ -135,11 +130,17 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
             ))}
           </ol>
         )}
-        <ul className={estilos.datos}>
-          {datos(agente.atributos).map((dato) => (
-            <li key={dato}>{dato}</li>
-          ))}
-        </ul>
+        <section aria-label="Perfil de la persona" className={estilos.perfil}>
+          <h3>Perfil de la persona</h3>
+          <ul className={estilos.datos}>
+            {DATOS.filter(({ clave }) => agente.atributos[clave] && !(clave === 'Evaluación del gobierno' && agente.atributos[clave] === 'Sin respuesta')).map(({ clave, etiqueta, icono }) => (
+              <li key={clave}>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d={icono} /></svg>
+                <div><span>{etiqueta}</span><strong>{agente.atributos[clave]}</strong></div>
+              </li>
+            ))}
+          </ul>
+        </section>
         <p className={estilos.fuente}>Persona de la muestra del Censo 2024 · datos de Casen 2024 y opiniones de la CEP 96 imputados</p>
       </div>
     </aside>

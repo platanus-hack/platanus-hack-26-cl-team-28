@@ -18,7 +18,7 @@
 
 Las columnas son las de la muestra: están descritas en `contexto/muestra/README.md` (censo y Casen) y `contexto/muestra/actitudes.md` (CEP). Las llaves también se llaman igual, `id_persona_muestra` e `id_hogar_muestra`, para que los mismos scripts sirvan con la muestra y con la población.
 
-`data/agentes/` es la versión reducida que usa el motor del sitio: 1 de cada 10 personas, con la columna `representa`. Esa sí está en el repositorio; ver `agentes.md`.
+`data/agentes/` es la versión reducida que usa el motor del sitio: 1 de cada 10 personas, agrupadas por tipo político, comuna, sexo y edad, con la columna `representa` y las de los niveles más reducidos (1 por cada 100, 1.000 y 10.000). Esa sí está en el repositorio; ver `agentes.md`.
 
 ## Qué es dato y qué es imputado
 

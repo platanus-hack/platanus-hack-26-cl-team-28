@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { formatear } from '../dominio/textos';
 import type { Conexion, EnVivo } from '../vivo/useEnVivo';
 import { EscenaProceso, type DatosProceso } from './EscenaProceso';
+import { ENCUESTA } from '../vivo/encuesta';
 import estilos from './VistaProceso.module.css';
 
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
 }
 
 /** Nombre corto de cada pregunta de la encuesta, en el orden de las notas. */
-const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría', 'Cree que funcionará'];
+const CORTAS = ENCUESTA.map((p) => p.nombre);
 const GENERO = ['Mujer', 'Hombre'];
 
 /**
