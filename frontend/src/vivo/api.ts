@@ -1,4 +1,5 @@
 /** Cliente del motor de simulación (backend/servidor). En desarrollo Vite lo atiende en /api. */
+import type { Filtros } from '../dominio/tipos';
 
 export interface MotorInfo {
   nombre: string;
@@ -6,9 +7,21 @@ export interface MotorInfo {
   grabado: boolean;
 }
 
+/** La población de la que el motor sortea a los agentes. */
+export interface PoblacionInfo {
+  fuente: string;
+  /** Agentes disponibles en total, antes de filtrar. */
+  agentes: number;
+  /** Personas de 14 años o más que representan. */
+  personas: number;
+  /** A cuántas personas representa cada agente, en promedio. */
+  representa: number;
+}
+
 export interface EstadoMotor {
   motor: MotorInfo;
   agentes: number;
+  poblacion?: PoblacionInfo;
   lote: number;
   concurrencia: number;
   /** Las preguntas de la encuesta, en el orden de las notas. */
@@ -29,6 +42,16 @@ export interface AgenteRemoto {
   /** Índice en POLITICA: 0 izquierda … 4 derecha, 5 sin identificación. Imputado desde la CEP. */
   politica?: number;
   atributos: Record<string, string>;
+}
+
+/** Lo que devuelve el motor al filtrar la población y sortear una muestra. */
+export interface MuestraRemota {
+  id: string;
+  /** Agentes que cumplen los filtros, antes de recortar al tamaño pedido. */
+  disponibles: number;
+  /** Personas a las que representan esos agentes. */
+  representadas: number;
+  agentes: AgenteRemoto[];
 }
 
 export interface DocumentoLeido {
@@ -95,8 +118,16 @@ export async function pedirEstado(): Promise<EstadoMotor> {
   }
 }
 
-export async function pedirAgentes(): Promise<AgenteRemoto[]> {
-  return leer<AgenteRemoto[]>(await fetch(`${BASE}/agentes`));
+/** Pide al motor que filtre la población y sortee hasta `filtros.tamano` agentes. */
+export async function pedirMuestra(filtros: Filtros, senal?: AbortSignal): Promise<MuestraRemota> {
+  const { tamano, ...resto } = filtros;
+  const respuesta = await fetch(`${BASE}/muestra`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filtros: resto, tamano }),
+    signal: senal,
+  });
+  return leer<MuestraRemota>(respuesta);
 }
 
 export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
@@ -110,7 +141,7 @@ export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
 
 /** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
 export async function correrRemoto(
-  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number },
+  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number },
   alEvento: (evento: Evento) => void,
 ): Promise<() => void> {
   const { id } = await leer<{ id: string }>(

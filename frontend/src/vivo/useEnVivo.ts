@@ -8,8 +8,8 @@ import type { Filtros, Persona, Postura } from '../dominio/tipos';
 import { useBorradores } from '../estado/useBorradores';
 import {
   correrRemoto,
-  pedirAgentes,
   pedirEstado,
+  pedirMuestra,
   subirDocumento,
   type AgenteRemoto,
   type CasoPedido,
@@ -28,6 +28,9 @@ export type FaseVivo = 'cargando' | 'preparar' | 'corriendo' | 'resultados';
 /** Tamaños de muestra, en agentes. */
 export const TAMANOS_AGENTES = [250, 500, 1000, 2000] as const;
 const TAMANO_INICIAL = 1000;
+const FILTROS_DE_PARTIDA: Filtros = { ...FILTROS_INICIALES, tamano: TAMANO_INICIAL };
+/** Milisegundos que se espera tras el último cambio de filtros antes de pedir la muestra al motor. */
+const PAUSA_MUESTRA = 220;
 export const MAXIMO_VARIANTES = 6;
 export const MAXIMO_ITERACIONES = 3;
 /** Segundos que se queda en pantalla una variante ya respondida antes de pasar a la siguiente. */
@@ -63,9 +66,12 @@ export interface Voz {
 
 export interface Conexion {
   estado: EstadoMotor | null;
+  /** Con el motor en vivo: la muestra que el motor sorteó para los filtros actuales. En demostración: todos. */
   agentes: AgenteRemoto[];
   puntos: Persona[];
   demo: boolean;
+  /** La muestra del motor: su identificador, cuántos agentes cumplen los filtros y a cuántas personas representan. */
+  muestra: { id: string; disponibles: number; representadas: number } | null;
 }
 
 export const posturaDe = (acuerdo: number): Postura => (acuerdo >= 5 ? 'favor' : acuerdo <= 3 ? 'contra' : 'indecisa');
@@ -90,7 +96,8 @@ function coincide(agente: AgenteRemoto, f: Filtros): boolean {
     (agente.edad <= f.edadMax || f.edadMax >= EDAD_MAXIMA) &&
     pasa(agente.genero, f.genero) &&
     pasa(agente.quintil, f.quintil) &&
-    pasa(agente.educacion, f.educacion)
+    pasa(agente.educacion, f.educacion) &&
+    pasa(agente.politica ?? 5, f.politica)
   );
 }
 
@@ -102,6 +109,8 @@ export interface MuestraVivo {
   /** Cuántos agentes cumplen los filtros antes de recortar al tamaño pedido. */
   disponibles: number;
   total: number;
+  /** Personas de la población a las que representan quienes cumplen los filtros, si el motor lo informa. */
+  representadas?: number;
 }
 
 function elegir(agentes: AgenteRemoto[], filtros: Filtros): MuestraVivo {
@@ -114,6 +123,18 @@ function elegir(agentes: AgenteRemoto[], filtros: Filtros): MuestraVivo {
   return { agentes: tomados, elegido, disponibles: posibles.length, total: tomados.length };
 }
 
+/** Con el motor en vivo, el motor ya filtró y sorteó: van todos los agentes que mandó. */
+function todos(conexion: Conexion): MuestraVivo {
+  const agentes = conexion.agentes.map((a) => a.i);
+  return {
+    agentes,
+    elegido: new Uint8Array(agentes.length).fill(1),
+    disponibles: conexion.muestra?.disponibles ?? agentes.length,
+    total: agentes.length,
+    representadas: conexion.muestra?.representadas,
+  };
+}
+
 const INICIALES = [{ texto: CASOS_VALIDACION[0].texto, referencia: CASOS_VALIDACION[0].referencia }];
 
 /** Estado de la herramienta conectada al motor: muestra, variantes y la corrida que llega en vivo. */
@@ -121,7 +142,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const [conexion, setConexion] = useState<Conexion | null>(null);
   const edicion = useBorradores(INICIALES);
   const { borradores, fijar } = edicion;
-  const [filtros, setFiltros] = useState<Filtros>({ ...FILTROS_INICIALES, tamano: TAMANO_INICIAL });
+  const [filtros, setFiltros] = useState<Filtros>(FILTROS_DE_PARTIDA);
+  /** Los filtros de la muestra que está en pantalla, para no volver a pedirla. */
+  const pedida = useRef(JSON.stringify(FILTROS_DE_PARTIDA));
+  const [buscando, setBuscando] = useState(false);
   const [iteraciones, setIteraciones] = useState(0);
   const [fase, setFase] = useState<FaseVivo>('cargando');
   const [viendo, setViendo] = useState(0);
@@ -141,16 +165,19 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     (async () => {
       let estado: EstadoMotor | null = null;
       let agentes: AgenteRemoto[];
+      let muestra: Conexion['muestra'] = null;
       try {
         estado = await pedirEstado();
-        agentes = await pedirAgentes();
+        const remota = await pedirMuestra(FILTROS_DE_PARTIDA);
+        agentes = remota.agentes;
+        muestra = { id: remota.id, disponibles: remota.disponibles, representadas: remota.representadas };
       } catch {
         estado = null;
         agentes = agentesDeDemostracion(regiones);
       }
       if (!vigente) return;
-      const porAgente = Math.max(1, Math.round(puntosDeseados / agentes.length));
-      setConexion({ estado, agentes, puntos: poblacionDeAgentes(agentes, porAgente, regiones), demo: estado === null });
+      const porAgente = Math.max(1, Math.round(puntosDeseados / Math.max(1, agentes.length)));
+      setConexion({ estado, agentes, puntos: poblacionDeAgentes(agentes, porAgente, regiones), demo: estado === null, muestra });
       setFase('preparar');
     })();
     return () => {
@@ -159,10 +186,47 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     };
   }, [regiones, puntosDeseados]);
 
-  const muestra = useMemo<MuestraVivo>(
-    () => (conexion ? elegir(conexion.agentes, filtros) : { agentes: [], elegido: new Uint8Array(0), disponibles: 0, total: 0 }),
-    [conexion, filtros],
-  );
+  // Con el motor en vivo, cada cambio de filtros le pide una muestra nueva: él filtra la población
+  // completa y sortea hasta el máximo pedido. Con una corrida en pantalla no se pide: ahí los
+  // filtros solo eligen a quiénes se mira.
+  const enVivo = !!conexion && !conexion.demo;
+  useEffect(() => {
+    if (!enVivo || fase !== 'preparar') return;
+    const clave = JSON.stringify(filtros);
+    if (clave === pedida.current) return;
+    const control = new AbortController();
+    setBuscando(true);
+    const espera = window.setTimeout(async () => {
+      try {
+        const remota = await pedirMuestra(filtros, control.signal);
+        pedida.current = clave;
+        const porAgente = Math.max(1, Math.round(puntosDeseados / Math.max(1, remota.agentes.length)));
+        setConexion(
+          (previa) =>
+            previa && {
+              ...previa,
+              agentes: remota.agentes,
+              puntos: poblacionDeAgentes(remota.agentes, porAgente, regiones),
+              muestra: { id: remota.id, disponibles: remota.disponibles, representadas: remota.representadas },
+            },
+        );
+        setBuscando(false);
+      } catch (error) {
+        if (control.signal.aborted) return;
+        setBuscando(false);
+        setAviso(humano(error, 'El motor no pudo armar la muestra. Intenta de nuevo en unos segundos.'));
+      }
+    }, PAUSA_MUESTRA);
+    return () => {
+      window.clearTimeout(espera);
+      control.abort();
+    };
+  }, [enVivo, fase, filtros, regiones, puntosDeseados]);
+
+  const muestra = useMemo<MuestraVivo>(() => {
+    if (!conexion) return { agentes: [], elegido: new Uint8Array(0), disponibles: 0, total: 0 };
+    return conexion.demo ? elegir(conexion.agentes, filtros) : todos(conexion);
+  }, [conexion, filtros]);
 
   // Con una corrida en pantalla, la muestra queda fija y los filtros eligen a quiénes se mira dentro de ella.
   const [corrida, setCorrida] = useState<MuestraVivo | null>(null);
@@ -286,7 +350,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
 
   const listos = borradores.filter((b) => (b.texto.trim() || b.leido) && !b.leyendo);
   const leyendo = borradores.some((b) => b.leyendo);
-  const puedePreguntar = !!conexion && fase === 'preparar' && listos.length > 0 && !leyendo && muestra.total > 0;
+  const puedePreguntar = !!conexion && fase === 'preparar' && listos.length > 0 && !leyendo && !buscando && muestra.total > 0;
 
   const preguntar = useCallback(async () => {
     if (!puedePreguntar || !conexion) return;
@@ -307,7 +371,12 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setViendo(0);
     setCorrida(muestra);
     setFase('corriendo');
-    const pedido = { casos: pedidos, agentes: muestra.agentes, iteraciones: Math.min(iteraciones, MAXIMO_VARIANTES + 2 - pedidos.length) };
+    const pedido = {
+      casos: pedidos,
+      muestra: conexion.muestra?.id,
+      agentes: muestra.agentes,
+      iteraciones: Math.min(iteraciones, MAXIMO_VARIANTES + 2 - pedidos.length),
+    };
     try {
       cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento);
     } catch (error) {
@@ -376,6 +445,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     /** Agentes de la corrida en pantalla (sin filtrar). */
     totalCorrida: corrida?.total ?? 0,
     filtrada,
+    /** El motor está armando la muestra para los filtros nuevos. */
+    buscando,
     puedePreguntar,
     preguntar,
     detener,

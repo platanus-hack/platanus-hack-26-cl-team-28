@@ -2,6 +2,8 @@
 data/*
 # Las pruebas de modelos sí se versionan: sus resultados no se pueden reconstruir
 !data/pruebas/
+# La tabla de agentes también: es la población que filtra el motor del sitio (unos 100 MB)
+!data/agentes/
 
 .venv/
 __pycache__/

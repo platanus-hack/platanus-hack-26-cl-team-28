@@ -25,6 +25,8 @@ Vistas:
                                       lo imputado desde Casen y, los adultos, sus opiniones de la CEP (ver contexto/chile/)
     chile_personas, chile_hogares,
     chile_actitudes                   la misma población separada en personas, hogares y opiniones
+    agentes                           tabla de agentes del sitio: 1 de cada 10 personas, con `representa`
+                                      (ver contexto/chile/agentes.md); pondera por esa columna
 
 Sin --todo se muestran como máximo 200 filas. Con --csv la salida es CSV completo.
 """
@@ -68,6 +70,8 @@ def conectar():
         ruta = RAIZ / "data" / "chile" / f"{archivo}.parquet"
         if ruta.exists():
             con.execute(f"create view {vista} as select * from read_parquet('{ruta.as_posix()}')")
+    if list((RAIZ / "data" / "agentes").glob("region_*.parquet")):
+        con.execute(f"create view agentes as select * from read_parquet('{(RAIZ / 'data' / 'agentes' / 'region_*.parquet').as_posix()}')")
     ruta = RAIZ / "data" / "cep96" / "cep96.parquet"
     if ruta.exists():
         con.execute(f"create view cep as select * from read_parquet('{ruta.as_posix()}')")

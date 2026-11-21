@@ -311,13 +311,14 @@ class Grabado(Motor):
     ARCHIVO = Path(__file__).resolve().parent.parent / "data" / "pruebas" / "sala_cuna" / "resultados_haiku55_2000_20x100.jsonl"
 
     def __init__(self, agentes: list[Agente], pausa: float = 0.6):
-        por_id = {agente.id: agente.indice for agente in agentes}
-        self._acuerdo: dict[int, list[int]] = {}
+        conocidos = {agente.id for agente in agentes}
+        # Por identificador de persona: el índice de un agente cambia de una muestra a otra.
+        self._acuerdo: dict[str, list[int]] = {}
         with open(self.ARCHIVO, encoding="utf-8") as f:
             for linea in f:
                 fila = json.loads(linea)
-                if fila.get("valida") and fila["id"] in por_id:
-                    self._acuerdo[por_id[fila["id"]]] = [fila["respuestas"][clave] for clave in metodo.CLAVES if clave in fila["respuestas"]]
+                if fila.get("valida") and fila["id"] in conocidos:
+                    self._acuerdo[fila["id"]] = [fila["respuestas"][clave] for clave in metodo.CLAVES if clave in fila["respuestas"]]
         self.modelo = "claude-haiku-5-5 (grabado)"
         self._pausa = pausa
         self._grabadas = min((len(notas) for notas in self._acuerdo.values()), default=0)
@@ -331,7 +332,7 @@ class Grabado(Motor):
 
     def responder(self, politica, agentes):
         time.sleep(self._pausa)
-        respuestas = [Respuesta(a.indice, self._acuerdo[a.indice]) for a in agentes if a.indice in self._acuerdo]
+        respuestas = [Respuesta(a.indice, self._acuerdo[a.id]) for a in agentes if a.id in self._acuerdo]
         return ResultadoLote(respuestas, Consumo())
 
     def redactar(self, sistema, prompt, esquema):

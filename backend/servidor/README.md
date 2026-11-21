@@ -1,17 +1,33 @@
 # Motor de simulación
 
-Servidor HTTP que hace responder a los agentes. Cada agente es una persona de 14 años o más de la muestra del
-1 % del Censo 2024, con datos de Casen y opiniones de la Encuesta CEP imputados (ver `contexto/muestra/README.md`
-y `contexto/muestra/actitudes.md`). Hoy se usan las 2.000 de `data/pruebas/poblacion/al_azar_2000.jsonl`,
-sorteadas al azar para que cada una valga lo mismo, y ubicadas en el centro de su comuna
-(`contexto/geo/comunas_centroides.csv`). De ellas, 144 tienen entre 14 y 17 años.
-
-Para cambiar de agentes basta generar otro archivo con `scripts/personas_muestra.py` (desde la muestra o desde
-la población completa de `data/chile/`) y apuntar `ARCHIVO_AGENTES` en `agentes.py`.
+Servidor HTTP que hace responder a los agentes. Cada agente es una persona real de 14 años o más del Censo
+2024, con datos de Casen y opiniones de la Encuesta CEP imputados (ver `contexto/chile/README.md`), ubicada en
+el centro de su comuna (`contexto/geo/comunas_centroides.csv`).
 
     cd backend
-    python3 -m servidor                          # http://127.0.0.1:8787, solo biblioteca estándar
-    LOTE=20 CONCURRENCIA=50 python3 -m servidor  # lo que se usa en la demo: 1.000 agentes en unos 30 s
+    uv run python -m servidor                          # http://127.0.0.1:8787, con la tabla de agentes
+    LOTE=20 CONCURRENCIA=50 uv run python -m servidor  # lo que se usa en la demo
+    python3 -m servidor                                # sin DuckDB: solo biblioteca estándar y el archivo fijo
+
+## De dónde salen los agentes
+
+De `data/agentes/` (ver `contexto/chile/agentes.md`): 1.546.322 agentes que representan a las 15.463.163
+personas de 14 años o más, uno por cada 10. Esa tabla está en el repositorio. En cada consulta, `poblacion.py`:
+
+1. Filtra la tabla con los filtros de la interfaz (región, edad, género, ingreso, educación, posición política).
+2. Sortea hasta el máximo pedido entre quienes los cumplen, en proporción a cuántas personas representa cada uno.
+3. Arma el perfil de cada elegido con la misma función del banco de pruebas (`scripts/personas_muestra.py`).
+
+El sorteo es fijo: los mismos filtros dan siempre las mismas personas, así que la caché de respuestas sirve, y
+la muestra de 250 está contenida en la de 2.000. Filtrar una región y pedir 2.000 entrega 2.000 personas de esa
+región, no las pocas que le tocarían en una muestra nacional.
+
+Hoy cada agente es una persona elegida al azar dentro de un grupo de 10 parecidas. Más adelante será el
+arquetipo de un cluster; eso se cambia en `scripts/reducir_poblacion.py` y el servidor no se toca, porque ya
+sortea según la columna `representa`.
+
+Si falta DuckDB o la tabla, y siempre con la corrida grabada, se usan las 2.000 personas de
+`data/pruebas/poblacion/al_azar_2000.jsonl`, filtradas en memoria.
 
 ## Motores
 
@@ -93,9 +109,11 @@ las instrucciones invalida la caché sola. `data/` no se versiona.
 
 ## Rutas
 
-    GET  /api/estado                  motor, modelo, cuántos agentes hay y las preguntas de la encuesta
-    GET  /api/agentes                 perfil y ubicación de cada agente
+    GET  /api/estado                  motor, modelo, población disponible y las preguntas de la encuesta
+    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea. Devuelve id, cuántos cumplen
+                                      los filtros, a cuántas personas representan y los agentes elegidos
+    GET  /api/agentes                 la muestra sin filtros, como lista (por compatibilidad)
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], agentes:[índices], iteraciones}
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[índices], iteraciones}
     GET  /api/corridas/<id>/eventos   text/event-stream
     POST /api/corridas/<id>/cancelar

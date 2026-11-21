@@ -6,7 +6,9 @@
 set -euo pipefail
 raiz="$(cd "$(dirname "$0")" && pwd)"
 
-(cd "$raiz/backend" && LOTE="${LOTE:-20}" CONCURRENCIA="${CONCURRENCIA:-50}" exec python3 -m servidor) &
+# Con uv el motor lee la tabla de agentes (necesita DuckDB); sin uv usa el archivo fijo de 2.000 personas.
+if command -v uv >/dev/null; then python=(uv run python); else python=(python3); fi
+(cd "$raiz/backend" && LOTE="${LOTE:-20}" CONCURRENCIA="${CONCURRENCIA:-50}" exec "${python[@]}" -m servidor) &
 motor=$!
 trap 'kill $motor 2>/dev/null' EXIT
 

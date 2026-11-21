@@ -4,10 +4,11 @@
     MOTOR=grabado python3 -m servidor            # sin red: repite una corrida real guardada
 
 Rutas:
-    GET  /api/estado                  motor, modelo y cuántos agentes hay
-    GET  /api/agentes                 perfil y ubicación de cada agente
+    GET  /api/estado                  motor, modelo, población disponible y preguntas
+    POST /api/muestra                 {filtros, tamano}: filtra la población y sortea hasta `tamano` agentes
+    GET  /api/agentes                 la muestra por defecto (sin filtros), como lista
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre. Devuelve texto o resumen
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], agentes:[i], iteraciones}
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones}
     GET  /api/corridas/<id>/eventos   eventos de la corrida (text/event-stream)
     POST /api/corridas/<id>/cancelar
 """
@@ -18,10 +19,12 @@ import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import unquote, urlparse
 
-from .agentes import cargar_agentes
+from collections import OrderedDict
+
 from .corridas import Cache, Caso, Corrida, resumir_documento
 from .documentos import DocumentoIlegible, extraer_texto
 from .motor import elegir_motor
+from .poblacion import ArchivoFijo, Muestra, elegir_poblacion
 
 LETRAS = "ABCDEFGH"
 MAXIMO_DOCUMENTO = 25 * 1024 * 1024
@@ -29,11 +32,33 @@ LOTE = int(os.environ.get("LOTE", "10"))
 CONCURRENCIA = int(os.environ.get("CONCURRENCIA", "30"))
 MAXIMO_ITERACIONES = 3
 
-AGENTES = cargar_agentes()
-MOTOR = elegir_motor(AGENTES)
+TAMANO_POR_DEFECTO = 2000
+MAXIMO_MUESTRA = 5000
+MUESTRAS_GUARDADAS = 24
+
+# La corrida grabada solo tiene respuestas de las personas del archivo fijo: con ella se usa ese archivo.
+GRABADO = os.environ.get("MOTOR", "").lower() == "grabado"
+POBLACION = elegir_poblacion(fija=GRABADO)
+FIJOS = POBLACION.agentes if isinstance(POBLACION, ArchivoFijo) else ArchivoFijo().agentes
+MOTOR = elegir_motor(FIJOS)
+if MOTOR.grabado and not isinstance(POBLACION, ArchivoFijo):
+    POBLACION = ArchivoFijo()
 CACHE = Cache()
 CORRIDAS: dict[str, Corrida] = {}
-AGENTES_PUBLICOS = json.dumps([a.publico() for a in AGENTES], ensure_ascii=False).encode()
+MUESTRAS: OrderedDict[str, Muestra] = OrderedDict()
+CERROJO_MUESTRAS = threading.Lock()
+
+
+def sacar_muestra(filtros: dict | None, tamano) -> Muestra:
+    """Filtra la población y sortea; las últimas muestras se guardan para poder correrlas."""
+    tamano = max(1, min(MAXIMO_MUESTRA, int(tamano or TAMANO_POR_DEFECTO)))
+    muestra = POBLACION.muestra(filtros, tamano)
+    with CERROJO_MUESTRAS:
+        MUESTRAS[muestra.id] = muestra
+        MUESTRAS.move_to_end(muestra.id)
+        while len(MUESTRAS) > MUESTRAS_GUARDADAS:
+            MUESTRAS.popitem(last=False)
+    return muestra
 
 
 class Manejador(BaseHTTPRequestHandler):
@@ -70,9 +95,10 @@ class Manejador(BaseHTTPRequestHandler):
     def do_GET(self):
         ruta = urlparse(self.path).path
         if ruta == "/api/estado":
-            return self._json(200, {"motor": MOTOR.describir(), "agentes": len(AGENTES), "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas})
+            poblacion = POBLACION.describir()
+            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas})
         if ruta == "/api/agentes":
-            return self._json(200, None, AGENTES_PUBLICOS)
+            return self._json(200, [a.publico() for a in sacar_muestra(None, TAMANO_POR_DEFECTO).agentes])
         partes = ruta.strip("/").split("/")
         if len(partes) == 4 and partes[:2] == ["api", "corridas"] and partes[3] == "eventos":
             return self._eventos(partes[2])
@@ -83,6 +109,9 @@ class Manejador(BaseHTTPRequestHandler):
         try:
             if ruta == "/api/documentos":
                 return self._documento()
+            if ruta == "/api/muestra":
+                pedido = json.loads(self._cuerpo() or b"{}")
+                return self._json(200, sacar_muestra(pedido.get("filtros"), pedido.get("tamano")).publica())
             if ruta == "/api/corridas":
                 return self._crear_corrida()
             partes = ruta.strip("/").split("/")
@@ -117,8 +146,14 @@ class Manejador(BaseHTTPRequestHandler):
                 casos.append(caso)
         if not casos:
             raise ValueError("Falta al menos una propuesta con texto")
+        with CERROJO_MUESTRAS:
+            muestra = MUESTRAS.get(str(pedido.get("muestra") or ""))
+        if muestra is None:
+            if pedido.get("muestra"):
+                raise ValueError("Esa muestra ya no está disponible; vuelve a elegir a quiénes preguntar")
+            muestra = sacar_muestra(None, TAMANO_POR_DEFECTO)
         indices = pedido.get("agentes")
-        elegidos = [AGENTES[i] for i in indices if 0 <= i < len(AGENTES)] if indices else AGENTES
+        elegidos = [muestra.agentes[i] for i in indices if 0 <= i < len(muestra.agentes)] if indices else muestra.agentes
         if not elegidos:
             raise ValueError("La muestra quedó vacía")
         iteraciones = 0 if MOTOR.grabado else max(0, min(MAXIMO_ITERACIONES, int(pedido.get("iteraciones", 0))))
@@ -165,7 +200,9 @@ def main():
     servidor = ThreadingHTTPServer(("127.0.0.1" if not os.environ.get("ABIERTO") else "0.0.0.0", puerto), Manejador)
     servidor.daemon_threads = True
     descripcion = MOTOR.describir()
-    print(f"Simulador en http://127.0.0.1:{puerto} · {len(AGENTES)} agentes · motor {descripcion['nombre']} ({descripcion['modelo']})", flush=True)
+    poblacion = POBLACION.describir()
+    print(f"Simulador en http://127.0.0.1:{puerto} · {poblacion['fuente']}: {poblacion['agentes']:,} agentes por {poblacion['personas']:,} personas · "
+          f"motor {descripcion['nombre']} ({descripcion['modelo']})".replace(",", "."), flush=True)
     servidor.serve_forever()
 
 

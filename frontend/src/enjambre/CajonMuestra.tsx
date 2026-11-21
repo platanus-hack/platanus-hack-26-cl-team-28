@@ -40,7 +40,9 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
   const { filtros, setFiltros, muestra } = sim;
   const caja = useRef<HTMLElement>(null);
   const enCorrida = sim.fase === 'resultados';
-  const base = enCorrida ? sim.totalCorrida : (sim.conexion?.agentes.length ?? 0);
+  // Sin corrida, los cuadros muestran cuánto de lo pedido se va a preguntar: con filtros muy finos no alcanza.
+  const base = enCorrida ? sim.totalCorrida : sim.conexion?.demo ? (sim.conexion?.agentes.length ?? 0) : filtros.tamano;
+  const representadas = !enCorrida && !sim.conexion?.demo ? muestra.representadas : undefined;
   const llenos = base ? Math.max(muestra.total ? 1 : 0, Math.round((muestra.total / base) * CUADROS)) : 0;
   const cambiar = (parte: Partial<Filtros>) => setFiltros({ ...filtros, ...parte });
   const alternar = (clave: 'region' | 'genero' | 'quintil' | 'educacion', valor: number) =>
@@ -73,7 +75,11 @@ export function CajonMuestra({ sim, claro, alCambiarTema, alOcultar, alCerrar }:
         <p className={estilos.cuenta}>
           <b>{formatear(muestra.total)}</b>
           <span>
-            {enCorrida ? `de ${formatear(base)} personas, las que estás mirando` : `personas del Censo 2024 van a responder`}
+            {enCorrida
+              ? `de ${formatear(base)} personas, las que estás mirando`
+              : representadas
+                ? `personas del Censo 2024 van a responder, sorteadas entre las ${formatear(representadas)} que cumplen los filtros`
+                : `personas del Censo 2024 van a responder`}
           </span>
         </p>
         <button type="button" className={estilos.cerrar} onClick={alCerrar} aria-label="Cerrar">

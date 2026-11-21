@@ -45,6 +45,7 @@ Además del censo hay otras fuentes:
 | `contexto/muestra/actitudes.md` | Cómo se imputaron las actitudes, sus columnas, sus límites y la comparación con la CEP. |
 | `data/chile/chile.parquet` | Población completa de 14 años o más: 15.463.163 personas del censo, una por fila, con su hogar, su vivienda, lo imputado desde Casen y, los 14,5 M de adultos, sus opiniones de la CEP. También separada en `personas`, `hogares` (todos, con la composición del hogar) y `actitudes`. Mismas columnas y llaves que la muestra. |
 | `contexto/chile/README.md` y `validacion.md` | Qué es la población completa, sus límites, y su comparación con el censo, Casen y la CEP (distribuciones y correlaciones). |
+| `data/agentes/region_NN.parquet` | Tabla de agentes: 1.546.322 personas que representan a las 15,5 M (columna `representa`, 10 por ahora). Mismas columnas que `chile.parquet`. **Sí se versiona** (unos 100 MB): es la que filtra el motor del sitio. `contexto/chile/agentes.md` la describe y la compara con la población completa. |
 
 En la muestra cada fila vale por 100 personas y no hay ponderadores. Las columnas del censo son datos observados; las que vienen de Casen (decil de ingreso, previsión, etc.) son valores plausibles sorteados, no datos de esa persona. Se reconstruye con:
 
@@ -55,7 +56,10 @@ uv run python -I scripts/descargar_cep.py data/cep96
 uv run python -I scripts/imputar_cep.py data/muestra data/cep96 contexto/muestra
 uv run python -I scripts/construir_poblacion.py data/censo2024 data/casen2024 data/cep96 data/chile
 uv run python -I scripts/validar_poblacion.py data/chile data/censo2024 data/casen2024 data/cep96 contexto/chile
+uv run python -I scripts/reducir_poblacion.py data/chile data/agentes contexto/chile
 ```
+
+La tabla de agentes es provisoria en un punto: cada agente es una persona elegida al azar dentro de un grupo de 10 vecinas en el orden comuna, zona, sexo y edad. El destino es que sea el arquetipo de un cluster de personas parecidas. Ese cambio va en `grupos()` y `representantes()` de `reducir_poblacion.py`; el resto (el motor, los filtros, el sorteo ponderado por `representa`) ya está preparado.
 
 La población completa usa las mismas funciones de imputación que la muestra (`imputar_casen` en `construir_muestra.py` y el emparejamiento de `imputar_cep.py`): un cambio en el método vale para ambas. `validar_poblacion.py` termina con error si algo deja de calzar; córrelo después de cualquier cambio en la imputación. La población conserva la composición del censo, que tiene menos ocupados y más independientes que Casen: no la "corrijas" hacia la encuesta.
 
@@ -74,8 +78,8 @@ El sistema debe servir para estimar respuestas en muchos contextos, no solo en u
 | `scripts/probar_modelo.py` | Aplica la encuesta con el modelo local (escala 1 a 7; las preguntas son las del `encuesta.json` del caso o, si no hay, seis sobre una política). Si el texto es una carpeta, corre cada `.md` como variante con las mismas personas y semilla. `--abiertas N` pide justificaciones y preguntas abiertas a una submuestra. |
 | `scripts/lotes_agentes.py` | Para contestar la encuesta con subagentes (Claude Haiku): `preparar` arma lotes de personas con la política y las preguntas, y `reunir` junta las respuestas en un archivo de resultados. Con `--juntas`, cada subagente contesta todas las variantes para sus mismas personas. |
 | `scripts/comparar_variantes.py` | Ranking de variantes con diferencias pareadas, efecto de cada atributo, desglose por región y grupo, validación contra `benchmarks.json` y coincidencia entre corridas. |
-| `data/pruebas/poblacion/` | Los perfiles generales, comunes a todos los casos. `al_azar_2000.jsonl` son los agentes del sitio. |
-| `servidor/` | El motor del sitio (ver `servidor/README.md`). No copia el método: `servidor/metodo.py` importa de `scripts/probar_modelo.py` las preguntas, `mensajes`, `prosa_de` y `encuestar`. Si cambias sus firmas, ajusta ese archivo y prueba que el servidor arranque (`MOTOR=grabado python3 -m servidor`). |
+| `data/pruebas/poblacion/` | Los perfiles generales del banco de pruebas, comunes a todos los casos. `al_azar_2000.jsonl` es el respaldo del sitio cuando no puede leer la tabla de agentes. |
+| `servidor/` | El motor del sitio (ver `servidor/README.md`). Saca a los agentes de `data/agentes/`: filtra y sortea en `servidor/poblacion.py`. No copia el método: `servidor/metodo.py` importa de `scripts/probar_modelo.py` las preguntas, `mensajes`, `prosa_de` y `encuestar`. Si cambias sus firmas, ajusta ese archivo y prueba que el servidor arranque (`MOTOR=grabado python3 -m servidor`). |
 | `../datos-pruebas/` | Banco de referencias externas del equipo: 140 casos con encuesta real publicada, cortes por segmento y resultados observados. Sirve para validar; no lo mezcles con `data/pruebas/`, que son las corridas de los modelos. |
 | `data/pruebas/sala_cuna/` | El caso de Sala Cuna: variantes (`variantes/`, con `atributos.json`), textos de validación, `benchmarks.json` y resultados. Sus `personas_*.jsonl` son los perfiles cortos con que se hicieron las corridas hasta el 21-11-2026. |
 
@@ -95,7 +99,7 @@ Reglas de este análisis:
 uv run python -I scripts/consulta.py "select nombre_comuna, poblacion from comunas order by 2 desc limit 10"
 ```
 
-`scripts/consulta.py` abre DuckDB con estas vistas: `personas`, `hogares`, `viviendas`, `etiquetas`, `comunas`, `territorios`, `territorios_especificos`, `manzana_entidad`, `zona_localidad`, `urbanos`, `aldeas`, `casen`, `muestra`, `muestra_personas`, `muestra_hogares`, `etiquetas_casen`, `muestra_actitudes`, `etiquetas_cep`, `cep`, `chile`, `chile_personas`, `chile_hogares`, `chile_actitudes`. Muestra hasta 200 filas; `--todo` las muestra todas y `--csv` entrega CSV completo.
+`scripts/consulta.py` abre DuckDB con estas vistas: `personas`, `hogares`, `viviendas`, `etiquetas`, `comunas`, `territorios`, `territorios_especificos`, `manzana_entidad`, `zona_localidad`, `urbanos`, `aldeas`, `casen`, `muestra`, `muestra_personas`, `muestra_hogares`, `etiquetas_casen`, `muestra_actitudes`, `etiquetas_cep`, `cep`, `chile`, `chile_personas`, `chile_hogares`, `chile_actitudes`, `agentes`. Muestra hasta 200 filas; `--todo` las muestra todas y `--csv` entrega CSV completo.
 
 Si una cifra ya está en un tabulado oficial, cítala desde ahí (`data/censo2024/tabulados_csv/`) en vez de recalcularla.
 

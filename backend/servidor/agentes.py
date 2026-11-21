@@ -55,6 +55,7 @@ def normalizar(texto: str) -> str:
 
 @dataclass(frozen=True)
 class Agente:
+    #: Posición dentro de la muestra en que viene; es el índice que usa la interfaz.
     indice: int
     id: str
     #: Resumen corto para la interfaz: edad, género, lugar y los grupos de `A_LA_VISTA`.
@@ -97,38 +98,37 @@ def cargar_comunas() -> dict[tuple[int, str], tuple[float, float]]:
         }
 
 
+def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos: dict, comunas: dict) -> Agente:
+    """Arma un agente con lo que entrega scripts/personas_muestra.py de una persona."""
+    region = CODIGO_A_INDICE[datos["region"]]
+    comuna = datos.get("comuna") or ""
+    lon, lat = comunas.get((datos["region"], normalizar(comuna)), (None, None))
+    if lon is None:
+        # Sin centroide conocido: la capital regional que usa la interfaz se encarga.
+        lon, lat = 0.0, 0.0
+    genero = datos.get("genero") or ""
+    atributos = {"Edad": f"{datos['edad']} años", "Género": genero, "Región": datos.get("nombre_region") or "", "Comuna": comuna, "Zona": datos.get("zona") or ""}
+    atributos |= {clave: grupos[clave] for clave in A_LA_VISTA if grupos.get(clave)}
+    return Agente(
+        indice=indice,
+        id=identificador,
+        atributos=atributos,
+        perfil=perfil,
+        region=region,
+        comuna=comuna,
+        lon=lon,
+        lat=lat,
+        edad=datos["edad"],
+        genero=GENEROS.get(genero, 3),
+        quintil=max(0, min(4, (datos.get("quintil") or 3) - 1)),
+        educacion=EDUCACION.get(datos.get("educacion") or "", 1),
+        # La escala de 1 a 10 de la CEP en cinco tramos; los menores de 18 y quienes no se ubican van aparte.
+        politica=(datos["posicion_politica"] - 1) // 2 if datos.get("posicion_politica") else 5,
+    )
+
+
 def cargar_agentes(archivo: Path = ARCHIVO_AGENTES) -> list[Agente]:
     comunas = cargar_comunas()
-    agentes = []
     with open(archivo, encoding="utf-8") as f:
         filas = [json.loads(linea) for linea in f if linea.strip()]
-    for indice, fila in enumerate(filas):
-        datos, grupos = fila["datos"], fila.get("grupos", {})
-        region = CODIGO_A_INDICE[datos["region"]]
-        comuna = datos.get("comuna") or ""
-        lon, lat = comunas.get((datos["region"], normalizar(comuna)), (None, None))
-        if lon is None:
-            # Sin centroide conocido: la capital regional que usa la interfaz se encarga.
-            lon, lat = 0.0, 0.0
-        genero = datos.get("genero") or ""
-        atributos = {"Edad": f"{datos['edad']} años", "Género": genero, "Región": datos.get("nombre_region") or "", "Comuna": comuna, "Zona": datos.get("zona") or ""}
-        atributos |= {clave: grupos[clave] for clave in A_LA_VISTA if grupos.get(clave)}
-        agentes.append(
-            Agente(
-                indice=indice,
-                id=fila["id"],
-                atributos=atributos,
-                perfil=fila["perfil"],
-                region=region,
-                comuna=comuna,
-                lon=lon,
-                lat=lat,
-                edad=datos["edad"],
-                genero=GENEROS.get(genero, 3),
-                quintil=max(0, min(4, (datos.get("quintil") or 3) - 1)),
-                educacion=EDUCACION.get(datos.get("educacion") or "", 1),
-                # La escala de 1 a 10 de la CEP en cinco tramos; los menores de 18 y quienes no se ubican van aparte.
-                politica=(datos["posicion_politica"] - 1) // 2 if datos.get("posicion_politica") else 5,
-            )
-        )
-    return agentes
+    return [agente_de(indice, fila["id"], fila["perfil"], fila.get("grupos", {}), fila["datos"], comunas) for indice, fila in enumerate(filas)]
