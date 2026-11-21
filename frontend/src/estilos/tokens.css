@@ -1,0 +1,61 @@
+/* Única fuente de valores visuales. La escena del mapa lee estos mismos tokens. */
+:root {
+  color-scheme: light;
+
+  --mar: #dbe7ec;
+  --mar-trazo: #8fb0bf;
+  --tierra: #fcf9f1;
+  --vecino: #ecebe2;
+  --vecino-borde: #cdcbbc;
+  --region-borde: #b8b2a0;
+  --cordillera: #6b7385;
+  --costa-clara: rgb(255 255 255 / 0.5);
+  --sombra-figura: rgb(27 32 48 / 0.13);
+  --tinta-fuerte: #000;
+
+  --tinta: #1b2030;
+  --tinta-suave: #4a5368;
+  --papel: #fdfcf8;
+  --papel-velo: rgb(253 252 248 / 0.94);
+  --linea-suave: #c5ccd4;
+  --relleno-suave: #eef2f4;
+
+  --favor: #2450d6;
+  --favor-texto: #1c3fae;
+  --contra: #e0432b;
+  --contra-texto: #b02c18;
+  --indecisa: #f0b429;
+  --neutra: #d5dde8;
+  --indecisa-texto: #765300;
+  --foco: #2450d6;
+
+  --fuente-voz: 'Newsreader Variable', Georgia, 'Times New Roman', serif;
+  --fuente-ui: 'Hanken Grotesk Variable', system-ui, sans-serif;
+  --fuente-mano: 'Shantell Sans Variable', 'Comic Sans MS', cursive;
+
+  --texto-xxs: 0.6875rem;
+  --texto-xs: 0.75rem;
+  --texto-s: 0.8125rem;
+  --texto-m: 0.9375rem;
+  --texto-l: 1.125rem;
+  --texto-titular: clamp(1.75rem, 1.1rem + 2.1vw, 2.9rem);
+  --texto-cifra: clamp(2.6rem, 1.6rem + 3.4vw, 4.6rem);
+
+  --e0: 2px;
+  --e1: 4px;
+  --e2: 8px;
+  --e3: 12px;
+  --e4: 16px;
+  --e5: 24px;
+  --e6: 32px;
+  --gutter: clamp(16px, 2.6vw, 40px);
+  --alto-barra: 56px;
+  --radio: 6px;
+  --radio-fino: 2px;
+  --trazo: 1.5px;
+
+  --rapido: 160ms;
+  --medio: 280ms;
+  --lento: 900ms;
+  --curva-salida: cubic-bezier(0.16, 1, 0.3, 1);
+}

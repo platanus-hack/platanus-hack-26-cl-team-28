@@ -1,0 +1,130 @@
+.barra {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--e5);
+  min-height: var(--alto-barra);
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  font: italic 500 1.35rem/1 var(--fuente-voz);
+  letter-spacing: -0.01em;
+}
+
+.sello {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e0);
+}
+
+.sello i {
+  width: 6px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: 3px 3px 1px 1px;
+}
+
+.sello i:nth-child(1) {
+  height: 14px;
+  background: var(--favor);
+}
+
+.sello i:nth-child(2) {
+  height: 19px;
+  background: var(--indecisa);
+}
+
+.sello i:nth-child(3) {
+  height: 11px;
+  background: var(--contra);
+}
+
+.pasos {
+  display: flex;
+  gap: var(--e4);
+  margin-inline: auto;
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+.pasos li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.pasos span {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: var(--trazo) solid currentColor;
+  border-radius: 50%;
+  font-size: var(--texto-xs);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.pasos li[aria-current] {
+  color: var(--tinta);
+  font-weight: 650;
+}
+
+.pasos li[aria-current] span,
+.pasos li[data-hecho] span {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: var(--papel);
+}
+
+.aviso {
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+.corto {
+  display: none;
+}
+
+.aviso::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 7px;
+  background: var(--indecisa);
+  border: var(--trazo) solid var(--tinta);
+  rotate: 45deg;
+}
+
+@media (max-width: 1079px) {
+  .barra {
+    order: -2;
+  }
+}
+
+@media (max-width: 720px) {
+  .barra {
+    gap: var(--e3);
+    justify-content: space-between;
+  }
+
+  .pasos {
+    display: none;
+  }
+
+  .largo {
+    display: none;
+  }
+
+  .corto {
+    display: inline;
+  }
+}

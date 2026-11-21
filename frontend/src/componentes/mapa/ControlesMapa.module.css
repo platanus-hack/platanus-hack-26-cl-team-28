@@ -1,0 +1,63 @@
+.controles {
+  position: absolute;
+  right: var(--gutter);
+  bottom: var(--e3);
+  z-index: 1;
+  display: flex;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio);
+  background: var(--papel);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.controles button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  transition: background var(--rapido);
+}
+
+.controles button + button {
+  border-left: var(--trazo) solid var(--tinta);
+}
+
+.controles svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.controles button:active {
+  background: var(--linea-suave);
+}
+
+.controles button:focus-visible {
+  outline-offset: -3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .controles button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .controles button:hover {
+    background: var(--relleno-suave);
+  }
+}
+
+@media (max-width: 1079px) {
+  .controles {
+    right: var(--e3);
+    bottom: auto;
+    top: var(--e3);
+  }
+}

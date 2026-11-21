@@ -1,0 +1,82 @@
+.rango {
+  display: grid;
+  gap: var(--e1);
+}
+
+.rango legend {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: var(--e1);
+  font-size: var(--texto-s);
+  font-weight: 650;
+}
+
+.rango output {
+  font-weight: 400;
+  color: var(--tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+.pista {
+  position: relative;
+  height: 44px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio);
+  background:
+    linear-gradient(var(--tinta), var(--tinta)) no-repeat,
+    linear-gradient(var(--linea-suave), var(--linea-suave)) no-repeat,
+    var(--papel);
+  background-size:
+    calc((100% - 32px) * (var(--hasta) - var(--desde)) / 100%) 3px,
+    calc(100% - 32px) 3px;
+  background-position:
+    calc(16px + (100% - 32px) * var(--desde) / 100%) 50%,
+    16px 50%;
+}
+
+.pista input {
+  position: absolute;
+  inset: 0 6px;
+  width: calc(100% - 12px);
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.pista input::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: 50%;
+  background: var(--papel);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.pista input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: 50%;
+  background: var(--papel);
+  cursor: ew-resize;
+  pointer-events: auto;
+}
+
+.pista input:focus-visible {
+  outline: 0;
+}
+
+.pista input:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.pista input:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}

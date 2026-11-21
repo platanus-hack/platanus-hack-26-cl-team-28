@@ -1,0 +1,80 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+  min-width: 0;
+}
+
+.panel header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e2);
+  margin-block: -13px -9px;
+}
+
+.panel h2 {
+  font: 650 var(--texto-s) / 1.2 var(--fuente-ui);
+  letter-spacing: 0.02em;
+}
+
+.lista {
+  display: grid;
+  border-top: 1px solid var(--linea-suave);
+}
+
+.lista button {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  width: 100%;
+  min-height: 60px;
+  padding: 4px var(--e2) 4px 0;
+  border: 0;
+  border-bottom: 1px solid var(--linea-suave);
+  background: transparent;
+  text-align: left;
+  transition: background var(--rapido);
+}
+
+.lista button:focus-visible {
+  outline-offset: -3px;
+}
+
+.lista span {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.lista q {
+  font: 500 var(--texto-m) / 1.25 var(--fuente-mano);
+  quotes: '“' '”';
+}
+
+.lista small {
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+}
+
+.lista {
+  min-height: 0;
+}
+
+@media (min-width: 1080px) and (max-height: 820px) {
+  .nota {
+    display: none;
+  }
+}
+
+.nota {
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lista button:hover {
+    background: var(--relleno-suave);
+  }
+}

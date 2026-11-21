@@ -1,0 +1,62 @@
+.caja {
+  display: grid;
+  gap: var(--e1);
+  min-width: 0;
+}
+
+.barra {
+  display: flex;
+  height: 12px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio-fino);
+  overflow: hidden;
+  background: var(--papel);
+}
+
+.barra span {
+  flex-basis: 0;
+  min-width: 0;
+  transition: flex-grow var(--medio) var(--curva-salida);
+}
+
+.favor {
+  background: var(--favor);
+}
+
+.indecisa {
+  background: var(--indecisa);
+  border-inline: var(--trazo) solid var(--tinta);
+}
+
+.contra {
+  background: var(--contra);
+}
+
+.texto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e0) var(--e3);
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+.texto span {
+  white-space: nowrap;
+}
+
+.texto b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.texto_favor b {
+  color: var(--favor-texto);
+}
+
+.texto_indecisa b {
+  color: var(--indecisa-texto);
+}
+
+.texto_contra b {
+  color: var(--contra-texto);
+}

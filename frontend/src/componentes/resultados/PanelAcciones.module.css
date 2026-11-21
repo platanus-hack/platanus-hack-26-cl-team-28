@@ -1,0 +1,86 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e2);
+  min-width: 0;
+}
+
+.panel h2 {
+  font: 650 var(--texto-s) / 1.2 var(--fuente-ui);
+  letter-spacing: 0.02em;
+}
+
+.panel h2 span {
+  font-weight: 400;
+  color: var(--tinta-suave);
+}
+
+.lista {
+  display: grid;
+  gap: 7px;
+  padding-top: var(--e2);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.lista li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--e0) var(--e2);
+  font-size: var(--texto-s);
+  line-height: 1.25;
+}
+
+.lista b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.barra {
+  grid-column: 1 / -1;
+  display: flex;
+  min-width: 3px;
+  height: 9px;
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio-fino);
+  overflow: hidden;
+  transition: width var(--medio) var(--curva-salida);
+}
+
+.barra i {
+  flex-basis: 0;
+  transition: flex-grow var(--medio) var(--curva-salida);
+}
+
+.panel i[data-postura='favor'] {
+  background: var(--favor);
+}
+
+.panel i[data-postura='indecisa'] {
+  background: var(--indecisa);
+}
+
+.panel i[data-postura='contra'] {
+  background: var(--contra);
+}
+
+.clave {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e0) var(--e3);
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+}
+
+.clave span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.clave i {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--tinta);
+  border-radius: var(--radio-fino);
+}

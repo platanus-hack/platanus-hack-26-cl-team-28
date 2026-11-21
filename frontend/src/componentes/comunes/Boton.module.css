@@ -1,0 +1,63 @@
+/* Receta de botones: una acción principal por pantalla; el resto, secundarias. */
+.primario,
+.secundario,
+.texto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e2);
+  min-height: 44px;
+  padding: 0 var(--e5);
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio);
+  font-weight: 650;
+  white-space: nowrap;
+  transition:
+    background var(--rapido),
+    box-shadow var(--rapido),
+    scale var(--rapido);
+}
+
+.primario {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.primario:disabled {
+  background: var(--tinta-suave);
+  border-color: var(--tinta-suave);
+  cursor: not-allowed;
+}
+
+.secundario {
+  background: var(--papel);
+}
+
+.texto {
+  min-height: 44px;
+  padding: 0 var(--e2);
+  border-color: transparent;
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.primario:active:not(:disabled),
+.secundario:active {
+  scale: 0.97;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primario:hover:not(:disabled) {
+    background: var(--tinta-fuerte);
+  }
+
+  .secundario:hover {
+    box-shadow: inset 0 0 0 1px var(--tinta);
+  }
+
+  .texto:hover {
+    text-decoration-thickness: 2px;
+  }
+}

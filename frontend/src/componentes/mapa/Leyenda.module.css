@@ -1,0 +1,65 @@
+.leyenda {
+  position: absolute;
+  left: var(--gutter);
+  bottom: var(--e3);
+  z-index: 1;
+  display: grid;
+  gap: var(--e1);
+  pointer-events: none;
+  font-size: var(--texto-s);
+}
+
+.norte {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--fuente-mano);
+  color: var(--tinta);
+}
+
+.flecha {
+  width: 26px;
+  height: 9px;
+  background: var(--tinta);
+  clip-path: polygon(0 50%, 34% 0, 34% 38%, 100% 38%, 100% 62%, 34% 62%, 34% 100%);
+}
+
+.pista {
+  display: none;
+}
+
+.leyenda ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e0) var(--e4);
+}
+
+.leyenda li {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e0);
+  padding-bottom: var(--e0);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.leyenda li canvas {
+  margin-bottom: -4px;
+}
+
+@media (max-width: 1079px) {
+  .leyenda {
+    left: var(--e3);
+    bottom: var(--e2);
+    font-size: var(--texto-xs);
+  }
+
+  .leyenda ul {
+    gap: 0 var(--e2);
+  }
+
+  .pista {
+    display: inline;
+    margin-left: -4px;
+  }
+}

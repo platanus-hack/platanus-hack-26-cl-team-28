@@ -1,0 +1,128 @@
+.filtros {
+  display: grid;
+  gap: var(--e3);
+  align-content: start;
+  min-width: 0;
+}
+
+.filtros header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.filtros header h2 {
+  font: 500 1.5rem/1.1 var(--fuente-voz);
+}
+
+.filtros header p {
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+.filtros header button {
+  margin-top: -10px;
+}
+
+.tamanos legend,
+.campo span {
+  display: block;
+  margin-bottom: var(--e1);
+  font-size: var(--texto-s);
+  font-weight: 650;
+}
+
+.tamanos div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio);
+  background: var(--papel);
+  overflow: hidden;
+}
+
+.tamanos label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.tamanos label + label {
+  border-left: var(--trazo) solid var(--tinta);
+}
+
+.tamanos input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.tamanos input:focus-visible {
+  outline: 0;
+}
+
+.tamanos label:has(:checked) {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.tamanos label:has(:focus-visible) {
+  outline: 2px solid var(--foco);
+  outline-offset: -5px;
+}
+
+.tamanos label:has(:checked:focus-visible) {
+  outline-color: var(--papel);
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: var(--e3) var(--e4);
+}
+
+.tamanos {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 1080px) {
+  .grilla {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .tamanos {
+    grid-column: span 2;
+  }
+}
+
+.campo {
+  display: block;
+  min-width: 0;
+}
+
+.campo select {
+  width: 100%;
+  height: 44px;
+  padding: 0 34px 0 var(--e3);
+  border: var(--trazo) solid var(--tinta);
+  border-radius: var(--radio);
+  background: var(--papel)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%231b2030' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    no-repeat right 12px center / 11px;
+  appearance: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tamanos label:not(:has(:checked)):hover {
+    background: var(--relleno-suave);
+  }
+}

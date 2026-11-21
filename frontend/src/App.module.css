@@ -1,0 +1,42 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.tablero {
+  position: relative;
+  z-index: 2;
+  background: var(--papel-velo);
+}
+
+@media (min-width: 1080px) {
+  /* Herramienta de una sola pantalla: el mapa llena la página y el tablero ocupa el mar del sur. */
+  .app {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* Si el mapa se acerca y queda bajo la cabecera y el titular, un velo del color de la tierra vecina los mantiene legibles. */
+  .app::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 1;
+    height: 212px;
+    background: linear-gradient(var(--vecino) 74%, transparent);
+    opacity: 0;
+    transition: opacity var(--medio);
+    pointer-events: none;
+  }
+
+  .app[data-acercado]::before {
+    opacity: 1;
+  }
+
+  .tablero {
+    flex: none;
+    height: clamp(340px, 43dvh, 400px);
+    border-top: var(--trazo) solid var(--tinta);
+  }
+}
