@@ -67,9 +67,8 @@ export class CapaPersonas {
     this.fase = Float32Array.from({ length: n }, (_, i) => ((i * 0.618) % 1) * 6.283);
     // Orden fijo y repartido: así los representantes no cambian de un cuadro a otro.
     this.prioridad = Uint16Array.from(Array.from({ length: n }, (_, i) => i).sort((a, b) => ((a * 0.618) % 1) - ((b * 0.618) % 1)));
-    const ancho = multitud.maxX - multitud.minX;
     // La gente aparece como una ola de norte a sur.
-    this.tNace = Float32Array.from(multitud.x, (x, i) => ahora + 0.25 + ((x - multitud.minX) / ancho) * 1.1 + ((i * 0.37) % 1) * 0.25);
+    this.tNace = Float32Array.from(multitud.avance, (avance, i) => ahora + 0.25 + avance * 1.1 + ((i * 0.37) % 1) * 0.25);
     this.finAnimacion = ahora + 2.4;
   }
 
@@ -78,12 +77,12 @@ export class CapaPersonas {
   }
 
   programar(estados: Uint8Array, modo: ModoCambio, ahora: number, duracion = 2.4): void {
-    const { x, minX, maxX } = this.multitud;
+    const { avance: avances } = this.multitud;
     this.barrido = modo === 'barrido' ? { inicio: ahora, duracion } : null;
     let fin = ahora;
     for (let i = 0; i < estados.length; i++) {
       if (estados[i] === this.estados[i] && this.tCambio[i] === SIN_CAMBIO) continue;
-      const avance = (x[i] - minX) / (maxX - minX);
+      const avance = avances[i];
       const espera = modo === 'barrido' ? avance * duracion : modo === 'cambio' ? avance * 0.5 + ((i * 0.37) % 1) * 0.18 : 0;
       this.pendiente[i] = estados[i];
       this.tCambio[i] = ahora + espera;
@@ -104,7 +103,7 @@ export class CapaPersonas {
   /** Alto en pantalla de una figura que se representa solo a sí misma. */
   private altoUnidad(camara: Camara): number {
     // En pantallas angostas el país se ve entero y las figuras se achican con él.
-    const base = Math.max(11, Math.min(ALTO_BASE, camara.u * 0.72));
+    const base = Math.max(11, Math.min(ALTO_BASE, camara.u * 0.95));
     return Math.min(64, base * camara.zoom ** 0.4);
   }
 

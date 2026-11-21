@@ -1,4 +1,4 @@
-import { MAPA, POSTURA_TITULO } from '../../contenido';
+import { POSTURA_TITULO } from '../../contenido';
 import { Figura } from '../comunes/Figura';
 import estilos from './Leyenda.module.css';
 
@@ -8,8 +8,7 @@ export function Leyenda({ conPosturas }: { conPosturas: boolean }) {
     <div className={estilos.leyenda}>
       <p className={estilos.norte}>
         <span aria-hidden="true" className={estilos.flecha} />
-        <b>N</b> {MAPA.orientacion}
-        <span className={estilos.pista}>. {MAPA.arrastre}</span>
+        <b>N</b>
       </p>
       <ul>
         {!conPosturas && (

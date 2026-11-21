@@ -1,4 +1,4 @@
-import { NOTA_DEMO, PREPARAR } from '../../contenido';
+import { PREPARAR } from '../../contenido';
 import { formatear } from '../../dominio/textos';
 import type { Simulacion } from '../../estado/useSimulacion';
 import { Boton } from '../comunes/Boton';
@@ -12,7 +12,7 @@ function aviso(sim: Simulacion): string {
   if (sim.muestra.total < sim.muestra.pedidas) {
     return `Hay ${formatear(sim.muestra.disponibles)} perfiles disponibles de los ${formatear(sim.muestra.pedidas)} pedidos.`;
   }
-  return sim.simulador.esDemostracion ? NOTA_DEMO : '';
+  return PREPARAR.figuras;
 }
 
 export function MesaPreparar({ sim }: { sim: Simulacion }) {
@@ -24,14 +24,14 @@ export function MesaPreparar({ sim }: { sim: Simulacion }) {
         void sim.preguntar();
       }}
     >
-      <EditorCasos sim={sim} />
-      <FiltrosMuestra sim={sim} />
-      <footer className={estilos.pie}>
+      <div className={estilos.accion}>
         <p role="status">{aviso(sim)}</p>
         <Boton type="submit" variante="primario" disabled={!sim.puedePreguntar}>
           Preguntar a {formatear(sim.muestra.total)} personas
         </Boton>
-      </footer>
+      </div>
+      <EditorCasos sim={sim} />
+      <FiltrosMuestra sim={sim} />
     </form>
   );
 }

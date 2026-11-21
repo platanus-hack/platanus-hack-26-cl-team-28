@@ -1,4 +1,4 @@
-import { ALTO_MUNDO, ALTO_UTIL, ANCHO_MUNDO, CENTRO_Y } from './proyeccion';
+import { ALTO_MUNDO, ANCHO_MUNDO, ANCHO_UTIL, CENTRO_X, CENTRO_Y } from './proyeccion';
 
 export interface Marco {
   x: number;
@@ -8,33 +8,24 @@ export interface Marco {
 }
 
 const ZOOM_MAXIMO = 9;
-const X_SANTIAGO = 16.45;
-/** Bajo esta proporción el país no cabe a lo ancho: se ajusta al alto y se recorre arrastrando. */
-const PROPORCION_MINIMA = 0;
 const RAPIDEZ = 7;
+/** Aire sobre Arica y bajo el Cabo de Hornos, en grados. */
+const MARGEN_VERTICAL = 1;
 
 export class Camara {
   u = 1;
   zoom = 1;
-  cx = ANCHO_MUNDO / 2;
+  cx = CENTRO_X;
   cy = CENTRO_Y;
   private sx = 0;
   private sy = 0;
-  private ancho = 1;
   private meta: { cx: number; cy: number; zoom: number } | null = null;
-  private recorre = false;
-  private iniciada = false;
 
+  /** Encuadra el país entero dentro del marco. */
   ajustar(marco: Marco): void {
-    this.recorre = marco.w / marco.h < PROPORCION_MINIMA;
-    this.u = this.recorre ? marco.h / (ALTO_UTIL + 0.3) : Math.min(marco.w / ANCHO_MUNDO, marco.h / ALTO_UTIL);
+    this.u = Math.min(marco.w / ANCHO_UTIL, marco.h / (ALTO_MUNDO + MARGEN_VERTICAL));
     this.sx = marco.x + marco.w / 2;
     this.sy = marco.y + marco.h / 2;
-    this.ancho = marco.w;
-    if (!this.iniciada) {
-      this.iniciada = true;
-      this.cx = this.inicioX();
-    }
     this.limitar();
   }
 
@@ -42,13 +33,9 @@ export class Camara {
     return this.u * this.zoom;
   }
 
-  private inicioX(): number {
-    return this.recorre ? X_SANTIAGO : ANCHO_MUNDO / 2;
-  }
-
-  /** Posición horizontal de un punto del mundo en la vista inicial, sin importar el zoom actual. */
-  xInicial(x: number): number {
-    return (x - this.inicioX()) * this.u + this.sx;
+  /** Posición vertical de un punto del mundo en la vista inicial, sin importar el zoom actual. */
+  yInicial(y: number): number {
+    return (y - CENTRO_Y) * this.u + this.sy;
   }
 
   aPantalla(x: number, y: number): [number, number] {
@@ -80,7 +67,7 @@ export class Camara {
   }
 
   restablecer(): void {
-    this.irA(this.inicioX(), CENTRO_Y, 1);
+    this.irA(CENTRO_X, CENTRO_Y, 1);
   }
 
   saltarAMeta(): void {
@@ -97,16 +84,17 @@ export class Camara {
     this.cx += (this.meta.cx - this.cx) * k;
     this.cy += (this.meta.cy - this.cy) * k;
     this.zoom += (this.meta.zoom - this.zoom) * k;
-    const cerca = Math.abs(this.meta.zoom - this.zoom) < 0.004 && Math.abs(this.meta.cx - this.cx) < 0.004;
+    const cerca = Math.abs(this.meta.zoom - this.zoom) < 0.004 && Math.abs(this.meta.cy - this.cy) < 0.004;
     if (cerca) this.saltarAMeta();
     return true;
   }
 
+  /** Con la vista completa el país queda centrado; al acercar se puede recorrer hasta sus bordes. */
   private limitar(): void {
-    const medio = this.ancho / 2 / this.escala;
-    const [minimo, maximo] = medio * 2 >= ANCHO_MUNDO ? [ANCHO_MUNDO / 2, ANCHO_MUNDO / 2] : [medio - 0.6, ANCHO_MUNDO - medio + 0.6];
-    this.cx = Math.max(minimo, Math.min(maximo, this.cx));
-    const holgura = this.zoom > 1 ? (ALTO_MUNDO / 2) * (1 - 1 / this.zoom) + 0.4 : 0;
-    this.cy = Math.max(CENTRO_Y - holgura, Math.min(CENTRO_Y + holgura, this.cy));
+    const libre = 1 - 1 / this.zoom;
+    const holguraX = (ANCHO_MUNDO / 2) * libre;
+    const holguraY = (ALTO_MUNDO / 2) * libre;
+    this.cx = Math.max(CENTRO_X - holguraX, Math.min(CENTRO_X + holguraX, this.cx));
+    this.cy = Math.max(CENTRO_Y - holguraY, Math.min(CENTRO_Y + holguraY, this.cy));
   }
 }

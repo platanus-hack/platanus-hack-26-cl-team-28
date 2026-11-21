@@ -1,4 +1,4 @@
-# Diseño del front: Chile visto desde el Pacífico
+# Diseño del front: Chile a pantalla completa
 
 Contrato de diseño de la herramienta. Rediseño completo (tamaño L) del prototipo base de un solo `index.html`.
 
@@ -21,13 +21,14 @@ prototipo y es el reflejo habitual de un modelo).
 
 Direcciones consideradas:
 
-1. **Chile visto desde el Pacífico** (elegida). El país se dibuja acostado: norte a la izquierda, cordillera arriba
-   como telón de fondo, mar abajo. Así un país de 4.300 km de largo llena el ancho de la pantalla, y la gente queda
-   de pie sobre él como una multitud. El gráfico por región comparte eje con el mapa.
+1. **Chile de pie, a pantalla completa** (elegida). El mapa ocupa todo el lado izquierdo de la pantalla, con el norte
+   arriba, y la información vive en una hoja a la derecha. Se probó primero con el país acostado (norte a la
+   izquierda) para llenar el ancho; se descartó porque el mapa se leía raro y obligaba a apilar los paneles en
+   poco alto, con scrolls internos.
 2. Papeleta electoral: tipografía de voto impreso, timbres y casillas. Descartada: no deja lugar al mapa.
 3. Cabildo en la plaza: la gente reunida sin geografía. Descartada: se pierde la lectura territorial.
 
-Recurso propio: la franja de regiones cuelga del mapa con líneas guía, y la multitud cambia de postura con un salto
+Recurso propio: la franja de regiones corre de norte a sur pegada al mapa, unida a cada región con líneas guía, y la multitud cambia de postura con un salto
 al cambiar de variante, de modo que se ve quién cambia de opinión.
 
 Paleta de tres tintas de imprenta sobre mar frío: azul cobalto (a favor), mostaza (indecisa) y bermellón (en contra),
@@ -54,13 +55,16 @@ en controles, 280 ms en barras, 450 ms el salto de una figura, 2,6 s el barrido 
 
 ## Composición
 
-**1080 px o más (una sola pantalla, sin scroll).** El lienzo del mapa es el fondo de toda la página. Encima, de
-arriba abajo: cabecera (marca, etapas, aviso de demostración), titular (izquierda) con la cifra principal (derecha),
-el hueco donde se encuadra Chile y el tablero, que ocupa el 43 % inferior (entre 340 y 400 px) con fondo de papel. La cabecera y el
-titular quedan sobre Argentina y Bolivia; el tablero, sobre el mar.
+**1080 px o más.** Dos columnas a todo el alto. A la izquierda el mapa, que llena su columna: controles y leyenda
+arriba a la izquierda, ciudades rotuladas mar adentro y, en resultados, la franja de regiones en el borde derecho
+del mapa, alineada por latitud. A la derecha la hoja de información (entre 540 y 780 px), con un solo scroll y sin
+alturas forzadas: cabecera, titular con la cifra principal y las secciones una debajo de otra, con aire.
 
-**Bajo 1080 px.** Cabecera, mapa fijo arriba (un tercio del alto) con el país entero, y debajo el contenido en una
-columna con scroll. La franja de regiones pasa a lista de dos columnas.
+**Bajo 1080 px.** El mapa arriba (72 % del alto) con el país entero y, debajo, la hoja en una columna. La franja de
+regiones pasa a lista.
+
+El mapa ensancha el país unas dos veces y media de este a oeste para que la gente quepa encima: es un mapa
+ilustrado, no a escala.
 
 ## Escena
 
@@ -76,7 +80,7 @@ cuadros por segundo como dibujo a mano. El agrupamiento vive en `src/mapa/agrupa
 | Entrada | Carga | La gente aparece creciendo desde los pies, en ola de norte a sur (1,6 s) | Aparece completa |
 | Reposo | Siempre | Respiración leve, trazo que hierve, olas que derivan | Todo quieto |
 | Filtro | Cambio en la muestra | Quien sale queda en contorno tenue; quien entra salta | Cambio directo |
-| Barrido | Preguntar | Una línea con la etiqueta de la variante cruza el país en 2,6 s; cada figura muestra un globo y toma postura con un salto; el conteo del tablero crece al mismo ritmo | Resultado directo |
+| Barrido | Preguntar | Una línea con la etiqueta de la variante baja por el país en 2,6 s; cada figura muestra un globo y toma postura con un salto; el conteo del tablero crece al mismo ritmo | Resultado directo |
 | Cambio de variante | Elegir otra variante | Solo saltan quienes cambian de postura, en ola de 0,5 s; barras a 280 ms | Cambio directo |
 | Región | Elegir en la franja | La cámara se acerca en 0,6 s y la región queda contorneada | Salto de cámara |
 | Persona | Clic en figura o en una voz | Anillo bajo los pies, globo con su frase, ficha con su respuesta en cada variante | Igual, sin animación |

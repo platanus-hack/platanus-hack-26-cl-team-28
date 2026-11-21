@@ -1,12 +1,10 @@
 .barra {
-  position: relative;
-  z-index: 2;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--e5);
-  min-height: var(--alto-barra);
-  padding-inline: var(--gutter);
-  pointer-events: none;
+  gap: var(--e2) var(--e5);
+  padding-bottom: var(--e4);
+  border-bottom: 1px solid var(--linea-suave);
 }
 
 .marca {
@@ -47,7 +45,7 @@
 .pasos {
   display: flex;
   gap: var(--e4);
-  margin-inline: auto;
+  margin-left: auto;
   font-size: var(--texto-s);
   color: var(--tinta-suave);
 }
@@ -84,9 +82,10 @@
 }
 
 .aviso {
+  flex-basis: 100%;
   font-size: var(--texto-s);
   color: var(--tinta-suave);
-  white-space: nowrap;
+  text-wrap: pretty;
 }
 
 .corto {
@@ -102,12 +101,6 @@
   background: var(--indecisa);
   border: var(--trazo) solid var(--tinta);
   rotate: 45deg;
-}
-
-@media (max-width: 1079px) {
-  .barra {
-    order: -2;
-  }
 }
 
 @media (max-width: 720px) {

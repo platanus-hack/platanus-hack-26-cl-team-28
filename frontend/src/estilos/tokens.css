@@ -48,6 +48,7 @@
   --e4: 16px;
   --e5: 24px;
   --e6: 32px;
+  --e7: 44px;
   --gutter: clamp(16px, 2.6vw, 40px);
   --alto-barra: 56px;
   --radio: 6px;

@@ -107,16 +107,16 @@ function enTierra(lon: number, lat: number): boolean {
   return geografia.land.flat().some(adentro);
 }
 
-/** Trazos de oleaje repartidos por el Pacífico, lejos de la costa. */
+/** Trazos de oleaje repartidos por el Pacífico, al oeste de la costa. */
 export function crearOlas(): Ola[] {
   const azar = crearAzar(1520);
   const olas: Ola[] = [];
-  for (let x = 0.6; x < ANCHO_MUNDO; x += 1.25) {
-    const lat = LAT_NORTE - x;
-    const [, yCosta] = aMundo(costa(Math.max(-55.5, Math.min(-17.6, lat))), lat);
-    for (let y = yCosta + 0.55; y < ALTO_MUNDO + 3; y += 0.85) {
-      const ox = x + (azar() - 0.5) * 0.9;
-      const oy = y + (azar() - 0.5) * 0.3;
+  for (let y = 0.5; y < ALTO_MUNDO; y += 1.05) {
+    const lat = LAT_NORTE - y;
+    const [xCosta] = aMundo(costa(Math.max(-55.5, Math.min(-17.6, lat))), lat);
+    for (let x = xCosta - 0.7; x > -ANCHO_MUNDO; x -= 1.5) {
+      const ox = x + (azar() - 0.5) * 0.7;
+      const oy = y + (azar() - 0.5) * 0.7;
       if (!enTierra(...aGeografia(ox, oy))) olas.push({ x: ox, y: oy, fase: azar() * 6.28 });
     }
   }
@@ -127,8 +127,8 @@ export interface Rotulo {
   texto: string;
   x: number;
   y: number;
-  /** Altura del mundo donde va el texto: pasado la costa o pasado el límite oriental. */
-  yTexto: number;
+  /** Posición horizontal del texto en el mundo: mar adentro o al otro lado de la cordillera. */
+  xTexto: number;
   haciaElMar: boolean;
 }
 
@@ -140,20 +140,17 @@ const CIUDADES: [string, number, number, boolean][] = [
   ['Concepción', -73.05, -36.83, true],
   ['Puerto Montt', -72.94, -41.47, true],
   ['Coyhaique', -72.07, -45.57, false],
-  ['Punta Arenas', -70.91, -53.16, false],
+  ['Punta Arenas', -70.91, -53.16, true],
 ];
 
 export const ROTULOS: Rotulo[] = CIUDADES.map(([texto, lon, lat, haciaElMar]) => {
   const [x, y] = aMundo(lon, lat);
-  const borde = haciaElMar ? costa(lat) - 0.5 : limiteOriental(lat) + 0.55;
-  return { texto, x, y, yTexto: aMundo(borde, lat)[1], haciaElMar };
+  const borde = haciaElMar ? costa(lat) - 0.45 : limiteOriental(lat) + 0.5;
+  return { texto, x, y, xTexto: aMundo(borde, lat)[0], haciaElMar };
 });
 
-export const PAISES: { texto: string; x: number; y: number }[] = [
-  { texto: 'ARGENTINA', ...punto(-66.9, -36) },
-  { texto: 'BOLIVIA', ...punto(-66.9, -20.4) },
-  { texto: 'OCÉANO PACÍFICO', ...punto(-75.5, -33.2) },
-];
+/** Nombre del océano, escrito de abajo hacia arriba a lo largo de la costa. */
+export const OCEANO = { texto: 'OCÉANO PACÍFICO', ...punto(-74.6, -29.5) };
 
 function punto(lon: number, lat: number): { x: number; y: number } {
   const [x, y] = aMundo(lon, lat);

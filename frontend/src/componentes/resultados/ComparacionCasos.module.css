@@ -3,7 +3,6 @@
   flex-direction: column;
   gap: var(--e2);
   min-width: 0;
-  min-height: 0;
 }
 
 .panel h2 {
@@ -14,15 +13,13 @@
 .lista {
   display: grid;
   align-content: start;
-  min-height: 0;
-  overflow-y: auto;
   border-top: 1px solid var(--linea-suave);
 }
 
 .caso {
   display: grid;
   grid-template-columns: 2rem minmax(0, 1fr);
-  padding: var(--e2) var(--e3) var(--e2) var(--e2);
+  padding: var(--e3) var(--e3) var(--e3) var(--e2);
   border: 0;
   border-bottom: 1px solid var(--linea-suave);
   border-left: 3px solid transparent;
@@ -46,7 +43,7 @@
 
 .cuerpo {
   display: grid;
-  gap: 5px;
+  gap: var(--e2);
   min-width: 0;
 }
 

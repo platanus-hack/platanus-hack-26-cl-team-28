@@ -1,62 +1,26 @@
 .tablero {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-}
-
-.rotulo {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--e3);
-  padding: 0 var(--gutter);
-  border-bottom: 1px solid var(--linea-suave);
-}
-
-.rotulo h2 {
-  font: 650 var(--texto-s) / 1.2 var(--fuente-ui);
-  letter-spacing: 0.02em;
-}
-
-.rotulo h2 span {
-  margin-left: var(--e2);
-  font-weight: 400;
-  color: var(--tinta-suave);
-}
-
-.rotulo button {
-  min-height: 36px;
-}
-
-.paneles {
   display: grid;
-  gap: var(--e5);
-  padding: var(--e4) var(--gutter) var(--e5);
+  gap: var(--e6);
+}
+
+.par {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: var(--e6) var(--e7);
+  align-items: start;
+}
+
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--e3);
+  padding-top: var(--e4);
+  border-top: 1px solid var(--linea-suave);
 }
 
 @media (min-width: 1080px) {
-  .paneles {
-    flex: 1;
-    min-height: 0;
-    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.9fr) minmax(0, 1.05fr);
-    gap: calc(var(--gutter) * 1.2);
-    padding-block: var(--e3) var(--e3);
-  }
-
-  .paneles > * {
-    min-height: 0;
-  }
-}
-
-@media (max-width: 1079px) {
-  .rotulo {
-    order: -1;
-    padding-top: var(--e3);
-    border-bottom: 0;
-  }
-
-  .rotulo button {
-    min-height: 44px;
+  .tablero {
+    gap: var(--e7);
   }
 }

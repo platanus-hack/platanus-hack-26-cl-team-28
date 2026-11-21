@@ -6,7 +6,7 @@ import estilos from './Titular.module.css';
 
 /** Voz de la página: la pregunta mientras se prepara y, después, el caso activo con su cifra principal. */
 export function Titular({ sim }: { sim: Simulacion }) {
-  const { fase, corrida, muestra } = sim;
+  const { fase, corrida } = sim;
   if (fase === 'preparar' || !corrida) {
     return (
       <section className={estilos.titular}>
@@ -14,13 +14,6 @@ export function Titular({ sim }: { sim: Simulacion }) {
           <h1>{PREPARAR.titular}</h1>
           <p>{PREPARAR.bajada}</p>
         </div>
-        <p className={estilos.cifra}>
-          <b>{formatear(muestra.total)}</b>
-          <span>
-            personas simuladas en la muestra
-            <small>{muestra.total > 0 ? PREPARAR.figuras : PREPARAR.sinPersonas}</small>
-          </span>
-        </p>
       </section>
     );
   }

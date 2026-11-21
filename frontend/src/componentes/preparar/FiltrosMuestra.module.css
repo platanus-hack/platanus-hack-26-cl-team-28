@@ -1,6 +1,6 @@
 .filtros {
   display: grid;
-  gap: var(--e3);
+  gap: var(--e4);
   align-content: start;
   min-width: 0;
 }
@@ -85,21 +85,11 @@
 .grilla {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
-  gap: var(--e3) var(--e4);
+  gap: var(--e4) var(--e5);
 }
 
 .tamanos {
   grid-column: 1 / -1;
-}
-
-@media (min-width: 1080px) {
-  .grilla {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .tamanos {
-    grid-column: span 2;
-  }
 }
 
 .campo {

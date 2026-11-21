@@ -1,7 +1,7 @@
 .leyenda {
   position: absolute;
-  left: var(--gutter);
-  bottom: var(--e3);
+  left: var(--e5);
+  top: calc(var(--e5) + 52px);
   z-index: 1;
   display: grid;
   gap: var(--e1);
@@ -18,14 +18,10 @@
 }
 
 .flecha {
-  width: 26px;
-  height: 9px;
+  width: 9px;
+  height: 24px;
   background: var(--tinta);
-  clip-path: polygon(0 50%, 34% 0, 34% 38%, 100% 38%, 100% 62%, 34% 62%, 34% 100%);
-}
-
-.pista {
-  display: none;
+  clip-path: polygon(50% 0, 100% 34%, 62% 34%, 62% 100%, 38% 100%, 38% 34%, 0 34%);
 }
 
 .leyenda ul {
@@ -47,19 +43,14 @@
   margin-bottom: -4px;
 }
 
+.leyenda ul {
+  flex-direction: column;
+  gap: var(--e0);
+}
+
 @media (max-width: 1079px) {
   .leyenda {
     left: var(--e3);
-    bottom: var(--e2);
     font-size: var(--texto-xs);
-  }
-
-  .leyenda ul {
-    gap: 0 var(--e2);
-  }
-
-  .pista {
-    display: inline;
-    margin-left: -4px;
   }
 }

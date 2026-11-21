@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--e2);
-  margin-block: -13px -9px;
+  margin-block: calc(var(--e3) * -1) calc(var(--e2) * -1);
 }
 
 .panel h2 {
@@ -28,8 +28,8 @@
   align-items: center;
   gap: var(--e2);
   width: 100%;
-  min-height: 60px;
-  padding: 4px var(--e2) 4px 0;
+  min-height: 68px;
+  padding: var(--e2) var(--e2) var(--e2) 0;
   border: 0;
   border-bottom: 1px solid var(--linea-suave);
   background: transparent;
@@ -55,16 +55,6 @@
 .lista small {
   font-size: var(--texto-xs);
   color: var(--tinta-suave);
-}
-
-.lista {
-  min-height: 0;
-}
-
-@media (min-width: 1080px) and (max-height: 820px) {
-  .nota {
-    display: none;
-  }
 }
 
 .nota {

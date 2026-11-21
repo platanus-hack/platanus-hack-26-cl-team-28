@@ -6,41 +6,42 @@ import { repartir } from './repartir';
 
 interface Props {
   resumen: ResumenCaso;
-  /** Posición horizontal de cada región en el mapa; vacío mientras no se mide. */
-  xReales: number[];
-  ancho: number;
+  /** Posición vertical de cada región en el mapa; vacío mientras no se mide. */
+  yReales: number[];
+  alto: number;
   region: number;
   alElegir(region: number): void;
 }
 
-const ANCHO_COLUMNA = 66;
-const ALTO_GUIA = 16;
+const ALTO_FILA = 34;
+const ANCHO_GUIA = 26;
 
 /**
- * El apoyo por región, alineado con el mapa de arriba: cada columna cuelga de su región
- * con una línea guía, así el gráfico comparte eje con el país.
+ * El apoyo por región, de norte a sur y alineado con el mapa: cada fila cuelga de su
+ * región con una línea guía, así el gráfico comparte eje con el país.
  */
-export function FranjaRegiones({ resumen, xReales, ancho, region, alElegir }: Props) {
-  const medido = xReales.length === REGIONES.length && ancho > 0;
-  const centros = medido ? repartir(xReales, ANCHO_COLUMNA, ANCHO_COLUMNA / 2 + 4, ancho - ANCHO_COLUMNA / 2 - 4) : [];
+export function FranjaRegiones({ resumen, yReales, alto, region, alElegir }: Props) {
+  const medido = yReales.length === REGIONES.length && alto > 0;
+  const centros = medido ? repartir(yReales, ALTO_FILA, ALTO_FILA / 2 + 34, alto - ALTO_FILA / 2 - 8) : [];
   return (
-    <div className={estilos.franja}>
+    <section className={estilos.franja} aria-labelledby="titulo-franja">
+      <h2 id="titulo-franja">A favor por región</h2>
       {medido && (
-        <svg className={estilos.guias} width={ancho} height={ALTO_GUIA} aria-hidden="true">
+        <svg className={estilos.guias} width={ANCHO_GUIA} height={alto} aria-hidden="true">
           {centros.map((centro, i) => (
-            <path key={i} d={`M${xReales[i]} 0 V3 L${centro} ${ALTO_GUIA - 4} V${ALTO_GUIA}`} />
+            <path key={i} d={`M0 ${yReales[i]} H4 L${ANCHO_GUIA - 6} ${centro} H${ANCHO_GUIA}`} />
           ))}
         </svg>
       )}
-      <ol className={estilos.columnas}>
+      <ol className={estilos.filas}>
         {REGIONES.map((r, i) => {
           const conteo = resumen.porRegion[i];
           const hay = conteo.total >= MINIMO_REGION;
           const pct = (parte: number) => `${(parte / (conteo.total || 1)) * 100}%`;
           const pila = { '--pct-favor': pct(conteo.favor), '--pct-indecisa': pct(conteo.indecisa) } as CSSProperties;
           return (
-            <li key={r.nombre} style={medido ? ({ '--x': `${centros[i]}px` } as CSSProperties) : undefined}>
-              <button type="button" aria-pressed={region === i} onClick={() => alElegir(region === i ? -1 : i)} title={r.nombre}>
+            <li key={r.nombre} style={medido ? ({ '--y': `${centros[i]}px` } as CSSProperties) : undefined}>
+              <button type="button" aria-pressed={region === i} onClick={() => alElegir(region === i ? -1 : i)}>
                 <span className={estilos.nombre}>{r.corto}</span>
                 <span className={estilos.pila} style={pila} data-vacia={!hay || undefined} aria-hidden="true" />
                 <span className={estilos.valor}>
@@ -57,6 +58,6 @@ export function FranjaRegiones({ resumen, xReales, ancho, region, alElegir }: Pr
           );
         })}
       </ol>
-    </div>
+    </section>
   );
 }

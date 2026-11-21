@@ -6,6 +6,7 @@ import { Leyenda } from './componentes/mapa/Leyenda';
 import { MapaChile, type MapaApi, type OrdenMapa } from './componentes/mapa/MapaChile';
 import { PanelPreguntando } from './componentes/preguntando/PanelPreguntando';
 import { MesaPreparar } from './componentes/preparar/MesaPreparar';
+import { FranjaRegiones } from './componentes/resultados/FranjaRegiones';
 import { TableroResultados } from './componentes/resultados/TableroResultados';
 import { POSTURA_TITULO } from './contenido';
 import { REGIONES } from './dominio/catalogos';
@@ -23,16 +24,15 @@ const FIGURAS = matchMedia('(min-width: 1080px)').matches ? 680 : 420;
 const PERSONAS = crearPoblacion(FIGURAS, REGIONES_GEO);
 const MULTITUD = crearMultitud(PERSONAS);
 const ASPECTOS = Uint8Array.from(PERSONAS, (persona) => persona.aspecto);
-const X_REGIONES = REGIONES.map((region) => aMundo(region.capitalLon, region.capitalLat)[0]);
+const Y_REGIONES = REGIONES.map((region) => aMundo(region.capitalLon, region.capitalLat)[1]);
 
 export function App() {
   const sim = useSimulacion(PERSONAS);
   const { fase, corrida, muestra, activo, enBarrido } = sim;
   const api = useRef<MapaApi>(null);
-  const [medida, setMedida] = useState<{ xs: number[]; ancho: number }>({ xs: [], ancho: 0 });
+  const [medida, setMedida] = useState<{ ys: number[]; alto: number }>({ ys: [], alto: 0 });
   const [elegida, setElegida] = useState(-1);
   const [region, setRegion] = useState(-1);
-  const [acercado, setAcercado] = useState(false);
 
   const orden = useMemo<OrdenMapa>(() => {
     if (fase === 'preparar' || !corrida) return { estados: estadosDeMuestra(muestra, FIGURAS), modo: 'cambio' };
@@ -44,12 +44,11 @@ export function App() {
   const medir = useCallback(() => {
     const mapa = api.current;
     if (!mapa) return;
-    setMedida({ xs: X_REGIONES.map((x) => mapa.xInicial(x)), ancho: document.documentElement.clientWidth });
+    setMedida({ ys: Y_REGIONES.map((y) => mapa.yInicial(y)), alto: mapa.alto() });
   }, []);
 
   const avances = useMemo(() => {
-    const { x, minX, maxX } = MULTITUD;
-    return corrida ? corrida.muestra.indices.map((indice) => (x[indice] - minX) / (maxX - minX)) : [];
+    return corrida ? corrida.muestra.indices.map((indice) => MULTITUD.avance[indice]) : [];
   }, [corrida]);
 
   const enResultados = fase === 'resultados' && corrida !== null;
@@ -68,9 +67,7 @@ export function App() {
   };
 
   return (
-    <div className={estilos.app} data-acercado={acercado || undefined}>
-      <Cabecera fase={fase} esDemostracion={sim.simulador.esDemostracion} />
-      <Titular sim={sim} />
+    <div className={estilos.app}>
       <MapaChile
         multitud={MULTITUD}
         aspectos={ASPECTOS}
@@ -80,23 +77,25 @@ export function App() {
         region={enResultados ? region : -1}
         alElegir={(indice) => enResultados && setElegida(indice)}
         alMedir={medir}
-        alAcercarse={setAcercado}
         rotular={rotular}
         api={api}
       >
         <Leyenda conPosturas={fase !== 'preparar'} />
+        {enResultados && (
+          <FranjaRegiones resumen={corrida.resumenes[activo]} yReales={medida.ys} alto={medida.alto} region={region} alElegir={setRegion} />
+        )}
       </MapaChile>
-      <main className={estilos.tablero}>
+      <main className={estilos.panel}>
+        <Cabecera fase={fase} esDemostracion={sim.simulador.esDemostracion} />
+        <Titular sim={sim} />
         {fase === 'preparar' && <MesaPreparar sim={sim} />}
         {fase === 'preguntando' && corrida && <PanelPreguntando sim={sim} avances={avances} />}
         {enResultados && (
           <TableroResultados
             sim={sim}
-            xReales={medida.xs}
-            ancho={medida.ancho}
             region={region}
             posicionElegida={posicionElegida}
-            alElegirRegion={setRegion}
+            alVerTodo={() => setRegion(-1)}
             alElegirPersona={(posicion) => setElegida(posicion < 0 ? -1 : corrida.muestra.indices[posicion])}
           />
         )}

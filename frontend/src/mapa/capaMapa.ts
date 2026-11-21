@@ -1,8 +1,9 @@
 import type { Camara } from './camara';
-import { PAISES, ROTULOS, type Caminos, type Cumbre, type Ola } from './geografia';
+import { OCEANO, ROTULOS, type Caminos, type Cumbre, type Ola } from './geografia';
 
-/** Bajo esta escala (píxeles por grado) los nombres de países y del océano estorban más de lo que orientan. */
-const ESCALA_MINIMA_PAISES = 16;
+/** Bajo esta escala (píxeles por grado) el nombre del océano estorba más de lo que orienta. */
+const ESCALA_MINIMA_OCEANO = 12;
+const ALTO_ROTULO = 17;
 const PRIORIDAD = ['Santiago', 'Punta Arenas', 'Arica', 'Concepción', 'Antofagasta', 'Puerto Montt', 'La Serena', 'Coyhaique'];
 const ROTULOS_POR_PRIORIDAD = [...ROTULOS].sort((a, b) => PRIORIDAD.indexOf(a.texto) - PRIORIDAD.indexOf(b.texto));
 
@@ -76,19 +77,19 @@ export function dibujarMapa(l: Lienzo, camara: Camara, caminos: Caminos, cordill
   ctx.stroke(caminos.chile);
   cumbres(ctx, cordillera, colores, k);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (k < ESCALA_MINIMA_OCEANO) return;
+  const [x, y] = camara.aPantalla(OCEANO.x, OCEANO.y);
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(-Math.PI / 2);
   ctx.font = `600 11px ${colores.fuenteUi}`;
-  ctx.letterSpacing = '0.2em';
+  ctx.letterSpacing = '0.24em';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = colores.tintaSuave;
   ctx.globalAlpha = 0.75;
-  for (const pais of PAISES) {
-    if (k < ESCALA_MINIMA_PAISES) break;
-    const [x, y] = camara.aPantalla(pais.x, pais.y);
-    ctx.fillText(pais.texto, x, y);
-  }
-  ctx.globalAlpha = 1;
-  ctx.letterSpacing = '0px';
+  ctx.fillText(OCEANO.texto, 0, 0);
+  ctx.restore();
 }
 
 export function dibujarOlas(l: Lienzo, camara: Camara, olas: Ola[], colores: Colores, tiempo: number): void {
@@ -110,36 +111,35 @@ export function dibujarOlas(l: Lienzo, camara: Camara, olas: Ola[], colores: Col
   ctx.globalAlpha = 1;
 }
 
-/** Ciudades de referencia, rotuladas a mano sobre el mar o sobre la cordillera. */
+/** Ciudades de referencia, rotuladas a mano mar adentro o al otro lado de la cordillera. */
 export function dibujarRotulos(l: Lienzo, camara: Camara, colores: Colores): void {
   const { ctx } = l;
   ctx.font = `500 13px ${colores.fuenteMano}`;
-  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
   ctx.lineJoin = 'round';
-  const ocupados: [number, number, boolean][] = [];
+  const ocupados: [number, boolean][] = [];
   for (const rotulo of ROTULOS_POR_PRIORIDAD) {
-    const [xCiudad, y] = camara.aPantalla(rotulo.x, rotulo.y);
-    // Si no cabe junto a los que ya están, no se dibuja: de lejos quedan solo las ciudades principales.
-    const medio = ctx.measureText(rotulo.texto).width / 2 + 6;
-    // El texto nunca se sale por los lados aunque la ciudad esté en el borde.
-    const x = Math.max(medio, Math.min(l.ancho - medio, xCiudad));
-    if (ocupados.some(([ox, om, mar]) => mar === rotulo.haciaElMar && Math.abs(ox - x) < om + medio)) continue;
-    ocupados.push([x, medio, rotulo.haciaElMar]);
-    const [, yTexto] = camara.aPantalla(rotulo.x, rotulo.yTexto);
+    const [x, y] = camara.aPantalla(rotulo.x, rotulo.y);
+    // Si choca con uno que ya está, no se dibuja: de lejos quedan las ciudades principales.
+    if (ocupados.some(([oy, mar]) => mar === rotulo.haciaElMar && Math.abs(oy - y) < ALTO_ROTULO)) continue;
+    ocupados.push([y, rotulo.haciaElMar]);
+    const [xTexto] = camara.aPantalla(rotulo.xTexto, rotulo.y);
     ctx.strokeStyle = colores.tinta;
     ctx.lineWidth = 1;
     ctx.globalAlpha = 0.55;
     ctx.beginPath();
-    ctx.moveTo(xCiudad, y);
-    ctx.lineTo(xCiudad, yTexto);
+    ctx.moveTo(x, y);
+    ctx.lineTo(xTexto, y);
     ctx.stroke();
     ctx.globalAlpha = 1;
-    ctx.textBaseline = rotulo.haciaElMar ? 'top' : 'bottom';
-    const yLetra = yTexto + (rotulo.haciaElMar ? 3 : -3);
+    ctx.textAlign = rotulo.haciaElMar ? 'right' : 'left';
+    // El texto nunca se sale por la izquierda aunque la costa quede cerca del borde.
+    const ancho = ctx.measureText(rotulo.texto).width;
+    const xLetra = rotulo.haciaElMar ? Math.max(ancho + 6, xTexto - 4) : xTexto + 4;
     ctx.strokeStyle = rotulo.haciaElMar ? colores.mar : colores.vecino;
     ctx.lineWidth = 4;
-    ctx.strokeText(rotulo.texto, x, yLetra);
+    ctx.strokeText(rotulo.texto, xLetra, y);
     ctx.fillStyle = colores.tinta;
-    ctx.fillText(rotulo.texto, x, yLetra);
+    ctx.fillText(rotulo.texto, xLetra, y);
   }
 }

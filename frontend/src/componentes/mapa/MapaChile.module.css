@@ -1,11 +1,8 @@
 .hueco {
-  position: sticky;
-  top: 0;
-  /* Sobre el contenido: al bajar, los paneles pasan por debajo del mapa. */
-  z-index: 3;
-  order: -1;
-  height: 32dvh;
-  min-height: 240px;
+  --reserva-franja: 0px;
+  position: relative;
+  height: 72dvh;
+  min-height: 420px;
   overflow: hidden;
   border-bottom: var(--trazo) solid var(--tinta);
   background: var(--mar);
@@ -37,7 +34,7 @@
   left: 0;
   top: 0;
   z-index: 3;
-  padding: 3px 8px;
+  padding: var(--e1) var(--e2);
   border: var(--trazo) solid var(--tinta);
   border-radius: var(--radio);
   background: var(--papel);
@@ -49,23 +46,9 @@
 
 @media (min-width: 1080px) {
   .hueco {
-    position: relative;
-    z-index: auto;
-    order: 0;
-    flex: 1 1 0;
+    --reserva-franja: 200px;
     height: auto;
-    min-height: 180px;
-    overflow: visible;
+    min-height: 0;
     border-bottom: 0;
-    background: none;
-    pointer-events: none;
-  }
-
-
-  /* El mapa es el fondo de toda la página: los paneles flotan sobre el mar. */
-  .escena {
-    position: fixed;
-    z-index: 0;
-    pointer-events: auto;
   }
 }

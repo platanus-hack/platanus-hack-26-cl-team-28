@@ -62,8 +62,10 @@ export interface Multitud {
   y: Float32Array;
   /** Índices ordenados de atrás hacia adelante (cordillera primero, costa al final). */
   orden: Uint16Array;
-  minX: number;
-  maxX: number;
+  /** Qué tan al sur está cada figura, de 0 (Arica) a 1 (Magallanes): el orden en que la pregunta la alcanza. */
+  avance: Float32Array;
+  norte: number;
+  sur: number;
 }
 
 /**
@@ -84,19 +86,20 @@ export function crearMultitud(personas: Persona[]): Multitud {
   for (let pasada = 0; pasada < PASADAS; pasada++) {
     separar(x, y);
     for (let i = 0; i < n; i++) {
-      x[i] += (ax[i] - x[i]) * ATRACCION * 0.3;
-      y[i] += (ay[i] - y[i]) * ATRACCION;
+      x[i] += (ax[i] - x[i]) * ATRACCION;
+      y[i] += (ay[i] - y[i]) * ATRACCION * 0.3;
       // Quien quedó en el mar o al otro lado de la frontera vuelve hacia tierra sin
       // devolverse a lo largo del país: la multitud se estira de norte a sur.
-      if (pasada % 3 === 2 && !enChile(...aGeografia(x[i], y[i]))) y[i] += (ay[i] - y[i]) * 0.6;
+      if (pasada % 3 === 2 && !enChile(...aGeografia(x[i], y[i]))) x[i] += (ax[i] - x[i]) * 0.6;
     }
   }
   const orden = Uint16Array.from(Array.from({ length: n }, (_, i) => i).sort((a, b) => y[a] - y[b]));
-  let minX = Infinity;
-  let maxX = -Infinity;
+  let norte = Infinity;
+  let sur = -Infinity;
   for (let i = 0; i < n; i++) {
-    minX = Math.min(minX, x[i]);
-    maxX = Math.max(maxX, x[i]);
+    norte = Math.min(norte, y[i]);
+    sur = Math.max(sur, y[i]);
   }
-  return { x, y, orden, minX, maxX };
+  const avance = Float32Array.from(y, (valor) => (valor - norte) / (sur - norte));
+  return { x, y, orden, avance, norte, sur };
 }

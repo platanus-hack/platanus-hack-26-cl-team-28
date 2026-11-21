@@ -1,16 +1,14 @@
 .titular {
-  position: relative;
-  z-index: 2;
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--e6);
-  padding: var(--e2) var(--gutter) var(--e3);
-  pointer-events: none;
+  gap: var(--e5) var(--e6);
 }
 
 
 .voz {
+  flex: 1 1 18rem;
   min-width: 0;
   max-width: 46rem;
 }
@@ -21,13 +19,8 @@
 }
 
 .voz h1.caso {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  font-size: clamp(1.45rem, 0.9rem + 1.7vw, 2.35rem);
-  line-height: 1.06;
+  font-size: clamp(1.6rem, 1.1rem + 1.4vw, 2.4rem);
+  line-height: 1.08;
 }
 
 .voz p {
@@ -96,18 +89,3 @@
   color: var(--tinta-suave);
 }
 
-@media (min-width: 1080px) {
-  .titular {
-    height: 128px;
-  }
-}
-
-@media (max-width: 1079px) {
-  .titular {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--e4);
-    padding-block: var(--e4);
-    background: var(--papel);
-  }
-}

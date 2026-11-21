@@ -1,7 +1,7 @@
 .controles {
   position: absolute;
-  right: var(--gutter);
-  bottom: var(--e3);
+  left: var(--e5);
+  top: var(--e5);
   z-index: 1;
   display: flex;
   border: var(--trazo) solid var(--tinta);
@@ -54,10 +54,3 @@
   }
 }
 
-@media (max-width: 1079px) {
-  .controles {
-    right: var(--e3);
-    bottom: auto;
-    top: var(--e3);
-  }
-}

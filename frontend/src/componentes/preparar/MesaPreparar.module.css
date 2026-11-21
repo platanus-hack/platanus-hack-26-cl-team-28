@@ -1,48 +1,28 @@
 .mesa {
   display: grid;
-  gap: var(--e5);
-  padding: var(--e5) var(--gutter);
+  gap: var(--e6);
 }
 
-.pie {
+/* La acción va arriba, junto al titular: las variantes de ejemplo ya vienen escritas y se puede preguntar de inmediato. */
+.accion {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--e3) var(--e5);
+  padding-block: var(--e4);
+  border-block: 1px solid var(--linea-suave);
 }
 
-.pie p {
-  flex: 1 1 18rem;
-  max-width: 46rem;
+.accion p {
+  flex: 1 1 14rem;
   font-size: var(--texto-s);
   color: var(--tinta-suave);
   text-wrap: pretty;
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 1080px) and (max-height: 960px) {
   .mesa {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    grid-template-rows: minmax(0, 1fr) auto;
-    column-gap: calc(var(--gutter) * 1.5);
-    row-gap: var(--e4);
-    height: 100%;
-    padding-block: var(--e4) var(--e4);
-  }
-
-  .mesa > section {
-    overflow-y: auto;
-    padding-right: var(--e2);
-  }
-
-  .mesa > section:first-of-type {
-    border-right: 1px solid var(--linea-suave);
-    padding-right: calc(var(--gutter) * 0.75);
-  }
-
-  .pie {
-    grid-column: 1 / -1;
-    padding-top: var(--e3);
-    border-top: 1px solid var(--linea-suave);
+    gap: var(--e5);
   }
 }

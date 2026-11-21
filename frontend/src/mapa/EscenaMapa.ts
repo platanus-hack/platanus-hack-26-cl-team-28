@@ -7,7 +7,7 @@ import { conectarEntrada } from './entrada';
 import { CAJAS_REGION, crearCaminos, crearCordillera, crearOlas, type Caminos, type Cumbre, type Ola } from './geografia';
 import type { Multitud } from './multitud';
 import { crearAtlas, type Atlas, type Tintas } from './personajes';
-import { ALTO_UTIL, CENTRO_Y } from './proyeccion';
+import { ANCHO_UTIL, CENTRO_X } from './proyeccion';
 import { leerTokens } from './tokens';
 
 export interface OpcionesEscena {
@@ -19,8 +19,6 @@ export interface OpcionesEscena {
   alElegir(indice: number): void;
   /** `reunidas` dice cuántas figuras representa la apuntada (más de una si es un grupo). */
   alApuntar(indice: number, x: number, y: number, reunidas: number): void;
-  /** Avisa cuando el mapa pasa de la vista completa a una vista acercada, o al revés. */
-  alAcercarse(acercado: boolean): void;
 }
 
 const DPR_MAXIMO = 2;
@@ -51,7 +49,6 @@ export class EscenaMapa {
   private frase = '';
   private region = -1;
   private etiqueta = '';
-  private acercado = false;
   private desconectar: (() => void) | null = null;
   private readonly observador: ResizeObserver;
 
@@ -110,7 +107,7 @@ export class EscenaMapa {
     if (indice < 0) return this.restablecer();
     const caja = CAJAS_REGION[indice];
     const marco = this.o.obtenerMarco();
-    const zoom = Math.min(marco.w / (caja.w * this.camara.u * 2.2), marco.h / (caja.h * this.camara.u * 1.5));
+    const zoom = Math.min(marco.w / (caja.w * this.camara.u * 1.5), marco.h / (caja.h * this.camara.u * 1.8));
     this.camara.irA(caja.x + caja.w / 2, caja.y + caja.h / 2, Math.max(1.6, Math.min(6, zoom)));
     if (this.reducir.matches) this.mover(() => this.camara.saltarAMeta());
   }
@@ -132,9 +129,9 @@ export class EscenaMapa {
     if (this.reducir.matches) this.mover(() => this.camara.saltarAMeta());
   }
 
-  /** Posición horizontal de un punto del mundo en la vista inicial (para alinear la franja de regiones). */
-  xInicial(xMundo: number): number {
-    return this.camara.xInicial(xMundo);
+  /** Posición vertical de un punto del mundo en la vista inicial (para alinear la franja de regiones). */
+  yInicial(yMundo: number): number {
+    return this.camara.yInicial(yMundo);
   }
 
   /** Un clic en un grupo acerca el mapa hasta abrirlo; en una figura sola, la elige. */
@@ -169,11 +166,6 @@ export class EscenaMapa {
     const dt = Math.min(0.05, ahora - this.anterior);
     this.anterior = ahora;
     if (this.camara.avanzar(dt)) this.fondoSucio = true;
-    const acercado = this.camara.zoom > 1.03;
-    if (acercado !== this.acercado) {
-      this.acercado = acercado;
-      this.o.alAcercarse(acercado);
-    }
     const enMovimiento = this.fondoSucio || this.personas.activa(ahora) || this.apuntada >= 0;
     if (!enMovimiento && ahora - this.ultimoDibujo < 1 / CUADROS_EN_REPOSO) return;
     this.ultimoDibujo = ahora;
@@ -223,31 +215,31 @@ export class EscenaMapa {
     ctx.restore();
   }
 
-  /** Línea que recorre el país de norte a sur mientras la población responde. */
+  /** Línea que baja por el país de norte a sur mientras la población responde. */
   private barrido(ahora: number): void {
     const { ctx, camara, colores } = this;
     const { inicio, duracion } = this.personas.barrido!;
-    const { minX, maxX } = this.o.multitud;
+    const { norte, sur } = this.o.multitud;
     const avance = Math.min(1, (ahora - inicio) / duracion);
-    const [x, arriba] = camara.aPantalla(minX + (maxX - minX) * avance, CENTRO_Y - ALTO_UTIL * 0.5);
-    const [, abajo] = camara.aPantalla(0, CENTRO_Y + ALTO_UTIL * 0.52);
+    const [izquierda, y] = camara.aPantalla(CENTRO_X - ANCHO_UTIL * 0.5, norte + (sur - norte) * avance);
+    const [derecha] = camara.aPantalla(CENTRO_X + ANCHO_UTIL * 0.5, 0);
     ctx.save();
     ctx.strokeStyle = colores.tinta;
     ctx.lineWidth = 1.4;
     ctx.setLineDash([5, 5]);
     ctx.beginPath();
-    ctx.moveTo(x, arriba);
-    ctx.lineTo(x, abajo);
+    ctx.moveTo(izquierda, y);
+    ctx.lineTo(derecha, y);
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.font = `600 14px ${colores.fuenteMano}`;
     const anchoTexto = ctx.measureText(this.etiqueta).width + 16;
     ctx.fillStyle = colores.tinta;
-    ctx.fillRect(x, arriba - 22, anchoTexto, 22);
+    ctx.fillRect(izquierda, y - 22, anchoTexto, 22);
     ctx.fillStyle = colores.papel;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(this.etiqueta, x + 8, arriba - 10.5);
+    ctx.fillText(this.etiqueta, izquierda + 8, y - 10.5);
     ctx.restore();
   }
 }

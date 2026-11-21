@@ -14,8 +14,10 @@ export interface OrdenMapa {
 }
 
 export interface MapaApi {
-  /** Posición horizontal en pantalla, en la vista inicial, de un punto del mundo. */
-  xInicial(xMundo: number): number;
+  /** Posición vertical dentro del mapa, en la vista inicial, de un punto del mundo. */
+  yInicial(yMundo: number): number;
+  /** Alto del mapa en pantalla. */
+  alto(): number;
 }
 
 interface Props {
@@ -28,20 +30,19 @@ interface Props {
   region: number;
   alElegir(indice: number): void;
   alMedir(): void;
-  alAcercarse(acercado: boolean): void;
   rotular(indice: number, reunidas: number): string;
   api: Ref<MapaApi>;
   children?: ReactNode;
 }
 
-/** Envoltorio de React para la escena: el lienzo ocupa toda la página y el país se encuadra en este hueco. */
-export function MapaChile({ multitud, aspectos, orden, elegida, frase, region, alElegir, alMedir, alAcercarse, rotular, api, children }: Props) {
+/** Envoltorio de React para la escena del mapa. */
+export function MapaChile({ multitud, aspectos, orden, elegida, frase, region, alElegir, alMedir, rotular, api, children }: Props) {
   const hueco = useRef<HTMLDivElement>(null);
   const lienzo = useRef<HTMLCanvasElement>(null);
   const escena = useRef<EscenaMapa | null>(null);
-  const retornos = useRef({ alElegir, alMedir, alAcercarse });
+  const retornos = useRef({ alElegir, alMedir });
   const [apuntada, setApuntada] = useState<{ indice: number; x: number; y: number; reunidas: number } | null>(null);
-  retornos.current = { alElegir, alMedir, alAcercarse };
+  retornos.current = { alElegir, alMedir };
 
   useEffect(() => {
     const caja = hueco.current!;
@@ -51,13 +52,12 @@ export function MapaChile({ multitud, aspectos, orden, elegida, frase, region, a
       multitud,
       aspectos,
       obtenerMarco: () => {
-        const h = caja.getBoundingClientRect();
-        const l = tela.getBoundingClientRect();
-        return { x: h.left - l.left, y: h.top - l.top, w: h.width, h: h.height };
+        // El país se encuadra en el mapa dejando libre la columna de la franja de regiones.
+        const reserva = parseFloat(getComputedStyle(caja).getPropertyValue('--reserva-franja')) || 0;
+        return { x: 0, y: 0, w: tela.clientWidth - reserva, h: tela.clientHeight };
       },
       alElegir: (indice) => retornos.current.alElegir(indice),
       alApuntar: (indice, x, y, reunidas) => setApuntada(indice < 0 ? null : { indice, x, y, reunidas }),
-      alAcercarse: (acercado) => retornos.current.alAcercarse(acercado),
     });
     nueva.montar();
     escena.current = nueva;
@@ -73,7 +73,7 @@ export function MapaChile({ multitud, aspectos, orden, elegida, frase, region, a
     };
   }, [multitud, aspectos]);
 
-  useImperativeHandle(api, () => ({ xInicial: (x) => escena.current?.xInicial(x) ?? 0 }), []);
+  useImperativeHandle(api, () => ({ yInicial: (y) => escena.current?.yInicial(y) ?? 0, alto: () => hueco.current?.clientHeight ?? 0 }), []);
   useEffect(() => escena.current?.fijarEstados(orden.estados, orden.modo, orden.duracion, orden.etiqueta), [orden]);
   useEffect(() => escena.current?.elegir(elegida, frase), [elegida, frase]);
   useEffect(() => escena.current?.enfocarRegion(region), [region]);

@@ -1,8 +1,7 @@
 .panel {
   display: grid;
-  gap: var(--e4);
+  gap: var(--e5);
   align-content: start;
-  padding: var(--e5) var(--gutter);
 }
 
 .encabezado {
@@ -47,7 +46,7 @@
 
 .lista li {
   display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) minmax(4rem, 14rem) 6.5rem;
+  grid-template-columns: 2rem minmax(0, 1fr) minmax(4rem, 9rem) 6.5rem;
   align-items: center;
   gap: var(--e3);
   min-height: 44px;
