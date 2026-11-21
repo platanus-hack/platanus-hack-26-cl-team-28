@@ -1,7 +1,7 @@
 #!/bin/bash
-# Primer arranque de la máquina. Deja instalado lo necesario y tres servicios:
+# Primer arranque de la máquina. Deja instalado lo necesario y dos servicios (el despliegue lo
+# dispara GitHub Actions por SSH en cada push a main, con infra/desplegar.sh):
 #   ph26-motor   el servidor de simulación, en 127.0.0.1:8787
-#   ph26-cd      cada minuto mira main; si cambió, actualiza, compila el front y reinicia el motor
 #   caddy        HTTPS para ${dominio}, el front y /api hacia el motor
 set -x
 export DEBIAN_FRONTEND=noninteractive
@@ -12,6 +12,9 @@ apt-get install -yq nodejs
 npm install -g @anthropic-ai/claude-code
 sudo -u ubuntu bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh'
 sudo -u ubuntu git clone ${repositorio} /home/ubuntu/ph26
+
+# La llave con que entra GitHub Actions a desplegar.
+cat /home/ubuntu/ph26/infra/llave-cd.pub >> /home/ubuntu/.ssh/authorized_keys
 
 mkdir -p /etc/ph26 /var/www/ph26
 # Aquí van CLAUDE_TOKENS (sesiones de `claude setup-token`) y, si se quiere, otros ajustes del motor.
@@ -35,29 +38,6 @@ TasksMax=infinity
 
 [Install]
 WantedBy=multi-user.target
-UNIDAD
-
-cat > /etc/systemd/system/ph26-cd.service <<'UNIDAD'
-[Unit]
-Description=What If Chile: despliegue continuo desde main
-
-[Service]
-Type=oneshot
-User=ubuntu
-Environment=HOME=/home/ubuntu
-ExecStart=/bin/bash /home/ubuntu/ph26/infra/desplegar.sh
-UNIDAD
-
-cat > /etc/systemd/system/ph26-cd.timer <<'UNIDAD'
-[Unit]
-Description=Mira main cada minuto
-
-[Timer]
-OnBootSec=30
-OnUnitInactiveSec=60
-
-[Install]
-WantedBy=timers.target
 UNIDAD
 
 cat > /etc/caddy/Caddyfile <<'CADDY'
@@ -90,6 +70,5 @@ CADDY
 systemctl daemon-reload
 systemctl enable ph26-motor
 sudo -u ubuntu HOME=/home/ubuntu FORZAR=1 bash /home/ubuntu/ph26/infra/desplegar.sh
-systemctl enable --now ph26-cd.timer
 systemctl restart caddy
 touch /home/ubuntu/listo

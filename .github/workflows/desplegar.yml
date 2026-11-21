@@ -1,0 +1,27 @@
+# Despliegue continuo: cada push a main entra por SSH a la máquina y corre infra/desplegar.sh,
+# que trae main, recompila el front si cambió y reinicia el motor si cambió el backend.
+name: Desplegar
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: desplegar
+  cancel-in-progress: false
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Desplegar en la máquina
+        env:
+          LLAVE: ${{ secrets.WHATIF_SSH_KEY }}
+          MAQUINA: ${{ secrets.WHATIF_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$LLAVE" > ~/.ssh/cd && chmod 600 ~/.ssh/cd
+          ssh -i ~/.ssh/cd -o StrictHostKeyChecking=accept-new -o ConnectTimeout=20 "ubuntu@$MAQUINA" \
+            'bash ~/ph26/infra/desplegar.sh'

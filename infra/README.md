@@ -12,14 +12,22 @@ El estado de Terraform está en el bucket `ph26-whatif-tfstate-337227272524` (pe
 
 ## Despliegue continuo
 
-No hay nada que correr: cada minuto la máquina mira `main` (`ph26-cd.timer`, que ejecuta
-`infra/desplegar.sh`). Si hay commits nuevos los trae; recompila el front solo si cambió `frontend/` y
-reinicia el motor solo si cambió `backend/`. Un push a `main` queda publicado en uno o dos minutos.
+Cada push a `main` dispara `.github/workflows/desplegar.yml`: entra por SSH a la máquina y corre
+`infra/desplegar.sh`, que trae `main`, recompila el front solo si cambió `frontend/` y reinicia el motor
+solo si cambió `backend/`. Si el build del front falla, el workflow queda en rojo y el sitio sigue con la
+versión anterior.
 
-    ssh -i ~/.ssh/ph26_whatif ubuntu@$(terraform output -raw ip)
-    journalctl -u ph26-cd -n 30          # qué desplegó
-    journalctl -u ph26-motor -f          # el motor
-    FORZAR=1 bash ~/ph26/infra/desplegar.sh
+Secretos del repositorio: `WHATIF_SSH_KEY` (llave privada cuya parte pública es `infra/llave-cd.pub`) y
+`WHATIF_HOST` (el dominio).
+
+    gh run list --workflow desplegar.yml      # qué se desplegó
+    gh workflow run desplegar.yml             # desplegar a mano
+
+Para entrar a la máquina:
+
+    ssh -i ~/.ssh/ph26_whatif ubuntu@whatif.japs.ing
+    journalctl -u ph26-motor -f               # el motor
+    FORZAR=1 bash ~/ph26/infra/desplegar.sh   # despliega aunque no haya cambios
 
 ## Lo que no está en el repositorio
 

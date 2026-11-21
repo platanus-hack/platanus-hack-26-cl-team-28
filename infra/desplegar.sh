@@ -1,6 +1,6 @@
 #!/bin/bash
-# Despliegue continuo: corre en la máquina cada minuto (ph26-cd.timer). Si main cambió, trae lo
-# nuevo, compila el front, actualiza las dependencias del motor y lo reinicia.
+# Despliegue continuo: lo corre GitHub Actions por SSH en cada push a main
+# (.github/workflows/desplegar.yml). Si main cambió, trae lo nuevo, compila el front, actualiza las dependencias del motor y lo reinicia.
 #     FORZAR=1 bash infra/desplegar.sh    # despliega aunque no haya cambios
 set -euo pipefail
 export PATH="$HOME/.local/bin:$PATH"
