@@ -312,8 +312,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     [conexion],
   );
 
-  const alEvento = useCallback(
-    (evento: Evento) => {
+  // Cada evento del motor se aplica aquí. `loteFijo`: el número de lote, cuando el evento viene
+  // de la cola que reparte las respuestas de un mismo lote en varios cuadros.
+  const aplicar = useCallback(
+    (evento: Evento, loteFijo?: number) => {
       const lista = casos.current;
       switch (evento.tipo) {
         case 'inicio':
@@ -323,11 +325,12 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
         case 'respuestas': {
           const caso = lista[evento.caso];
           if (!caso) return;
-          caso.lotes += 1;
+          const lote = loteFijo ?? caso.lotes + 1;
+          caso.lotes = Math.max(caso.lotes, lote);
           for (const [agente, acuerdo, frase, notas] of evento.r) {
             if (caso.acuerdo[agente]) continue;
             caso.acuerdo[agente] = acuerdo;
-            caso.lote[agente] = caso.lotes;
+            caso.lote[agente] = lote;
             caso.frase[agente] = frase;
             caso.notas[agente] = notas;
             caso.respondidas += 1;
@@ -384,6 +387,51 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     [nuevoCaso, refrescar],
   );
 
+  // Las respuestas llegan de a un lote entero (20 personas de golpe) y varios lotes terminan casi
+  // juntos: aplicadas tal cual, el avance salta. Aquí se reparten en unos pocos cuadros, en orden,
+  // para que el contador y el mapa avancen parejo. El resto de los eventos espera su turno en la
+  // misma cola, así una variante no se da por terminada antes de mostrar sus últimas respuestas.
+  const cola = useRef<{ evento: Evento; lote?: number }[]>([]);
+  const filasEnCola = useRef(0);
+  const lotesVistos = useRef<number[]>([]);
+  const bomba = useRef(0);
+  const vaciarCola = useCallback(() => {
+    cancelAnimationFrame(bomba.current);
+    bomba.current = 0;
+    cola.current = [];
+    filasEnCola.current = 0;
+    lotesVistos.current = [];
+  }, []);
+  const bombear = useCallback(() => {
+    bomba.current = 0;
+    // Lo que haya en cola se termina de mostrar en menos de medio segundo; con la pestaña oculta, de una vez.
+    let presupuesto = document.hidden ? Infinity : Math.max(3, Math.ceil(filasEnCola.current / 24));
+    while (cola.current.length) {
+      const { evento, lote } = cola.current[0];
+      const esFila = evento.tipo === 'respuestas';
+      if (esFila && presupuesto <= 0) break;
+      cola.current.shift();
+      if (esFila) {
+        presupuesto -= 1;
+        filasEnCola.current -= 1;
+      }
+      aplicar(evento, lote);
+    }
+    if (cola.current.length) bomba.current = requestAnimationFrame(bombear);
+  }, [aplicar]);
+  const alEvento = useCallback(
+    (evento: Evento) => {
+      if (evento.tipo === 'respuestas') {
+        const lote = (lotesVistos.current[evento.caso] = (lotesVistos.current[evento.caso] ?? 0) + 1);
+        for (const fila of evento.r) cola.current.push({ evento: { ...evento, r: [fila] }, lote });
+        filasEnCola.current += evento.r.length;
+      } else cola.current.push({ evento });
+      if (document.hidden) bombear();
+      else if (!bomba.current) bomba.current = requestAnimationFrame(bombear);
+    },
+    [bombear],
+  );
+
   const listos = borradores.filter((b) => (b.texto.trim() || b.leido) && !b.leyendo);
   const leyendo = borradores.some((b) => b.leyendo);
   const preguntasBase = conexion?.estado?.preguntas?.length ? conexion.estado.preguntas : PREGUNTAS_BASE;
@@ -414,6 +462,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       nuevoCaso({ id: p.id, letra: p.letra, texto: p.texto, titulo: p.texto || p.documento?.titulo, referencia: listos[k].referencia }),
     );
     voces.current = [];
+    vaciarCola();
     setMetricas(METRICAS_CERO);
     setTerminada(false);
     setAviso(null);
@@ -471,6 +520,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const detener = useCallback(() => {
     cancelar.current?.();
     cancelar.current = null;
+    vaciarCola();
     setFase('preparar');
   }, []);
 
@@ -516,6 +566,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     detener,
     volver: () => {
       cancelar.current?.();
+      vaciarCola();
       setFase('preparar');
     },
   };

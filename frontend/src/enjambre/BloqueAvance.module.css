@@ -45,6 +45,35 @@
   overflow: hidden;
 }
 
+/* Sin respuestas todavía: un tramo recorre la barra de lado a lado. */
+.barra[data-esperando] {
+  position: relative;
+}
+
+.barra[data-esperando]::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 32%;
+  border-radius: inherit;
+  background: var(--tinta);
+  animation: recorrer 1.15s cubic-bezier(0.5, 0, 0.5, 1) infinite alternate;
+}
+
+@keyframes recorrer {
+  to {
+    translate: 212% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barra[data-esperando]::after {
+    width: 100%;
+    opacity: 0.4;
+    animation: none;
+  }
+}
+
 .barra::-webkit-progress-bar {
   background: var(--linea-suave);
 }

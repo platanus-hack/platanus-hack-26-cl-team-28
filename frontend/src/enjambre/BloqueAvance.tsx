@@ -29,7 +29,13 @@ export function BloqueAvance({ caso, total, metricas, motor }: Props) {
       <p className={estilos.nombre}>
         de {formatear(total)} agentes {esperando ? 'leyendo la propuesta' : 'ya respondieron'}
       </p>
-      <progress className={estilos.barra} max={total} value={caso.respondidas} aria-label="Avance de la simulación" />
+      {esperando ? (
+        // Los primeros segundos no hay respuestas todavía: la barra se mueve para que se vea que está trabajando.
+        <div className={estilos.barra} data-esperando role="progressbar" aria-label="La IA está leyendo los primeros perfiles" />
+      ) : (
+        <progress className={estilos.barra} max={total} value={contado} aria-label="Avance de la simulación" />
+      )}
+      {esperando && motor && !motor.grabado && <p className={estilos.detalle}>La IA está leyendo los primeros perfiles</p>}
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
         <p className={estilos.detalle}>Esta pregunta ya se hizo hoy: se muestran las respuestas que dieron los agentes en esa corrida</p>
       )}

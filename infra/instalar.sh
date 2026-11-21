@@ -28,7 +28,7 @@ After=network-online.target
 [Service]
 User=ubuntu
 WorkingDirectory=/home/ubuntu/ph26/backend
-Environment=HOME=/home/ubuntu MOTOR=claude LOTE=20 CONCURRENCIA=150
+Environment=HOME=/home/ubuntu MOTOR=claude LOTE=10 CONCURRENCIA=150
 EnvironmentFile=/etc/ph26/entorno
 ExecStart=/home/ubuntu/.local/bin/uv run python -m servidor
 Restart=always

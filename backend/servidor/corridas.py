@@ -52,9 +52,15 @@ ESQUEMA_RESUMEN = {
 
 # A cuántas personas de cada lote se les pide, aparte, una frase sobre lo que respondieron.
 VOCES_POR_LOTE = 2
-# Personas que van primero, en lotes chicos, para que haya respuestas a los pocos segundos.
-AVANZADA = 24
-LOTE_AVANZADA = 4
+# Las frases son una llamada aparte por lote. Con estas alcanza para los globos del mapa y para
+# redactar la variante siguiente; pedirlas a todos los lotes duplicaba los procesos y la espera.
+MAXIMO_LLAMADAS_VOCES = 30
+# Personas que van primero, en lotes chicos, para que haya respuestas a los pocos segundos. Un lote
+# tarda más mientras más personas lleva (2 personas, unos 3 s; 5, unos 5 s; 20, unos 13 s), así que
+# la partida va en escalera: (personas, tamaño del lote). Sin ella el avance se queda pegado entre
+# las primeras respuestas y la llegada de los lotes grandes.
+ESCALERA = [(24, 2), (40, 5)]
+AVANZADA = sum(personas for personas, _ in ESCALERA)
 
 # Segundos en que se reproduce lo que ya estaba en caché.
 REPRODUCCION = 6.0
@@ -147,6 +153,7 @@ class Corrida:
         self._condicion = threading.Condition()
         self._grupo: ThreadPoolExecutor | None = None
         self._voces: list = []
+        self._voces_pedidas: dict[int, int] = {}
         self._cerrojo = threading.Lock()
 
     # Eventos ------------------------------------------------------------------------------
@@ -221,6 +228,11 @@ class Corrida:
         elegidas = favor + resto
         if not elegidas or self._grupo is None:
             return
+        with self._cerrojo:
+            pedidas = self._voces_pedidas.get(numero, 0)
+            if pedidas >= MAXIMO_LLAMADAS_VOCES:
+                return
+            self._voces_pedidas[numero] = pedidas + 1
         self._voces.append(self._grupo.submit(self._voces_de, numero, caso, huella, elegidas))
 
     def _voces_de(self, numero: int, caso: Caso, huella: str, elegidas: list[Respuesta]) -> None:
@@ -261,8 +273,12 @@ class Corrida:
             tareas.append(grupo.submit(self._reproducir, numero, caso, huella, guardadas))
         # Una avanzada de lotes chicos responde antes: el mapa empieza a encenderse y llegan las primeras frases.
         avanzada = pendientes[:AVANZADA] if len(pendientes) > AVANZADA * 2 else []
-        for k in range(0, len(avanzada), LOTE_AVANZADA):
-            tareas.append(grupo.submit(self._lote, numero, caso, huella, avanzada[k:k + LOTE_AVANZADA]))
+        desde = 0
+        for personas, tamano in ESCALERA if avanzada else []:
+            tramo = avanzada[desde:desde + personas]
+            desde += personas
+            for k in range(0, len(tramo), tamano):
+                tareas.append(grupo.submit(self._lote, numero, caso, huella, tramo[k:k + tamano]))
         resto = pendientes[len(avanzada):]
         for k in range(0, len(resto), self.lote):
             tareas.append(grupo.submit(self._lote, numero, caso, huella, resto[k:k + self.lote]))
