@@ -27,13 +27,18 @@ function elegirRegion(azar: () => number): number {
   return REGIONES.length - 1;
 }
 
+/** Sorteo con forma de campana (Box-Muller), para que la gente se junte en torno a la capital sin bordes rectos. */
+function campana(azar: () => number): number {
+  return Math.sqrt(-2 * Math.log(1 - azar())) * Math.cos(2 * Math.PI * azar());
+}
+
 function ubicar(region: number, poligonos: Anillo[], azar: () => number): [number, number] {
   const { capitalLon, capitalLat } = REGIONES[region];
-  // La mayoría vive cerca de la capital regional; el resto se reparte por la región.
-  const radio = azar() < 0.3 ? 2.2 : 0.8;
+  // La mayoría vive cerca de la capital regional; el resto se reparte más lejos.
+  const radio = azar() < 0.3 ? 1.1 : 0.32;
   for (let intento = 0; intento < INTENTOS; intento++) {
-    const lon = capitalLon + (azar() - 0.44) * radio * 2;
-    const lat = capitalLat + (azar() - 0.5) * radio * 1.4;
+    const lon = capitalLon + campana(azar) * radio;
+    const lat = capitalLat + campana(azar) * radio;
     if (poligonos.some((anillo) => dentro(lon, lat, anillo))) return [lon, lat];
   }
   return [capitalLon, capitalLat];

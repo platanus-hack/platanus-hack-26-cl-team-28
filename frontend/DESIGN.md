@@ -1,4 +1,39 @@
-# Diseño del front: Chile a pantalla completa
+# Diseño del front
+
+Hay dos diseños sobre el mismo dominio y el mismo simulador:
+
+- **Diseño 2, "Chile se abre"** (el que abre por defecto): pensado para impactar en la demo. Se describe aquí abajo.
+- **Diseño 1, "mapa ilustrado"** (`?d=1` en la dirección, etiqueta de git `diseno-1-mapa-ilustrado`): el mapa con
+  criaturas y la hoja de información a la derecha. Se describe desde "Diseño 1" en adelante.
+
+## Diseño 2: Chile se abre
+
+**Idea.** Chile va en su proporción real, de pie y a todo el alto de la pantalla. Es angosto, y eso se usa: el país
+es el eje de un gráfico hecho con su propia gente. Cada persona simulada es un punto. En reposo los puntos dibujan
+el país, densos donde vive más gente. Al preguntar, una ola baja de norte a sur y cada punto despega: quienes están
+a favor vuelan a la derecha y quienes están en contra a la izquierda, y se juntan en una burbuja por región, a la
+altura de su región. Quien está indecisa se queda en el mapa. El país se abre en dos.
+
+**Por qué impacta.** Se entiende sin leer: el lado más cargado gana, las burbujas grandes son las regiones con más
+gente, y al cambiar de variante se ve a la gente cruzar de un lado al otro.
+
+**Lo que se lee.** Dos cifras gigantes, una por lado, cada una con su criatura, que crece con su porcentaje. Arriba,
+la variante. Nada más compite con el mapa.
+
+**Interfaz mínima y ocultable.** Una barra abajo a la izquierda (pestañas de variantes, texto, botón de preguntar) y
+tres botones abajo a la derecha (muestra, tema claro u oscuro, ocultar). La tecla H oculta todo y deja el país, las
+cifras y la pregunta; las flechas cambian de variante.
+
+**Sistema.** Fondo oscuro y plano, sin brillos ni degradados; hay tema claro para salas con mucha luz. Los mismos
+tokens del diseño 1 con otros valores (`src/enjambre/tema.css`), así se reutilizan sus componentes y sus criaturas.
+
+**Código.** `src/enjambre/`: `EscenaEnjambre.ts` (canvas, vuelo de los puntos), `disposicion.ts` (dónde va cada
+burbuja y cada punto; función pura con prueba), `AppEnjambre.tsx`, `BloquePostura.tsx`, `BarraMando.tsx`.
+
+**Pendiente.** No está afinado para móvil ni probado con más de cuatro variantes; las burbujas chicas que no tienen
+lugar para su rótulo quedan sin nombre.
+
+# Diseño 1: Chile a pantalla completa
 
 Contrato de diseño de la herramienta. Rediseño completo (tamaño L) del prototipo base de un solo `index.html`.
 

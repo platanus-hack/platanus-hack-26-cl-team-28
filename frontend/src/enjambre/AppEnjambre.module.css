@@ -1,0 +1,156 @@
+/* El país y su gente son la pantalla; la interfaz son cuatro esquinas que se pueden ocultar. */
+.app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--mar);
+  color: var(--tinta);
+}
+
+.lienzo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.arriba,
+.nota,
+.contra,
+.favor,
+.mando,
+.utiles {
+  position: absolute;
+  z-index: 1;
+  transition: opacity var(--medio);
+}
+
+.arriba {
+  top: var(--e5);
+  left: var(--gutter);
+  width: min(30vw, 26rem);
+  pointer-events: none;
+}
+
+.marca {
+  font: italic 500 1.15rem/1 var(--fuente-voz);
+  color: var(--tinta-suave);
+}
+
+.titular {
+  margin-top: var(--e4);
+  font: 500 clamp(2.2rem, 1rem + 3.4vw, 4.4rem) / 0.98 var(--fuente-voz);
+  letter-spacing: -0.025em;
+}
+
+.pregunta {
+  margin-top: var(--e4);
+  font: 500 clamp(1.3rem, 0.9rem + 1.1vw, 2rem) / 1.12 var(--fuente-voz);
+  letter-spacing: -0.01em;
+}
+
+.pregunta span {
+  display: block;
+  margin-bottom: var(--e2);
+  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.nota {
+  top: var(--e5);
+  right: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  max-width: 17rem;
+  font-size: var(--texto-m);
+  color: var(--tinta-suave);
+  text-align: right;
+  pointer-events: none;
+}
+
+.nota b {
+  color: var(--indecisa-texto);
+  font-weight: 650;
+}
+
+.contra,
+.favor {
+  top: 50%;
+  translate: 0 -46%;
+}
+
+.contra {
+  left: var(--gutter);
+}
+
+.favor {
+  right: var(--gutter);
+}
+
+.mando {
+  left: var(--gutter);
+  bottom: var(--e5);
+}
+
+.utiles {
+  right: var(--gutter);
+  bottom: var(--e5);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--e2);
+}
+
+.utiles p {
+  margin-right: var(--e2);
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+/* Modo presentación: quedan el país, las cifras y la pregunta. */
+.app[data-oculta] .mando,
+.app[data-oculta] .utiles,
+.app[data-oculta] .marca {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cajon {
+  position: absolute;
+  inset: 0 0 0 auto;
+  z-index: 2;
+  display: grid;
+  align-content: start;
+  gap: var(--e5);
+  width: min(100%, 26rem);
+  padding: var(--e6) var(--e5);
+  border-left: 1px solid var(--linea-suave);
+  background: var(--papel);
+  overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+  .arriba {
+    width: 44vw;
+  }
+
+  .nota {
+    max-width: 40vw;
+    font-size: var(--texto-xs);
+  }
+
+  .contra,
+  .favor {
+    top: 30%;
+  }
+
+  .mando {
+    right: var(--gutter);
+    bottom: calc(var(--e5) + 56px);
+  }
+}

@@ -3,7 +3,7 @@
 React, TypeScript y Vite. El mapa es un canvas 2D propio, sin librerías de mapas.
 
     npm install
-    npm run dev       # http://127.0.0.1:5280
+    npm run dev       # http://127.0.0.1:5280 (diseño 2) y http://127.0.0.1:5280/?d=1 (diseño 1)
     npm test          # pruebas del dominio (métricas, muestra, simulador de demostración)
     npm run build     # compila a dist/
 

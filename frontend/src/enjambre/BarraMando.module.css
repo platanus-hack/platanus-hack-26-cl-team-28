@@ -1,0 +1,65 @@
+.barra {
+  display: grid;
+  gap: var(--e2);
+  width: min(100%, 26rem);
+  padding: var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel-velo);
+}
+
+.pestanas {
+  display: flex;
+  gap: var(--e1);
+}
+
+.pestanas button {
+  min-width: 44px;
+  height: 40px;
+  padding: 0 var(--e2);
+  border: 1px solid transparent;
+  border-radius: var(--radio);
+  background: transparent;
+  color: var(--tinta-suave);
+  font: italic 500 1.35rem/1 var(--fuente-voz);
+  transition: background var(--rapido);
+}
+
+.pestanas button[aria-selected='true'] {
+  background: var(--tinta);
+  color: var(--mar);
+}
+
+.pestanas .mas {
+  font-style: normal;
+  font-family: var(--fuente-ui);
+}
+
+.campo textarea {
+  display: block;
+  width: 100%;
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--tinta-suave);
+  border-radius: var(--radio);
+  background: var(--mar);
+  font-size: var(--texto-m);
+  line-height: 1.35;
+  resize: none;
+  field-sizing: content;
+  min-height: 3.4rem;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--e2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pestanas button[aria-selected='false']:hover,
+  .pestanas .mas:hover {
+    background: var(--relleno-suave);
+  }
+}

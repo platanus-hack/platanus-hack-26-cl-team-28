@@ -25,7 +25,9 @@ export function Figura({ estado, aspecto, alto = 54 }: Props) {
     const ctx = lienzo.getContext('2d')!;
     const escala = (alto / CELDA_ALTO) * dpr;
     ctx.setTransform(escala, 0, 0, escala, 0, 0);
-    dibujarFigura(ctx, { estado: ESTADO[estado] as EstadoFigura, aspecto, cuadro, tintas: leerTokens(), detalle: alto > 34 });
+    const tokens = leerTokens();
+    ctx.clearRect(0, 0, CELDA_ANCHO, CELDA_ALTO);
+    dibujarFigura(ctx, { estado: ESTADO[estado] as EstadoFigura, aspecto, cuadro, tintas: { ...tokens, tinta: tokens.tintaFigura }, detalle: alto > 34 });
   }, [estado, aspecto, cuadro, alto, ancho]);
 
   return <canvas ref={ref} aria-hidden="true" style={{ width: ancho, height: alto, flex: 'none' }} />;

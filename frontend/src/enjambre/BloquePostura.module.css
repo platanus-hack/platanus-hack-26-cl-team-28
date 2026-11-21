@@ -1,0 +1,44 @@
+.bloque {
+  display: grid;
+  justify-items: start;
+  pointer-events: none;
+}
+
+.bloque[data-postura='favor'] {
+  justify-items: end;
+  text-align: right;
+}
+
+.cifra {
+  margin-top: var(--e2);
+  font: 500 clamp(4.5rem, 2rem + 9vw, 11rem) / 0.8 var(--fuente-voz);
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.cifra span {
+  margin-left: 0.06em;
+  font-size: 0.42em;
+  letter-spacing: 0;
+}
+
+.bloque[data-postura='favor'] .cifra {
+  color: var(--favor);
+}
+
+.bloque[data-postura='contra'] .cifra {
+  color: var(--contra);
+}
+
+.nombre {
+  margin-top: var(--e3);
+  font: 500 clamp(1.3rem, 1rem + 1vw, 2rem) / 1 var(--fuente-voz);
+}
+
+.personas {
+  margin-top: var(--e1);
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
