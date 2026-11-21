@@ -1,0 +1,32 @@
+.pensando {
+  margin-top: var(--e5);
+}
+
+.titulo {
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.pensando ol {
+  display: grid;
+  gap: var(--e1);
+  margin: var(--e2) 0 0;
+  padding: 0;
+  list-style: none;
+  font: 500 1.05rem/1.25 var(--fuente-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+.pensando li {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 899px) {
+  .pensando {
+    display: none;
+  }
+}

@@ -236,6 +236,8 @@ class Corrida:
         objeciones = [r for r in base.respuestas.values() if r.acuerdo <= 4 and r.frase]
         objeciones.sort(key=lambda r: r.acuerdo)
         muestra = objeciones[:: max(1, len(objeciones) // 45)][:45]
+        apoyos = [r for r in base.respuestas.values() if r.acuerdo >= 5 and r.frase]
+        valoradas = apoyos[:: max(1, len(apoyos) // 15)][:15]
         lineas = []
         for r in muestra:
             a = self.por_indice[r.agente]
@@ -243,8 +245,10 @@ class Corrida:
         prompt = (
             f"# Propuesta actual (variante {base.letra}, {round(base.apoyo() * 100)} % a favor)\n\n{base.politica()}\n\n"
             f"# Lo que dijeron quienes no la apoyan\n\n" + "\n".join(lineas) + "\n\n"
-            "Escribe una versión mejorada de la propuesta que mantenga su objetivo y responda a las "
-            "objeciones más repetidas. Devuelve `titulo` (la propuesta nueva en una sola oración de máximo "
+            f"# Lo que valoran quienes sí la apoyan (no lo pierdas)\n\n" + "\n".join(f"- {r.frase}" for r in valoradas) + "\n\n"
+            "Escribe una versión mejorada de la propuesta que mantenga su objetivo y todo lo que valoran "
+            "quienes la apoyan, y que responda a las objeciones más repetidas sin agregar costos ni "
+            "condiciones que la hagan más difícil de aceptar. Cambia lo mínimo necesario. Devuelve `titulo` (la propuesta nueva en una sola oración de máximo "
             "16 palabras, como un titular), `texto` (la propuesta nueva completa, máximo 110 palabras, "
             "lenguaje simple, sin viñetas) y `cambio` (una frase de máximo 14 palabras que diga qué cambiaste)."
         )

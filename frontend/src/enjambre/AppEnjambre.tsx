@@ -13,6 +13,7 @@ import { EscenaEnjambre, PUNTO, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { Insignia } from './Insignia';
 import { MenuOpciones } from './MenuOpciones';
+import { Pensando } from './Pensando';
 import { Redactando } from './Redactando';
 import { useAngosto } from './useAngosto';
 import { Validacion } from './Validacion';
@@ -27,6 +28,14 @@ function textoDelta(delta: number, caso: CasoVivo): string {
   const quien = caso.iteracion ? 'con la versión del agente' : `con la variante ${caso.letra}`;
   if (delta === 0) return `Igual que A ${quien}`;
   return `${delta > 0 ? '+' : ''}${delta} ${Math.abs(delta) === 1 ? 'punto' : 'puntos'} ${quien}`;
+}
+
+/** Cuántas personas que no apoyaban la A apoyan esta variante: el cambio dicho en gente, no en puntos. */
+function textoConversos(a: CasoVivo, b: CasoVivo, agentes: number[]): string | undefined {
+  let ganadas = 0;
+  for (const i of agentes) if (a.acuerdo[i] && a.acuerdo[i] <= 4 && b.acuerdo[i] >= 5) ganadas += 1;
+  if (!ganadas) return undefined;
+  return `${formatear(ganadas)} ${ganadas === 1 ? 'persona que no apoyaba' : 'personas que no apoyaban'} la A ${ganadas === 1 ? 'ahora la apoya' : 'ahora la apoyan'}`;
 }
 
 export function AppEnjambre() {
@@ -185,6 +194,7 @@ export function AppEnjambre() {
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
           <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} />
+          {conexion && (!caso.iteracion || caso.respondidas > 0) && <Pensando caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} />}
         </div>
       )}
       {mostrarRedactando && base && (
@@ -208,6 +218,7 @@ export function AppEnjambre() {
               aspecto={1}
               compacto={angosto}
               encabezado={viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : undefined}
+              nota={viendo > 0 && casos[0].listo ? textoConversos(casos[0], caso, muestra.agentes) : undefined}
             />
           </div>
         </>
