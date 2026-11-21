@@ -205,7 +205,7 @@
   }
 }
 
-/* Sus cinco respuestas a la encuesta, cada una en la escala de 1 a 7. */
+/* Sus respuestas a la encuesta, cada una en la escala de 1 a 7. */
 .encuesta {
   display: grid;
   gap: 5px;

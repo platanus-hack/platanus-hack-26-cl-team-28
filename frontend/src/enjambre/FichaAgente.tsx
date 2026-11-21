@@ -20,24 +20,27 @@ interface Props {
 const ANCHO = 380;
 const POSTURA = { favor: 'A favor', contra: 'En contra', indecisa: 'No se decide' } as const;
 const ESCALA = [1, 2, 3, 4, 5, 6, 7];
-/** Las cinco preguntas del banco de pruebas, dichas en corto; la pregunta completa va al pasar el cursor. */
-const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría'];
+/** Las preguntas del banco de pruebas, dichas en corto; la pregunta completa va al pasar el cursor. */
+const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría', 'Cree que funcionará'];
+
+/** Cómo se dice en la ficha cada dato que manda el motor (los grupos del perfil general). */
+const DATOS: [string, (valor: string) => string][] = [
+  ['Nivel educacional', (v) => `Educación ${v.toLowerCase()}`],
+  ['Situación laboral', (v) => v],
+  ['Tipo de colegio', (v) => `Va a un colegio ${v.toLowerCase()}`],
+  ['Tramo socioeconómico', (v) => `${v} de ingreso`],
+  ['Previsión de salud', (v) => v],
+  ['Tipo de hogar', (v) => `Hogar ${v.toLowerCase()}`],
+  ['Menores en el hogar', (v) => v],
+  ['Tenencia de la vivienda', (v) => `Vivienda ${v.toLowerCase()}`],
+  ['Religión', (v) => (v === 'Ninguna' ? 'Sin religión' : `Religión ${v.toLowerCase()}`)],
+  ['Posición política', (v) => (v === 'No se ubica' ? 'No se ubica en izquierda ni derecha' : v.replace(/ \(.*\)$/, ''))],
+  ['Evaluación del gobierno', (v) => (v === 'Sin respuesta' ? '' : `${v} al gobierno`)],
+];
 
 /** Lo que se sabe de la persona, dicho corto: sirve para leerlo de un vistazo. */
 function datos(a: Record<string, string>): string[] {
-  const lista: string[] = [];
-  const educacion = a['Nivel educacional']?.split(/[,(]/)[0].trim();
-  if (educacion) lista.push(educacion);
-  const quintil = a['Tramo socioeconómico']?.match(/Quintil (\d)/)?.[1];
-  if (quintil) lista.push(`Quintil ${quintil} de ingreso`);
-  if (a['Previsión de salud']) lista.push(a['Previsión de salud'].replace(', grupo', ''));
-  if (a['Tipo de vivienda']) lista.push(`Vive en ${a['Tipo de vivienda'].toLowerCase()}`);
-  const hijos = a.Hijos;
-  if (hijos) lista.push(/^\d+$/.test(hijos) && hijos !== '0' ? `${hijos} ${hijos === '1' ? 'hijo' : 'hijos'}` : 'Sin hijos');
-  const transporte = a['Transporte al trabajo']?.split(':').pop()?.split('(')[0].trim();
-  if (transporte) lista.push(`Se mueve en ${transporte.toLowerCase()}`);
-  if (a['Estado civil']) lista.push(a['Estado civil'].split(' sin ')[0]);
-  return lista;
+  return DATOS.map(([clave, decir]) => (a[clave] ? decir(a[clave]) : '')).filter(Boolean);
 }
 
 /**
@@ -136,7 +139,7 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
             <li key={dato}>{dato}</li>
           ))}
         </ul>
-        <p className={estilos.fuente}>Persona de la muestra del Censo 2024 · datos de Casen 2024 imputados</p>
+        <p className={estilos.fuente}>Persona de la muestra del Censo 2024 · datos de Casen 2024 y opiniones de la CEP 96 imputados</p>
       </div>
     </aside>
   );

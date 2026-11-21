@@ -1,19 +1,20 @@
 """Los agentes: personas de la muestra del 1 % del Censo 2024 con su perfil, su comuna y su ubicación.
 
-Cada agente es una persona real y anonimizada de la muestra (ver contexto/muestra/README.md),
-con datos de Casen imputados. Aquí se cargan, se ubican en el centroide de su comuna y se
-resumen en los campos que usa la interfaz para filtrar y dibujar.
+Cada agente es una persona real y anonimizada de la muestra, de 14 años o más, con datos de
+Casen y opiniones de la CEP imputados (ver contexto/muestra/README.md y actitudes.md). Su
+perfil es el texto general por secciones que escribe scripts/personas_muestra.py. Aquí se
+cargan, se ubican en el centroide de su comuna y se resumen en los campos que usa la
+interfaz para filtrar y dibujar.
 """
 
 import csv
 import json
-import re
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-ARCHIVO_AGENTES = RAIZ / "data" / "pruebas" / "sala_cuna" / "personas_2000.jsonl"
+ARCHIVO_AGENTES = RAIZ / "data" / "pruebas" / "poblacion" / "al_azar_2000.jsonl"
 ARCHIVO_COMUNAS = RAIZ / "contexto" / "geo" / "comunas_centroides.csv"
 
 # Mismo orden que REGIONES en frontend/src/dominio/catalogos.ts (de norte a sur).
@@ -40,6 +41,11 @@ CODIGO_A_INDICE = {codigo: i for i, (_, codigo) in enumerate(REGIONES)}
 
 GENEROS = {"Femenino": 0, "Masculino": 1, "No binario": 2}
 EDUCACION = {"Básica o menos": 0, "Media": 1, "Superior": 3}
+# Lo que la interfaz muestra de cada persona, en este orden: son los grupos del perfil.
+A_LA_VISTA = [
+    "Nivel educacional", "Situación laboral", "Tipo de colegio", "Tramo socioeconómico", "Previsión de salud",
+    "Tipo de hogar", "Menores en el hogar", "Tenencia de la vivienda", "Religión", "Posición política", "Evaluación del gobierno",
+]
 
 
 def normalizar(texto: str) -> str:
@@ -51,7 +57,10 @@ def normalizar(texto: str) -> str:
 class Agente:
     indice: int
     id: str
+    #: Resumen corto para la interfaz: edad, género, lugar y los grupos de `A_LA_VISTA`.
     atributos: dict
+    #: El perfil completo que lee el modelo: {sección: texto}.
+    perfil: dict
     region: int
     comuna: str
     lon: float
@@ -60,10 +69,8 @@ class Agente:
     genero: int
     quintil: int
     educacion: int
-
-    def perfil(self) -> str:
-        """Perfil en una línea, tal como se le muestra al modelo."""
-        return "; ".join(f"{clave}: {valor}" for clave, valor in self.atributos.items())
+    #: Índice en POLITICA del frontend: 0 izquierda … 4 derecha, 5 sin identificación.
+    politica: int
 
     def publico(self) -> dict:
         return {
@@ -77,6 +84,7 @@ class Agente:
             "genero": self.genero,
             "quintil": self.quintil,
             "educacion": self.educacion,
+            "politica": self.politica,
             "atributos": self.atributos,
         }
 
@@ -89,40 +97,38 @@ def cargar_comunas() -> dict[tuple[int, str], tuple[float, float]]:
         }
 
 
-def _numero(texto: str | None, defecto: int) -> int:
-    hallado = re.search(r"\d+", texto or "")
-    return int(hallado.group()) if hallado else defecto
-
-
 def cargar_agentes(archivo: Path = ARCHIVO_AGENTES) -> list[Agente]:
     comunas = cargar_comunas()
     agentes = []
     with open(archivo, encoding="utf-8") as f:
         filas = [json.loads(linea) for linea in f if linea.strip()]
     for indice, fila in enumerate(filas):
-        atributos, grupos = fila["atributos"], fila.get("grupos", {})
-        region = INDICE_REGION[atributos["Región"]]
-        codigo = REGIONES[region][1]
-        comuna = atributos.get("Comuna", "")
-        lon, lat = comunas.get((codigo, normalizar(comuna)), (None, None))
+        datos, grupos = fila["datos"], fila.get("grupos", {})
+        region = CODIGO_A_INDICE[datos["region"]]
+        comuna = datos.get("comuna") or ""
+        lon, lat = comunas.get((datos["region"], normalizar(comuna)), (None, None))
         if lon is None:
             # Sin centroide conocido: la capital regional que usa la interfaz se encarga.
             lon, lat = 0.0, 0.0
-        genero_texto = atributos.get("Género") or ("Femenino" if atributos.get("Sexo") == "Mujer" else "Masculino")
-        quintil = _numero(grupos.get("Tramo socioeconómico"), 3) - 1
+        genero = datos.get("genero") or ""
+        atributos = {"Edad": f"{datos['edad']} años", "Género": genero, "Región": datos.get("nombre_region") or "", "Comuna": comuna, "Zona": datos.get("zona") or ""}
+        atributos |= {clave: grupos[clave] for clave in A_LA_VISTA if grupos.get(clave)}
         agentes.append(
             Agente(
                 indice=indice,
                 id=fila["id"],
                 atributos=atributos,
+                perfil=fila["perfil"],
                 region=region,
                 comuna=comuna,
                 lon=lon,
                 lat=lat,
-                edad=_numero(atributos.get("Edad"), 40),
-                genero=GENEROS.get(genero_texto, 3),
-                quintil=max(0, min(4, quintil)),
-                educacion=EDUCACION.get(grupos.get("Nivel educacional", ""), 1),
+                edad=datos["edad"],
+                genero=GENEROS.get(genero, 3),
+                quintil=max(0, min(4, (datos.get("quintil") or 3) - 1)),
+                educacion=EDUCACION.get(datos.get("educacion") or "", 1),
+                # La escala de 1 a 10 de la CEP en cinco tramos; los menores de 18 y quienes no se ubican van aparte.
+                politica=(datos["posicion_politica"] - 1) // 2 if datos.get("posicion_politica") else 5,
             )
         )
     return agentes

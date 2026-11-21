@@ -56,6 +56,8 @@ Y la comparación, igual para ambos:
 uv run python -I scripts/comparar_variantes.py data/pruebas/poblacion/regiones_50.jsonl data/pruebas/CASO/resultados_*.jsonl
 ```
 
+Para validar contra más encuestas reales está `datos-pruebas/`, en la raíz del repositorio: 140 casos con sus porcentajes publicados, que se pueden convertir en textos de `validacion/` y entradas de `benchmarks.json`.
+
 ## Casos
 
 - `sala_cuna/`: proyecto de Sala Cuna Universal, variantes A a E. Sus resultados hasta el 21-11-2026 se hicieron con perfiles más cortos (`sala_cuna/personas_*.jsonl`), no con los de `poblacion/`. Eran solo adultos: 731 de las 800 personas de `poblacion/regiones_50.jsonl` son las mismas, y con `--edad-minima 18` lo son todas. Sus ingresos imputados pueden diferir, porque el emparejamiento de hogares se corrigió después (ahora distingue hogares con niños y con adultos mayores).

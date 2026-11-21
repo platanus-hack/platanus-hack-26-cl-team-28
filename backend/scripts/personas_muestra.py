@@ -27,8 +27,9 @@ Cada línea del archivo de salida tiene:
   "perfil"     el perfil por secciones: {título de la sección: texto en segunda persona}.
                El modelo lo lee como un solo texto (ver prosa_de en probar_modelo.py).
   "grupos"     pocas categorías por variable, para desagregar los resultados.
-  "datos"      unos pocos datos sueltos (edad, género, región, comuna, zona, quintil) para
-               los programas que filtran o dibujan a las personas, como el motor del sitio.
+  "datos"      unos pocos datos sueltos (edad, género, región, comuna, zona, quintil, educación
+               y posición política de 1 a 10) para los programas que filtran o dibujan a las
+               personas, como el motor del sitio.
   "peso"       1 en la muestra al azar; con --por-region, adultos de la región por persona
                elegida, con media 1.
 
@@ -701,6 +702,7 @@ def datos_sueltos(f, etiquetas, g):
         "zona": g.get("Zona"),
         "quintil": f["quintil_ingreso"] if valido(f["quintil_ingreso"]) else None,
         "educacion": g.get("Nivel educacional"),
+        "posicion_politica": f.get("posicion_politica") if (f.get("posicion_politica") or 0) > 0 else None,
     }
 
 

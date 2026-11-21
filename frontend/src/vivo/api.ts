@@ -26,6 +26,8 @@ export interface AgenteRemoto {
   genero: number;
   quintil: number;
   educacion: number;
+  /** Índice en POLITICA: 0 izquierda … 4 derecha, 5 sin identificación. Imputado desde la CEP. */
+  politica?: number;
   atributos: Record<string, string>;
 }
 

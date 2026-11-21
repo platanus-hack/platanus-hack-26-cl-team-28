@@ -1,14 +1,15 @@
 """Motores que hacen responder a los agentes.
 
 El método es el de `scripts/probar_modelo.py` (ver `metodo.py`): cada persona responde las
-mismas cinco preguntas con un entero de 1 a 7, sin texto. Lo que cambia entre motores es quién
+mismas preguntas con un entero de 1 a 7, sin texto. Lo que cambia entre motores es quién
 contesta:
 
 - `LlamaLocal`: el servidor llama-server del banco de pruebas, una persona por llamada, con la
   misma función `encuestar` del script. Se usa si `LLAMA_URL` está definida.
 - `ClaudeApi`: Claude Haiku por la API de Anthropic (`ANTHROPIC_API_KEY`).
 - `ClaudeCodigo`: Claude Haiku por la CLI de Claude Code (`claude -p`).
-- `Grabado`: repite respuestas reales guardadas en `data/pruebas/`.
+- `Grabado`: repite respuestas reales guardadas en `data/pruebas/`. La grabación es anterior al
+  perfil general y a la sexta pregunta: trae cinco notas y solo a los adultos.
 
 Con Claude las personas van en lotes (`LOTE` por llamada, como en las pruebas con subagentes);
 `LOTE=1` pregunta de a una. Las frases que muestra la interfaz no son parte de la encuesta: se
@@ -172,9 +173,14 @@ class Motor:
         return {"nombre": self.nombre, "modelo": self.modelo, "grabado": self.grabado}
 
     @property
+    def preguntas(self) -> list[str]:
+        """Las preguntas que este motor responde, en el orden de las notas."""
+        return metodo.PREGUNTAS
+
+    @property
     def clave(self) -> str:
         """Modelo más versión de las instrucciones: si cambia el prompt, la caché no se reutiliza."""
-        version = hashlib.sha256((metodo.SISTEMA + "".join(metodo.PREGUNTAS) + INSTRUCCION_LOTE).encode()).hexdigest()[:8]
+        version = hashlib.sha256((metodo.VERSION + INSTRUCCION_LOTE).encode()).hexdigest()[:8]
         return f"{self.modelo}:{version}"
 
 
@@ -294,7 +300,11 @@ class ClaudeApi(Motor):
 
 
 class Grabado(Motor):
-    """Repite una corrida real ya hecha. Para cualquier política responde lo grabado de sala cuna."""
+    """Repite una corrida real ya hecha. Para cualquier política responde lo grabado de sala cuna.
+
+    La grabación es de antes del perfil general: Haiku respondió cinco preguntas con el perfil
+    corto de entonces, y solo había adultos. Aquí se repite tal cual, sin completar nada: se
+    informan las preguntas que tiene, y quien no estaba en esa corrida no responde."""
 
     nombre = "Corrida grabada"
     grabado = True
@@ -307,9 +317,17 @@ class Grabado(Motor):
             for linea in f:
                 fila = json.loads(linea)
                 if fila.get("valida") and fila["id"] in por_id:
-                    self._acuerdo[por_id[fila["id"]]] = [fila["respuestas"][clave] for clave in metodo.CLAVES]
+                    self._acuerdo[por_id[fila["id"]]] = [fila["respuestas"][clave] for clave in metodo.CLAVES if clave in fila["respuestas"]]
         self.modelo = "claude-haiku-5-5 (grabado)"
         self._pausa = pausa
+        self._grabadas = min((len(notas) for notas in self._acuerdo.values()), default=0)
+
+    @property
+    def preguntas(self) -> list[str]:
+        return metodo.PREGUNTAS[: self._grabadas]
+
+    def describir(self) -> dict:
+        return {**super().describir(), "con_respuesta": len(self._acuerdo)}
 
     def responder(self, politica, agentes):
         time.sleep(self._pausa)
@@ -329,12 +347,12 @@ class LlamaLocal(Motor):
         self._url = url.rstrip("/")
         modelo = metodo.banco.pedir(f"{self._url}/v1/models", espera=10)["data"][0]["id"]
         self.modelo = Path(modelo).name.removesuffix(".gguf")
-        self._temperatura = float(os.environ.get("TEMPERATURA", "1.0"))
+        self._cfg = metodo.cfg_local(self._url, float(os.environ.get("TEMPERATURA", "1.0")))
 
     def responder(self, politica, agentes):
         respuestas = []
         for agente in agentes:
-            registro = metodo.banco.encuestar(self._url, politica, metodo.persona_de(agente), agente.indice, self._temperatura, logprobs=False)
+            registro = metodo.banco.encuestar(politica, metodo.persona_de(agente), agente.indice, self._cfg)
             if registro["valida"]:
                 respuestas.append(Respuesta(agente.indice, [registro["respuestas"][clave] for clave in metodo.CLAVES]))
         return ResultadoLote(respuestas, Consumo(llamadas=len(agentes)))

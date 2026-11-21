@@ -11,7 +11,7 @@ const INTENTOS = 24;
 /** Dispersión en grados alrededor del centro de la comuna: la ciudad se junta, el campo se abre. */
 const DISPERSION_URBANA = 0.045;
 const DISPERSION_RURAL = 0.16;
-/** Los agentes no traen orientación política: van como "Sin identificación" (índice en POLITICA). */
+/** Quien no se ubica en la escala, o es menor de 18, va como "Sin identificación" (índice en POLITICA). */
 const SIN_POLITICA = 5;
 
 function campana(azar: () => number): number {
@@ -52,7 +52,7 @@ export function poblacionDeAgentes(agentes: AgenteRemoto[], porAgente: number, r
         genero: agente.genero,
         quintil: agente.quintil,
         educacion: agente.educacion,
-        politica: SIN_POLITICA,
+        politica: agente.politica ?? SIN_POLITICA,
         aspecto: Math.floor(azar() * 6),
       });
     }

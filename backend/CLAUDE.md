@@ -69,12 +69,14 @@ El sistema debe servir para estimar respuestas en muchos contextos, no solo en u
 
 | Ruta | Contenido |
 |---|---|
-| `scripts/personas_muestra.py` | Saca adultos de la muestra y arma su perfil general en nueve secciones: identidad, trabajo, hogar, vivienda, economía, salud y redes, política, visión del país y confianza en instituciones. `--por-region K` estratifica y deja un `peso`; `--secciones` elige cuáles van; `--sin-actitudes` deja fuera lo imputado desde la CEP. |
+| `scripts/personas_muestra.py` | Saca personas de 14 años o más de la muestra o de la población completa y arma su perfil general en nueve secciones: identidad, trabajo, hogar, vivienda, economía, salud y redes, política, visión del país y confianza en instituciones. `--por-region K` estratifica y deja un `peso`; `--secciones` elige cuáles van; `--sin-actitudes` deja fuera lo imputado desde la CEP. |
 | `scripts/servir_modelo.sh` | Levanta `llama-server` con un modelo local en la GPU NVIDIA. |
 | `scripts/probar_modelo.py` | Aplica la encuesta con el modelo local (escala 1 a 7; las preguntas son las del `encuesta.json` del caso o, si no hay, seis sobre una política). Si el texto es una carpeta, corre cada `.md` como variante con las mismas personas y semilla. `--abiertas N` pide justificaciones y preguntas abiertas a una submuestra. |
 | `scripts/lotes_agentes.py` | Para contestar la encuesta con subagentes (Claude Haiku): `preparar` arma lotes de personas con la política y las preguntas, y `reunir` junta las respuestas en un archivo de resultados. Con `--juntas`, cada subagente contesta todas las variantes para sus mismas personas. |
 | `scripts/comparar_variantes.py` | Ranking de variantes con diferencias pareadas, efecto de cada atributo, desglose por región y grupo, validación contra `benchmarks.json` y coincidencia entre corridas. |
-| `data/pruebas/poblacion/` | Los perfiles generales, comunes a todos los casos. |
+| `data/pruebas/poblacion/` | Los perfiles generales, comunes a todos los casos. `al_azar_2000.jsonl` son los agentes del sitio. |
+| `servidor/` | El motor del sitio (ver `servidor/README.md`). No copia el método: `servidor/metodo.py` importa de `scripts/probar_modelo.py` las preguntas, `mensajes`, `prosa_de` y `encuestar`. Si cambias sus firmas, ajusta ese archivo y prueba que el servidor arranque (`MOTOR=grabado python3 -m servidor`). |
+| `../datos-pruebas/` | Banco de referencias externas del equipo: 140 casos con encuesta real publicada, cortes por segmento y resultados observados. Sirve para validar; no lo mezcles con `data/pruebas/`, que son las corridas de los modelos. |
 | `data/pruebas/sala_cuna/` | El caso de Sala Cuna: variantes (`variantes/`, con `atributos.json`), textos de validación, `benchmarks.json` y resultados. Sus `personas_*.jsonl` son los perfiles cortos con que se hicieron las corridas hasta el 21-11-2026. |
 
 Reglas de este análisis:

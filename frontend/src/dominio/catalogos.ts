@@ -59,7 +59,8 @@ export const RAZONES = [
 ] as const;
 
 export const TAMANOS = [10_000, 50_000, 100_000, 200_000] as const;
-export const EDAD_MINIMA = 18;
+/** Se simula desde los 14 años. */
+export const EDAD_MINIMA = 14;
 export const EDAD_MAXIMA = 90;
 /** Perfiles sintéticos disponibles en el prototipo. */
 export const UNIVERSO = 480_000;

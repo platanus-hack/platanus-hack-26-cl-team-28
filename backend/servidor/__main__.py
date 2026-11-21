@@ -21,7 +21,6 @@ from urllib.parse import unquote, urlparse
 from .agentes import cargar_agentes
 from .corridas import Cache, Caso, Corrida, resumir_documento
 from .documentos import DocumentoIlegible, extraer_texto
-from .metodo import PREGUNTAS
 from .motor import elegir_motor
 
 LETRAS = "ABCDEFGH"
@@ -71,7 +70,7 @@ class Manejador(BaseHTTPRequestHandler):
     def do_GET(self):
         ruta = urlparse(self.path).path
         if ruta == "/api/estado":
-            return self._json(200, {"motor": MOTOR.describir(), "agentes": len(AGENTES), "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": PREGUNTAS})
+            return self._json(200, {"motor": MOTOR.describir(), "agentes": len(AGENTES), "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas})
         if ruta == "/api/agentes":
             return self._json(200, None, AGENTES_PUBLICOS)
         partes = ruta.strip("/").split("/")
