@@ -1,0 +1,183 @@
+                                                                           Glosario:
+                                                    Características de la población
+
+
+
+POBLACIÓN
+
+
+
+Población con       • Personas de 5 años o más que respondieron tener mucha dificultad o no po-
+discapacidad          der realizar al menos una de las seis actividades incluidas en el set de pre-
+                      guntas del Washington Group on Disability Statistics (WG): ver, oír, caminar,
+                      recordar, cuidado personal y comunicarse.
+                    • Este conjunto de preguntas es el indicador recomendado para la medición de
+                      discapacidad en censos de población.
+                    • Este indicador se captura a partir de la pregunta 32 del cuestionario.
+                        – ¿Tiene dificultad para:
+                          · ver, aun usando anteojos o lentes?
+                          · oír, aun usando un dispositivo auditivo?
+                          · caminar o subir escaleras?
+                          · recordar o concentrarse?
+                          · realizar tareas de cuidado personal, como bañarse o vestirse?
+                          · hablar o comunicarse usando su idioma habitual, por ejemplo, enten-
+                            der o ser entendido por otras personas?
+
+                        – Para cada una de estas actividades se consultó por el nivel de dificultad a
+                          partir de las categorías de respuesta “No, sin dificultad”, “Sí, algo de difi-
+                          cultad”, “Sí, mucha dificultad”, “No, puede hacerlo”.
+
+
+
+
+Pueblos indígenas   • Personas que son o se consideran pertenecientes a los once pueblos indíge-
+u originarios         nas u originarios reconocidos por la ley chilena, como otros pueblos presentes
+                      en el territorio nacional, otros pueblos de América Latina y otros pueblos del
+                      resto del mundo.
+                    • Esta información se captura a partir de la pregunta 28: ¿Es o se considera per-
+                      teneciente a algún pueblo indígena u originario? Si la persona contesta que sí,
+                      las categorías de respuesta son “Mapuche”, “Aymara”, “Rapa Nui”, “Atacameño
+                      o Lickanantay”, “Quechua”, “Colla”, “Diaguita”, “Kawésqar”, “Yagán”, “Chango”,
+                      “Selk’nam”, “Otro, especifique”.
+                                                                              Glosario:
+                                                       Características de la población
+
+
+
+POBLACIÓN
+
+
+
+Población              • Personas que son o se consideran pertenecientes a un pueblo af rodes-
+afrodescendiente         cendiente.
+                       • Esta información se captura en la pregunta 29: ¿De acuerdo con sus antepasa-
+                         dos, tradiciones y cultura, es o se considera…? Sus categorías de respuesta son:
+                         “Afrodescendiente”, “Afrochileno/a”, “Negro/a”, “Del Pueblo Tribal Afrodescen-
+                         dientes Chileno”, “Moreno/a de Azapa”, “Negro/a de la Chimba” y “Ninguna de
+                         las anteriores”.
+
+
+
+
+Personas que           • Personas de 5 años o más que hablan o entienden alguna de las lenguas de
+manejan lenguas          los pueblos indígenas u originarios de Chile.
+originarias
+                       • Esta información se captura a partir de la pregunta 30 del cuestionario: ¿Habla
+                         o entiende una de las siguientes lenguas indígenas u originarias? Las catego-
+                         rías de respuesta son: “Mapuzugun (lengua mapuche)”, “Aymara”, “Quechua”,
+                         “Rapa Nui”, “Ckunza”, Kawésqar”, “Yagán”, “Otra lengua indígena de Chile”,
+                         “No habla ni entiende ninguna lengua indígena de Chile”.
+
+
+
+
+Personas que tienen    • Personas de 15 años o más que profesan o tienen alguna religión o credo.
+una religión o credo   • Esta información se captura a partir de la pregunta 31: ¿Cuál es su religión o
+                         credo? Las categorías de respuesta de esta pregunta son: “Católica”, “Evangé-
+                         lica o protestante”, “Judía”, “Musulmana”, “Iglesia de Jesucristo de los Santos
+                         de los Últimos días”, “Católica Ortodoxa”, “Budista”, “Hinduista”, “Fe Bahá’í”,
+                         “Testigo de Jehová”, “Otra religión o credo”, “Ninguna”.
+                       • A partir de la codificación realizada de la categoría “Otros” se genera la ca-
+                         tegoría “Otros cristianos y tradiciones relacionadas con Cristo”, que incluye a
+                         las personas que mencionan creencias, denominaciones o movimientos cris-
+                         tianos que no se asocian exactamente con las categorías presentes en la pre-
+                         gunta 31.
+                                                                            Glosario:
+                                                     Características de la población
+
+
+
+POBLACIÓN
+
+
+Población de         • Personas de 18 años o más de acuerdo con su género declarado.
+acuerdo con          • El género refiere a la identidad o forma de expresar que una persona tiene.
+su identidad o         Para algunas personas su género corresponde a su sexo asignado al nacer.
+expresión de           Para otras, su género no coincide con su sexo asignado al nacer.
+género
+                     • La información de género se capturó a partir de las preguntas 49 y 50.
+                         – Pregunta 49: ¿Con cuál género se identifica? Sus categorías de respuesta
+                           son “Masculino”, “Femenino”, “Transmasculino”, Transfemenino”, “No bi-
+                           nario”, “Otro, especifique”.
+                         – Pregunta 50: ¿Se identifica como trans? Las categorías de respuesta de
+                           esta pregunta son “Sí” y “No”.
+                     • La población trans o transgénero corresponde a personas que responden
+                       “Transfemenino” o “Transmasculino” en la pregunta 49 o cuya respuesta en la
+                       pregunta 50 “¿Se identifica como trans?” es “Sí”.
+
+
+EDUCACIÓN
+
+
+Escolaridad          • Promedio de años de educación formalmente completados por las personas.
+                     • Esta información se captura a partir de las preguntas 34 y 35 del cuestionario
+                       censal.
+                         – Pregunta 34: ¿Cuál es su nivel educativo más alto alcanzado? Sus catego-
+                           rías de respuesta son “Nunca asistió”, “Sala cuna”, “Jardín infantil”, “Pre-
+                           kinder”, “Kinder”, “Educación especial o diferencial”, “Educación básica”,
+                           “Primaria (sistema antiguo)”, “Media científica humanista o artística”,
+                           “Media técnico profesional, “Humanidades (sistema antiguo)”, “Técnico
+                           comercial, industrial, normalista (sistema antiguo)”, “Técnico nivel supe-
+                           rior (1 a 3 años” (incluye suboficial de la FFAA”, “Profesional (4 años o más)
+                           (incluye oficial de las FFAA”, Magíster y “Doctorado”.
+                         – Pregunta 35: Dentro del nivel declarado anteriormente, ¿cuál es el último
+                           curso o año que aprobó? Las categorías de respuesta a esta pregunta van
+                           del valor 1 al valor 10.
+
+
+Nivel educativo      • El nivel educativo corresponde a un conjunto de programas y cursos recono-
+más alto alcanzado     cidos por el Ministerio de Educación, el que agrupa aprendizajes, conocimien-
+                       tos, habilidades y competencias requerida para completar dicho nivel.
+                     • En el censo se mide el nivel más alto alcanzado, que corresponde al nivel edu-
+                       cativo en donde al menos se ha finalizado o aprobado un curso de ese nivel.
+                     • Esta información se captura a partir de la pregunta 34 ¿Cuál es su nivel edu-
+                       cativo más alto alcanzado?
+                                                                             Glosario:
+                                                      Características de la población
+
+
+
+EDUCACIÓN
+
+
+Tasa de asistencia    • Proporción de personas en un rango de edad que asisten a un nivel educativo
+neta                    determinado. En particular este rango de edad está dado por las edades ofi-
+                        ciales en que las personas deberían asistir a determinado nivel.
+                      • Este indicador se construye a partir de:
+                          – La pregunta 33: ¿Asiste actualmente a la educación formal? Incluye edu-
+                            cación parvularia, especial, básica, media y superior.
+                          – La pregunta 34: ¿Cuál es su nivel educativo más alto alcanzado?
+                          – La pregunta 35: Dentro del mismo nivel declarado anteriormente, ¿cuál
+                            es el último curso que aprobó?
+
+
+
+                      Nivel                         Fórmula tasa de asistencia neta por nivel
+
+                      Parvularia        Población de 0 a 5 años que asisten a la educación parvularia
+                                                                                                        * 100
+                                                           Población de 0 a 5 años
+
+
+                      Básica            Población de 6 a 13 años que asisten a la educación básica
+                                                                                                        * 100
+                                                           Población de 6 a 13 años
+
+
+                      Media             Población de 14 a 17 años que asisten a la educación media
+                                                                                                        * 100
+                                                          Población de 14 a 17 años
+
+
+                      Superior          Población de 18 a 24 años que asisten a la educación superior
+                                                                                                        * 100
+                                                          Población de 18 a 24 años
+
+
+
+
+Tasa de               • Proporción de personas de 15 años o más que sabe leer y escribir.
+alfabetización para   • Esta información se captura a partir de la pregunta 37: ¿Sabe leer y escribir?
+personas de 15
+años o más
+

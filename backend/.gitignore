@@ -1,0 +1,7 @@
+# Datos pesados y reconstruibles con los scripts de descarga y construcción (ver CLAUDE.md)
+data/*
+# Las pruebas de modelos sí se versionan: sus resultados no se pueden reconstruir
+!data/pruebas/
+
+.venv/
+__pycache__/

@@ -1,0 +1,183 @@
+columna,variable_casen,valor,etiqueta
+categoria_ocupacional,o15,1,1. Patrón(a) o empleador(a)
+categoria_ocupacional,o15,2,2. Trabajador(a) por cuenta propia
+categoria_ocupacional,o15,3,3. Empleado(a) u obrero(a) del sector público (Gobierno Central o Municipal)
+categoria_ocupacional,o15,4,4. Empleado(a) u obrero(a) de empresas públicas
+categoria_ocupacional,o15,5,5. Empleado(a) u obrero(a) del sector privado
+categoria_ocupacional,o15,6,6. Servicio doméstico puertas adentro
+categoria_ocupacional,o15,7,7. Servicio doméstico puertas afuera
+categoria_ocupacional,o15,8,8. FF.AA. y del Orden
+categoria_ocupacional,o15,9,9. Familiar no remunerado
+sindicato,o26a,-88,No sabe
+sindicato,o26a,1,1. Sí
+sindicato,o26a,2,2. No
+prevision_salud,s13,-88,No sabe
+prevision_salud,s13,1,1. Sistema Público FONASA
+prevision_salud,s13,2,2. Isapre
+prevision_salud,s13,3,3. FF.AA. y del Orden
+prevision_salud,s13,4,4. Ninguno (particular)
+prevision_salud,s13,5,5. Otro sistema
+fonasa_grupo,s13_fonasa,-88,No sabe grupo
+fonasa_grupo,s13_fonasa,1,1. Grupo A
+fonasa_grupo,s13_fonasa,2,2. Grupo B
+fonasa_grupo,s13_fonasa,3,3. Grupo C
+fonasa_grupo,s13_fonasa,4,4. Grupo D
+participa_organizacion,r6,1,"1. Juntas de vecinos u otra organización territorial (comité de aguas, comité de allegados, otros)"
+participa_organizacion,r6,2,2. Club deportivo o recreativo
+participa_organizacion,r6,3,3. Organización religiosa o de iglesia
+participa_organizacion,r6,4,"4. Agrupaciones culturales, artísticas o patrimoniales"
+participa_organizacion,r6,5,"5. Grupos de identidad cultural (asociaciones indígenas, círculos de inmigrantes, otros)"
+participa_organizacion,r6,6,"6. Agrupaciones juveniles o de estudiantes (scout, centros de alumnos, otros)"
+participa_organizacion,r6,7,7. Agrupaciones de mujeres
+participa_organizacion,r6,8,"8. Agrupaciones de adulto mayor (club de adulto mayor, asistentes de centros de día, otros)"
+participa_organizacion,r6,9,9. Grupos de voluntariado
+participa_organizacion,r6,10,10. Grupos de autoayuda en salud
+participa_organizacion,r6,11,11. Agrupación ideológica (partido político)
+participa_organizacion,r6,12,"12. Agrupación corporativa (sindicato, asociación gremial, colegio profesional, otros)"
+participa_organizacion,r6,13,13. Centro de padres y apoderados
+participa_organizacion,r6,14,14. Otra
+participa_organizacion,r6,15,15. No participa en ninguna organización o grupo
+red_cuidado_enfermedad,r7a,-88,No sabe
+red_cuidado_enfermedad,r7a,1,"1. Sí, alguien fuera del hogar"
+red_cuidado_enfermedad,r7a,2,"2. Sí, alguien dentro del hogar"
+red_cuidado_enfermedad,r7a,3,3. Ambas
+red_cuidado_enfermedad,r7a,4,4. No conoce
+red_cuidado_dependientes,r7b,-88,No sabe
+red_cuidado_dependientes,r7b,1,"1. Sí, alguien fuera del hogar"
+red_cuidado_dependientes,r7b,2,"2. Sí, alguien dentro del hogar"
+red_cuidado_dependientes,r7b,3,3. Ambas
+red_cuidado_dependientes,r7b,4,4. No conoce
+red_vehiculo,r7c,-88,No sabe
+red_vehiculo,r7c,1,"1. Sí, alguien fuera del hogar"
+red_vehiculo,r7c,2,"2. Sí, alguien dentro del hogar"
+red_vehiculo,r7c,3,3. Ambas
+red_vehiculo,r7c,4,4. No conoce
+red_dinero,r7d,-88,No sabe
+red_dinero,r7d,1,"1. Sí, alguien fuera del hogar"
+red_dinero,r7d,2,"2. Sí, alguien dentro del hogar"
+red_dinero,r7d,3,3. Ambas
+red_dinero,r7d,4,4. No conoce
+red_tramites,r7e,-88,No sabe
+red_tramites,r7e,1,"1. Sí, alguien fuera del hogar"
+red_tramites,r7e,2,"2. Sí, alguien dentro del hogar"
+red_tramites,r7e,3,3. Ambas
+red_tramites,r7e,4,4. No conoce
+red_tecnologia,r7f,-88,No sabe
+red_tecnologia,r7f,1,"1. Sí, alguien fuera del hogar"
+red_tecnologia,r7f,2,"2. Sí, alguien dentro del hogar"
+red_tecnologia,r7f,3,3. Ambas
+red_tecnologia,r7f,4,4. No conoce
+red_reparaciones,r7g,-88,No sabe
+red_reparaciones,r7g,1,"1. Sí, alguien fuera del hogar"
+red_reparaciones,r7g,2,"2. Sí, alguien dentro del hogar"
+red_reparaciones,r7g,3,3. Ambas
+red_reparaciones,r7g,4,4. No conoce
+red_trabajo,r7h,-88,No sabe
+red_trabajo,r7h,1,"1. Sí, alguien fuera del hogar"
+red_trabajo,r7h,2,"2. Sí, alguien dentro del hogar"
+red_trabajo,r7h,3,3. Ambas
+red_trabajo,r7h,4,4. No conoce
+red_consejo,r7i,-88,No sabe
+red_consejo,r7i,1,"1. Sí, alguien fuera del hogar"
+red_consejo,r7i,2,"2. Sí, alguien dentro del hogar"
+red_consejo,r7i,3,3. Ambas
+red_consejo,r7i,4,4. No conoce
+inseg_alim_preocupacion,r8a,1,1. Sí
+inseg_alim_preocupacion,r8a,2,2. No
+inseg_alim_no_saludable,r8b,1,1. Sí
+inseg_alim_no_saludable,r8b,2,2. No
+inseg_alim_poca_variedad,r8c,1,1. Sí
+inseg_alim_poca_variedad,r8c,2,2. No
+inseg_alim_salto_comida,r8d,1,1. Sí
+inseg_alim_salto_comida,r8d,2,2. No
+inseg_alim_comio_menos,r8e,1,1. Sí
+inseg_alim_comio_menos,r8e,2,2. No
+inseg_alim_sin_alimentos,r8f,1,1. Sí
+inseg_alim_sin_alimentos,r8f,2,2. No
+inseg_alim_hambre,r8g,1,1. Sí
+inseg_alim_hambre,r8g,2,2. No
+inseg_alim_dia_sin_comer,r8h,1,1. Sí
+inseg_alim_dia_sin_comer,r8h,2,2. No
+discrim_nivel_socioeconomico,r9a,0,0. No
+discrim_nivel_socioeconomico,r9a,1,1. Sí
+discrim_nivel_educacional,r9b,0,0. No
+discrim_nivel_educacional,r9b,1,1. Sí
+discrim_ocupacion,r9u,0,0. No
+discrim_ocupacion,r9u,1,1. Sí
+discrim_sexo,r9c,0,0. No
+discrim_sexo,r9c,1,1. Sí
+discrim_estado_civil,r9d,0,0. No
+discrim_estado_civil,r9d,1,1. Sí
+discrim_ropa,r9e,0,0. No
+discrim_ropa,r9e,1,1. Sí
+discrim_color_piel,r9f,0,0. No
+discrim_color_piel,r9f,1,1. Sí
+discrim_extranjero,r9g,0,0. No
+discrim_extranjero,r9g,1,1. Sí
+discrim_edad,r9h,0,0. No
+discrim_edad,r9h,1,1. Sí
+discrim_orientacion_genero,r9i,0,0. No
+discrim_orientacion_genero,r9i,1,1. Sí
+discrim_tatuajes,r9j,0,0. No
+discrim_tatuajes,r9j,1,1. Sí
+discrim_apariencia,r9k,0,0. No
+discrim_apariencia,r9k,1,1. Sí
+discrim_religion,r9l,0,0. No
+discrim_religion,r9l,1,1. Sí
+discrim_politica,r9m,0,0. No
+discrim_politica,r9m,1,1. Sí
+discrim_sindicato,r9n,0,0. No
+discrim_sindicato,r9n,1,1. Sí
+discrim_lugar_residencia,r9o,0,0. No
+discrim_lugar_residencia,r9o,1,1. Sí
+discrim_establecimiento,r9p,0,0. No
+discrim_establecimiento,r9p,1,1. Sí
+discrim_pueblo_indigena,r9q,0,0. No
+discrim_pueblo_indigena,r9q,1,1. Sí
+discrim_salud_discapacidad,r9r,0,0. No
+discrim_salud_discapacidad,r9r,1,1. Sí
+discrim_otro,r9s,0,0. No
+discrim_otro,r9s,1,1. Sí
+discrim_ninguna,r9t,0,0. No
+discrim_ninguna,r9t,1,1. Sí
+tiene_vehiculo,r14,1,1. Sí
+tiene_vehiculo,r14,2,2. No
+n_vehiculos,r15,-88,No sabe
+genero,genero,-99,Prefiere no responder
+genero,genero,-88,No sabe
+genero,genero,1,1. Masculino
+genero,genero,2,2. Femenino
+genero,genero,3,3. Transmasculino
+genero,genero,4,4. Transfemenino
+genero,genero,5,5. No binario
+genero,genero,6,6. Otro género. Especifique
+pobreza_ingresos,pobreza,1,Pobreza extrema
+pobreza_ingresos,pobreza,2,Pobreza no extrema
+pobreza_ingresos,pobreza,3,Fuera de la pobreza
+decil_ingreso,dau,1,I
+decil_ingreso,dau,2,II
+decil_ingreso,dau,3,III
+decil_ingreso,dau,4,IV
+decil_ingreso,dau,5,V
+decil_ingreso,dau,6,VI
+decil_ingreso,dau,7,VII
+decil_ingreso,dau,8,VIII
+decil_ingreso,dau,9,IX
+decil_ingreso,dau,10,X
+quintil_ingreso,qaut,1,I
+quintil_ingreso,qaut,2,II
+quintil_ingreso,qaut,3,III
+quintil_ingreso,qaut,4,IV
+quintil_ingreso,qaut,5,V
+tiene_contrato,contrato,0,No
+tiene_contrato,contrato,1,Sí
+tiene_contrato,contrato,-88,No sabe
+cotiza_pension,cotiza,0,No
+cotiza_pension,cotiza,1,Sí
+cotiza_pension,cotiza,-88,No sabe
+dependencia_grado,depen_grado,0,No dependiente
+dependencia_grado,depen_grado,1,Dependencia severa
+dependencia_grado,depen_grado,2,Dependencia moderada
+dependencia_grado,depen_grado,3,Dependencia leve
+es_cuidador,cuidador,0,No
+es_cuidador,cuidador,1,Sí

@@ -1,0 +1,329 @@
+                                                                             Nota técnica n°4
+
+
+PROCESO DE AJUSTE TERRITORIAL DE DIRECCIONES
+
+1. Antecedentes
+Uno de los objetivos del Censo de Población y Vivienda es proveer insumos para la
+actualización del marco muestral utilizado en las encuestas de hogares. Este producto es
+fundamental para las oficinas de estadísticas, ya que constituye la base sobre la cual se
+diseñan las muestras de gran parte de los productos estadísticos sobre hogares del país. Para
+cumplir esta función, es esencial asegurar una correcta vinculación de los datos censales y el
+territorio.
+
+
+Por ello, durante la recolección del Censo 2024 se registró información geográfica de todas las
+edificaciones identificadas en terreno, incorporando atributos asociados a su localización
+como, dirección, coordenadas y su vinculación con la estructura geográfica censal (manzana
+o área de levantamiento, zona, distrito, comuna, entre otros). Una vez finalizada la
+recolección, se implementaron procesos adicionales destinados a garantizar el ajuste
+geográfico y la completitud de la información obtenida en terreno.
+
+
+Cabe destacar que una de las principales innovaciones del Censo 2024 fue la incorporación
+de herramientas tecnológicas en todas las etapas del proceso. La priorización de la modalidad
+CAPI1 como principal modalidad de recolección, complementada por CAWI2 y PAPI3, junto con
+el uso de dispositivos móviles de captura (DMC) y la aplicación de estrategias operativas
+diferenciadas según las características del territorio, permitió resguardar la cobertura
+demográfica y territorial del operativo censal.
+
+
+Estas innovaciones también facilitaron la obtención de información con alta precisión
+geográfica, aunque implicaron un desafío en el ajuste de direcciones al integrar datos
+provenientes de distintas modalidades de recolección y estrategias operativas. Dicho desafío
+fue abordado en la etapa de procesamiento de datos y se detalla en esta Nota Técnica.
+
+
+
+1
+  CAPI: Computer – Assisted Personal Interviewing (Entrevista personal asistida por computadora).
+2
+  CAWI: Computer Assisted Web Interviewing (Entrevista web asistida por computadora).
+3
+  PAPI: Paper and Pencil Interviewing (Entrevista personal en papel y lápiz)
+                                                       1
+                                                                                      Nota técnica n°4
+
+
+      2. Proceso de ajuste territorial de direcciones
+      El proceso de ajuste territorial de direcciones se divide en tres etapas explicadas en la Figura
+      1: i) normalización de direcciones, ii) búsqueda en fuentes de referencia y iii) evaluación y
+      clasificación de direcciones para su asociación a coordenadas.
+
+
+                                Figura 1. Proceso de ajuste territorial de direcciones por etapa
+
+
+                                             Búsqueda                                       Evaluación
+Normaliza-
+                                             en fuentes                                       y clasifi-
+  ción de
+                                                 de          Procesos de                     cación de      Evaluación y
+direcciones   Estandarización de             referencia      Búsqueda Precisa y             direcciones     clasificación de
+              la estructura de
+                                                             Búsqueda Difusa                                hallazgos de
+              datos, ajustes y
+                                                             en fuentes de                                  búsqueda para
+              recuperación de
+                                                             referencia para la                             vinculación a
+              componentes de
+                                                             validación de                                  unidades
+              dirección.
+                                                             hallazgos.                                     geográficas.
+
+                                   Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+      Todo el proceso fue desarrollado y automatizado utilizando Python, y la ejecución de sus
+      etapas requirió la integración de diversas herramientas geoespaciales y de análisis de datos4.
+
+
+      2.1 Normalización de direcciones
+      El primer paso consistió en identificar las unidades con componentes de dirección
+      incompletos o poco precisos, para luego recuperar esa información desde otros campos del
+      cuestionario. Este procedimiento permitió asegurar que todas las unidades contaran con la
+      información necesaria para su correcta ubicación en la manzana correspondiente.
+
+
+      En esta etapa se corrigieron los nombres de vía que contenían caracteres especiales como
+      guiones medios, barras diagonales, entre otros, o que comenzaran con palabras con algún
+      término definido en un listado de exclusión5.
+
+
+      4
+        Se emplearon Sistemas de Información Geográfica (SIG) para la visualización, validación y verificación espacial
+      de direcciones. Además, las bibliotecas Geopandas y Pandas para el procesamiento masivo, la limpieza y la
+      integración de los datos territoriales. Para optimizar la eficiencia en la lectura, almacenamiento y manipulación de
+      grandes volúmenes de datos, los archivos se gestionaron y analizaron mediante el formato Parquet.
+      5
+        Este listado fue utilizado con el objetivo de eliminar registros de tipos de vía ingresados de manera errónea al
+      campo de nombre para evitar redundancias.
+                                                               2
+                                                                              Nota técnica n°4
+
+
+Adicionalmente, se implementaron procedimientos para completar o corregir la información
+de numeración o de otros atributos que no fueron registrados en el campo correspondiente
+durante la recolección, tales como:
+
+
+    •    Dirección secundaria. Se utilizó esta variable como fuente de información para
+         completar la numeración interior cuando estaba vacía o incompleta. Para ello se usó
+         la numeración y letra de la dirección secundaria. Tras una limpieza de caracteres en la
+         dirección secundaria se crearon variables auxiliares con elementos específicos como
+         block, torre, condominio, etc.
+
+    •    Numeración interior6. Para viviendas particulares de tipo casa o departamento se
+         implementó un proceso de búsqueda para recuperar numeraciones interiores
+         erróneamente registradas en el campo de descripción de la dirección secundaria. Se
+         utilizaron palabras clave, se aplicaron reglas para descartar resultados incorrectos y
+         se diferenciaron criterios de asignación según el tipo de vivienda.
+
+    •    Numeración exterior7. Se depuraron registros con abreviaturas o comentarios (“na”,
+         “sin número”) y se completaron con información ingresada erróneamente en otros
+         campos (nombre de vía, numeración interior). También se descartaron valores
+         improbables y se eliminó redundancias cuando la numeración aparecía registrada en
+         el nombre de la vía (ejemplo: “Calle larga 42”).
+
+Este proceso de normalización permitió armonizar la estructura de direcciones, recuperar
+componentes faltantes y establecer un estándar común en toda la base de datos censal. Con
+ello fue posible aplicar, en la etapa posterior, algoritmos de búsqueda precisa y difusa,
+optimizando la geolocalización de cada vivienda en su correspondiente manzana censal. A
+continuación, se describen ambos algoritmos de búsqueda.
+
+
+
+
+6
+  La numeración interior es uno de los componentes de una dirección y se usa para identificar unidades específicas
+dentro de un complejo donde existen múltiples unidades. Eso puede ocurrir en terrenos con varias edificaciones o
+en edificios con varios departamentos.
+7
+  La numeración exterior es uno de los componentes de una dirección y se usa para identificar la posición de un
+terreno dentro de una vía, ya sea que en ella exista una o varias edificaciones o que corresponda a un sitio sin
+edificación.
+                                                        3
+                                                                            Nota técnica n°4
+
+2.2 Búsqueda de direcciones en fuentes de referencia
+Esta etapa se dividió en dos procesos complementarios: Búsqueda Precisa (BP) y Búsqueda
+Difusa (BD). En estos procesos, los registros provenientes de la recolección fueron
+contrastados con distintas fuentes de direcciones georreferenciadas, con el objetivo de
+identificar coincidencias y corregir aquellos casos en que las direcciones estuvieran
+asociadas a ubicaciones incorrectas.
+
+
+Los siguientes métodos de búsqueda deben entenderse como complementarios, permitiendo
+con ello equilibrar la exactitud y la eficiencia en el proceso de georreferenciación.
+
+
+    a. Búsqueda precisa
+La Búsqueda Precisa (BP) corresponde al proceso de localizar las direcciones recolectadas
+contrastándolas con seis bases de datos externas de direcciones georreferenciadas. Para ello,
+se utilizan las variables comuna, nombre de vía, numeración (exterior e interior) con el fin de
+identificar la existencia de la dirección en dichas fuentes. Si la dirección es ubicada en alguna
+de las bases, el resultado obtenido es la asignación de las coordenadas (x,y) de cada fuente.
+Si la dirección no es identificada en ninguna de las fuentes, será parte del proceso de
+búsqueda difusa.
+
+
+Para ejecutar este procedimiento, las bases de datos externas fueron ordenadas
+jerárquicamente según su nivel de precisión y actualización, en el siguiente orden de
+priorización: Marco Georreferenciado de Edificaciones (MGE, 2020), la base de direcciones de
+la Actualización Precensal (APC, 2023), la Cartografía Digital del SII (SII, 2024), la base de la
+Superintendencia de Servicios Sanitarios (SISS, 2020), la base del Servicio Electoral (SERVEL,
+2022) y de OpenStreetMap (OSM, 2024).
+
+
+Una vez definida la jerarquía, los registros censales fueron vinculados con estas bases
+externas. Cada dirección fue clasificada según el nivel de coincidencia obtenido,
+diferenciando entre coincidencias exactas y coincidencias parciales8. En los casos en que una
+
+
+
+
+8
+ Las exactas corresponden a direcciones cuyas variables se encuentran completamente en la fuente de referencia,
+mientras que las parciales solo se encuentran algunas de ellas.
+                                                      4
+                                                                  Nota técnica n°4
+
+dirección aparecía con igual nivel de precisión en más de una fuente, se priorizó la información
+de la base con mayor jerarquía, asegurando así una correcta asignación territorial.
+
+
+b. Búsqueda difusa
+La Búsqueda Difusa (BD) de direcciones fue un proceso que se ejecutó de manera
+complementaria y en paralelo al de Búsqueda Precisa (BP). En este caso, se buscaban las
+direcciones registradas por las y los censistas utilizando el nombre de vía y la altura
+domiciliaria exclusivamente, evaluándolas en siete fuentes de referencia, incorporando una
+fuente adicional a las seis utilizadas en la BP: Superintendencia de Electricidad y Combustible
+(SEC, 2023), que registra la posición de los medidores.
+
+A diferencia de la BP, la BD tuvo como objetivo ubicar direcciones censales a partir de
+coincidencias aproximadas con las fuentes de referencia, vinculando el registro con una cara
+de manzana al encontrar coincidencia dentro de un rango y tipo de numeración par o impar.
+
+
+El contraste entre las fuentes se realizó utilizando un umbral de similitud igual o superior al
+80%. Una vez alcanzado este umbral, se verificó la paridad (numeración par o impar) y se
+comprobó que la numeración estuviera dentro de los rangos definidos por cada cara de
+manzana. Este procedimiento se ejecutó de forma secuencial y jerárquica, deteniendo el
+procesamiento en la primera fuente que presentara una coincidencia válida.
+
+
+Es decir, mientras que la BP requiere que la dirección registrada exista en al menos una fuente
+de referencia habiendo coincidencia en nombre de vía y numeración exterior para asignarle
+una coordenada exacta, la BD asocia la dirección a una cara de manzana que contiene el
+nombre de vía y un rango de numeración, sin que los componentes de nombre de vía y
+numeración deban coincidir entre las fuentes.
+
+
+3. Evaluación y clasificación de direcciones
+Tras la normalización y los procesos de búsquedas de direcciones, los registros censales de
+direcciones fueron sometidos a una evaluación mediante una matriz de coincidencias, la cual
+integró hasta cinco posibles fuentes de ubicación a nivel de manzana para cada dirección.
+
+
+
+
+                                                5
+                                                                               Nota técnica n°4
+
+       •   Manzana de asignación: corresponde a la manzana asignada a él o la censista para la
+           gestión de sus direcciones en terreno.
+       •   Manzana GPS: corresponde a la ubicación geográfica registrada automáticamente por
+           el DMC al momento de realizar una gestión, la cual se asocia directamente a una
+           manzana.
+       •   Manzana geográfica: corresponde a la ubicación definida manualmente por el o la
+           censista en el mapa interactivo del DMC, seleccionando en la pantalla el punto que
+           representa el lugar donde se efectuó la gestión.
+       •   Manzana de BP: corresponde a la manzana resultante del proceso de BP.
+       •   Manzana de BD: corresponde a la manzana resultante del proceso de BD.
+
+
+Para las direcciones que no pudieron ser ubicadas mediante los procesos automatizados de
+búsqueda, se realizó el proceso conocido como “búsqueda manual”, utilizando proveedores
+geográficos externos como Google Earth y OpenStreetMap. Esta revisión abordó registros que
+requerían un tratamiento diferenciado por haber sido recolectados en el marco de operativos
+especiales.
+
+
+En estos operativos especiales se utilizaron unidades geográficas particulares como
+manzanas de asignación para facilitar la gestión territorial y garantizar la cobertura territorial.
+Las unidades utilizadas fueron manzanas auxiliares, correspondientes a bandejones9, y
+contenedores comunales como contenedores temporales de asignación en operativos
+especiales.
+
+
+Al finalizar el proceso de ajuste territorial, aquellas direcciones que no pudieron ser ubicadas
+en una manzana (1%), quedaron alojadas en los contenedores comunales. Lo anterior
+permitió mantener la integridad de la estructura comunal.
+
+
+Estas medidas permitieron asegurar que todas las viviendas fueran asignadas a unidades
+geográficas válidas y consistentes, incluso en escenarios con particularidades operativas y/o
+con dificultades para su georreferenciación.
+
+
+
+9
+    Manzana o franja central que separa las calzadas de una vía, generalmente con áreas verdes o pavimento.
+                                                         6
+                                                                         Nota técnica n°4
+
+
+
+4. Resultados
+Como resultado del proceso de ajuste territorial el 99,1% de las direcciones fueron vinculadas
+a una manzana. El uso de la matriz de coincidencias y el proceso manual definieron la
+manzana definitiva de ubicación para el 99,1% de los registros. Este procedimiento aseguró
+una asignación confiable, incluso en los casos en que la información censal de origen era
+parcial o presentaba inconsistencias.
+
+
+Cabe destacar que el 85,8% de las direcciones se mantuvo en la manzana originalmente
+asignada y registrada por las y los censistas, el 9,4% fue asignada a las manzanas de BP, BD,
+GPS o geográfica, y el 3,9% fue asignada mediante un proceso manual.
+
+                                          Tabla 1. Resultados
+
+                                            MANZANA
+                                                                                       No
+                REGIÓN                            Fuentes              Ubicado
+                                  M.A.a                                             ubicado
+                                             Matriz b  Manual c
+           Arica y Parinacota      81,2        9,4         8             98,6          1,5
+               Tarapacá            73,7        5,9       18,8            98,4          1,6
+              Antofagasta          79,0       11,3        8,1            98,4          1,7
+                Atacama            82,3        6,2       10,4            98,9          1,2
+               Coquimbo            87,8        8,9        2,3             99           1,1
+               Valparaíso          82,1        9,9        6,9            98,9          1,1
+             Metropolitana         84,7       11,4        2,9             99           1,0
+               O'Higgins           91,2        6,7        1,6            99,6          0,4
+                 Maule             86,9       11,2        1,1            99,2          0,7
+                 Ñuble             93,5        4,7        1,1            99,3          0,6
+                 Biobío            87,2        8,1        4,3            99,6          0,4
+               Araucanía           91,4        6,0        1,9            99,3          0,6
+                Los Ríos           91,0        5,5        2,5             99           1,0
+               Los Lagos           88,1        6,4        3,7            98,2          1,9
+                 Aysén             87,9        7,1        3,2            98,2          1,8
+              Magallanes           88,4        9,1        1,5             99           1,1
+               Nacional            85,8       9,4         3,9            99,1          1,0
+            a
+             Corresponde a manzana de asignación.
+            b
+              Corresponde a manzanas BP, BD, GPS y Geográfica.
+            c
+              Para este proceso se utilizaron proveedores geográficos externos como GeoPy y Google Earth.
+             Nota: dado la aproximación de los valores a un decimal estos pueden no sumar 100%.
+
+                         Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+
+                                                    7
+

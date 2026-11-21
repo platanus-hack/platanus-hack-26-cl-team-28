@@ -1,0 +1,419 @@
+codigo,nivel,nombre
+1,region,Tarapacá
+2,region,Antofagasta
+3,region,Atacama
+4,region,Coquimbo
+5,region,Valparaíso
+6,region,Libertador General Bernardo O'Higgins
+7,region,Maule
+8,region,Biobío
+9,region,La Araucanía
+10,region,Los Lagos
+11,region,Aysén del General Carlos Ibáñez del Campo
+12,region,Magallanes y de la Antártica Chilena
+13,region,Metropolitana de Santiago
+14,region,Los Ríos
+15,region,Arica y Parinacota
+16,region,Ñuble
+11,provincia,Iquique
+14,provincia,Del Tamarugal
+21,provincia,Antofagasta
+22,provincia,El Loa
+23,provincia,Tocopilla
+31,provincia,Copiapó
+32,provincia,Chañaral
+33,provincia,Huasco
+41,provincia,Elqui
+42,provincia,Choapa
+43,provincia,Limarí
+51,provincia,Valparaíso
+52,provincia,Isla de Pascua
+53,provincia,Los Andes
+54,provincia,Petorca
+55,provincia,Quillota
+56,provincia,San Antonio
+57,provincia,San Felipe de Aconcagua
+58,provincia,Marga Marga
+61,provincia,Cachapoal
+62,provincia,Cardenal Caro
+63,provincia,Colchagua
+71,provincia,Talca
+72,provincia,Cauquenes
+73,provincia,Curicó
+74,provincia,Linares
+81,provincia,Concepción
+82,provincia,Arauco
+83,provincia,Biobío
+91,provincia,Cautín
+92,provincia,Malleco
+101,provincia,Llanquihue
+102,provincia,Chiloé
+103,provincia,Osorno
+104,provincia,Palena
+111,provincia,Coyhaique
+112,provincia,Aysén
+113,provincia,Capitán Prat
+114,provincia,General Carrera
+121,provincia,Magallanes
+122,provincia,Antártica Chilena
+123,provincia,Tierra del Fuego
+124,provincia,Última Esperanza
+131,provincia,Santiago
+132,provincia,Cordillera
+133,provincia,Chacabuco
+134,provincia,Maipo
+135,provincia,Melipilla
+136,provincia,Talagante
+141,provincia,Valdivia
+142,provincia,Ranco
+151,provincia,Arica
+152,provincia,Parinacota
+161,provincia,Diguillín
+162,provincia,Itata
+163,provincia,Punilla
+1101,comuna,Iquique
+1107,comuna,Alto Hospicio
+1401,comuna,Pozo Almonte
+1402,comuna,Camiña
+1403,comuna,Colchane
+1404,comuna,Huara
+1405,comuna,Pica
+2101,comuna,Antofagasta
+2102,comuna,Mejillones
+2103,comuna,Sierra Gorda
+2104,comuna,Taltal
+2201,comuna,Calama
+2202,comuna,Ollagüe
+2203,comuna,San Pedro de Atacama
+2301,comuna,Tocopilla
+2302,comuna,María Elena
+3101,comuna,Copiapó
+3102,comuna,Caldera
+3103,comuna,Tierra Amarilla
+3201,comuna,Chañaral
+3202,comuna,Diego de Almagro
+3301,comuna,Vallenar
+3302,comuna,Alto del Carmen
+3303,comuna,Freirina
+3304,comuna,Huasco
+4101,comuna,La Serena
+4102,comuna,Coquimbo
+4103,comuna,Andacollo
+4104,comuna,La Higuera
+4105,comuna,Paihuano
+4106,comuna,Vicuña
+4201,comuna,Illapel
+4202,comuna,Canela
+4203,comuna,Los Vilos
+4204,comuna,Salamanca
+4301,comuna,Ovalle
+4302,comuna,Combarbalá
+4303,comuna,Monte Patria
+4304,comuna,Punitaqui
+4305,comuna,Río Hurtado
+5101,comuna,Valparaíso
+5102,comuna,Casablanca
+5103,comuna,Concón
+5104,comuna,Juan Fernández
+5105,comuna,Puchuncaví
+5107,comuna,Quintero
+5109,comuna,Viña del Mar
+5201,comuna,Isla de Pascua
+5301,comuna,Los Andes
+5302,comuna,Calle Larga
+5303,comuna,Rinconada
+5304,comuna,San Esteban
+5401,comuna,La Ligua
+5402,comuna,Cabildo
+5403,comuna,Papudo
+5404,comuna,Petorca
+5405,comuna,Zapallar
+5501,comuna,Quillota
+5502,comuna,Calera
+5503,comuna,Hijuelas
+5504,comuna,La Cruz
+5506,comuna,Nogales
+5601,comuna,San Antonio
+5602,comuna,Algarrobo
+5603,comuna,Cartagena
+5604,comuna,El Quisco
+5605,comuna,El Tabo
+5606,comuna,Santo Domingo
+5701,comuna,San Felipe
+5702,comuna,Catemu
+5703,comuna,Llaillay
+5704,comuna,Panquehue
+5705,comuna,Putaendo
+5706,comuna,Santa María
+5801,comuna,Quilpué
+5802,comuna,Limache
+5803,comuna,Olmué
+5804,comuna,Villa Alemana
+6101,comuna,Rancagua
+6102,comuna,Codegua
+6103,comuna,Coinco
+6104,comuna,Coltauco
+6105,comuna,Doñihue
+6106,comuna,Graneros
+6107,comuna,Las Cabras
+6108,comuna,Machalí
+6109,comuna,Malloa
+6110,comuna,Mostazal
+6111,comuna,Olivar
+6112,comuna,Peumo
+6113,comuna,Pichidegua
+6114,comuna,Quinta de Tilcoco
+6115,comuna,Rengo
+6116,comuna,Requínoa
+6117,comuna,San Vicente
+6201,comuna,Pichilemu
+6202,comuna,La Estrella
+6203,comuna,Litueche
+6204,comuna,Marchihue
+6205,comuna,Navidad
+6206,comuna,Paredones
+6301,comuna,San Fernando
+6302,comuna,Chépica
+6303,comuna,Chimbarongo
+6304,comuna,Lolol
+6305,comuna,Nancagua
+6306,comuna,Palmilla
+6307,comuna,Peralillo
+6308,comuna,Placilla
+6309,comuna,Pumanque
+6310,comuna,Santa Cruz
+7101,comuna,Talca
+7102,comuna,Constitución
+7103,comuna,Curepto
+7104,comuna,Empedrado
+7105,comuna,Maule
+7106,comuna,Pelarco
+7107,comuna,Pencahue
+7108,comuna,Río Claro
+7109,comuna,San Clemente
+7110,comuna,San Rafael
+7201,comuna,Cauquenes
+7202,comuna,Chanco
+7203,comuna,Pelluhue
+7301,comuna,Curicó
+7302,comuna,Hualañé
+7303,comuna,Licantén
+7304,comuna,Molina
+7305,comuna,Rauco
+7306,comuna,Romeral
+7307,comuna,Sagrada Familia
+7308,comuna,Teno
+7309,comuna,Vichuquén
+7401,comuna,Linares
+7402,comuna,Colbún
+7403,comuna,Longaví
+7404,comuna,Parral
+7405,comuna,Retiro
+7406,comuna,San Javier
+7407,comuna,Villa Alegre
+7408,comuna,Yerbas Buenas
+8101,comuna,Concepción
+8102,comuna,Coronel
+8103,comuna,Chiguayante
+8104,comuna,Florida
+8105,comuna,Hualqui
+8106,comuna,Lota
+8107,comuna,Penco
+8108,comuna,San Pedro de La paz
+8109,comuna,Santa Juana
+8110,comuna,Talcahuano
+8111,comuna,Tomé
+8112,comuna,Hualpén
+8201,comuna,Lebu
+8202,comuna,Arauco
+8203,comuna,Cañete
+8204,comuna,Contulmo
+8205,comuna,Curanilahue
+8206,comuna,Los Álamos
+8207,comuna,Tirúa
+8301,comuna,Los Ángeles
+8302,comuna,Antuco
+8303,comuna,Cabrero
+8304,comuna,Laja
+8305,comuna,Mulchén
+8306,comuna,Nacimiento
+8307,comuna,Negrete
+8308,comuna,Quilaco
+8309,comuna,Quilleco
+8310,comuna,San Rosendo
+8311,comuna,Santa Bárbara
+8312,comuna,Tucapel
+8313,comuna,Yumbel
+8314,comuna,Alto Biobío
+9101,comuna,Temuco
+9102,comuna,Carahue
+9103,comuna,Cunco
+9104,comuna,Curarrehue
+9105,comuna,Freire
+9106,comuna,Galvarino
+9107,comuna,Gorbea
+9108,comuna,Lautaro
+9109,comuna,Loncoche
+9110,comuna,Melipeuco
+9111,comuna,Nueva Imperial
+9112,comuna,Padre Las Casas
+9113,comuna,Perquenco
+9114,comuna,Pitrufquén
+9115,comuna,Pucón
+9116,comuna,Saavedra
+9117,comuna,Teodoro Schmidt
+9118,comuna,Toltén
+9119,comuna,Vilcún
+9120,comuna,Villarrica
+9121,comuna,Cholchol
+9201,comuna,Angol
+9202,comuna,Collipulli
+9203,comuna,Curacautín
+9204,comuna,Ercilla
+9205,comuna,Lonquimay
+9206,comuna,Los Sauces
+9207,comuna,Lumaco
+9208,comuna,Purén
+9209,comuna,Renaico
+9210,comuna,Traiguén
+9211,comuna,Victoria
+10101,comuna,Puerto Montt
+10102,comuna,Calbuco
+10103,comuna,Cochamó
+10104,comuna,Fresia
+10105,comuna,Frutillar
+10106,comuna,Los Muermos
+10107,comuna,Llanquihue
+10108,comuna,Maullín
+10109,comuna,Puerto Varas
+10201,comuna,Castro
+10202,comuna,Ancud
+10203,comuna,Chonchi
+10204,comuna,Curaco de Vélez
+10205,comuna,Dalcahue
+10206,comuna,Puqueldón
+10207,comuna,Queilén
+10208,comuna,Quellón
+10209,comuna,Quemchi
+10210,comuna,Quinchao
+10301,comuna,Osorno
+10302,comuna,Puerto Octay
+10303,comuna,Purranque
+10304,comuna,Puyehue
+10305,comuna,Río Negro
+10306,comuna,San Juan de la Costa
+10307,comuna,San Pablo
+10401,comuna,Chaitén
+10402,comuna,Futaleufú
+10403,comuna,Hualaihué
+10404,comuna,Palena
+11101,comuna,Coyhaique
+11102,comuna,Lago Verde
+11201,comuna,Aysén
+11202,comuna,Cisnes
+11203,comuna,Guaitecas
+11301,comuna,Cochrane
+11302,comuna,O'Higgins
+11303,comuna,Tortel
+11401,comuna,Chile Chico
+11402,comuna,Río Ibáñez
+12101,comuna,Punta Arenas
+12102,comuna,Laguna Blanca
+12103,comuna,Río Verde
+12104,comuna,San Gregorio
+12201,comuna,Cabo de Hornos
+12202,comuna,Antártica
+12301,comuna,Porvenir
+12302,comuna,Primavera
+12303,comuna,Timaukel
+12401,comuna,Natales
+12402,comuna,Torres del Paine
+13101,comuna,Santiago
+13102,comuna,Cerrillos
+13103,comuna,Cerro Navia
+13104,comuna,Conchalí
+13105,comuna,El Bosque
+13106,comuna,Estación Central
+13107,comuna,Huechuraba
+13108,comuna,Independencia
+13109,comuna,La Cisterna
+13110,comuna,La Florida
+13111,comuna,La Granja
+13112,comuna,La Pintana
+13113,comuna,La Reina
+13114,comuna,Las Condes
+13115,comuna,Lo Barnechea
+13116,comuna,Lo Espejo
+13117,comuna,Lo Prado
+13118,comuna,Macul
+13119,comuna,Maipú
+13120,comuna,Ñuñoa
+13121,comuna,Pedro Aguirre Cerda
+13122,comuna,Peñalolén
+13123,comuna,Providencia
+13124,comuna,Pudahuel
+13125,comuna,Quilicura
+13126,comuna,Quinta Normal
+13127,comuna,Recoleta
+13128,comuna,Renca
+13129,comuna,San Joaquín
+13130,comuna,San Miguel
+13131,comuna,San Ramón
+13132,comuna,Vitacura
+13201,comuna,Puente Alto
+13202,comuna,Pirque
+13203,comuna,San José de Maipo
+13301,comuna,Colina
+13302,comuna,Lampa
+13303,comuna,Tiltil
+13401,comuna,San Bernardo
+13402,comuna,Buin
+13403,comuna,Calera de Tango
+13404,comuna,Paine
+13501,comuna,Melipilla
+13502,comuna,Alhué
+13503,comuna,Curacaví
+13504,comuna,María Pinto
+13505,comuna,San Pedro
+13601,comuna,Talagante
+13602,comuna,El Monte
+13603,comuna,Isla de Maipo
+13604,comuna,Padre Hurtado
+13605,comuna,Peñaflor
+14101,comuna,Valdivia
+14102,comuna,Corral
+14103,comuna,Lanco
+14104,comuna,Los Lagos
+14105,comuna,Máfil
+14106,comuna,Mariquina
+14107,comuna,Paillaco
+14108,comuna,Panguipulli
+14201,comuna,La Unión
+14202,comuna,Futrono
+14203,comuna,Lago Ranco
+14204,comuna,Río Bueno
+15101,comuna,Arica
+15102,comuna,Camarones
+15201,comuna,Putre
+15202,comuna,General Lagos
+16101,comuna,Chillán
+16102,comuna,Bulnes
+16103,comuna,Chillán Viejo
+16104,comuna,El Carmen
+16105,comuna,Pemuco
+16106,comuna,Pinto
+16107,comuna,Quillón
+16108,comuna,San Ignacio
+16109,comuna,Yungay
+16201,comuna,Quirihue
+16202,comuna,Cobquecura
+16203,comuna,Coelemu
+16204,comuna,Ninhue
+16205,comuna,Portezuelo
+16206,comuna,Ránquil
+16207,comuna,Trehuaco
+16301,comuna,San Carlos
+16302,comuna,Coihueco
+16303,comuna,Ñiquén
+16304,comuna,San Fabián
+16305,comuna,San Nicolás

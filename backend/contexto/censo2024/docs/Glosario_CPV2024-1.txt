@@ -1,0 +1,216 @@
+                                      Glosario: conceptos generales
+
+
+1. TÉRMINOS GENERALES
+
+Censo de derecho      • Contabiliza a las personas en el lugar donde residen habitualmente. El proce-
+                        so de recolección de datos puede tomar varias semanas.
+                      • Esta fue la modalidad del Censo 2024.
+
+Censo de hecho        • Contabiliza a las personas en el lugar que pasaron la noche anterior al censo,
+                        sean o no residentes habituales de esa vivienda. Se realizan en un periodo
+                        corto de tiempo, por lo general un día.
+
+Población residente   • Personas que han vivido dentro del territorio nacional la mayor parte de los
+habitual                últimos 12 meses (es decir, 6 meses y 1 día) antes del momento censal, o que,
+                        viviendo menos tiempo, tienen la intención de seguir viviendo en el país.
+
+Población no          • Personas que se encuentran en el país de manera temporal, como turistas,
+residente               trabajadores transitorios o quienes cruzan la frontera diariamente hacia Chile,
+                        pero residen habitualmente en otro país.
+                      • También incluye a quienes permanecen en Chile por un período menor a 6
+                        meses sin intención de establecerse de manera permanente.
+                      • Estas personas no fueron contabilizadas en el censo.
+
+Vivienda              • Una vivienda es toda edificación construida, convertida o dispuesta para el
+                        alojamiento permanente o temporal de personas, así como cualquier clase de
+                        albergue, fijo o móvil, ocupado como lugar de residencia.
+                      • Existen dos tipos de vivienda: particular y colectiva.
+
+Vivienda particular   • Una vivienda particular es toda construcción estructuralmente separada e in-
+                        dependiente ubicada dentro de un sitio, la cual se encuentra destinada, total
+                        o parcialmente, para el alojamiento de personas y hogares.
+
+Vivienda colectiva    • Una vivienda colectiva es aquella que ha sido construida y destinada al aloja-
+                        miento de personas, los que por diversas razones hacen vida en común, ya sea
+                        por trabajo, estudios u otro.
+
+Personas en           • Son aquellas personas que carecen de residencia fija y que pernoctan en lu-
+situación de calle      gares públicos o privados, que no tienen las características básicas de una
+                        vivienda, aunque cumplan esa función. También pueden encontrar residen-
+                        cia nocturna en alojamientos dirigidos por entidades públicas o privadas que
+                        funcionan como hospederías (pagando o no por este servicio) y que brindan
+                        albergue temporal.
+
+Hogar                 • Un hogar está conformado por una o más personas, que residen en una mis-
+                        ma vivienda o parte de ella y se benefician de un mismo presupuesto para
+                        alimentación. Las personas que conforman un hogar pueden tener vínculos
+                        familiares o no.
+                                                    Glosario: conceptos generales
+
+
+ 2. INDICADORES PRINCIPALES1
+
+
+ Vivienda censada                 • Corresponden a aquellas viviendas, particulares o colectivas, que fueron con-
+                                    tabilizadas durante el proceso de recolección censal.
+
+
+ Vivienda particular              • Corresponden a aquellas viviendas particulares en las que viven personas de
+ ocupada                            manera habitual y fueron contabilizadas durante el proceso de recolección
+                                    oficial de datos.
+                                  • Al momento de la visita puede que estas personas se hayan encontrado o no
+                                    presentes.
+
+ Vivienda particular              • Corresponden a aquellas viviendas particulares en las que no residen habi-
+ desocupada                         tualmente personas en el momento censal.
+                                  • Estas viviendas pueden encontrarse en venta, arriendo, ser viviendas de tem-
+                                    porada (vacacionales) o estar abandonadas.
+
+
+ Población censada                • Corresponde al total de personas contabilizadas y caracterizadas socio-demo-
+                                    gráficamente en el proceso de recolección censal.
+
+
+ Sexo                             • Refiere al atributo declarado por la persona informante en el cuestionario
+                                    censal.
+                                  • Sus categorías son “hombre” y “mujer”.
+
+ Razón
+                                  • Cantidad de hombres por cada 100 mujeres.
+ hombre-mujer
+
+ Edad                             • Refiere al tiempo completo de la vida de una persona, desde el momento de
+                                    su nacimiento hasta el momento de contestar el cuestionario.
+
+
+ Índice de
+ envejecimiento                   • Es un indicador demográfico que mide el grado de envejecimiento de una
+                                    población, al comparar la cantidad de personas mayores con la cantidad de
+                                    población joven.
+                                  • Se obtiene dividiendo el número total de personas de 65 años o más con el
+                                    número total de personas menores de 15 años y multiplicando el resultado
+                                    por 100.
+                                  • Esto permite conocer cuántas personas mayores hay por cada 100 personas
+                                    de 14 años o menos.
+
+
+
+
+1 Para más detalle de los indicadores se sugiere revisar el Anexo 1.
+                                     Glosario: conceptos generales
+
+
+2. INDICADORES PRINCIPALES1
+
+
+Pirámide de la       • Representación gráfica de la estructura de la población en un momento de-
+población              terminado, según edad y sexo.
+                     • El eje horizontal de una pirámide puede presentar los valores absolutos o las
+                       proporciones de la población, mientras que el eje vertical presenta las edades
+                       de la población por quinquenios (tramos de 5 años) o edades simples.
+
+
+
+Hogares censados     • Corresponde al total de hogares contabilizados y caracterizados socio-demo-
+                       gráficamente en el proceso de recolección censal.
+
+
+Promedio de          • Este indicador permite conocer el tamaño promedio de los hogares.
+personas por hogar   • Se calcula dividiendo el total de personas en hogares por el número total de
+                       hogares.
+
+Tasa de respuesta    • Permite medir el porcentaje de entrevistas con información suficiente respec-
+                       to del total de viviendas particulares ocupadas censadas.
+                     • Corresponde al número de viviendas particulares ocupadas con cuestionarios
+                       completos y parciales dividido por el total de viviendas particulares ocupadas.
+
+Tasa de rechazo      • Se obtiene dividiendo el número de viviendas particulares ocupadas en las
+                       que la persona informante se negó a ser entrevistada por el total de viviendas
+                       particulares ocupadas.
+
+
+
+
+3. ESTIMACIÓN Y PROYECCIONES DE POBLACIÓN
+
+
+Estimación y         • Refiere al resultado de modelos demográficos sobre la evolución de una po-
+proyección de          blación (tamaño y estructura), considerando supuestos respecto a cambios
+población              en la fecundidad, la mortalidad y la migración (inmigración y emigración).
+                     • Estas estimaciones permiten conocer cómo cambiará la población en térmi-
+                       nos de tamaño, estructura por edad y sexo, así como su distribución geográ-
+                       fica en el tiempo.
+                     • Los datos del censo son uno de los insumos que se utilizan para actualizar las
+                       estimaciones y proyecciones, siendo este uno de sus objetivos.
+                     • Una estimación de población refiere a un cálculo que se realiza sobre el tama-
+                       ño de la población y su distribución por sexo y edad, en un momento pasado
+                       o presente. En cambio, una proyección de población es un cálculo orientado
+                       al futuro.
+                                            Glosario: conceptos generales
+
+
+4. ANEXO 1
+
+                                        Indicadores de población
+
+
+ Población censada                                                                   Estructura de
+    (operativo y                  Hombres                    Mujeres              población por edad y
+    modalidad)                                                                            sexo
+
+ Número de personas          Número de hombres          Número de mujeres
+     censadas con                censados con               censadas con
+                                                                                  Pirámide de población
+residencia habitual en      residencia habitual en     residencia habitual en
+        el país                     el país                    el país
+
+
+  Distribución por                                       Razón hombre -                 Índice de
+                                    Edad
+  grupos de edad                                             mujer                   envejecimiento
+
+                                                                                  Razón personas de 65
+   Porcentaje de
+                                                            Índice de             o más años respecto
+  población según            Promedio de edad
+                                                           masculinidad            a personas de 14 o
+    grupo etario
+                                                                                      menos años
+
+
+                                Indicadores de viviendas y hogares
+
+
+                          Viviendas            Viviendas
+   Viviendas                                                         Viviendas
+                         particulares         particulares                            Hogares censados
+   censadas                                                          colectivas
+                          ocupadas            desocupadas
+
+
+  Número de              Número de             Número de
+                                                                    Número de
+   viviendas              viviendas             viviendas                                Número de
+                                                                     viviendas
+ particulares y          particulares         particulades                                hogares
+                                                                    colectivas
+  colectivas              ocupadas            desocupadas
+
+
+
+
+  Hogares por            Personas por          Hogares             Hogares con           Hogares de
+   vivienda                 hogar            unipersonales            niños           personas mayores
+
+
+                                                                                          Porcentaje
+                                                                   Porcentaje de
+  Promedio de            Promedio de            Número de                                 de hogares
+                                                                  hogares donde
+  hogares por            personas por        hogares con un                           conformados solo
+                                                                 residen personas
+    vivienda                hogar           residente habitual                        por personas de 65
+                                                                 entre 0 y 14 años
+                                                                                          o más años
+

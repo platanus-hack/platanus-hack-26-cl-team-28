@@ -1,0 +1,384 @@
+                                                                                    Nota técnica n°5
+
+PROCESO DE INDETERMINACIÓN GEOGRÁFICA
+
+
+1. Antecedentes
+En los productos de difusión del Censo de Población y Vivienda 2024, al igual que en todos los
+productos estadísticos elaborados por el Instituto Nacional de Estadísticas (INE), se aplican
+procedimientos destinados a resguardar la confidencialidad de la información. En este
+contexto, toda la información censal, incluida la de carácter geográfico, se difunde con un
+nivel de agregación que impide la identificación directa o indirecta de personas, hogares y
+viviendas. Para tal efecto, la información geográfica se publica de manera indeterminada en
+aquellas unidades territoriales que, debido a su tamaño o composición, presentan riesgos de
+identificación.
+
+
+La indeterminación geográfica consiste en la agrupación de datos espaciales, iniciando por
+las unidades territoriales de menor tamaño —como entidades de población rural, manzanas
+urbanas o aldeas— y avanzando progresivamente hacia niveles superiores de la división
+político-administrativa y censal, con el propósito de resguardar la confidencialidad en
+unidades que presentan riesgo de identificación. El procedimiento contempla la identificación
+de aquellas unidades geográficas censales que registran entre una y tres viviendas
+particulares ocupadas con moradores presentes (VPOMP), las cuales son agrupadas con
+unidades cercanas pertenecientes al mismo estrato censal 1. Esta agrupación se implementa
+tanto en la dimensión geográfica, mediante la fusión de geometrías, como en la dimensión
+estadística, a través de la recodificación y consolidación de atributos en la base de datos.
+
+
+La Base Cartográfica Censal disponible en el sitio web del Censo de Población y Vivienda 2024
+(https://censo2024.ine.gob.cl/resultados/) fue sometida al proceso de indeterminación,
+según lo explicado en esta Nota Técnica.
+
+
+
+
+1 Clasificación geográfica utilizada para el Censo de Población y Vivienda 2024 que distingue entre áreas urbanas,
+
+subdivididas en manzanas, y dos tipos de área rural: el área rural concentrada o "aldea", también subdividida en manzanas,
+y el área rural dispersa, subdividida en entidades.
+                                                            1
+               2. Metodología de indeterminación geográfica
+               El proceso de indeterminación geográfica se ejecutó siguiendo un flujo de trabajo organizado
+               en cuatro fases: (i) identificación de unidades geográficas a indeterminar, (ii) procesamiento
+               por estratos e indeterminación, (iii) validación y consistencia territorial, y (iv) recodificación de
+               manzanas y entidades indeterminadas.
+
+
+                                                  Figura 1. Proceso de indeterminación geográfica
+
+ Identifica-                                                                                                             Recodifi-
+                                          Procesa-
+   ción de                                                                                                               cación de
+                                        miento por                              Validación y
+  unidades                                                                                                              manzanas y
+                                         estratos e                             consistencia                                         Normalizar las
+geográficas     Detectar las unidades                 Ejecutar la                                                        entidades
+                                        indetermi-                               territorial                                         codificaciones de las
+a indetermi-    que requeren                          indeterminación de                       Garantizar la calidad    indetermi-
+                                           nación                                                                                    unidades para
+     nar        indeterminación.                      forma independiente                      de los resultados y la      nadas
+                                                                                                                                     garantizar la
+                Preprar los datos de                  para cada tipo de                        coherencia geográfica
+                                                                                                                                     continuidad en las
+                proximidad                            zona
+                                                                                                                                     secuencias numéricas
+
+
+                                              Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+               2.1.       Identificación de unidades geográficas a indeterminar
+               2.1.1. Identificación de manzanas y entidades
+               Las manzanas y entidades que requieren ser sometidas a indeterminadas son aquellas que
+               registran tres o menos viviendas particulares ocupadas con morador presente (VPOMP). A
+               nivel nacional, estas corresponden a 10.229 (4,3%) manzanas y 12.853 (32,1%) entidades.
+
+
+               Una vez identificadas, dichas unidades son evaluadas en relación con otras unidades
+               ubicadas dentro del mismo nivel geográfico (zona censal o localidad), priorizando aquellas
+               pertenecientes al mismo estrato (urbano, rural o aldea) que presenten el menor número de
+               VPOMP distinto de cero entre las opciones disponibles. En aquellos casos en que la unidad a
+               indeterminar no dispone de candidatos válidos dentro de su mismo nivel geográfico, el
+               proceso de agrupamiento se realiza con unidades pertenecientes a un nivel geográfico
+               superior.
+
+
+
+
+                                                                            2
+2.1.2. Gestión de las relaciones de proximidad
+Para garantizar la consistencia geográfica y reducir el impacto en la caracterización de las
+unidades territoriales, se incorporaron criterios de cercanía y vecindad al proceso de
+indeterminación, con el fin de establecer un mecanismo de priorización que permita
+seleccionar el candidato más idóneo para la agrupación.
+
+
+Con el objetivo de gestionar adecuadamente las relaciones de vecindad y proximidad entre las
+unidades a indeterminar, se elaboraron tablas de cercanía para cada uno de los estratos
+(urbano, rural y aldea). Esta segmentación asegura que no se generen agrupaciones entre
+unidades censales de distintos estratos, impidiendo explícitamente la unión de una manzana
+urbana con una entidad rural vecina.
+
+
+Las tablas de proximidad se construyeron en un sistema de información geográfica (SIG),
+evaluando las manzanas aldea y urbanas, así como las entidades rurales presentes en la base
+de datos censal sin indeterminar, con el objetivo de identificar hasta diez candidatos
+potenciales (Kn = 10) para cada unidad geográfica. Este proceso considera distancias
+diferenciadas según el estrato: para las manzanas aldea y urbanas se aplica un umbral de 15
+metros, mientras que para las entidades rurales se utiliza una distancia de 0 metros (vecindad
+directa2), en atención a sus características de continuidad espacial.
+
+
+2.2. Procesamiento por estratos
+La ejecución del procesamiento para la indeterminación se sustenta en algoritmos
+programados       en    Python3,    los    cuales    implementan        procedimientos       secuenciales
+automatizados que abordan cada estrato de forma independiente. El flujo considera etapas
+de búsqueda, evaluación, asignación y validación en los distintos niveles geográficos,
+incorporando controles en cada fase.
+
+
+El procesamiento de la indeterminación por estratos sigue una secuencia de cinco pasos en
+su ejecución, aplicada de manera iterativa (véase Figura 2). Este flujo se inicia con la
+
+2
+ Entendida como la relación entre polígonos que comparten bordes y/o vértices, sin separación geométrica.
+3
+ La programación fue realizada principalmente en Python 2.7.5 dada su compatibilidad con la plataforma ArcGis
+10.7 mediante el uso de geoprocesos de la librería arcpy además las librerías nativas propias del lenguaje.
+                                                     3
+identificación de manzanas o entidades a indeterminar, es decir, aquellas con VPOMP ≤ 3.
+Luego continúa con la agrupación con la unidad vecina que presenta la menor cantidad de
+VPOMP y prosigue con la validar que la agrupación resultante contenga VPOMP ≥ 4.
+Posteriormente, se asigna una nueva codificación para la manzana creada y, finalmente, se
+actualizan sus atributos.
+
+
+                               Figura 2. Pasos de ejecución de la indeterminación geográfica
+
+     Identi-                    Agru-
+                                                           Valida-                    Codifi-                    Actua-
+    ficación                    pación
+                                          Con la            ción         Cada         cación                    lización
+    de casos                    inicial                                                         Asignación de
+               Manzanas o                 manzana o                      agrupación                                        Actualización
+                                                                                                códigos 900+
+               entidades con              entidad vecina                 resultante                                        de campos
+                                                                                                (intra) o
+               VPOMP ≤ 3                  de menor                       debe tener                                        con atributos
+                                                                                                800+(inter)
+                                          VPOMP                          VPOMP ≥ 4
+
+                                  Fuente: Instituto Nacional de Estadísticas - Censo 2024
+
+
+
+2.2.1. Estrato urbano
+El procesamiento de las manzanas urbanas se organiza en dos niveles. La indeterminación se
+inicia al interior de cada zona censal (intra zona censal), priorizando la búsqueda de
+soluciones dentro de la misma unidad geográfica. En aquellos casos que no se resuelven en
+esta etapa, se evalúan candidatos ubicados en zonas censales contiguas (inter zona censal).
+
+
+•     Indeterminación intra zona censal: para cada manzana con VPOMP≤ 3, se buscan
+      vecinos dentro de la misma zona censal, aplicando un algoritmo que se basa en tres
+      aspectos: (i) agrupar VPOMP≤3 entre sí, sumando VPOMP ≥ 4; (ii) agrupar con el vecino que
+      contenga la menor cantidad de VPOMP, sumando VPOMP ≥ 4; o (iii) integrar con un nuevo
+      grupo cercano, es decir, una agrupación conformada en la misma zona censal durante el
+      procesamiento de la indeterminación. Cada agrupación resultante recibe un código
+      provisional (900, 901, etc.) en el campo N_MZ_INDET4 y un nuevo geocódigo
+      MANZENT_INDET. Las manzanas que no logran agruparse dentro de su zona censal se
+      codifican como 999.
+      Finalmente, se genera una nueva tabla de proximidad que incorpora las agrupaciones
+      realizadas, tratándolas como unidades consolidadas. Esto garantiza que, en las siguientes
+
+4
+ N_MZ_INDET corresponde a una variable creada para identificar las manzanas que cumplen con los criterios
+definidos para aplicar la indeterminación. Con este campo mantiene la trazabilidad entre el valor original y el código
+asignado de manera provisoria (es decir, anterior a la codificación final).
+                                                                     4
+    fases de procesamiento, el algoritmo reconozca estas nuevas unidades y no pierda
+    candidatos válidos para agrupación debido a los cambios en la configuración territorial
+    derivados de las fusiones de manzanas.
+
+
+•   Indeterminación inter zona censal: en esta etapa se realiza un inventario de las
+    manzanas no resueltas en el procesamiento intrazona censal (codificadas con 999) y de
+    las manzanas candidatas válidas que se encuentran en zonas censales vecinas.
+    Posteriormente se aplica un nuevo algoritmo de agrupación, que identifica cuatro
+    tipologías, según los tres aspectos mencionados en el punto anterior. Como resultado, se
+    obtienen las nuevas agrupaciones, y en herencia, se transfirieren atributos geográficos
+    (N_MZ_INDET, DC_INDET, ZC_INDET) de una unidad a otra.            Una vez terminada la
+    asignación de nuevos códigos y la transferencia, se realiza la actualización de los campos
+    según la estrategia definida y el recalculo del código para el campo MANZENT_INDET.
+
+
+2.2.2. Estrato rural
+El tratamiento de entidades rurales sigue un procedimiento similar al implementado en el
+estrato urbano. La indeterminación comienza en cada localidad (intra localidad), priorizando
+soluciones dentro de la misma unidad geográfica, y para los casos no resueltos, se evalúan
+candidatos en localidades vecinas (inter localidad).
+
+
+•   Indeterminación intra localidad: la indeterminación de entidades rurales identifica
+    unidades con VPOMP≤ 3 dentro de una misma localidad. Para cada entidad, se buscan
+    vecinos directos (Kn=5, distancia=0 metros), aplicando un algoritmo que se basa en tres
+    aspectos: (i) agrupar entidades VPOMP≤3 entre sí, sumando VPOMP≥4; (ii) agrupar con el
+    vecino con la menor cantidad de VPOMP, sumando VPOMP≥4; o (iii) integrar con una
+    agrupación nueva cercana.
+
+
+
+
+                                              5
+    Cada agrupación recibe codificación 900+ en N_MZ_INDET y se actualizan ocho campos
+    específicos5. Las entidades que no logran agruparse dentro de su localidad se codifican
+    como 999.
+
+
+•   Indeterminación inter localidad: en esta etapa se evalúan las entidades que no resueltas
+    resueltas en el proceso previo (codificadas con 999), utilizando una tabla de vecindad
+    directa (Kn = 5 y distancia = 0), que considera las agrupaciones intra localidad. Para ello,
+    se aplica un algoritmo que opera mediante dos mecanismos: herencia de atributos, en
+    cuyo caso la entidad hereda el código de un nuevo grupo, manteniendo o modificando su
+    ubicación geográfica; o recodificación, mediante la cual se crean nuevos grupos con
+    codificación 800+ y se actualizan, según corresponda, los campos de localidad. En todos
+    los casos, se valida que el VPOMP resultante sea igual o superior a 4 y que preserve la
+    consistencia de los atributos geográficos.
+
+
+2.2.3. Estrato aldea
+Aunque las aldeas se clasifican dentro de la categoría de entidades rurales, su conformación
+amanzanada y sus características de tipo urbano determinan que su tratamiento sea
+homólogo al aplicado a las manzanas urbanas. En consecuencia, la manzana aldea constituye
+el nivel geográfico mínimo para este tipo de entidades, pudiendo las agrupaciones escalar, de
+ser necesario, hasta el nivel de entidad (aldea).
+
+
+Cada agrupación recibe una codificación igual o superior a 900 en el campo N_MZ_INDET, y
+se calcula el correspondiente MANZENT_INDET. Dada la distribución y conformación espacial
+de las aldeas, no fue necesario ejecutar el algoritmo de búsqueda inter aldeas, ya que la
+distancia de búsqueda impide la identificación de candidatos válidos para la indeterminación.
+Al igual que en los demás estratos, los casos excepcionales que no pudieron ser agrupados
+fueron marcados con el código 999; no obstante, en este estrato dichos casos fueron objeto
+de evaluación y revisión manual como se explica en el procesamiento de casos excepcionales.
+
+
+5
+  DC_INDET = COD_DISTRITO original; LOC_INDET = COD_LOCALIDAD original; N_MZ_INDET = Código asignado
+(900+) o 999; COD_CAT_INDET = 15 (Indeterminada) si agrupada, sino original; CATEGORIA_INDET =
+"Indeterminada" si agrupada, sino original; ENTIDAD_INDET = "INDETERMINADA" si agrupada, sino original
+LOCALIDAD_INDET = Original por ahora; MANZENT_INDET = CUT×10⁹ + DC×10⁷ + AREA×10⁶ + LOC×10³ + N_MZ×1
+
+                                                  6
+2.3.   Procesamiento de casos excepcionales
+En aquellos casos en que el procesamiento automatizado no pudo agrupar una manzana o
+entidad con otra dentro o fuera de su zona censal (0,7%), ya sea porque no existen candidatos
+con VPOMP válidos y/o su localización en distintos estratos, se realiza un proceso de
+indeterminación manual, siguiendo las mismas reglas definidas para los algoritmos
+automatizados.
+En este caso, se mantiene la prelación de agrupar primero dentro de la misma zona censal o
+localidad, idealmente sobre una agrupación nueva y, en casos donde el algoritmo no encontró
+candidatos válidos no indeterminados, este se eligió manualmente para la nueva agrupación
+(considerando tanto el menor VPOMP como la distribución geográfica).
+
+
+2.4.   Validación y consistencia territorial
+A lo largo de cada indeterminación se ejecutaron validaciones automatizadas que verificaron
+el cumplimiento de los criterios establecidos, particularmente la regla de VPOMP ≥ 4 en todas
+las agrupaciones.
+Adicionalmente, para mantener la coherencia en la representación territorial, se
+implementaron mecanismos de control de consistencia geográfica para cada estrato, los
+cuales garantizan que las agrupaciones resultantes se integren adecuadamente en la
+estructura de divisiones político-administrativas.
+
+
+2.4.1. Mecanismo de consistencia geográfica para estrato urbano
+Dadas las reglas de indeterminación de manzanas en distintas zonas censales, la adopción de
+uno u otro código implica que se modifican los límites de estas unidades para envolver a las
+nuevas agrupaciones, sin la necesidad de construir distritos o zonas censales ficticias.
+
+
+2.4.2. Mecanismo de consistencia geográfica para estrato aldea
+Dadas las reglas de indeterminación de manzanas de distritos distintos de la misma aldea, se
+implementó la adopción del código de distrito para el grupo y la posterior modificación del
+límite distrital respectivo (solo en ese sector). Por lo tanto, las manzanas indeterminadas son
+consistentes con el distrito que las contiene.
+
+
+
+
+                                                 7
+2.4.3. Mecanismo de consistencia geográfica para estrato rural
+Dadas las reglas de indeterminación que permiten agrupar entidades de localidades distintas,
+se implementó la creación automática de localidades indeterminadas (código 900) que
+contienen exclusivamente las entidades agrupadas. Esto preserva las localidades originales
+con sus entidades no afectadas, acotando la indeterminación al área mínima necesaria.
+Cuando estas agrupaciones involucran entidades de distritos distintos, se modifica el límite
+distrital correspondiente para mantener la consistencia geográfica, sin necesidad de crear
+unidades ficticias.
+
+
+3.   Recodificación de manzanas y entidades indeterminadas
+Una vez finalizado el proceso de indeterminación, se realizó una recodificación de las
+entidades y manzanas indeterminadas. Esta etapa busca homogeneizar las codificaciones y
+minimizar los saltos en las secuencias numéricas que podrían evidenciar la ubicación de
+datos indeterminados.
+El procedimiento consiste en reemplazar los códigos marcadores ≥ 900 asignados
+provisionalmente en el proceso de indeterminación, por el código de entidad o número de
+manzana con menor cardinalidad dentro de cada agrupación6.
+
+
+4.   Resultados
+El proceso de indeterminación geográfica genera como producto principal una base tabular
+que consolida las agrupaciones efectuadas, recalculando la caracterización de viviendas y
+población mediante la transferencia de la información de las manzanas y entidades
+indeterminadas hacia aquellas unidades con las que fueron agrupadas. Adicionalmente, se
+genera una base de datos que mantiene la relación registro a registro entre las unidades
+geográficas en su versión original y en su versión indeterminada. Esta base permite realizar la
+transferencia de datos resguardando la trazabilidad de la información, y garantiza, además, la
+disponibilidad de una base de información geográfica consistente y segura, en conformidad
+con los principios de protección del secreto estadístico.
+
+
+6
+ A modo de ejemplo, si se indeterminaron las manzanas DC 1 ZC 3 MZ 25 y DC 1 ZC 3 MZ 10, la agrupación
+provisional se codificaría como DC 1 ZC 3 MZ 900. En la recodificación, se adopta el código de la manzana con el
+número menor (DC 1 ZC 3 MZ 10), eliminándose únicamente el código de la manzana no seleccionada (DC 1 ZC 3
+MZ 25).
+
+                                                       8
+    Los resultados del proceso de indeterminación se presentan en la Tabla 1, en la cual se
+    detallan las agregaciones de manzanas y entidades realizadas a nivel regional, según el estrato
+    geográfico correspondiente. Cabe señalar que los valores consignados en la columna “INDET”
+    incluyen tanto las unidades que requerían la indeterminación como aquellas con las que
+    dichas unidades fueron agrupadas.
+
+                          Tabla 1. Resultados regionales del proceso de indeterminación por estrato
+                                     Estrato Urbano                      Estrato Rural                     Estrato Aldea
+         Región
+                                MZ        INDET         %          ENT       INDET        %       MZ AL        INDET        %
+ARICA Y PARINACOTA             3.511        241       6,9%         590        306        51,9%     103           45        43,7%
+
+TARAPACÁ                       4.443        504       11,3%        466        215        46,1%     221           91        41,2%
+
+ANTOFAGASTA                    8.853        676       7,6%         273        136        49,8%     165           65        39,4%
+
+ATACAMA                        6.536        818       12,5%        867        424        48,9%     668          220        32,9%
+
+COQUIMBO                      14.218       1.724      12,1%      3.075       1.583       51,5%    1.659         546        32,9%
+
+VALPARAÍSO                    28.702       3.758      13,1%      2.344        888        37,9%    1.421         419        29,5%
+METROPOLITANA DE
+                              68.085       2.347      3,4%       2.549        868        34,1%     626           96        15,3%
+SANTIAGO
+LIBERTADOR GENERAL
+                              12.245       1.019      8,3%       3.516       1.750       49,8%    1.387         302        21,8%
+BERNARDO O'HIGGINS
+MAULE                         15.915       1.361      8,6%       4.812       2.283       47,4%    1.670         460        27,5%
+
+ÑUBLE                          6.071        424       7,0%       2.547       1.066       41,9%     428           82        19,2%
+
+BIOBÍO                        21.767       1.430      6,6%       3.035       1.309       43,1%     646          163        25,2%
+
+LA ARAUCANÍA                  13.427       1.032      7,7%       5.698       2.509       44,0%     601          173        28,8%
+
+LOS RÍOS                       4.917        369       7,5%       2.659       1.485       55,8%     319           67        21,0%
+
+LOS LAGOS                     11.205        761       6,8%       5.759       3.031       52,6%     531          106        20,0%
+AYSÉN DEL GENERAL
+CARLOS IBÁÑEZ DEL              2.147        227       10,6%        824        448        54,4%     330           83        25,2%
+CAMPO
+MAGALLANES Y DE LA
+                               3.312        149       4,5%       1.066        552        51,8%      27           2         7,4%
+ANTÁRTICA CHILENA
+TOTAL                         225.354      16.840     7,5%      40.080      18.853       47,0%    10.802       2.920       27,0%
+                                     Fuente: Instituto Nacional de Estadísticas - Censo 2024
+           Nota: La tabla representa la totalidad de manzanas existentes en el país, que pueden tener o no viviendas.
+
+
+
+
+                                                               9
+
