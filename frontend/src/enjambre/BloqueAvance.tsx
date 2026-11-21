@@ -35,7 +35,7 @@ export function BloqueAvance({ caso, total, metricas, motor }: Props) {
       )}
       {motor && !motor.grabado && caso.desdeCache < caso.respondidas && (
         <p className={estilos.detalle}>
-          {formatear(metricas.llamadas)} {metricas.llamadas === 1 ? 'llamada' : 'llamadas'} a {nombreModelo(motor.modelo)} · {formatear(Math.round(metricas.segundos))} s ·{' '}
+          {formatear(metricas.llamadas)} {metricas.llamadas === 1 ? 'llamada' : 'llamadas'} al modelo · {formatear(Math.round(metricas.segundos))} s ·{' '}
           {dinero(metricas.costo_usd)}
         </p>
       )}

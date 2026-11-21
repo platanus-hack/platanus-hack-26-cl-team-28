@@ -4,6 +4,10 @@
  */
 :root[data-diseno='enjambre'] {
   color-scheme: dark;
+  /* Una sola familia en toda la página: títulos, cifras, textos y rótulos del mapa. */
+  --fuente-voz: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --fuente-ui: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --fuente-mano: 'Bricolage Grotesque Variable', system-ui, sans-serif;
   --mar: #0d1016;
   --papel: #161a23;
   --papel-velo: rgb(22 26 35 / 0.94);

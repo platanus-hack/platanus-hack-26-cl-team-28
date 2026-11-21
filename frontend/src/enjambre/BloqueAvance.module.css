@@ -69,14 +69,13 @@
   gap: var(--e2);
   margin-top: var(--e5);
   max-width: 24rem;
-  font: italic 500 clamp(1.3rem, 0.9rem + 0.9vw, 1.9rem) / 1.2 var(--fuente-voz);
+  font: 500 clamp(1.3rem, 0.9rem + 0.9vw, 1.9rem) / 1.2 var(--fuente-voz);
   color: var(--favor-texto);
   animation: subir 600ms var(--curva-salida) both;
 }
 
 .cambio span {
   font: 650 var(--texto-s) / 1 var(--fuente-ui);
-  font-style: normal;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tinta-suave);
@@ -94,14 +93,13 @@
   gap: var(--e2);
   margin-top: var(--e5);
   max-width: 24rem;
-  font: italic 500 1.35rem / 1.25 var(--fuente-voz);
+  font: 500 1.35rem / 1.25 var(--fuente-voz);
   color: var(--contra-texto);
   animation: subir 500ms var(--curva-salida) both;
 }
 
 .objecion span {
   font: 650 var(--texto-s) / 1 var(--fuente-ui);
-  font-style: normal;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--tinta-suave);

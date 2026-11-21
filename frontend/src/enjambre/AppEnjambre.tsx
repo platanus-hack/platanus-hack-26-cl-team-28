@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
-import { Figura } from '../componentes/comunes/Figura';
 import { formatear } from '../dominio/textos';
 import { REGIONES_GEO } from '../mapa/geografia';
 import { porcentajesDe, posturaDe, useEnVivo, type CasoVivo } from '../vivo/useEnVivo';
@@ -22,6 +21,9 @@ import { Voces } from './Voces';
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
+
+/** El signo de porcentaje no se separa de su número al cortar la línea. */
+const sinCorte = (texto: string) => texto.replace(/(\d) %/g, '$1\u00a0%');
 
 function textoDelta(delta: number, caso: CasoVivo): string {
   const quien = caso.iteracion ? 'con la versión del agente' : `con la variante ${caso.letra}`;
@@ -145,8 +147,8 @@ export function AppEnjambre() {
               Variante {caso.letra}
               {caso.iteracion && ` · reescrita por el agente sobre ${caso.iteracion.de}`}
             </span>
-            <q className={estilos.titulo}>{caso.titulo}</q>
-            {caso.iteracion?.cambio && <small>{caso.iteracion.cambio}</small>}
+            <q className={estilos.titulo}>{sinCorte(caso.titulo)}</q>
+            {caso.iteracion?.cambio && <small>{sinCorte(caso.iteracion.cambio)}</small>}
           </h1>
         ) : (
           <h1 className={estilos.titular}>¿Cómo respondería Chile?</h1>
@@ -179,15 +181,7 @@ export function AppEnjambre() {
       </div>
       <div className={estilos.derecha}>
       <div className={estilos.nota}>
-        <Insignia conexion={conexion} agentes={muestra.total} />
-        {pct && (
-          <p className={estilos.indecisas}>
-            <Figura estado="indecisa" aspecto={2} alto={30} />
-            <span>
-              <b>{pct.indecisa} %</b> no se decide y se queda en el mapa
-            </span>
-          </p>
-        )}
+        <Insignia conexion={conexion} agentes={muestra.total} indecisas={pct?.indecisa} />
         {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} viendo={viendo} />}
         {caso && sim.filtrada && (
           <p className={estilos.filtro}>

@@ -1,28 +1,42 @@
 import { formatear } from '../dominio/textos';
 import type { Conexion } from '../vivo/useEnVivo';
-import { nombreModelo } from './BloqueAvance';
 import estilos from './Insignia.module.css';
 
-/** Qué está respondiendo: el motor en vivo con su modelo, o la demostración sin motor. */
-export function Insignia({ conexion, agentes }: { conexion: Conexion | null; agentes: number }) {
+interface Props {
+  conexion: Conexion | null;
+  agentes: number;
+  /** Porcentaje que no se decide, cuando hay un resultado en pantalla. */
+  indecisas?: number;
+}
+
+/**
+ * Ficha de la muestra: a quiénes se les pregunta y, con un resultado en pantalla, qué son los
+ * puntos amarillos que se quedan en el mapa. Si no responde el motor en vivo, lo avisa.
+ */
+export function Insignia({ conexion, agentes, indecisas }: Props) {
   if (!conexion) return null;
   const motor = conexion.estado?.motor;
-  if (conexion.demo || !motor) {
-    return (
-      <p className={estilos.insignia} data-demo>
-        <i aria-hidden="true" />
-        Demostración sin motor
-      </p>
-    );
-  }
-  const modelo = nombreModelo(motor.modelo);
+  const aviso = conexion.demo || !motor ? 'Demostración sin motor' : motor.grabado ? 'Corrida grabada' : null;
   return (
-    <p className={estilos.insignia} data-grabado={motor.grabado || undefined}>
-      <i aria-hidden="true" />
-      <span>
-        <b>{motor.grabado ? 'Corrida grabada' : 'En vivo'}</b> · {modelo}
-      </span>
-      <span className={estilos.detalle}>{formatear(agentes)} personas reales del Censo 2024, cada una con su agente</span>
-    </p>
+    <dl className={estilos.ficha}>
+      <div>
+        <dt>Muestra</dt>
+        <dd>
+          <b>{formatear(agentes)}</b> personas del Censo 2024
+        </dd>
+      </div>
+      {indecisas !== undefined && (
+        <div data-indecisas>
+          <dt>
+            <i aria-hidden="true" />
+            Sin decidir
+          </dt>
+          <dd>
+            <b>{indecisas} %</b> se queda en el mapa
+          </dd>
+        </div>
+      )}
+      {aviso && <p className={estilos.aviso}>{aviso}</p>}
+    </dl>
   );
 }

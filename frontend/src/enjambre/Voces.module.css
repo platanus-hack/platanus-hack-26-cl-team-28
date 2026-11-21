@@ -38,7 +38,7 @@
 
 .globo blockquote {
   margin: 0;
-  font: italic 500 1.6rem/1.22 var(--fuente-voz);
+  font: 500 1.6rem/1.22 var(--fuente-voz);
   color: var(--tinta);
   text-wrap: pretty;
 }

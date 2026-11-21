@@ -29,7 +29,7 @@
   border-radius: var(--radio);
   background: transparent;
   color: var(--tinta-suave);
-  font: italic 500 1.35rem/1 var(--fuente-voz);
+  font: 500 1.35rem/1 var(--fuente-voz);
   transition: background var(--rapido);
 }
 
@@ -174,7 +174,8 @@
 
   .campo textarea {
     min-height: 0;
-    max-height: 5.2rem;
+    max-height: calc(1.35em * 4 + var(--e2) * 2 + 2px);
+    overflow-y: auto;
     font-size: 1rem;
     line-height: 1.35;
   }

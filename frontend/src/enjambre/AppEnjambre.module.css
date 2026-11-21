@@ -61,7 +61,7 @@
 }
 
 .marca {
-  font: italic 500 1.15rem/1 var(--fuente-voz);
+  font: 500 1.15rem/1 var(--fuente-voz);
   color: var(--tinta-suave);
 }
 

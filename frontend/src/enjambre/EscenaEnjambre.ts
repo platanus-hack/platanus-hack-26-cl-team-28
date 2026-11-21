@@ -35,6 +35,9 @@ const DESTELLO = 0.45;
 /** Desde este ancho las cifras gigantes van a los costados del lienzo. */
 const ANCHO_CON_CIFRAS = 900;
 
+/** Mayor espacio libre, en píxeles, que se deja entre una burbuja y la siguiente hacia el sur. */
+const SEPARACION_MAXIMA = 26;
+
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
 
@@ -115,6 +118,10 @@ export class EscenaEnjambre {
     }
     this.finVuelo = ahora + 0.7 + VUELO;
     this.observador.observe(this.lienzo);
+    // Los rótulos se dibujan con la fuente de la página: se redibuja cuando termina de cargar.
+    void document.fonts.ready.then(() => {
+      this.sucio = true;
+    });
     this.cuadro = requestAnimationFrame(this.ciclo);
   }
 
@@ -267,6 +274,14 @@ export class EscenaEnjambre {
       armado = lados.map(([estado, lado]) => {
         const regiones = grupos[estado].map((lista, region) => ({ lista, region })).filter((g) => g.lista.length);
         const pedidos = regiones.map((g) => ({ y: this.proyectar(0, REGIONES[g.region].capitalLat)[1], r: radioDe(g.lista.length, paso) }));
+        // El extremo sur está casi vacío y muy lejos: sus burbujas se acercan a las anteriores para
+        // que la columna se lea como un solo gráfico, sin una burbuja suelta al pie de la pantalla.
+        const orden = pedidos.map((_, k) => k).sort((a, b) => pedidos[a].y - pedidos[b].y);
+        for (let k = 1; k < orden.length; k++) {
+          const previo = pedidos[orden[k - 1]];
+          const actual = pedidos[orden[k]];
+          actual.y = Math.min(actual.y, previo.y + previo.r + actual.r + SEPARACION_MAXIMA);
+        }
         return { lado, regiones, puestas: ubicarBurbujas(pedidos, lado, bordes[lado], 8, this.alto - 8) };
       });
       const cabe = armado.every(({ puestas }) => puestas.every((b) => b.x - b.r >= reserva && b.x + b.r <= this.ancho - reserva));
@@ -427,7 +442,8 @@ export class EscenaEnjambre {
       ctx.font = `650 ${this.letra}px ${this.fuente}`;
       const w = Math.max(ctx.measureText(nombre).width, 30) + 14;
       const h = this.letra * 2.7;
-      const adentro = b.r >= 30;
+      // Adentro solo si la burbuja es bastante más ancha que el rótulo; si no, el texto tapa los puntos.
+      const adentro = b.r * 2 >= w + 44;
       const candidatos: [number, number][] = adentro
         ? [[b.x, b.y]]
         : [
