@@ -384,7 +384,7 @@
   padding: 0 var(--e3);
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
-  background: var(--papel-velo);
+  background: var(--papel);
   color: var(--tinta);
   font: 600 var(--texto-s) / 1 var(--fuente-ui);
 }

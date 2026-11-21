@@ -93,6 +93,7 @@ export class EscenaEnjambre {
   private oy = 0;
   private agarre: [number, number] | null = null;
   private arrastro = false;
+  private zoomAlPellizcar = 1;
   /** Aviso a la interfaz cuando cambia el acercamiento. */
   alCambiarVista?: (zoom: number) => void;
   /** Verdadero cuando los puntos ya volaron a sus burbujas con los estados actuales. */
@@ -131,7 +132,9 @@ export class EscenaEnjambre {
     }
     this.finVuelo = ahora + 0.7 + VUELO;
     this.observador.observe(this.lienzo);
-    this.lienzo.addEventListener('wheel', this.rueda, { passive: false });
+    document.addEventListener('wheel', this.rueda, { passive: false });
+    document.addEventListener('gesturestart', this.gesto, { passive: false });
+    document.addEventListener('gesturechange', this.gesto, { passive: false });
     this.lienzo.addEventListener('pointerdown', this.baja);
     this.lienzo.addEventListener('pointermove', this.mueve);
     this.lienzo.addEventListener('pointerup', this.sube);
@@ -146,7 +149,9 @@ export class EscenaEnjambre {
   destruir(): void {
     cancelAnimationFrame(this.cuadro);
     this.observador.disconnect();
-    this.lienzo.removeEventListener('wheel', this.rueda);
+    document.removeEventListener('wheel', this.rueda);
+    document.removeEventListener('gesturestart', this.gesto);
+    document.removeEventListener('gesturechange', this.gesto);
     this.lienzo.removeEventListener('pointerdown', this.baja);
     this.lienzo.removeEventListener('pointermove', this.mueve);
     this.lienzo.removeEventListener('pointerup', this.sube);
@@ -206,10 +211,27 @@ export class EscenaEnjambre {
     this.alCambiarVista?.(this.zoom);
   }
 
+  /**
+   * Rueda sobre el mapa, o pellizco en el trackpad en cualquier parte (el navegador lo entrega como
+   * rueda con Ctrl). Se acerca el mapa redibujándolo, nítido; si no se cancelara, el navegador
+   * ampliaría la página entera como una imagen borrosa.
+   */
   private readonly rueda = (e: WheelEvent): void => {
+    const pellizco = e.ctrlKey || e.metaKey;
+    if (!pellizco && e.target !== this.lienzo) return;
     e.preventDefault();
     const caja = this.lienzo.getBoundingClientRect();
-    this.acercar(Math.exp(-e.deltaY * 0.0016), e.clientX - caja.left, e.clientY - caja.top);
+    const paso = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+    this.acercar(Math.exp(-paso * (pellizco ? 0.012 : 0.0016)), e.clientX - caja.left, e.clientY - caja.top);
+  };
+
+  /** Safari entrega el pellizco como eventos de gesto propios. */
+  private readonly gesto = (e: Event): void => {
+    e.preventDefault();
+    const { scale, clientX, clientY } = e as Event & { scale: number; clientX: number; clientY: number };
+    if (e.type === 'gesturestart') this.zoomAlPellizcar = this.zoom;
+    const caja = this.lienzo.getBoundingClientRect();
+    this.acercar((this.zoomAlPellizcar * scale) / this.zoom, clientX - caja.left, clientY - caja.top);
   };
 
   private readonly baja = (e: PointerEvent): void => {
@@ -507,7 +529,7 @@ export class EscenaEnjambre {
     ctx.lineWidth = 1 / this.zoom;
     ctx.stroke(this.silueta);
     // Al acercar, los puntos crecen menos que el mapa: así se separan y se ve a cada persona.
-    const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66) / Math.sqrt(this.zoom);
+    const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66) / this.zoom ** 0.3;
     for (const estado of [PUNTO.fuera, PUNTO.pendiente, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
       ctx.fillStyle = this.colores[estado];
       for (let i = 0; i < this.n; i++) {
