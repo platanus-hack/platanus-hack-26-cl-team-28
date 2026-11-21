@@ -1,0 +1,7 @@
+Hoy en Chile, una empresa tiene que pagarle sala cuna a sus trabajadoras (el lugar donde cuidan a sus guaguas menores de dos años mientras ellas trabajan) solo si tiene 20 trabajadoras o más. Eso tiene un efecto raro: muchas empresas prefieren no contratar a la mujer número 20 para no tener que pagar. La política de Sala Cuna Universal elimina esa regla: todas las personas que trabajan, madres y padres, con contrato, independientes o de casa particular, pueden acceder a sala cuna para sus hijos menores de dos años, sin importar el tamaño de la empresa. Para eso se crea un fondo común que paga las salas cuna, en vez de que cada empresa pague por su cuenta.
+
+Financiamiento. El fondo no recibe aportes fijos de empleadores ni de trabajadores. Se financia con la rentabilidad de sus inversiones, con multas y con una garantía del Estado si la plata no alcanza. Los trabajadores independientes no pagan nada.
+
+Copago. Si la sala cuna cuesta más de lo que cubre el fondo, la familia paga toda la diferencia de su bolsillo, sin ayuda.
+
+Transición. Las empresas que hoy están obligadas a pagar sala cuna dejan de estarlo un año después de aprobada la ley, todas al mismo tiempo. Desde ahí paga el fondo.

@@ -1,0 +1,35 @@
+{
+ "_nota": "Cifras reales para validar la simulación (sección 6.3 de contexto/delphos/framework.md). De acuerdo = respuestas 5 a 7; en desacuerdo = 1 a 3. Las claves de «cerradas» son el nombre del texto de validacion/ y las de «alternativas», el de la pregunta.",
+ "cerradas": {
+  "iniciativa": {
+   "pregunta": "p1",
+   "acuerdo": [
+    72,
+    74
+   ],
+   "desacuerdo": 8,
+   "fuentes": [
+    "Cadem, mayo 2026: 72 % de acuerdo con la iniciativa",
+    "Criteria, junio 2026: 74 % de aprobación y 8 % en desacuerdo"
+   ]
+  }
+ },
+ "alternativas": {
+  "titularidad": {
+   "derecho_del_nino": 62,
+   "beneficio_laboral_de_la_madre": 32,
+   "fuentes": [
+    "Cadem, septiembre 2026"
+   ]
+  }
+ },
+ "rango_sanidad": {
+  "minimo": 44,
+  "maximo": 87,
+  "tope_sospechoso": 90,
+  "fuentes": [
+   "Megarreforma, Cadem mayo 2026: 44 % de acuerdo",
+   "Segundo retiro del 10 %, Cadem noviembre 2020: 87 %"
+  ]
+ }
+}

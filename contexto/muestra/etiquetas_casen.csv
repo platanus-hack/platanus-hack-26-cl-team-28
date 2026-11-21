@@ -169,6 +169,22 @@ quintil_ingreso,qaut,2,II
 quintil_ingreso,qaut,3,III
 quintil_ingreso,qaut,4,IV
 quintil_ingreso,qaut,5,V
+dependencia_colegio,depen,-66,No es posible clasificar
+dependencia_colegio,depen,1,Municipal
+dependencia_colegio,depen,2,Particular Subvencionado
+dependencia_colegio,depen,3,Particular Pagado
+dependencia_colegio,depen,4,Corp. de Administración Delegada
+dependencia_colegio,depen,5,Servicio Local de Educación
+dependencia_colegio,depen,6,Junji
+dependencia_colegio,depen,7,Integra
+dependencia_colegio,depen,8,Universidades Estatales Cruch
+dependencia_colegio,depen,9,Universidades Privadas Cruch
+dependencia_colegio,depen,10,Universidades Privadas
+dependencia_colegio,depen,11,Institutos Profesionales
+dependencia_colegio,depen,12,Centros de Formación Técnica Estatales
+dependencia_colegio,depen,13,Centros de Formación Técnica
+dependencia_colegio,depen,14,Instituciones de Estudio FFAA y del orden
+dependencia_colegio,depen,15,Instituciones Extranjeras
 tiene_contrato,contrato,0,No
 tiene_contrato,contrato,1,Sí
 tiene_contrato,contrato,-88,No sabe
