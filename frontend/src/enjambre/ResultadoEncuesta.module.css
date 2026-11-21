@@ -35,6 +35,33 @@
   padding: 0;
   overflow-y: auto;
   list-style: none;
+  /* Barra de desplazamiento fina, del color de la hoja: sin flechas ni carril gris del sistema. */
+  scrollbar-width: thin;
+  scrollbar-color: var(--tinta-suave) transparent;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+/* Si hay más preguntas abajo, la lista se desvanece en el borde para que se note. */
+@supports (animation-timeline: scroll()) {
+  .encuesta ol {
+    animation: desvanecer linear both;
+    animation-timeline: scroll(self);
+  }
+
+  @keyframes desvanecer {
+    from {
+      mask-image: linear-gradient(#000 calc(100% - 14px), transparent);
+    }
+
+    95% {
+      mask-image: linear-gradient(#000 calc(100% - 14px), transparent);
+    }
+
+    to {
+      mask-image: linear-gradient(#000 100%, transparent);
+    }
+  }
 }
 
 .encuesta li {

@@ -13,6 +13,7 @@ import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type ModoVuelo } from './EscenaEnja
 import { FichaAgente } from './FichaAgente';
 import { Insignia } from './Insignia';
 import { MenuOpciones } from './MenuOpciones';
+import { Propuesta } from './Propuesta';
 import { Redactando } from './Redactando';
 import { ResultadoEncuesta } from './ResultadoEncuesta';
 import { useAngosto } from './useAngosto';
@@ -220,17 +221,11 @@ export function AppEnjambre() {
               Variante {caso.letra}
               {caso.iteracion && ` · reescrita por el agente sobre ${caso.iteracion.de}`}
             </span>
-            <q className={estilos.titulo}>{sinCorte(caso.titulo)}</q>
+            <Propuesta letra={caso.letra} titulo={caso.titulo} texto={caso.texto} />
             {caso.iteracion?.cambio && <small>{sinCorte(caso.iteracion.cambio)}</small>}
           </h1>
         ) : (
           <h1 className={estilos.titular}>What If Chile ...</h1>
-        )}
-        {caso && caso.texto !== caso.titulo && caso.texto && (
-          <details className={estilos.completo}>
-            <summary>Leer la propuesta completa</summary>
-            <p>{caso.texto}</p>
-          </details>
         )}
         {fase === 'corriendo' && caso && !listo && (
           <div className={estilos.avance}>
