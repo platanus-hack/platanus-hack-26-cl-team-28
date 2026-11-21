@@ -11,6 +11,8 @@ export interface EstadoMotor {
   agentes: number;
   lote: number;
   concurrencia: number;
+  /** Las preguntas de la encuesta, en el orden de las notas. */
+  preguntas?: string[];
 }
 
 export interface AgenteRemoto {
@@ -61,7 +63,10 @@ export interface CasoPublico {
 /** Eventos de una corrida, en el orden en que llegan. */
 export type Evento =
   | { tipo: 'inicio'; motor: MotorInfo; agentes: number; casos: CasoPublico[] }
-  | { tipo: 'respuestas'; caso: number; cache: boolean; r: [number, number, string][]; metricas: Metricas }
+  // Cada fila: agente, acuerdo (la primera pregunta), frase si ya la tiene, y sus notas a todas las preguntas.
+  | { tipo: 'respuestas'; caso: number; cache: boolean; r: [number, number, string, number[]?][]; metricas: Metricas }
+  // Frases pedidas aparte, después de responder, a unas pocas personas: [agente, frase].
+  | { tipo: 'voces'; caso: number; r: [number, string][]; metricas: Metricas }
   | { tipo: 'caso_listo'; caso: number; apoyo: number; metricas: Metricas }
   | { tipo: 'redactando'; numero: number; metricas: Metricas }
   | ({ tipo: 'caso'; caso: number; metricas: Metricas } & CasoPublico)
@@ -111,7 +116,7 @@ export async function correrRemoto(
   );
   const fuente = new EventSource(`${BASE}/corridas/${id}/eventos`);
   // El servidor llama "falla" a su error: "error" es el evento propio de EventSource al perder la conexión.
-  const tipos = ['inicio', 'respuestas', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'falla'] as const;
+  const tipos = ['inicio', 'respuestas', 'voces', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'falla'] as const;
   for (const tipo of tipos) {
     fuente.addEventListener(tipo, (e) => {
       const datos = JSON.parse((e as MessageEvent).data);

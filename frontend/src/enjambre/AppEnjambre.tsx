@@ -239,7 +239,7 @@ export function AppEnjambre() {
         )}
       </div>
       {ficha && conexion && (
-        <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
+        <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} preguntas={conexion.estado?.preguntas} alCerrar={() => setFicha(null)} />
       )}
       {oculta && (
         <div className={estilos.mostrar} ref={mostrar}>

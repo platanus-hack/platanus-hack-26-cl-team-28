@@ -12,12 +12,16 @@ interface Props {
   viendo: number;
   x: number;
   y: number;
+  /** Las preguntas de la encuesta, en el orden de las notas. */
+  preguntas?: string[];
   alCerrar(): void;
 }
 
 const ANCHO = 380;
 const POSTURA = { favor: 'A favor', contra: 'En contra', indecisa: 'No se decide' } as const;
 const ESCALA = [1, 2, 3, 4, 5, 6, 7];
+/** Las cinco preguntas del banco de pruebas, dichas en corto; la pregunta completa va al pasar el cursor. */
+const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría'];
 
 /** Lo que se sabe de la persona, dicho corto: sirve para leerlo de un vistazo. */
 function datos(a: Record<string, string>): string[] {
@@ -41,7 +45,7 @@ function datos(a: Record<string, string>): string[] {
  * de color, lo que dijo, cuánto apoyó cada variante en la misma escala de 1 a 7 que respondió,
  * y lo que el censo sabe de ella.
  */
-export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
+export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }: Props) {
   const caja = useRef<HTMLElement>(null);
   useEffect(() => {
     caja.current?.focus({ preventScroll: true });
@@ -51,13 +55,18 @@ export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
   }, [alCerrar]);
   // Se abre hacia el centro de la pantalla, para no tapar las cifras de los costados.
   const haciaIzquierda = x > window.innerWidth / 2;
-  const izquierda = Math.max(16, Math.min(window.innerWidth - ANCHO - 16, haciaIzquierda ? x - ANCHO - 28 : x + 28));
+  // Se queda en la franja central, entre las dos columnas de texto, siempre que quepa ahí.
+  const ancho = window.innerWidth;
+  const columna = ancho >= 900 ? Math.max(16, Math.min(40, ancho * 0.026)) + Math.min(ancho * 0.28, 416) + 12 : 16;
+  const borde = ancho - 2 * columna >= ANCHO ? columna : 16;
+  const izquierda = Math.max(borde, Math.min(ancho - ANCHO - borde, haciaIzquierda ? x - ANCHO - 28 : x + 28));
   // Nunca se sale por abajo: sube lo necesario y, si aun así no cabe, se desplaza por dentro.
   const arriba = Math.max(16, Math.min(window.innerHeight - 500, y - 60));
   const caso = casos[viendo];
   const acuerdo = caso?.acuerdo[agente.i] ?? 0;
   const postura = acuerdo ? posturaDe(acuerdo) : 'indecisa';
   const frase = caso?.frase[agente.i];
+  const notas = caso?.notas[agente.i];
   return (
     <aside
       ref={caja}
@@ -105,6 +114,21 @@ export function FichaAgente({ agente, casos, viendo, x, y, alCerrar }: Props) {
                 </li>
               );
             })}
+          </ol>
+        )}
+        {notas && preguntas && (
+          <ol className={estilos.encuesta} aria-label={`Sus respuestas a la encuesta${casos.length > 1 ? `, variante ${caso.letra}` : ''}`}>
+            {preguntas.map((pregunta, k) => (
+              <li key={pregunta} data-postura={posturaDe(notas[k])} title={pregunta}>
+                <p>{CORTAS[k] ?? pregunta}</p>
+                <span aria-hidden="true">
+                  {ESCALA.map((n) => (
+                    <i key={n} data-lleno={n <= notas[k] || undefined} />
+                  ))}
+                </span>
+                <em>{notas[k]}</em>
+              </li>
+            ))}
           </ol>
         )}
         <ul className={estilos.datos}>

@@ -1,0 +1,54 @@
+{"caso_id": "uc25-identidad", "dimension": "edad", "segmento": "18–34", "localizador": "p. 43", "respuestas": {"Muy de acuerdo + De acuerdo": 47}}
+{"caso_id": "uc25-identidad", "dimension": "edad", "segmento": "35–54", "localizador": "p. 43", "respuestas": {"Muy de acuerdo + De acuerdo": 59}}
+{"caso_id": "uc25-identidad", "dimension": "edad", "segmento": "55+", "localizador": "p. 43", "respuestas": {"Muy de acuerdo + De acuerdo": 66}}
+{"caso_id": "ebs23-vida", "dimension": "edad", "segmento": "18–29", "localizador": "p. 9, dato 2023", "respuestas": {"Totalmente satisfecho(a) + Satisfecho(a)": 78.3, "Totalmente insatisfecho(a) + Insatisfecho(a)": 7.4}}
+{"caso_id": "ebs23-vida", "dimension": "edad", "segmento": "30–44", "localizador": "p. 9, dato 2023", "respuestas": {"Totalmente satisfecho(a) + Satisfecho(a)": 80.3, "Totalmente insatisfecho(a) + Insatisfecho(a)": 9.1}}
+{"caso_id": "ebs23-vida", "dimension": "edad", "segmento": "45–59", "localizador": "p. 9, dato 2023", "respuestas": {"Totalmente satisfecho(a) + Satisfecho(a)": 78.6, "Totalmente insatisfecho(a) + Insatisfecho(a)": 12.5}}
+{"caso_id": "ebs23-vida", "dimension": "edad", "segmento": "60+", "localizador": "p. 9, dato 2023", "respuestas": {"Totalmente satisfecho(a) + Satisfecho(a)": 75.9, "Totalmente insatisfecho(a) + Insatisfecho(a)": 15.2}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Arica y Parinacota", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 94}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Tarapacá", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Antofagasta", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Atacama", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 92}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Coquimbo", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Valparaíso", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "O’Higgins", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 93}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Maule", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 97}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Ñuble", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 92}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Biobío", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 94}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "La Araucanía", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Los Ríos", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 91}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Los Lagos", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Aysén", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 99}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Magallanes", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 91}}
+{"caso_id": "mma18-bolsas", "dimension": "region", "segmento": "Metropolitana", "localizador": "p. 110, gráfico 139", "respuestas": {"Muy de acuerdo + De acuerdo": 95}}
+{"caso_id": "mma18-bolsas", "dimension": "zona", "segmento": "Norte", "localizador": "p. 110, gráfico 138", "respuestas": {"Muy de acuerdo + De acuerdo": 94, "Muy en desacuerdo + En desacuerdo": 4}}
+{"caso_id": "mma18-bolsas", "dimension": "zona", "segmento": "Centro", "localizador": "p. 110, gráfico 138", "respuestas": {"Muy de acuerdo + De acuerdo": 95, "Muy en desacuerdo + En desacuerdo": 4}}
+{"caso_id": "mma18-bolsas", "dimension": "zona", "segmento": "Sur", "localizador": "p. 110, gráfico 138", "respuestas": {"Muy de acuerdo + De acuerdo": 94, "Muy en desacuerdo + En desacuerdo": 5}}
+{"caso_id": "mma18-bolsas", "dimension": "zona", "segmento": "Santiago (RM)", "localizador": "p. 110, gráfico 138", "respuestas": {"Muy de acuerdo + De acuerdo": 95, "Muy en desacuerdo + En desacuerdo": 4}}
+{"caso_id": "ct22-reforma", "dimension": "sexo", "segmento": "Mujeres", "localizador": "Comunicado de Cadem, párrafo de desagregación", "respuestas": {"De acuerdo": 32, "En desacuerdo": 43}}
+{"caso_id": "ct22-reforma", "dimension": "sexo", "segmento": "Hombres", "localizador": "Comunicado de Cadem, párrafo de desagregación", "respuestas": {"De acuerdo": 35, "En desacuerdo": 48}}
+{"caso_id": "ct22-reforma", "dimension": "edad", "segmento": "35–54", "localizador": "Comunicado de Cadem, párrafo de rangos de edad", "respuestas": {"De acuerdo": 28, "En desacuerdo": 50}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "edad", "segmento": "18–24", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 40}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "edad", "segmento": "25–34", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 39}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "edad", "segmento": "35–44", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 46}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "edad", "segmento": "45–54", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 53}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "edad", "segmento": "55+", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 64}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "gse", "segmento": "Alto", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 38}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "gse", "segmento": "Medio", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 42}}
+{"caso_id": "uc26-familia-crianza-en-casa", "dimension": "gse", "segmento": "Bajo", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 64}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "edad", "segmento": "18–24", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 48}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "edad", "segmento": "25–34", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 51}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "edad", "segmento": "35–44", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 41}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "edad", "segmento": "45–54", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 45}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "edad", "segmento": "55+", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 50}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "gse", "segmento": "Alto", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 50}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "gse", "segmento": "Medio", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 53}}
+{"caso_id": "uc26-familia-realizacion", "dimension": "gse", "segmento": "Bajo", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 43}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "edad", "segmento": "18–24", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 16}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "edad", "segmento": "25–34", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 16}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "edad", "segmento": "35–44", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 28}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "edad", "segmento": "45–54", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 40}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "edad", "segmento": "55+", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 46}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "gse", "segmento": "Alto", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 20}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "gse", "segmento": "Medio", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 31}}
+{"caso_id": "uc26-familia-jornada-completa", "dimension": "gse", "segmento": "Bajo", "localizador": "p. 82", "respuestas": {"Muy de acuerdo + De acuerdo": 40}}

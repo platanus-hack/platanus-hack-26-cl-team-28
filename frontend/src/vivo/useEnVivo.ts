@@ -45,6 +45,8 @@ export interface CasoVivo {
   /** Acuerdo de 1 a 7 de cada agente (índice global); cero mientras no responde. */
   acuerdo: Int8Array;
   frase: string[];
+  /** Las notas de 1 a 7 de cada agente a todas las preguntas de la encuesta. */
+  notas: (number[] | undefined)[];
   respondidas: number;
   /** Cuántas respuestas vinieron de la caché del motor (ya se habían preguntado antes). */
   desdeCache: number;
@@ -207,6 +209,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       referencia: base.referencia,
       acuerdo: new Int8Array(conexion?.agentes.length ?? 0),
       frase: [],
+      notas: [],
       respondidas: 0,
       desdeCache: 0,
       conteo: conteoVacio(),
@@ -222,16 +225,26 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
         case 'respuestas': {
           const caso = lista[evento.caso];
           if (!caso) return;
-          for (const [agente, acuerdo, frase] of evento.r) {
+          for (const [agente, acuerdo, frase, notas] of evento.r) {
             if (caso.acuerdo[agente]) continue;
             caso.acuerdo[agente] = acuerdo;
             caso.frase[agente] = frase;
+            caso.notas[agente] = notas;
             caso.respondidas += 1;
             if (evento.cache) caso.desdeCache += 1;
-            if (frase && !evento.cache) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
-            else if (frase && voces.current.length < 8) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
+            if (frase) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
           }
           if (voces.current.length > VOCES_GUARDADAS) voces.current.splice(0, voces.current.length - VOCES_GUARDADAS);
+          setMetricas(evento.metricas);
+          break;
+        }
+        case 'voces': {
+          const caso = lista[evento.caso];
+          if (!caso) return;
+          for (const [agente, frase] of evento.r) {
+            caso.frase[agente] = frase;
+            voces.current.push({ agente, caso: evento.caso, acuerdo: caso.acuerdo[agente], frase });
+          }
           setMetricas(evento.metricas);
           break;
         }

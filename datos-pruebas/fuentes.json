@@ -1,0 +1,262 @@
+{
+  "cadem-483": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 483",
+    "periodo": "2023-04",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 704,
+    "url": "https://cadem.cl/wp-content/uploads/2023/04/Track-PP-483-Abril-S2-VF.pdf"
+  },
+  "cadem-505": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 505",
+    "periodo": "2023-09",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 712,
+    "url": "https://cadem.cl/wp-content/uploads/2023/09/Track-PP-505-Septiembre-S2-VF.pdf"
+  },
+  "cadem-511": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 511",
+    "periodo": "2023-10",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 705,
+    "url": "https://cadem.cl/wp-content/uploads/2023/10/Track-PP-511-Octubre-S4-VF.pdf"
+  },
+  "cadem-543": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 543",
+    "periodo": "2024-06",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 701,
+    "url": "https://cadem.cl/wp-content/uploads/2024/06/Track-PP-543-Junio-S1-VF.pdf"
+  },
+  "cadem-577": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 577",
+    "periodo": "2025-01",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 705,
+    "url": "https://cadem.cl/wp-content/uploads/2025/02/Track-PP-577-Enero-S5-VF.pdf"
+  },
+  "cadem-594": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 594",
+    "periodo": "2025-05",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 705,
+    "url": "https://cadem.cl/wp-content/uploads/2025/06/Track-PP-594-Mayo-S5-VF.pdf"
+  },
+  "cadem-625": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 625",
+    "periodo": "2025-12",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 703,
+    "url": "https://cadem.cl/wp-content/uploads/2026/01/Track-PP-625-Diciembre-S5-VF.pdf"
+  },
+  "cadem-629": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 629",
+    "periodo": "2026-01",
+    "metodo": "Entrevista telefónica a celulares, según ficha del informe",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 702,
+    "url": "https://cadem.cl/wp-content/uploads/2026/02/Track-PP-629-Enero-S4-VF.pdf"
+  },
+  "cadem-638": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 638",
+    "periodo": "2026-03-17",
+    "metodo": "Panel web no probabilístico con cuotas y ponderación",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 1017,
+    "url": "https://cadem.cl/wp-content/uploads/2026/03/Track-PP-638-Marzo-S3-M1-VF.pdf"
+  },
+  "cadem-663": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 663",
+    "periodo": "2026-06-12",
+    "metodo": "Panel web no probabilístico con cuotas y ponderación",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 1005,
+    "url": "https://cadem.cl/wp-content/uploads/2026/06/Track-PP-663-Junio-S2-M2-VF.pdf"
+  },
+  "cadem-698": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 698",
+    "periodo": "2026-10-16",
+    "metodo": "Panel web no probabilístico con cuotas y ponderación",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 1007,
+    "url": "https://cadem.cl/wp-content/uploads/2026/10/Track-PP-698-Octubre-S3-M1-VF.pdf"
+  },
+  "cadem-704": {
+    "entidad": "Cadem",
+    "titulo": "Plaza Pública 704",
+    "periodo": "2026-11-13",
+    "metodo": "Panel web no probabilístico con cuotas y ponderación",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": 1001,
+    "url": "https://cadem.cl/wp-content/uploads/2026/11/Track-PP-704-Noviembre-S2-M1-VF.pdf"
+  },
+  "cadem-miscelaneo-2026": {
+    "entidad": "Deloitte, Cadem, MBA UC y Diario Financiero",
+    "titulo": "Índice de Riesgos para Chile, proyecto misceláneo",
+    "periodo": "2026-04",
+    "metodo": "Dos paneles, ciudadanía y negocios",
+    "universo": "Consultar universo de cada panel",
+    "n_total": null,
+    "url": "https://cadem.cl/df-amplia-brecha-en-apoyo-al-proyecto-miscelaneo-constata-indice-deloitte-cadem-entre-la-ciudadania-y-el-mundo-empresarial/"
+  },
+  "cadem-seguridad-2026": {
+    "entidad": "Cadem",
+    "titulo": "Percepción de delincuencia y reforma de seguridad",
+    "periodo": "2026-10",
+    "metodo": "Resumen de Plaza Pública, panel web",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": null,
+    "url": "https://cadem.cl/estudios/temor-a-ser-victima-de-un-delito-se-mantiene-alto-en-70-3pts-y-78-6pts-considera-que-el-principal-problema-de-la-delincuencia-es-el-crimen-organizado/"
+  },
+  "cadem-tributaria-2022": {
+    "entidad": "Cadem",
+    "titulo": "Reforma tributaria de 2022",
+    "periodo": "2022-07-06 a 2022-07-08",
+    "metodo": "Resumen del levantamiento Plaza Pública",
+    "universo": "Personas de 18 años o más en Chile, en las 16 regiones",
+    "n_total": null,
+    "url": "https://cadem.cl/pulso-cadem-un-44-no-conoce-la-reforma-tributaria-del-gobierno-y-un-45-esta-en-desacuerdo-con-ella/"
+  },
+  "cep-96": {
+    "entidad": "Centro de Estudios Públicos",
+    "titulo": "Estudio Nacional de Opinión Pública 96",
+    "periodo": "2026-04-18 a 2026-05-27",
+    "metodo": "Cara a cara, muestreo probabilístico estratificado multietápico",
+    "universo": "Residentes de 18 años o más, salvo zonas de difícil acceso",
+    "n_total": 1469,
+    "url": "https://static.cepchile.cl/uploads/cepchile/2026/06/10-141614_atf6_Encuesta-CEP-96_con-anexos.pdf",
+    "microdatos": "https://www.cepchile.cl/encuesta/encuesta-cep-n-96-abril-mayo-2026/"
+  },
+  "ebs-2023": {
+    "entidad": "Ministerio de Desarrollo Social y Familia",
+    "titulo": "Encuesta de Bienestar Social 2023",
+    "periodo": "2023",
+    "metodo": "Encuesta con diseño y ponderadores publicados",
+    "universo": "Personas de 18 años o más en el universo EBS",
+    "n_total": null,
+    "url": "https://observatorio.ministeriodesarrollosocial.gob.cl/storage/docs/bienestar-social/2023/Resultados_Encuesta_EBS_2023.pdf",
+    "microdatos": "https://observatorio.ministeriodesarrollosocial.gob.cl/encuesta-bienestar-social-2023"
+  },
+  "ipsos-clima-2024": {
+    "entidad": "Ipsos",
+    "titulo": "Día de la Tierra 2024, Chile",
+    "periodo": "2024",
+    "metodo": "Encuesta en línea Global Advisor",
+    "universo": "Submuestra chilena en línea, consultar ficha internacional",
+    "n_total": null,
+    "url": "https://www.ipsos.com/es-cl/71-cree-que-el-pais-deberia-hacer-mas-en-la-lucha-contra-el-cambio-climatico"
+  },
+  "ipsos-orgullo-2025": {
+    "entidad": "Ipsos",
+    "titulo": "Global Advisor LGBT+ Pride 2025, Chile",
+    "periodo": "2025",
+    "metodo": "Encuesta en línea Global Advisor",
+    "universo": "Submuestra chilena en línea, consultar ficha internacional",
+    "n_total": null,
+    "url": "https://www.ipsos.com/sites/default/files/ct/news/documents/2025-06/Comunicado%20-%20Informe%20Ipsos%20Orgullo%20LGBT%2B%202025.pdf"
+  },
+  "mesu-2024": {
+    "entidad": "Ministerio de Hacienda",
+    "titulo": "Medición de Satisfacción Usuaria 2024",
+    "periodo": "2024",
+    "metodo": "Encuesta anual de experiencia usuaria",
+    "universo": "Personas usuarias de 78 instituciones públicas participantes",
+    "n_total": 60224,
+    "url": "https://satisfaccion.gob.cl/informacion-de-interes/noticias/medicion-de-satisfaccion-usuaria-65-de-las-personas-quedo-conforme-con-el"
+  },
+  "mesu-2025": {
+    "entidad": "Ministerio de Hacienda",
+    "titulo": "Medición de Satisfacción Usuaria 2025",
+    "periodo": "2025",
+    "metodo": "Encuesta anual de experiencia usuaria",
+    "universo": "Personas usuarias de 79 instituciones públicas participantes",
+    "n_total": 57094,
+    "url": "https://satisfaccion.gob.cl/informacion-de-interes/noticias/medicion-de-satisfaccion-usuaria-mesu-2025-69-de-las-personas-evaluo-con-nota-6",
+    "tabulados": "https://satisfaccion.gob.cl/medicion-de-satisfaccion-usuaria/resultados/resultados-mesu-2025/resultados-satisfaccion-con-la-ultima-experiencia",
+    "metodologia": "https://satisfaccion.gob.cl/medicion-de-satisfaccion-usuaria/documentos/documentos-metodologicos/2025"
+  },
+  "mma-2014": {
+    "entidad": "Ministerio del Medio Ambiente",
+    "titulo": "Primera Encuesta Nacional de Medio Ambiente",
+    "periodo": "2014",
+    "metodo": "Encuesta en capitales regionales",
+    "universo": "Universo urbano de las capitales regionales",
+    "n_total": null,
+    "url": "https://mma.gob.cl/ministerio-del-medio-ambiente-realiza-la-primera-encuesta-nacional-de-medio-ambiente-opiniones-comportamientos-y-preocupaciones/",
+    "microdatos": "https://mma.gob.cl/encuestas-nacionales-del-medio-ambiente/"
+  },
+  "mma-2018": {
+    "entidad": "Ministerio del Medio Ambiente y DESUC",
+    "titulo": "Encuesta Nacional de Medio Ambiente 2017–2018",
+    "periodo": "2017–2018",
+    "metodo": "Encuesta en capitales regionales",
+    "universo": "Universo urbano cubierto por las capitales regionales de la encuesta",
+    "n_total": 7601,
+    "url": "https://mma.gob.cl/wp-content/uploads/2018/03/Informe-Final-Encuesta-Nacional-de-Medio-Ambiente-2018.pdf",
+    "microdatos": "https://mma.gob.cl/encuestas-nacionales-del-medio-ambiente/"
+  },
+  "ocde-confianza-2023": {
+    "entidad": "OCDE",
+    "titulo": "Encuesta sobre los motores de la confianza, Chile",
+    "periodo": "2023",
+    "metodo": "Encuesta OCDE, nota país publicada en 2024",
+    "universo": "Residentes en Chile, con filtro por experiencia para satisfacción con servicios",
+    "n_total": null,
+    "url": "https://www.oecd.org/content/dam/oecd/es/publications/reports/2024/06/oecd-survey-on-drivers-of-trust-in-public-institutions-2024-results-country-notes_33192204/chile_c3d29801/f5523f36-es.pdf"
+  },
+  "servel-2022": {
+    "entidad": "Servicio Electoral de Chile",
+    "titulo": "Archivo histórico, resultados del plebiscito 2022",
+    "periodo": "2022-09-04",
+    "metodo": "Escrutinio con 99,97% de mesas",
+    "universo": "Votos válidos de las mesas escrutadas en el corte publicado",
+    "n_total": null,
+    "url": "https://archivo.servel.cl/index.php/resultados-plebiscitos?listLimit=10&listPage=2&sort=date&sortDir=asc"
+  },
+  "servel-2023": {
+    "entidad": "Servicio Electoral de Chile",
+    "titulo": "Cuenta Pública 2023, resultados definitivos del plebiscito",
+    "periodo": "2023-12-17",
+    "metodo": "Escrutinio definitivo proclamado por el Tricel",
+    "universo": "Votos válidamente emitidos en el plebiscito del 17 de diciembre de 2023",
+    "n_total": null,
+    "url": "https://www.servel.cl/wp-content/uploads/2024/05/Cuenta-Publica-2023.pdf"
+  },
+  "uc-2025": {
+    "entidad": "Pontificia Universidad Católica de Chile",
+    "titulo": "Encuesta Nacional Bicentenario UC 2025",
+    "periodo": "2025-08-06 a 2025-09-29",
+    "metodo": "Cara a cara CAPI, muestreo estratificado y ponderado",
+    "universo": "Personas de 18 años o más en viviendas particulares urbanas ocupadas, con más de seis meses de residencia",
+    "n_total": 1611,
+    "url": "https://encuestabicentenario.uc.cl/content/uploads/2025/11/Bicentenario-2025_Resultados.pdf",
+    "microdatos": "https://encuestabicentenario.uc.cl/base-de-datos/"
+  },
+  "uc-2026": {
+    "entidad": "Pontificia Universidad Católica de Chile",
+    "titulo": "Encuesta Nacional Bicentenario UC 2026",
+    "periodo": "2026-07-30 a 2026-09-16",
+    "metodo": "Cara a cara CAPI, muestreo estratificado y ponderado",
+    "universo": "Personas de 18 años o más en viviendas particulares urbanas ocupadas, con más de seis meses de residencia",
+    "n_total": 1594,
+    "url": "https://encuestabicentenario.uc.cl/content/uploads/2026/11/031126-EB2026-COMPLETA.pdf",
+    "microdatos": "https://encuestabicentenario.uc.cl/base-de-datos/"
+  }
+}

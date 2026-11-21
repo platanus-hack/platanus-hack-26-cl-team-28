@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .agentes import Agente
+from .metodo import PREGUNTAS
 from .motor import Consumo, Motor, Respuesta
 
 CARPETA_CACHE = Path(__file__).resolve().parent.parent / "data" / "cache"
@@ -48,6 +49,12 @@ ESQUEMA_RESUMEN = {
     "required": ["titulo", "resumen"],
     "additionalProperties": False,
 }
+
+# A cuántas personas de cada lote se les pide, aparte, una frase sobre lo que respondieron.
+VOCES_POR_LOTE = 2
+# Personas que van primero, en lotes chicos, para que haya respuestas a los pocos segundos.
+AVANZADA = 24
+LOTE_AVANZADA = 4
 
 # Segundos en que se reproduce lo que ya estaba en caché.
 REPRODUCCION = 6.0
@@ -88,7 +95,7 @@ class Cache:
     def __init__(self, carpeta: Path = CARPETA_CACHE):
         carpeta.mkdir(parents=True, exist_ok=True)
         self._archivo = carpeta / "respuestas.jsonl"
-        self._datos: dict[tuple[str, str], tuple[int, str]] = {}
+        self._datos: dict[tuple[str, str, str], tuple[list[int], str]] = {}
         self._cerrojo = threading.Lock()
         if self._archivo.exists():
             with open(self._archivo, encoding="utf-8") as f:
@@ -97,21 +104,22 @@ class Cache:
                         fila = json.loads(linea)
                     except ValueError:
                         continue
-                    self._datos[(fila["p"], fila["m"], fila["a"])] = (fila["v"], fila["f"])
+                    if isinstance(fila.get("r"), list):
+                        self._datos[(fila["p"], fila["m"], fila["a"])] = (fila["r"], fila.get("f", ""))
 
     @staticmethod
     def huella(politica: str) -> str:
         return hashlib.sha256(" ".join(politica.split()).lower().encode()).hexdigest()[:20]
 
-    def buscar(self, huella: str, modelo: str, agente: Agente) -> tuple[int, str] | None:
+    def buscar(self, huella: str, modelo: str, agente: Agente) -> tuple[list[int], str] | None:
         return self._datos.get((huella, modelo, agente.id))
 
     def guardar(self, huella: str, modelo: str, agentes: dict[int, Agente], respuestas: list[Respuesta]) -> None:
         with self._cerrojo, open(self._archivo, "a", encoding="utf-8") as f:
             for r in respuestas:
                 clave = (huella, modelo, agentes[r.agente].id)
-                self._datos[clave] = (r.acuerdo, r.frase)
-                f.write(json.dumps({"p": huella, "m": modelo, "a": clave[2], "v": r.acuerdo, "f": r.frase}, ensure_ascii=False) + "\n")
+                self._datos[clave] = (r.respuestas, r.frase)
+                f.write(json.dumps({"p": huella, "m": modelo, "a": clave[2], "r": r.respuestas, "f": r.frase}, ensure_ascii=False) + "\n")
 
 
 class Corrida:
@@ -133,6 +141,8 @@ class Corrida:
         self.terminada = False
         self.cancelada = False
         self._condicion = threading.Condition()
+        self._grupo: ThreadPoolExecutor | None = None
+        self._voces: list = []
         self._cerrojo = threading.Lock()
 
     # Eventos ------------------------------------------------------------------------------
@@ -194,9 +204,41 @@ class Corrida:
         self.publicar("respuestas", {
             "caso": numero,
             "cache": desde_cache,
-            "r": [[r.agente, r.acuerdo, r.frase] for r in respuestas],
+            "r": [[r.agente, r.acuerdo, r.frase, r.respuestas] for r in respuestas],
             "metricas": self.metricas(),
         })
+        if not desde_cache and not self.cancelada:
+            self._pedir_voces(numero, caso, huella, respuestas)
+
+    def _pedir_voces(self, numero: int, caso: Caso, huella: str, respuestas: list[Respuesta]) -> None:
+        """Aparte de la encuesta: a unas pocas personas de cada lote se les pide una frase sobre lo que ya respondieron."""
+        favor = [r for r in respuestas if r.acuerdo >= 5][:1]
+        resto = [r for r in respuestas if r.acuerdo <= 4][:VOCES_POR_LOTE - len(favor)]
+        elegidas = favor + resto
+        if not elegidas or self._grupo is None:
+            return
+        self._voces.append(self._grupo.submit(self._voces_de, numero, caso, huella, elegidas))
+
+    def _voces_de(self, numero: int, caso: Caso, huella: str, elegidas: list[Respuesta]) -> None:
+        try:
+            pares = [(self.por_indice[r.agente], r) for r in elegidas]
+            frases, consumo = self.motor.comentar(caso.politica(), pares)
+        except Exception:
+            return  # las frases son un adorno: si fallan, la encuesta sigue igual
+        if not frases:
+            return
+        with self._cerrojo:
+            self.consumo.sumar(consumo)
+            for agente, frase in frases:
+                if agente in caso.respuestas:
+                    caso.respuestas[agente].frase = frase
+        self.cache.guardar(huella, self.motor.clave, self.por_indice, [caso.respuestas[a] for a, _ in frases if a in caso.respuestas])
+        self.publicar("voces", {"caso": numero, "r": [[agente, frase] for agente, frase in frases], "metricas": self.metricas()})
+
+    def _esperar_voces(self) -> None:
+        pendientes, self._voces = self._voces, []
+        for tarea in pendientes:
+            tarea.result()
 
     def _preguntar(self, grupo: ThreadPoolExecutor, numero: int) -> list:
         caso = self.casos[numero]
@@ -213,8 +255,13 @@ class Corrida:
         # Lo que ya estaba en caché llega de a poco, para que el mapa igual se vea encender.
         if guardadas:
             tareas.append(grupo.submit(self._reproducir, numero, caso, huella, guardadas))
-        for k in range(0, len(pendientes), self.lote):
-            tareas.append(grupo.submit(self._lote, numero, caso, huella, pendientes[k:k + self.lote]))
+        # Una avanzada de lotes chicos responde antes: el mapa empieza a encenderse y llegan las primeras frases.
+        avanzada = pendientes[:AVANZADA] if len(pendientes) > AVANZADA * 2 else []
+        for k in range(0, len(avanzada), LOTE_AVANZADA):
+            tareas.append(grupo.submit(self._lote, numero, caso, huella, avanzada[k:k + LOTE_AVANZADA]))
+        resto = pendientes[len(avanzada):]
+        for k in range(0, len(resto), self.lote):
+            tareas.append(grupo.submit(self._lote, numero, caso, huella, resto[k:k + self.lote]))
         return tareas
 
     def _reproducir(self, numero, caso, huella, respuestas):
@@ -242,8 +289,14 @@ class Corrida:
         for r in muestra:
             a = self.por_indice[r.agente]
             lineas.append(f"- ({a.atributos.get('Edad')}, {a.comuna}, {a.atributos.get('Tramo socioeconómico', '')[:9]}; acuerdo {r.acuerdo}/7) {r.frase}")
+        todas = list(base.respuestas.values())
+        medias = "\n".join(
+            f"- {texto} Media {sum(r.respuestas[k] for r in todas) / len(todas):.1f} de 7."
+            for k, texto in enumerate(PREGUNTAS)
+        )
         prompt = (
             f"# Propuesta actual (variante {base.letra}, {round(base.apoyo() * 100)} % a favor)\n\n{base.politica()}\n\n"
+            f"# Cómo respondieron la encuesta\n\n{medias}\n\n"
             f"# Lo que dijeron quienes no la apoyan\n\n" + "\n".join(lineas) + "\n\n"
             f"# Lo que valoran quienes sí la apoyan (no lo pierdas)\n\n" + "\n".join(f"- {r.frase}" for r in valoradas) + "\n\n"
             "Escribe una versión mejorada de la propuesta que mantenga su objetivo y todo lo que valoran "
@@ -272,6 +325,7 @@ class Corrida:
                 "iteraciones": self.iteraciones,
             })
             with ThreadPoolExecutor(max_workers=self.concurrencia) as grupo:
+                self._grupo = grupo
                 # Las variantes escritas van todas juntas; la A primero en la cola.
                 por_caso = [self._preguntar(grupo, k) for k in range(len(self.casos))]
                 for k, tareas in enumerate(por_caso):
@@ -282,6 +336,8 @@ class Corrida:
                     if self.cancelada or len(self.casos) >= len(self.letras):
                         break
                     self.publicar("redactando", {"numero": n, "metricas": self.metricas()})
+                    # El agente que reescribe lee las frases: se espera a que lleguen.
+                    self._esperar_voces()
                     nuevo = self._iterar(n)
                     self.casos.append(nuevo)
                     k = len(self.casos) - 1
@@ -289,6 +345,7 @@ class Corrida:
                     for tarea in self._preguntar(grupo, k):
                         tarea.result()
                     self._cerrar_caso(k)
+                self._esperar_voces()
             self.publicar("fin", {"metricas": self.metricas(), "apoyos": [round(c.apoyo(), 4) for c in self.casos]})
         except Exception as error:
             self.publicar("falla", {"mensaje": str(error)[:400]})

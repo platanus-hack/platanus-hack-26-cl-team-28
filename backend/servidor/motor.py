@@ -1,14 +1,18 @@
 """Motores que hacen responder a los agentes.
 
-- `ClaudeCodigo`: llama a Haiku por la CLI de Claude Code (`claude -p`), con la sesión del
-  equipo. Es lo que corre en un PC de desarrollo sin clave de API.
-- `ClaudeApi`: llama a la API de Anthropic con `ANTHROPIC_API_KEY`; sin razonamiento previo
-  responde varias veces más rápido. Es el que corresponde a un despliegue.
-- `Grabado`: repite respuestas reales guardadas en `data/pruebas/` (Haiku 5.5 sobre los mismos
-  2.000 agentes y la política de sala cuna). Sirve sin red y se rotula como corrida grabada.
+El método es el de `scripts/probar_modelo.py` (ver `metodo.py`): cada persona responde las
+mismas cinco preguntas con un entero de 1 a 7, sin texto. Lo que cambia entre motores es quién
+contesta:
 
-Cada motor recibe una política y un lote de agentes y devuelve, por agente, su acuerdo de 1 a 7
-y una frase en primera persona.
+- `LlamaLocal`: el servidor llama-server del banco de pruebas, una persona por llamada, con la
+  misma función `encuestar` del script. Se usa si `LLAMA_URL` está definida.
+- `ClaudeApi`: Claude Haiku por la API de Anthropic (`ANTHROPIC_API_KEY`).
+- `ClaudeCodigo`: Claude Haiku por la CLI de Claude Code (`claude -p`).
+- `Grabado`: repite respuestas reales guardadas en `data/pruebas/`.
+
+Con Claude las personas van en lotes (`LOTE` por llamada, como en las pruebas con subagentes);
+`LOTE=1` pregunta de a una. Las frases que muestra la interfaz no son parte de la encuesta: se
+piden después, en una llamada aparte, a unas pocas personas que ya respondieron (`comentar`).
 """
 
 import hashlib
@@ -20,21 +24,10 @@ import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import metodo
 from .agentes import Agente
 
-SISTEMA = (
-    "Simulas una encuesta a personas reales que viven en Chile. Para cada perfil, ponte en el lugar "
-    "de esa persona (su situación, sus intereses, su forma de pensar) y responde como ella, no como "
-    "un asistente ni como un experto neutral. Las personas reales difieren entre sí: usa toda la "
-    "escala cuando el perfil lo justifique.\n\n"
-    "Contesta como esa persona le contestaría a una encuestadora: aunque la propuesta no la afecte "
-    "directamente, igual tiene una opinión sobre si le parece bien o mal (por lo que cree justo, "
-    "por lo que le pasa a otros, por cómo ve al gobierno o a las empresas). Que no le toque no "
-    "significa estar en desacuerdo. El 4 es solo para quien de verdad no sabe o le da lo mismo.\n\n"
-    "Usa los valores y preocupaciones que de verdad tiene la gente con ese perfil en el Chile de "
-    "hoy, no los tuyos: mucha gente prioriza la seguridad, el orden y el castigo al delito, "
-    "desconfía de los políticos y de las grandes empresas, y mira primero su bolsillo."
-)
+N = len(metodo.CLAVES)
 
 ESQUEMA_LOTE = {
     "type": "object",
@@ -45,10 +38,9 @@ ESQUEMA_LOTE = {
                 "type": "object",
                 "properties": {
                     "i": {"type": "integer"},
-                    "a": {"type": "integer"},
-                    "f": {"type": "string"},
+                    "p": {"type": "array", "items": {"type": "integer"}},
                 },
-                "required": ["i", "a", "f"],
+                "required": ["i", "p"],
                 "additionalProperties": False,
             },
         }
@@ -57,12 +49,36 @@ ESQUEMA_LOTE = {
     "additionalProperties": False,
 }
 
+# Lo único que se agrega a las instrucciones del banco: que vienen varias personas juntas.
 INSTRUCCION_LOTE = (
-    "Para cada persona devuelve: i (su número en la lista), a (qué tan de acuerdo está con esta "
-    "propuesta, de 1 = totalmente en desacuerdo a 7 = totalmente de "
-    "acuerdo) y f (una frase de esa persona, en primera persona, de máximo 14 palabras, con su voz "
-    "y su motivo concreto)."
+    "Vienen varias personas, numeradas. Responde la encuesta por separado como cada una de ellas, "
+    f"sin que una influya en otra. Para cada persona devuelve `i` (su número) y `p` (sus {N} "
+    "respuestas, enteros de 1 a 7, en el orden de las preguntas)."
 )
+
+SISTEMA_VOCES = (
+    "Estas personas ya contestaron una encuesta sobre una política pública en Chile. Sus respuestas "
+    "están dadas y no se cambian. Para cada una, escribe la frase con que le explicaría a la "
+    "encuestadora su respuesta a la primera pregunta: en primera persona, con su voz y su motivo "
+    "concreto según su perfil, en máximo 14 palabras."
+)
+
+ESQUEMA_VOCES = {
+    "type": "object",
+    "properties": {
+        "r": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {"i": {"type": "integer"}, "f": {"type": "string"}},
+                "required": ["i", "f"],
+                "additionalProperties": False,
+            },
+        }
+    },
+    "required": ["r"],
+    "additionalProperties": False,
+}
 
 
 @dataclass
@@ -82,8 +98,15 @@ class Consumo:
 @dataclass
 class Respuesta:
     agente: int
-    acuerdo: int
-    frase: str
+    #: Una nota de 1 a 7 por cada pregunta del banco, en su orden.
+    respuestas: list[int]
+    #: Frase pedida aparte, después de responder; vacía si no se le pidió.
+    frase: str = ""
+
+    @property
+    def acuerdo(self) -> int:
+        """La primera pregunta: si está de acuerdo con que se implemente la política."""
+        return self.respuestas[0]
 
 
 @dataclass
@@ -92,22 +115,42 @@ class ResultadoLote:
     consumo: Consumo = field(default_factory=Consumo)
 
 
-def prompt_lote(politica: str, agentes: list[Agente]) -> str:
-    personas = "\n".join(f"{k}. {agente.perfil()}" for k, agente in enumerate(agentes))
-    return f"# Política\n\n{politica.strip()}\n\n# Personas\n\n{personas}\n\n{INSTRUCCION_LOTE}"
+def prompt_lote(agentes: list[Agente]) -> str:
+    personas = "\n\n".join(f"## Persona {k}\n\n{metodo.perfil(agente)}" for k, agente in enumerate(agentes))
+    return f"{INSTRUCCION_LOTE}\n\n{personas}"
+
+
+def notas_validas(notas) -> bool:
+    return isinstance(notas, list) and len(notas) == N and all(type(v) is int and 1 <= v <= 7 for v in notas)
 
 
 def leer_lote(datos: dict, agentes: list[Agente]) -> list[Respuesta]:
     respuestas, vistos = [], set()
     for fila in datos.get("r", []):
-        k, acuerdo = fila.get("i"), fila.get("a")
-        if not isinstance(k, int) or not 0 <= k < len(agentes) or k in vistos:
-            continue
-        if not isinstance(acuerdo, int) or not 1 <= acuerdo <= 7:
+        k = fila.get("i")
+        if not isinstance(k, int) or not 0 <= k < len(agentes) or k in vistos or not notas_validas(fila.get("p")):
             continue
         vistos.add(k)
-        respuestas.append(Respuesta(agentes[k].indice, acuerdo, str(fila.get("f", "")).strip()[:160]))
+        respuestas.append(Respuesta(agentes[k].indice, fila["p"]))
     return respuestas
+
+
+def prompt_voces(politica: str, pares: list[tuple[Agente, Respuesta]]) -> str:
+    preguntas = "\n".join(f"{k}. {texto}" for k, texto in enumerate(metodo.PREGUNTAS, start=1))
+    personas = "\n\n".join(
+        f"## Persona {k}\n\n{metodo.perfil(agente)}\n- Sus respuestas (1 a 7, en el orden de las preguntas): {respuesta.respuestas}"
+        for k, (agente, respuesta) in enumerate(pares)
+    )
+    return f"# Política\n\n{politica.strip()}\n\n# Preguntas\n\n{preguntas}\n\n{personas}\n\nDevuelve `i` (número de la persona) y `f` (su frase)."
+
+
+def leer_voces(datos: dict, pares: list[tuple[Agente, Respuesta]]) -> list[tuple[int, str]]:
+    salida = []
+    for fila in datos.get("r", []):
+        k, frase = fila.get("i"), str(fila.get("f", "")).strip()[:160]
+        if isinstance(k, int) and 0 <= k < len(pares) and frase:
+            salida.append((pares[k][0].indice, frase))
+    return salida
 
 
 class Motor:
@@ -121,13 +164,17 @@ class Motor:
     def redactar(self, sistema: str, prompt: str, esquema: dict) -> tuple[dict, Consumo]:
         raise NotImplementedError
 
+    def comentar(self, politica: str, pares: list[tuple[Agente, Respuesta]]) -> tuple[list[tuple[int, str]], Consumo]:
+        """Frases de personas que ya respondieron. Por defecto, ninguna: no todos los motores escriben."""
+        return [], Consumo()
+
     def describir(self) -> dict:
         return {"nombre": self.nombre, "modelo": self.modelo, "grabado": self.grabado}
 
     @property
     def clave(self) -> str:
         """Modelo más versión de las instrucciones: si cambia el prompt, la caché no se reutiliza."""
-        version = hashlib.sha256((SISTEMA + INSTRUCCION_LOTE).encode()).hexdigest()[:8]
+        version = hashlib.sha256((metodo.SISTEMA + "".join(metodo.PREGUNTAS) + INSTRUCCION_LOTE).encode()).hexdigest()[:8]
         return f"{self.modelo}:{version}"
 
 
@@ -176,8 +223,12 @@ class ClaudeCodigo(Motor):
         return datos["structured_output"], consumo
 
     def responder(self, politica, agentes):
-        datos, consumo = self._llamar(self._modelo, SISTEMA, prompt_lote(politica, agentes), ESQUEMA_LOTE)
+        datos, consumo = self._llamar(self._modelo, metodo.sistema_con_politica(politica), prompt_lote(agentes), ESQUEMA_LOTE)
         return ResultadoLote(leer_lote(datos, agentes), consumo)
+
+    def comentar(self, politica, pares):
+        datos, consumo = self._llamar(self._modelo, SISTEMA_VOCES, prompt_voces(politica, pares), ESQUEMA_VOCES)
+        return leer_voces(datos, pares), consumo
 
     def redactar(self, sistema, prompt, esquema):
         return self._llamar(self._redaccion, sistema, prompt, esquema)
@@ -231,8 +282,12 @@ class ClaudeApi(Motor):
         return json.loads(texto), consumo
 
     def responder(self, politica, agentes):
-        datos, consumo = self._llamar(self.modelo, SISTEMA, prompt_lote(politica, agentes), ESQUEMA_LOTE, rapido=True)
+        datos, consumo = self._llamar(self.modelo, metodo.sistema_con_politica(politica), prompt_lote(agentes), ESQUEMA_LOTE, rapido=True)
         return ResultadoLote(leer_lote(datos, agentes), consumo)
+
+    def comentar(self, politica, pares):
+        datos, consumo = self._llamar(self.modelo, SISTEMA_VOCES, prompt_voces(politica, pares), ESQUEMA_VOCES, rapido=True)
+        return leer_voces(datos, pares), consumo
 
     def redactar(self, sistema, prompt, esquema):
         return self._llamar(self._redaccion, sistema, prompt, esquema, rapido=False)
@@ -247,22 +302,45 @@ class Grabado(Motor):
 
     def __init__(self, agentes: list[Agente], pausa: float = 0.6):
         por_id = {agente.id: agente.indice for agente in agentes}
-        self._acuerdo: dict[int, int] = {}
+        self._acuerdo: dict[int, list[int]] = {}
         with open(self.ARCHIVO, encoding="utf-8") as f:
             for linea in f:
                 fila = json.loads(linea)
                 if fila.get("valida") and fila["id"] in por_id:
-                    self._acuerdo[por_id[fila["id"]]] = fila["respuestas"]["p1"]
+                    self._acuerdo[por_id[fila["id"]]] = [fila["respuestas"][clave] for clave in metodo.CLAVES]
         self.modelo = "claude-haiku-5-5 (grabado)"
         self._pausa = pausa
 
     def responder(self, politica, agentes):
         time.sleep(self._pausa)
-        respuestas = [Respuesta(a.indice, self._acuerdo[a.indice], "") for a in agentes if a.indice in self._acuerdo]
+        respuestas = [Respuesta(a.indice, self._acuerdo[a.indice]) for a in agentes if a.indice in self._acuerdo]
         return ResultadoLote(respuestas, Consumo())
 
     def redactar(self, sistema, prompt, esquema):
         raise RuntimeError("La corrida grabada no redacta variantes nuevas")
+
+
+class LlamaLocal(Motor):
+    """El servidor llama-server del banco de pruebas: una persona por llamada, con su misma función."""
+
+    nombre = "Modelo local"
+
+    def __init__(self, url: str):
+        self._url = url.rstrip("/")
+        modelo = metodo.banco.pedir(f"{self._url}/v1/models", espera=10)["data"][0]["id"]
+        self.modelo = Path(modelo).name.removesuffix(".gguf")
+        self._temperatura = float(os.environ.get("TEMPERATURA", "1.0"))
+
+    def responder(self, politica, agentes):
+        respuestas = []
+        for agente in agentes:
+            registro = metodo.banco.encuestar(self._url, politica, metodo.persona_de(agente), agente.indice, self._temperatura, logprobs=False)
+            if registro["valida"]:
+                respuestas.append(Respuesta(agente.indice, [registro["respuestas"][clave] for clave in metodo.CLAVES]))
+        return ResultadoLote(respuestas, Consumo(llamadas=len(agentes)))
+
+    def redactar(self, sistema, prompt, esquema):
+        raise RuntimeError("El modelo local solo responde la encuesta; para iteraciones hace falta Claude")
 
 
 def elegir_motor(agentes: list[Agente]) -> Motor:
@@ -270,6 +348,8 @@ def elegir_motor(agentes: list[Agente]) -> Motor:
     pedido = os.environ.get("MOTOR", "").lower()
     if pedido == "grabado":
         return Grabado(agentes)
+    if os.environ.get("LLAMA_URL") and pedido in ("", "local"):
+        return LlamaLocal(os.environ["LLAMA_URL"])
     if pedido in ("", "api") and ClaudeApi.disponible():
         return ClaudeApi()
     if pedido in ("", "claude") and ClaudeCodigo.disponible():
