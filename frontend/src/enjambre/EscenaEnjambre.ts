@@ -166,6 +166,7 @@ export class EscenaEnjambre {
   private finVuelo = 0;
   private inicioRotulos = 0;
   private sucio = true;
+  private pausada = false;
   private zoom = 1;
   private ox = 0;
   private oy = 0;
@@ -754,9 +755,19 @@ export class EscenaEnjambre {
     this.sale[i] = ahora + (modo === 'ola' ? norteSur * 1.3 : 0) + Math.abs(azar(i, 4)) * 0.4;
   }
 
+  /**
+   * Deja de dibujar mientras otra vista tapa el mapa por completo (el proceso, el análisis): los
+   * cambios se siguen anotando y al volver se pinta de inmediato con lo último.
+   */
+  pausar(pausada: boolean): void {
+    if (this.pausada === pausada) return;
+    this.pausada = pausada;
+    if (!pausada) this.sucio = true;
+  }
+
   private readonly ciclo = (marca: number): void => {
     this.cuadro = requestAnimationFrame(this.ciclo);
-    if (document.hidden || !this.ancho) return;
+    if (document.hidden || !this.ancho || this.pausada) return;
     const ahora = marca / 1000;
     const volando = ahora < this.finVuelo + 0.6;
     const urgente = volando || this.sucio || this.latiendo || this.foco.length > 0;

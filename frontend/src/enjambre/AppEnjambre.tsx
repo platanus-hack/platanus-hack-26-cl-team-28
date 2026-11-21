@@ -204,6 +204,13 @@ export function AppEnjambre() {
     setProcesoMontado(false);
     setAnalisis(false);
   }, [hayProceso]);
+  // Con el mapa tapado por completo no se dibuja: el proceso lo cubre al terminar de abrirse (sus
+  // cuadrados salen del mapa, que debe verse mientras vuelan) y el análisis, de inmediato.
+  useEffect(() => {
+    if (!proceso && !analisis) return escena.current?.pausar(false);
+    const espera = window.setTimeout(() => escena.current?.pausar(true), analisis ? 400 : 1300);
+    return () => window.clearTimeout(espera);
+  }, [proceso, analisis, puntos]);
   useEffect(() => {
     const estrecha = matchMedia('(max-width: 899px)');
     const cerrar = () => estrecha.matches && setAnalisis(false);

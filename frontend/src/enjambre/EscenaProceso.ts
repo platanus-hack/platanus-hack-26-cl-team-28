@@ -37,6 +37,16 @@ const NOMBRES = ['A favor', 'Sin decidir', 'En contra'];
 const ABRIR = 1.1;
 const CERRAR = 0.55;
 const DPR_MAXIMO = 2;
+/**
+ * Los caminos de todas las personas se pintan una vez en una capa aparte y cada cuadro la copia:
+ * trazar miles de curvas translúcidas en cada cuadro es lo que trababa la vista.
+ * Mientras llegan respuestas la capa se rehace a lo más cada tantos segundos.
+ */
+const PAUSA_CAPA = 0.5;
+/** Con más caminos que estos se dibuja una parte, repartida pareja: a esa densidad se ven igual. */
+const CAMINOS_MAXIMOS = 2500;
+/** Mientras siguen llegando respuestas la capa va en borrador, con menos caminos; al terminar se pinta entera. */
+const CAMINOS_BORRADOR = 450;
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => {
   const v = Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453;
@@ -84,10 +94,17 @@ export class EscenaProceso {
   private geo = { y0: 0, y1: 0, embudo: [0, 0], lotes: [0, 0], ejes: [0, 0], pila: [0, 0], otra: [0, 0], conOtra: false };
   private cuenta = [0, 0, 0];
   private sobre = -1;
-  /** Avance suavizado de la entrada, para que los caminos salgan de donde va cada cuadrado. */
-  private e = 1;
   private colores = { favor: '', indecisa: '', contra: '', tinta: '', suave: '', fondo: '', linea: '', papel: '', pendiente: '', figura: '' };
   private fuente = 'sans-serif';
+  /** Capa con los caminos de todos, y si quedó vieja (cambiaron los datos, el tamaño o el tema). */
+  private capa: HTMLCanvasElement | null = null;
+  private capaVieja = true;
+  private capaPintada = -1;
+  /** La capa se pintó en borrador (faltaban respuestas): hay que rehacerla entera cuando lleguen todas. */
+  private capaBorrador = false;
+  /** Donde se pinta la capa definitiva antes de mostrarla, y cuántas posturas lleva pintadas. */
+  private capaAtras: HTMLCanvasElement | null = null;
+  private pasoCapa = 0;
   private readonly reducir = matchMedia('(prefers-reduced-motion: reduce)');
   private readonly observador: ResizeObserver;
   /** Aviso al elegir a una persona: agente y dónde quedó en pantalla. */
@@ -152,6 +169,8 @@ export class EscenaProceso {
       figura: v('--tinta-figura'),
     };
     this.fuente = v('--fuente-ui') || 'sans-serif';
+    this.capaVieja = true;
+    this.pasoCapa = 0;
     this.sucio = true;
   }
 
@@ -277,6 +296,8 @@ export class EscenaProceso {
         this.py[k] = this.ty[k];
       }
     }
+    this.capaVieja = true;
+    this.pasoCapa = 0;
     this.sucio = true;
   }
 
@@ -372,7 +393,9 @@ export class EscenaProceso {
       moviendo = true;
     }
     const esperando = this.lotes.some((lote) => lote.pendiente) || this.datos.redactando;
-    if (!this.sucio && !moviendo && antes === this.t && !esperando) return;
+    if (this.capaBorrador && !this.lotes.some((lote) => lote.pendiente)) this.capaVieja = true;
+    // Una capa vieja que todavía no toca rehacer mantiene el ciclo andando hasta que se rehace.
+    if (!this.sucio && !moviendo && antes === this.t && !esperando && !this.capaVieja) return;
     this.sucio = false;
     this.dibujar(ahora);
   };
@@ -432,8 +455,9 @@ export class EscenaProceso {
     const d = this.datos!;
     const { ctx, dpr, colores, geo } = this;
     const e = suave(this.t);
-    this.e = e;
     // Lo que no es gente aparece después de que los cuadrados despegan.
+    // La capa de caminos se pinta antes de que haga falta: el costo cae al empezar a abrir, no a mitad del vuelo.
+    if (this.capaVieja && (this.pasoCapa > 0 || this.capaPintada < 0 || ahora - this.capaPintada >= PAUSA_CAPA)) this.pintarCaminos(d, ahora);
     const visible = Math.max(0, Math.min(1, (this.t - 0.3) / 0.5));
     const trazo = Math.max(0, Math.min(1, (this.t - 0.42) / 0.58));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -488,29 +512,22 @@ export class EscenaProceso {
       ctx.beginPath();
       ctx.rect(0, 0, geo.lotes[1] + (this.ancho - geo.lotes[1]) * trazo, this.alto);
       ctx.clip();
-      const respondidas = this.cuenta[0] + this.cuenta[1] + this.cuenta[2];
+      // Con una persona señalada los caminos de los demás se apagan.
+      ctx.globalAlpha = this.sobre >= 0 ? 0.45 : 1;
+      if (this.capa) ctx.drawImage(this.capa, 0, 0, this.ancho, this.alto);
       ctx.lineWidth = 1;
       const loteSobre = this.sobre >= 0 ? this.loteDe[this.sobre] : -1;
-      for (let p = 0; p < 3; p++) {
-        ctx.strokeStyle = color[p];
-        ctx.globalAlpha = Math.max(0.045, Math.min(0.4, 55 / Math.max(1, respondidas))) * (this.sobre >= 0 ? 0.45 : 1);
-        ctx.beginPath();
-        for (let k = 0; k < n; k++) {
-          const acuerdo = d.acuerdo[d.agentes[k]];
-          if (!acuerdo || posturaDe(acuerdo) !== p) continue;
-          this.camino(d, k);
-        }
-        ctx.stroke();
-      }
       // Con una persona señalada: su lote completo, y su camino encima.
       if (this.sobre >= 0 && d.acuerdo[d.agentes[this.sobre]]) {
         ctx.globalAlpha = 0.5;
-        for (let k = 0; k < n; k++) {
-          const acuerdo = d.acuerdo[d.agentes[k]];
-          if (k === this.sobre || this.loteDe[k] !== loteSobre || !acuerdo) continue;
-          ctx.strokeStyle = color[posturaDe(acuerdo)];
+        for (let p = 0; p < 3; p++) {
+          ctx.strokeStyle = color[p];
           ctx.beginPath();
-          this.camino(d, k);
+          for (let k = 0; k < n; k++) {
+            const acuerdo = d.acuerdo[d.agentes[k]];
+            if (k === this.sobre || this.loteDe[k] !== loteSobre || !acuerdo || posturaDe(acuerdo) !== p) continue;
+            this.camino(ctx, d, k);
+          }
           ctx.stroke();
         }
       }
@@ -529,12 +546,13 @@ export class EscenaProceso {
       ctx.strokeStyle = colores.linea;
       ctx.fillStyle = colores.papel;
       ctx.lineWidth = 1;
+      // Todos los marcos en un solo trazo: con miles de agentes son cientos de recuadros.
+      ctx.beginPath();
       for (const lote of this.lotes) {
-        ctx.beginPath();
         ctx.roundRect(lote.x - borde, lote.y - borde, this.celda * 5 + borde * 2, this.celda * this.filasLote + borde * 2, Math.min(5, borde));
-        ctx.fill();
-        ctx.stroke();
       }
+      ctx.fill();
+      ctx.stroke();
       ctx.globalAlpha = 1;
     }
 
@@ -561,15 +579,68 @@ export class EscenaProceso {
     }
   }
 
-  /** Agrega al trazo en curso el camino de una persona. */
-  private camino(d: DatosProceso, k: number): void {
-    const { ctx } = this;
+  /**
+   * Pinta en la capa los caminos de todas las personas que ya respondieron, un trazo por postura
+   * (así los caminos del mismo color no se oscurecen entre sí al cruzarse).
+   */
+  private pintarCaminos(d: DatosProceso, ahora: number): void {
+    const borrador = this.lotes.some((lote) => lote.pendiente);
+    // El borrador va a un píxel por punto y de una vez: se rehace seguido y nadie lo mira de cerca
+    // mientras cambia. La capa definitiva se pinta atrás, una postura por cuadro, y se muestra al
+    // terminar: así ningún cuadro carga con todas las curvas.
+    const escala = borrador ? 1 : this.dpr;
+    const lienzo = borrador ? (this.capa ??= document.createElement('canvas')) : (this.capaAtras ??= document.createElement('canvas'));
+    const primero = borrador || this.pasoCapa === 0;
+    const ancho = Math.round(this.ancho * escala);
+    const alto = Math.round(this.alto * escala);
+    if (primero && (lienzo.width !== ancho || lienzo.height !== alto)) {
+      lienzo.width = ancho;
+      lienzo.height = alto;
+    }
+    const ctx = lienzo.getContext('2d')!;
+    ctx.setTransform(escala, 0, 0, escala, 0, 0);
+    if (primero) ctx.clearRect(0, 0, this.ancho, this.alto);
+    const n = d.agentes.length;
+    const respondidas = this.cuenta[0] + this.cuenta[1] + this.cuenta[2];
+    const paso = Math.max(1, Math.ceil(respondidas / (borrador ? CAMINOS_BORRADOR : CAMINOS_MAXIMOS)));
+    const dibujados = Math.max(1, respondidas / paso);
+    const color = [this.colores.favor, this.colores.indecisa, this.colores.contra];
+    ctx.lineWidth = 1;
+    ctx.globalAlpha = Math.max(0.045, Math.min(0.4, 55 / dibujados));
+    const desde = borrador ? 0 : this.pasoCapa;
+    const hasta = borrador ? 3 : this.pasoCapa + 1;
+    for (let p = desde; p < hasta; p++) {
+      ctx.strokeStyle = color[p];
+      ctx.beginPath();
+      let visto = 0;
+      for (let k = 0; k < n; k++) {
+        const acuerdo = d.acuerdo[d.agentes[k]];
+        if (!acuerdo || posturaDe(acuerdo) !== p) continue;
+        if (visto++ % paso === 0) this.camino(ctx, d, k);
+      }
+      ctx.stroke();
+    }
+    if (!borrador) {
+      this.pasoCapa += 1;
+      // Faltan posturas: la capa sigue vieja y el próximo cuadro pinta la siguiente.
+      if (this.pasoCapa < 3) return;
+      [this.capa, this.capaAtras] = [this.capaAtras, this.capa];
+    }
+    this.pasoCapa = 0;
+    this.capaVieja = false;
+    this.capaBorrador = borrador;
+    this.capaPintada = ahora;
+  }
+
+  /** Agrega al trazo en curso de `ctx` el camino de una persona. */
+  private camino(ctx: CanvasRenderingContext2D, d: DatosProceso, k: number): void {
     const a = d.agentes[k];
     const notas = d.notas[a];
     // Los caminos salen del borde del bloque de lotes, a la altura de cada persona: así no cruzan
     // por encima de los otros lotes y cada grupo se lee limpio.
     let x = this.salida;
-    let y = this.oy[k] + (this.py[k] - this.oy[k]) * this.e;
+    // Parten de donde queda la persona en su lote (no de donde va mientras se desliza): la capa no depende del cuadro.
+    let y = this.ty[k];
     ctx.moveTo(x, y);
     this.orden.forEach((pregunta, e) => {
       const nota = pregunta === 0 ? d.acuerdo[a] : (notas?.[pregunta] ?? d.acuerdo[a]);
@@ -803,7 +874,7 @@ export class EscenaProceso {
       ctx.beginPath();
       ctx.moveTo(this.px[k], this.py[k]);
       ctx.lineTo(this.salida, this.py[k]);
-      this.camino(d, k);
+      this.camino(ctx, d, k);
       ctx.stroke();
       this.orden.forEach((pregunta, e) => {
         const nota = pregunta === 0 ? acuerdo : (d.notas[a]?.[pregunta] ?? acuerdo);
