@@ -1,39 +1,52 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { Figura } from '../componentes/comunes/Figura';
-import { FiltrosMuestra } from '../componentes/preparar/FiltrosMuestra';
 import { MARCA, PREPARAR } from '../contenido';
-import { crearPoblacion } from '../dominio/poblacion';
 import { personasPorFigura } from '../dominio/muestra';
+import { crearPoblacion } from '../dominio/poblacion';
 import { formatear } from '../dominio/textos';
+import type { Caso } from '../dominio/tipos';
 import { useSimulacion } from '../estado/useSimulacion';
 import { REGIONES_GEO } from '../mapa/geografia';
 import estilos from './AppEnjambre.module.css';
 import { BarraMando } from './BarraMando';
+import { BarraResultado } from './BarraResultado';
+import { BloqueAvance } from './BloqueAvance';
 import { BloquePostura } from './BloquePostura';
 import { EscenaEnjambre, PUNTO, type ModoVuelo } from './EscenaEnjambre';
+import { useAngosto } from './useAngosto';
+import { MenuOpciones } from './MenuOpciones';
 
 /** Puntos dibujados: cada uno representa a una parte igual de la muestra. */
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 const PERSONAS = crearPoblacion(PUNTOS, REGIONES_GEO);
+/** Cuánto tarda la demostración en entregar las respuestas, para ver llegar a los agentes. */
+const DURACION_DEMO = 5200;
+
+const tituloDe = (caso: Caso) => caso.texto || caso.documento?.nombre || '';
 
 export function AppEnjambre() {
-  const sim = useSimulacion(PERSONAS);
-  const { fase, corrida, muestra, activo, enBarrido } = sim;
+  const sim = useSimulacion(PERSONAS, { minimoCasos: 1, duracionDemo: DURACION_DEMO });
+  const { fase, corrida, muestra, activo, enBarrido, respondidas } = sim;
   const lienzo = useRef<HTMLCanvasElement>(null);
   const escena = useRef<EscenaEnjambre | null>(null);
-  const [elegida, setElegida] = useState(0);
+  const [editando, setEditando] = useState(0);
   const [oculta, setOculta] = useState(false);
-  const [cajon, setCajon] = useState(false);
   const [claro, setClaro] = useState(false);
+  const angosto = useAngosto();
 
   const viendo = fase === 'preguntando' ? enBarrido : activo;
-  const hayResultado = fase !== 'preparar' && corrida !== null;
+  const hayResultado = (fase === 'preguntando' || fase === 'resultados') && corrida !== null;
   const resumen = hayResultado ? corrida.resumenes[viendo] : null;
   const porPunto = personasPorFigura(hayResultado ? corrida.muestra : muestra);
 
   const orden = useMemo<{ estados: Uint8Array; modo: ModoVuelo }>(() => {
     const estados = new Uint8Array(PUNTOS).fill(PUNTO.fuera);
+    if (fase === 'simulando') {
+      // Cada punto espera apagado hasta que su agente responde.
+      for (const indice of muestra.indices) estados[indice] = sim.llegadas.current[indice] || PUNTO.pendiente;
+      return { estados, modo: 'aparecer' };
+    }
     if (!hayResultado) {
       for (const indice of muestra.indices) estados[indice] = PUNTO.neutra;
       return { estados, modo: 'cambio' };
@@ -42,7 +55,8 @@ export function AppEnjambre() {
       estados[corrida.muestra.indices[k]] = PUNTO[respuesta.postura];
     });
     return { estados, modo: fase === 'preguntando' && viendo === 0 ? 'ola' : 'cambio' };
-  }, [hayResultado, corrida, muestra, viendo, fase]);
+    // `respondidas` cambia cada vez que llegan respuestas nuevas.
+  }, [hayResultado, corrida, muestra, viendo, fase, respondidas, sim.llegadas]);
 
   useEffect(() => {
     const nueva = new EscenaEnjambre(lienzo.current!, PERSONAS);
@@ -55,41 +69,36 @@ export function AppEnjambre() {
     document.documentElement.dataset.tema = claro ? 'claro' : 'oscuro';
     escena.current?.actualizarTema();
   }, [claro]);
-  // Mientras la pregunta recorre las variantes, la barra muestra la que se está viendo.
-  useEffect(() => {
-    if (fase === 'preguntando') setElegida(enBarrido);
-  }, [fase, enBarrido]);
-
-  const elegir = (indice: number) => {
-    setElegida(indice);
-    const enCorrida = corrida?.casos.findIndex((caso) => caso.id === String(sim.borradores[indice]?.id)) ?? -1;
-    if (fase === 'resultados' && enCorrida >= 0) sim.setActivo(enCorrida);
-  };
 
   // Teclas para presentar: H oculta la interfaz, las flechas cambian de variante.
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).closest('textarea, input, select')) return;
       if (e.key === 'h' || e.key === 'H') setOculta((valor) => !valor);
-      if (e.key === 'ArrowRight') elegir(Math.min(sim.borradores.length - 1, elegida + 1));
-      if (e.key === 'ArrowLeft') elegir(Math.max(0, elegida - 1));
+      if (fase !== 'resultados' || !corrida) return;
+      if (e.key === 'ArrowRight') sim.setActivo(Math.min(corrida.casos.length - 1, activo + 1));
+      if (e.key === 'ArrowLeft') sim.setActivo(Math.max(0, activo - 1));
     };
     window.addEventListener('keydown', tecla);
     return () => window.removeEventListener('keydown', tecla);
   });
 
+  const caso = hayResultado ? corrida.casos[viendo] : null;
   return (
     <div className={estilos.app} data-oculta={oculta || undefined}>
       <canvas ref={lienzo} className={estilos.lienzo} role="img" aria-label="Chile dibujado con puntos: cada punto es un grupo de personas simuladas. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región." />
       <header className={estilos.arriba}>
         <p className={estilos.marca}>{MARCA}</p>
-        {hayResultado ? (
+        {caso ? (
           <h1 className={estilos.pregunta}>
-            <span>Variante {corrida.casos[viendo].letra}</span>
-            {corrida.casos[viendo].texto}
+            <span>
+              Variante {caso.letra}
+              {caso.iteracion && ` · iteración del agente sobre ${caso.iteracion.de}`}
+            </span>
+            {tituloDe(caso)}
           </h1>
         ) : (
-          <h1 className={estilos.titular}>{PREPARAR.titular}</h1>
+          <h1 className={estilos.titular}>{fase === 'simulando' ? 'Chile está respondiendo' : PREPARAR.titular}</h1>
         )}
       </header>
       <p className={estilos.nota}>
@@ -104,38 +113,36 @@ export function AppEnjambre() {
           <span>{porPunto < 1.5 ? 'Cada punto es una persona simulada' : `Cada punto son ${formatear(Math.round(porPunto))} personas simuladas`}</span>
         )}
       </p>
+      {fase === 'simulando' && (
+        <div className={estilos.avance}>
+          <BloqueAvance respondidas={respondidas} total={muestra.total} porPunto={porPunto} />
+        </div>
+      )}
       {resumen && (
         <>
           <div className={estilos.contra}>
-            <BloquePostura postura="contra" porcentaje={resumen.porcentajes.contra} personas={Math.round(resumen.conteo.contra * porPunto)} aspecto={3} />
+            <BloquePostura postura="contra" porcentaje={resumen.porcentajes.contra} personas={Math.round(resumen.conteo.contra * porPunto)} aspecto={3} compacto={angosto} />
           </div>
           <div className={estilos.favor}>
-            <BloquePostura postura="favor" porcentaje={resumen.porcentajes.favor} personas={Math.round(resumen.conteo.favor * porPunto)} aspecto={1} />
+            <BloquePostura postura="favor" porcentaje={resumen.porcentajes.favor} personas={Math.round(resumen.conteo.favor * porPunto)} aspecto={1} compacto={angosto} />
           </div>
         </>
       )}
       <div className={estilos.mando}>
-        <BarraMando sim={sim} elegida={Math.min(elegida, sim.borradores.length - 1)} alElegir={elegir} />
+        {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
+        {hayResultado && (
+          <BarraResultado corrida={corrida} viendo={viendo} recorriendo={fase === 'preguntando'} alElegir={sim.setActivo} alVolver={sim.editar} />
+        )}
       </div>
       <div className={estilos.utiles}>
-        {sim.simulador.esDemostracion && <p>Datos de demostración</p>}
-        <Boton variante="secundario" onClick={() => setCajon(true)}>
-          Muestra
-        </Boton>
-        <Boton variante="secundario" onClick={() => setClaro(!claro)}>
-          {claro ? 'Oscuro' : 'Claro'}
-        </Boton>
-        <Boton variante="secundario" onClick={() => setOculta(true)}>
-          Ocultar (H)
-        </Boton>
+        <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
       </div>
-      {cajon && (
-        <aside className={estilos.cajon} aria-label="Muestra">
-          <FiltrosMuestra sim={sim} />
-          <Boton variante="primario" onClick={() => setCajon(false)}>
-            Listo
+      {oculta && (
+        <div className={estilos.mostrar}>
+          <Boton variante="texto" onClick={() => setOculta(false)}>
+            Mostrar la interfaz (H)
           </Boton>
-        </aside>
+        </div>
       )}
     </div>
   );

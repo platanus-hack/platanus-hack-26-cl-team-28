@@ -17,10 +17,29 @@ export interface Persona {
   aspecto: number;
 }
 
+export interface Documento {
+  nombre: string;
+  /** Tamaño en bytes. */
+  tamano: number;
+  /** El archivo tal como se subió, para enviarlo al motor (una ley completa, por ejemplo). */
+  archivo: File;
+}
+
 export interface Caso {
   id: string;
   letra: string;
+  /** Texto escrito de la propuesta; puede ir vacío si se subió un documento. */
   texto: string;
+  documento?: Documento;
+  /** Si la variante la propuso el agente: sobre qué variante iteró y qué número de iteración es. */
+  iteracion?: { de: string; numero: number };
+}
+
+/** Una respuesta que llega mientras la simulación corre: los agentes terminan de a uno, en cualquier orden. */
+export interface Avance {
+  caso: number;
+  persona: number;
+  respuesta: Respuesta;
 }
 
 export interface Filtros {

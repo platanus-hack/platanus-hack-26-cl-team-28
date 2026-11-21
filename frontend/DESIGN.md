@@ -20,9 +20,17 @@ gente, y al cambiar de variante se ve a la gente cruzar de un lado al otro.
 **Lo que se lee.** Dos cifras gigantes, una por lado, cada una con su criatura, que crece con su porcentaje. Arriba,
 la variante. Nada más compite con el mapa.
 
-**Interfaz mínima y ocultable.** Una barra abajo a la izquierda (pestañas de variantes, texto, botón de preguntar) y
-tres botones abajo a la derecha (muestra, tema claro u oscuro, ocultar). La tecla H oculta todo y deja el país, las
-cifras y la pregunta; las flechas cambian de variante.
+**Los agentes llegan en vivo.** Al preguntar, los puntos de la muestra se apagan y cada uno se enciende con su color,
+con un destello, cuando su agente termina; un contador grande dice cuántas personas ya respondieron. Cuando
+terminan todos, la ola baja de norte a sur y el país se abre.
+
+**Interfaz mínima y ocultable.** Abajo a la izquierda, el mando: variantes, texto de la propuesta, subir un documento
+(o soltarlo encima), una casilla para que un agente proponga iteraciones con más apoyo, y el botón de preguntar. Con
+resultados en pantalla el mando se reemplaza por una ficha por variante con su porcentaje a favor. Abajo a la
+derecha, un solo botón, Opciones, que despliega la muestra y sus filtros, el fondo claro u oscuro y ocultar la
+interfaz. La tecla H oculta todo y deja el país, las cifras y la pregunta; las flechas cambian de variante.
+
+**Pantallas angostas.** Nada se superpone: título, mapa, las dos cifras, nota y mando van en una columna.
 
 **Sistema.** Fondo oscuro y plano, sin brillos ni degradados; hay tema claro para salas con mucha luz. Los mismos
 tokens del diseño 1 con otros valores (`src/enjambre/tema.css`), así se reutilizan sus componentes y sus criaturas.
@@ -30,8 +38,8 @@ tokens del diseño 1 con otros valores (`src/enjambre/tema.css`), así se reutil
 **Código.** `src/enjambre/`: `EscenaEnjambre.ts` (canvas, vuelo de los puntos), `disposicion.ts` (dónde va cada
 burbuja y cada punto; función pura con prueba), `AppEnjambre.tsx`, `BloquePostura.tsx`, `BarraMando.tsx`.
 
-**Pendiente.** No está afinado para móvil ni probado con más de cuatro variantes; las burbujas chicas que no tienen
-lugar para su rótulo quedan sin nombre.
+**Pendiente.** Las burbujas chicas que no tienen lugar para su rótulo quedan sin nombre, y no hay detalle al pasar
+el puntero por una burbuja o un punto.
 
 # Diseño 1: Chile a pantalla completa
 

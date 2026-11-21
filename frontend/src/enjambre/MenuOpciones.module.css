@@ -1,0 +1,65 @@
+.menu {
+  display: grid;
+  justify-items: end;
+  gap: var(--e2);
+}
+
+.menu svg {
+  width: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: rotate var(--rapido);
+}
+
+.menu svg[data-abierto] {
+  rotate: 180deg;
+}
+
+/* Se abre hacia arriba desde el botón, sin tapar el país. */
+.panel {
+  display: grid;
+  gap: var(--e5);
+  width: min(calc(100vw - var(--gutter) * 2), 25rem);
+  max-height: calc(100dvh - 7rem);
+  padding: var(--e5);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  overflow-y: auto;
+  animation: abrir var(--medio) var(--curva-salida);
+}
+
+@keyframes abrir {
+  from {
+    opacity: 0;
+    translate: 0 8px;
+  }
+}
+
+.vista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e2);
+  padding-top: var(--e4);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.demo {
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+
+/* En pantallas angostas el botón va arriba y el panel se abre como hoja desde abajo. */
+@media (max-width: 899px) {
+  .panel {
+    position: fixed;
+    inset: auto var(--gutter) var(--e4);
+    z-index: 5;
+    width: auto;
+    max-height: calc(100dvh - 5rem);
+  }
+}

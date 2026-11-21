@@ -1,22 +1,30 @@
 .barra {
   display: grid;
-  gap: var(--e2);
-  width: min(100%, 26rem);
-  padding: var(--e3);
+  gap: var(--e3);
+  width: min(100%, 27rem);
+  max-width: 100%;
+  padding: var(--e4);
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
   background: var(--papel-velo);
 }
 
+.barra[data-sobre] {
+  border-color: var(--tinta);
+  border-style: dashed;
+}
+
 .pestanas {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: var(--e1);
 }
 
 .pestanas button {
   min-width: 44px;
   height: 40px;
-  padding: 0 var(--e2);
+  padding: 0 var(--e3);
   border: 1px solid transparent;
   border-radius: var(--radio);
   background: transparent;
@@ -31,13 +39,16 @@
 }
 
 .pestanas .mas {
-  font-style: normal;
-  font-family: var(--fuente-ui);
+  font: 600 var(--texto-s) / 1 var(--fuente-ui);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .campo textarea {
   display: block;
   width: 100%;
+  min-height: 3.6rem;
+  max-height: 9rem;
   padding: var(--e2) var(--e3);
   border: 1px solid var(--tinta-suave);
   border-radius: var(--radio);
@@ -46,20 +57,55 @@
   line-height: 1.35;
   resize: none;
   field-sizing: content;
-  min-height: 3.4rem;
 }
 
-.acciones {
+.iterar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
   gap: var(--e2);
+  min-height: 44px;
+  font-size: var(--texto-s);
+  cursor: pointer;
+}
+
+.iterar input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--tinta);
+}
+
+.iterar span {
+  flex: 1;
+  line-height: 1.25;
+}
+
+.iterar select {
+  flex: none;
+  width: 4.2rem;
+  height: 36px;
+  padding: 0 28px 0 var(--e3);
+  border: 1px solid var(--tinta-suave);
+  border-radius: var(--radio);
+  background-color: var(--mar);
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  appearance: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .pestanas button[aria-selected='false']:hover,
   .pestanas .mas:hover {
     background: var(--relleno-suave);
+  }
+}
+
+@media (max-width: 899px) {
+  .barra {
+    width: 100%;
+    gap: var(--e2);
+    padding: var(--e3);
   }
 }

@@ -1,7 +1,7 @@
 import { resumirCaso, type ResumenCaso } from '../dominio/metricas';
 import { calcularMuestra, personasPorFigura } from '../dominio/muestra';
 import type { Simulador } from '../dominio/simulador';
-import type { Caso, Filtros, Muestra, Persona, ResultadoCaso } from '../dominio/tipos';
+import type { Avance, Caso, Filtros, Muestra, Persona, ResultadoCaso } from '../dominio/tipos';
 import { ESTADO } from '../mapa/personajes';
 
 /** Una simulación ya respondida: los casos, a quiénes se preguntó y qué dijeron. */
@@ -13,10 +13,16 @@ export interface Corrida {
   resumenes: ResumenCaso[];
 }
 
-export async function correr(simulador: Simulador, casos: Caso[], todas: Persona[], filtros: Filtros): Promise<Corrida> {
+export async function correr(
+  simulador: Simulador,
+  casos: Caso[],
+  todas: Persona[],
+  filtros: Filtros,
+  alAvanzar?: (avance: Avance) => void,
+): Promise<Corrida> {
   const muestra = calcularMuestra(todas, filtros);
   const personas = muestra.indices.map((indice) => todas[indice]);
-  const resultados = await simulador.simular(casos, personas);
+  const resultados = await simulador.simular(casos, personas, alAvanzar);
   if (resultados.length !== casos.length) throw new Error('El simulador debe responder todos los casos');
   const resumenes = resultados.map((resultado) => resumirCaso(personas, resultado.respuestas));
   return { casos, muestra, personas, resultados, resumenes };

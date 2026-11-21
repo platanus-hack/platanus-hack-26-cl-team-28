@@ -4,8 +4,12 @@ import { REGIONES_GEO } from '../mapa/geografia';
 import { puntoEnBurbuja, radioDe, ubicarBurbujas, type Burbuja } from './disposicion';
 
 /** Estado de cada punto. El número es también su color. */
-export const PUNTO = { fuera: 0, neutra: 1, favor: 2, contra: 3, indecisa: 4 } as const;
-export type ModoVuelo = 'ola' | 'cambio' | 'inmediato';
+export const PUNTO = { fuera: 0, neutra: 1, favor: 2, contra: 3, indecisa: 4, pendiente: 5 } as const;
+/**
+ * `ola`: el país responde de norte a sur. `cambio`: todos a la vez. `aparecer`: cada punto se
+ * enciende en su lugar cuando su agente termina, sin volar todavía.
+ */
+export type ModoVuelo = 'ola' | 'cambio' | 'aparecer' | 'inmediato';
 
 interface Rotulada extends Burbuja {
   region: number;
@@ -22,6 +26,9 @@ const LON_CENTRO = -71.4;
 const LON_MINIMA = -76.5;
 const DPR_MAXIMO = 2;
 const VUELO = 1.15;
+const DESTELLO = 0.45;
+/** Desde este ancho las cifras gigantes van a los costados del lienzo. */
+const ANCHO_CON_CIFRAS = 900;
 
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
@@ -42,6 +49,8 @@ export class EscenaEnjambre {
   private readonly x: Float32Array;
   private readonly y: Float32Array;
   private readonly sale: Float32Array;
+  /** Momento en que cada punto se encendió, para el destello de llegada. */
+  private readonly llega: Float32Array;
   private readonly color: Uint8Array;
   private estados: Uint8Array;
   private burbujas: Rotulada[] = [];
@@ -58,6 +67,8 @@ export class EscenaEnjambre {
   private dpr = 1;
   private u = 1;
   private paso = 3;
+  /** Separación con que quedaron armadas las burbujas (puede ser menor que `paso` si no cabían). */
+  private pasoActual = 3;
   private cuadro = 0;
   private finVuelo = 0;
   private inicioRotulos = 0;
@@ -72,8 +83,8 @@ export class EscenaEnjambre {
     this.ctx = lienzo.getContext('2d')!;
     this.n = personas.length;
     const crear = () => new Float32Array(this.n);
-    [this.casaX, this.casaY, this.desdeX, this.desdeY, this.haciaX, this.haciaY, this.x, this.y, this.sale] = [
-      crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(),
+    [this.casaX, this.casaY, this.desdeX, this.desdeY, this.haciaX, this.haciaY, this.x, this.y, this.sale, this.llega] = [
+      crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear(), crear().fill(-10),
     ];
     this.color = new Uint8Array(this.n).fill(PUNTO.neutra);
     this.estados = new Uint8Array(this.n).fill(PUNTO.neutra);
@@ -104,7 +115,7 @@ export class EscenaEnjambre {
   actualizarTema(): void {
     const estilo = getComputedStyle(document.documentElement);
     const v = (nombre: string) => estilo.getPropertyValue(nombre).trim();
-    this.colores = [v('--punto-fuera'), v('--punto-neutro'), v('--favor'), v('--contra'), v('--indecisa')];
+    this.colores = [v('--punto-fuera'), v('--punto-neutro'), v('--favor'), v('--contra'), v('--indecisa'), v('--punto-pendiente')];
     this.tinta = v('--tinta');
     this.tintaSuave = v('--tinta-suave');
     this.fondo = v('--mar');
@@ -116,8 +127,25 @@ export class EscenaEnjambre {
 
   /** Cambia el estado de cada punto y lo manda a su nuevo lugar. */
   fijar(estados: Uint8Array, modo: ModoVuelo): void {
+    if (modo === 'aparecer') return this.encender(estados);
     this.estados = estados;
     this.destinos(this.reducir.matches ? 'inmediato' : modo);
+  }
+
+  /** Mientras la simulación corre: quien ya respondió se enciende con su color, en su lugar del mapa. */
+  private encender(estados: Uint8Array): void {
+    const ahora = performance.now() / 1000;
+    for (let i = 0; i < this.n; i++) {
+      if (estados[i] === this.color[i]) continue;
+      this.color[i] = estados[i];
+      if (estados[i] !== PUNTO.fuera && estados[i] !== PUNTO.pendiente) this.llega[i] = ahora;
+      // Todos esperan en casa: las burbujas se arman recién cuando terminan todos.
+      this.volar(i, this.casaX[i], this.casaY[i], this.reducir.matches ? 'inmediato' : 'cambio', ahora);
+    }
+    this.estados = estados.slice();
+    this.burbujas = [];
+    this.finVuelo = Math.max(this.finVuelo, ahora + 0.4 + VUELO);
+    this.sucio = true;
   }
 
   private proyectar(lon: number, lat: number): [number, number] {
@@ -169,20 +197,30 @@ export class EscenaEnjambre {
     }
     const ahora = performance.now() / 1000;
     const pendiente = new Uint8Array(this.n);
-    this.burbujas = [];
+    const lados = [[PUNTO.favor, 1], [PUNTO.contra, -1]] as const;
     const bordes = { 1: this.ancho / 2 + 3.4 * ESTRECHEZ * this.u + 10, [-1]: this.ancho / 2 - 4.5 * ESTRECHEZ * this.u - 10 };
-    for (const [estado, lado] of [[PUNTO.favor, 1], [PUNTO.contra, -1]] as const) {
-      const regiones = grupos[estado].map((lista, region) => ({ lista, region })).filter((g) => g.lista.length);
-      const pedidos = regiones.map((g) => ({
-        y: this.proyectar(0, REGIONES[g.region].capitalLat)[1],
-        r: radioDe(g.lista.length, this.paso),
-      }));
-      const puestas = ubicarBurbujas(pedidos, lado, bordes[lado], 8, this.alto - 8);
+    // En pantallas anchas los costados son de las cifras: si las burbujas los invaden, los puntos se juntan más.
+    const reserva = this.ancho >= ANCHO_CON_CIFRAS ? this.ancho * 0.25 : 4;
+    let paso = this.paso;
+    let armado: { lado: 1 | -1; regiones: { lista: number[]; region: number }[]; puestas: Burbuja[] }[] = [];
+    for (let intento = 0; intento < 6; intento++) {
+      armado = lados.map(([estado, lado]) => {
+        const regiones = grupos[estado].map((lista, region) => ({ lista, region })).filter((g) => g.lista.length);
+        const pedidos = regiones.map((g) => ({ y: this.proyectar(0, REGIONES[g.region].capitalLat)[1], r: radioDe(g.lista.length, paso) }));
+        return { lado, regiones, puestas: ubicarBurbujas(pedidos, lado, bordes[lado], 8, this.alto - 8) };
+      });
+      const cabe = armado.every(({ puestas }) => puestas.every((b) => b.x - b.r >= reserva && b.x + b.r <= this.ancho - reserva));
+      if (cabe) break;
+      paso *= 0.88;
+    }
+    this.pasoActual = paso;
+    this.burbujas = [];
+    for (const { lado, regiones, puestas } of armado) {
       regiones.forEach((g, k) => {
         const burbuja = puestas[k];
         this.burbujas.push({ ...burbuja, region: g.region, lado, pct: Math.round((g.lista.length / total[g.region]) * 100) });
         g.lista.forEach((i, orden) => {
-          const [dx, dy] = puntoEnBurbuja(orden, this.paso);
+          const [dx, dy] = puntoEnBurbuja(orden, paso);
           this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
           pendiente[i] = 1;
         });
@@ -221,7 +259,7 @@ export class EscenaEnjambre {
     this.cuadro = requestAnimationFrame(this.ciclo);
     if (document.hidden || !this.ancho) return;
     const ahora = marca / 1000;
-    const volando = ahora < this.finVuelo + 0.5;
+    const volando = ahora < this.finVuelo + 0.6;
     if (!volando && !this.sucio) return;
     this.sucio = false;
     if (volando) this.mover(ahora);
@@ -259,12 +297,15 @@ export class EscenaEnjambre {
     ctx.strokeStyle = this.chileBorde;
     ctx.lineWidth = 1;
     ctx.stroke(this.silueta);
-    const lado = Math.max(1.4, this.paso * 0.66);
-    const mitad = lado / 2;
-    for (const estado of [PUNTO.fuera, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
+    const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66);
+    for (const estado of [PUNTO.fuera, PUNTO.pendiente, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
       ctx.fillStyle = this.colores[estado];
       for (let i = 0; i < this.n; i++) {
-        if (this.color[i] === estado) ctx.fillRect(this.x[i] - mitad, this.y[i] - mitad, lado, lado);
+        if (this.color[i] !== estado) continue;
+        // Destello de llegada: el punto nace grande y se asienta.
+        const recien = (ahora - this.llega[i]) / DESTELLO;
+        const tamano = recien < 1 ? lado * (1 + 2.2 * (1 - recien) ** 2) : lado;
+        ctx.fillRect(this.x[i] - tamano / 2, this.y[i] - tamano / 2, tamano, tamano);
       }
     }
     const visible = this.inicioRotulos === 0 ? 1 : Math.max(0, Math.min(1, (ahora - this.inicioRotulos) / 0.5));
@@ -279,6 +320,10 @@ export class EscenaEnjambre {
     const { ctx } = this;
     const ocupados: [number, number, number, number][] = [];
     const libre = (x: number, y: number, w: number, h: number, propia: Rotulada) =>
+      x >= 2 &&
+      x + w <= this.ancho - 2 &&
+      y >= 2 &&
+      y + h <= this.alto - 2 &&
       !this.burbujas.some((b) => b !== propia && circuloTocaCaja(b, x, y, w, h)) &&
       !ocupados.some(([ox, oy, ow, oh]) => x < ox + ow && ox < x + w && y < oy + oh && oy < y + h);
     ctx.globalAlpha = visible;

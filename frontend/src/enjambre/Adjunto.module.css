@@ -1,0 +1,30 @@
+.adjunto {
+  min-width: 0;
+}
+
+.archivo {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  min-width: 0;
+  padding-left: var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--relleno-suave);
+}
+
+.nombre {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.peso {
+  flex: none;
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+  font-variant-numeric: tabular-nums;
+}
