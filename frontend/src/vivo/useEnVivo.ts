@@ -54,6 +54,9 @@ export interface CasoVivo {
   /** Las notas de 1 a 7 de cada agente a todas las preguntas de la encuesta. */
   notas: (number[] | undefined)[];
   respondidas: number;
+  /** En qué tanda de respuestas llegó cada agente (desde 1): cada tanda es un lote, una llamada al modelo. */
+  lote: Int32Array;
+  lotes: number;
   /** Cuántas respuestas vinieron de la caché del motor (ya se habían preguntado antes). */
   desdeCache: number;
   conteo: Conteo;
@@ -277,6 +280,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       acuerdo: new Int8Array(conexion?.agentes.length ?? 0),
       frase: [],
       notas: [],
+      lote: new Int32Array(conexion?.agentes.length ?? 0),
+      lotes: 0,
       respondidas: 0,
       desdeCache: 0,
       conteo: conteoVacio(),
@@ -292,9 +297,11 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
         case 'respuestas': {
           const caso = lista[evento.caso];
           if (!caso) return;
+          caso.lotes += 1;
           for (const [agente, acuerdo, frase, notas] of evento.r) {
             if (caso.acuerdo[agente]) continue;
             caso.acuerdo[agente] = acuerdo;
+            caso.lote[agente] = caso.lotes;
             caso.frase[agente] = frase;
             caso.notas[agente] = notas;
             caso.respondidas += 1;

@@ -1,0 +1,67 @@
+/* El proceso ocupa el lugar del mapa. El lienzo lo dibuja todo; arriba solo va qué variante se mira. */
+.vista {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.lienzo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cabeza {
+  position: absolute;
+  top: var(--e5);
+  left: max(28px, 3.5vw);
+  right: max(28px, 3.5vw);
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+  opacity: 0;
+  transition: opacity 320ms;
+}
+
+.vista[data-abierta] .cabeza {
+  opacity: 1;
+  transition-delay: 380ms;
+}
+
+.variantes {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+.variantes button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--relleno-suave);
+  color: var(--tinta-suave);
+  font: 650 var(--texto-m) / 1 var(--fuente-voz);
+}
+
+.variantes button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.titulo {
+  overflow: hidden;
+  min-width: 0;
+  font: 500 clamp(1.1rem, 0.9rem + 0.7vw, 1.6rem) / 1.2 var(--fuente-voz);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .variantes button[aria-pressed='false']:hover {
+    color: var(--tinta);
+  }
+}

@@ -15,6 +15,7 @@ import { MenuOpciones } from './MenuOpciones';
 import { Redactando } from './Redactando';
 import { useAngosto } from './useAngosto';
 import { Validacion } from './Validacion';
+import { VistaProceso } from './VistaProceso';
 import { Voces } from './Voces';
 
 /** Puntos que se quieren dibujar; cada agente real se dibuja con varios alrededor de su comuna. */
@@ -50,6 +51,9 @@ export function AppEnjambre() {
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
   const [zoom, setZoom] = useState(1);
+  /** El proceso en lugar del mapa. `montado` sigue un momento más al cerrar, mientras los cuadrados vuelven. */
+  const [proceso, setProceso] = useState(false);
+  const [procesoMontado, setProcesoMontado] = useState(false);
   const mostrar = useRef<HTMLDivElement>(null);
 
   const puntos = conexion?.puntos;
@@ -138,13 +142,27 @@ export function AppEnjambre() {
     return () => window.removeEventListener('keydown', tecla);
   });
 
+  // En pantallas angostas el grupo de botones no se muestra, así que el proceso tampoco se abre.
+  const hayProceso = !!caso;
+  const alternarProceso = () => {
+    setFicha(null);
+    if (!proceso) setProcesoMontado(true);
+    setProceso(!proceso);
+  };
+  // Sin corrida en pantalla no hay proceso que mostrar.
+  useEffect(() => {
+    if (hayProceso) return;
+    setProceso(false);
+    setProcesoMontado(false);
+  }, [hayProceso]);
+
   const pct = caso && listo ? porcentajesDe(caso) : null;
   const motor = conexion?.estado?.motor ?? null;
   const base = casos.length ? casos.reduce((mejor, c) => (c.listo && porcentajesDe(c).favor > porcentajesDe(mejor).favor ? c : mejor), casos[0]) : undefined;
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined}>
+    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -227,22 +245,43 @@ export function AppEnjambre() {
         )}
       </div>
       </div>
-      {puntos && (fase === 'corriendo' || fase === 'resultados') && conexion && (
+      {procesoMontado && conexion && caso && (
+        <VistaProceso
+          sim={sim}
+          conexion={conexion}
+          abierta={proceso}
+          claro={claro}
+          origen={ubicar}
+          alElegir={(agente, x, y) => setFicha({ agente, x, y })}
+          alCerrado={() => setProcesoMontado(false)}
+        />
+      )}
+      {puntos && !procesoMontado && (fase === 'corriendo' || fase === 'resultados') && conexion && (
         <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
       )}
       <div className={estilos.zoom} role="group" aria-label="Acercamiento del mapa">
-        <button type="button" aria-label="Alejar" disabled={zoom <= 1} onClick={() => escena.current?.acercar(1 / 1.5)}>
+        {hayProceso && (
+          <button type="button" className={estilos.verProceso} aria-pressed={proceso} title={proceso ? 'Volver al mapa' : 'Ver el proceso'} aria-label={proceso ? 'Volver al mapa' : 'Ver el proceso de la simulación'} onClick={alternarProceso}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M4 4.2 11.6 8M4 11.8 11.6 8" />
+              <circle cx="3" cy="3.6" r="1.9" />
+              <circle cx="3" cy="12.4" r="1.9" />
+              <circle cx="13" cy="8" r="1.9" />
+            </svg>
+          </button>
+        )}
+        <button type="button" data-mapa aria-label="Alejar" disabled={zoom <= 1} onClick={() => escena.current?.acercar(1 / 1.5)}>
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 6h8" />
           </svg>
         </button>
-        <button type="button" aria-label="Acercar" disabled={zoom >= 8} onClick={() => escena.current?.acercar(1.5)}>
+        <button type="button" data-mapa aria-label="Acercar" disabled={zoom >= 8} onClick={() => escena.current?.acercar(1.5)}>
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 6h8M6 2v8" />
           </svg>
         </button>
         {zoom > 1 && (
-          <button type="button" onClick={() => escena.current?.restablecer()}>
+          <button type="button" data-mapa onClick={() => escena.current?.restablecer()}>
             Ver todo
           </button>
         )}
