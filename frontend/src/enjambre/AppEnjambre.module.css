@@ -63,19 +63,89 @@
 .nota {
   top: var(--e5);
   right: var(--gutter);
+  display: grid;
+  justify-items: end;
+  gap: var(--e4);
+  max-width: 19rem;
+  color: var(--tinta-suave);
+}
+
+.indecisas {
   display: flex;
   align-items: center;
   gap: var(--e2);
-  max-width: 17rem;
   font-size: var(--texto-m);
-  color: var(--tinta-suave);
   text-align: right;
   pointer-events: none;
 }
 
-.nota b {
+.indecisas b {
   color: var(--indecisa-texto);
   font-weight: 650;
+}
+
+.titulo {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  quotes: none;
+}
+
+.completo {
+  margin-top: var(--e3);
+  max-width: 26rem;
+  pointer-events: auto;
+}
+
+.completo summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  font: 600 var(--texto-s) / 1 var(--fuente-ui);
+  color: var(--tinta-suave);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.completo p {
+  margin-top: var(--e2);
+  padding: var(--e3) var(--e4);
+  max-height: 40vh;
+  overflow: auto;
+  border-radius: var(--radio);
+  background: var(--papel);
+  font-size: var(--texto-m);
+  line-height: 1.45;
+}
+
+.pregunta small {
+  display: block;
+  margin-top: var(--e3);
+  font: 500 var(--texto-m) / 1.35 var(--fuente-ui);
+  letter-spacing: 0;
+  color: var(--favor-texto);
+}
+
+.cargando {
+  font-size: var(--texto-m);
+  color: var(--tinta-suave);
+}
+
+.pista {
+  position: absolute;
+  bottom: var(--e5);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 1;
+  padding: var(--e2) var(--e4);
+  border-radius: 999px;
+  background: var(--papel-velo);
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .contra,

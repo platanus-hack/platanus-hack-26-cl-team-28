@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { FiltrosMuestra } from '../componentes/preparar/FiltrosMuestra';
-import type { Simulacion } from '../estado/useSimulacion';
+import { TAMANOS_AGENTES, type EnVivo } from '../vivo/useEnVivo';
 import estilos from './MenuOpciones.module.css';
 
 interface Props {
-  sim: Simulacion;
+  sim: EnVivo;
   claro: boolean;
   alCambiarTema(): void;
   alOcultar(): void;
@@ -38,7 +38,7 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
     <div className={estilos.menu} ref={caja}>
       {abierto && (
         <div className={estilos.panel} id="panel-opciones" role="region" aria-label="Opciones">
-          <FiltrosMuestra sim={sim} />
+          <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica />
           <div className={estilos.vista}>
             <Boton variante="secundario" onClick={alCambiarTema}>
               {claro ? 'Fondo oscuro' : 'Fondo claro'}
@@ -53,8 +53,8 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
               Ocultar la interfaz (H)
             </Boton>
           </div>
-          {sim.simulador.esDemostracion && (
-            <p className={estilos.demo}>Datos de demostración: las respuestas se generan en el navegador hasta conectar el motor de simulación.</p>
+          {sim.conexion?.demo && (
+            <p className={estilos.demo}>Sin motor conectado: las respuestas se sortean en el navegador. Levanta el backend con python3 -m servidor.</p>
           )}
         </div>
       )}

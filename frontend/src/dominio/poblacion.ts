@@ -7,7 +7,7 @@ type Anillo = number[][];
 const SEMILLA = 281126;
 const INTENTOS = 40;
 
-function dentro(lon: number, lat: number, anillo: Anillo): boolean {
+export function dentro(lon: number, lat: number, anillo: Anillo): boolean {
   let adentro = false;
   for (let i = 0, j = anillo.length - 1; i < anillo.length; j = i++) {
     const [ax, ay] = anillo[i];

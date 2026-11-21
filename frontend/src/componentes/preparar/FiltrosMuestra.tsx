@@ -3,7 +3,6 @@ import { EDUCACION, GENEROS, POLITICA, QUINTILES, REGIONES, TAMANOS } from '../.
 import { FILTROS_INICIALES, SIN_FILTRO } from '../../dominio/muestra';
 import { formatear } from '../../dominio/textos';
 import type { Filtros } from '../../dominio/tipos';
-import type { Simulacion } from '../../estado/useSimulacion';
 import { Boton } from '../comunes/Boton';
 import estilos from './FiltrosMuestra.module.css';
 import { RangoEdad } from './RangoEdad';
@@ -18,8 +17,17 @@ const LISTAS: { clave: Lista; rotulo: string; todas: string; opciones: readonly 
   { clave: 'politica', rotulo: 'Orientación política', todas: 'Todas', opciones: POLITICA },
 ];
 
-export function FiltrosMuestra({ sim }: { sim: Simulacion }) {
+interface Props {
+  sim: { filtros: Filtros; setFiltros(filtros: Filtros): void };
+  /** Tamaños de muestra que se ofrecen (personas simuladas o agentes). */
+  tamanos?: readonly number[];
+  /** Si los perfiles no traen orientación política, ese filtro no se muestra. */
+  sinPolitica?: boolean;
+}
+
+export function FiltrosMuestra({ sim, tamanos = TAMANOS, sinPolitica = false }: Props) {
   const { filtros, setFiltros } = sim;
+  const listas = sinPolitica ? LISTAS.filter((l) => l.clave !== 'politica') : LISTAS;
   const cambiar = (parte: Partial<Filtros>) => setFiltros({ ...filtros, ...parte });
   return (
     <section className={estilos.filtros} aria-labelledby="titulo-muestra">
@@ -36,7 +44,7 @@ export function FiltrosMuestra({ sim }: { sim: Simulacion }) {
         <fieldset className={estilos.tamanos}>
         <legend>{PREPARAR.tamano}</legend>
         <div>
-          {TAMANOS.map((tamano) => (
+          {tamanos.map((tamano) => (
             <label key={tamano}>
               <input type="radio" name="tamano" checked={filtros.tamano === tamano} onChange={() => cambiar({ tamano })} />
               <span>{formatear(tamano)}</span>
@@ -44,11 +52,11 @@ export function FiltrosMuestra({ sim }: { sim: Simulacion }) {
           ))}
         </div>
       </fieldset>
-        {LISTAS.slice(0, 1).map((lista) => (
+        {listas.slice(0, 1).map((lista) => (
           <Selector key={lista.clave} lista={lista} valor={filtros[lista.clave]} alCambiar={(v) => cambiar({ [lista.clave]: v })} />
         ))}
         <RangoEdad minimo={filtros.edadMin} maximo={filtros.edadMax} alCambiar={(edadMin, edadMax) => cambiar({ edadMin, edadMax })} />
-        {LISTAS.slice(1).map((lista) => (
+        {listas.slice(1).map((lista) => (
           <Selector key={lista.clave} lista={lista} valor={filtros[lista.clave]} alCambiar={(v) => cambiar({ [lista.clave]: v })} />
         ))}
       </div>

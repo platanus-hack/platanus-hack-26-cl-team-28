@@ -1,142 +1,198 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { Figura } from '../componentes/comunes/Figura';
-import { MARCA, PREPARAR } from '../contenido';
-import { personasPorFigura } from '../dominio/muestra';
-import { crearPoblacion } from '../dominio/poblacion';
+import { MARCA } from '../contenido';
 import { formatear } from '../dominio/textos';
-import type { Caso } from '../dominio/tipos';
-import { useSimulacion } from '../estado/useSimulacion';
 import { REGIONES_GEO } from '../mapa/geografia';
+import { porcentajesDe, posturaDe, useEnVivo } from '../vivo/useEnVivo';
 import estilos from './AppEnjambre.module.css';
 import { BarraMando } from './BarraMando';
 import { BarraResultado } from './BarraResultado';
 import { BloqueAvance } from './BloqueAvance';
 import { BloquePostura } from './BloquePostura';
 import { EscenaEnjambre, PUNTO, type ModoVuelo } from './EscenaEnjambre';
-import { useAngosto } from './useAngosto';
+import { FichaAgente } from './FichaAgente';
+import { Insignia } from './Insignia';
 import { MenuOpciones } from './MenuOpciones';
+import { Redactando } from './Redactando';
+import { useAngosto } from './useAngosto';
+import { Validacion } from './Validacion';
+import { Voces } from './Voces';
 
-/** Puntos dibujados: cada uno representa a una parte igual de la muestra. */
+/** Puntos que se quieren dibujar; cada agente real se dibuja con varios alrededor de su comuna. */
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
-const PERSONAS = crearPoblacion(PUNTOS, REGIONES_GEO);
-/** Cuánto tarda la demostración en entregar las respuestas, para ver llegar a los agentes. */
-const DURACION_DEMO = 5200;
 
-const tituloDe = (caso: Caso) => caso.texto || caso.documento?.nombre || '';
+const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
 
 export function AppEnjambre() {
-  const sim = useSimulacion(PERSONAS, { minimoCasos: 1, duracionDemo: DURACION_DEMO });
-  const { fase, corrida, muestra, activo, enBarrido, respondidas } = sim;
+  const sim = useEnVivo(REGIONES_GEO, PUNTOS);
+  const { conexion, fase, casos, viendo, muestra, version } = sim;
   const lienzo = useRef<HTMLCanvasElement>(null);
   const escena = useRef<EscenaEnjambre | null>(null);
   const [editando, setEditando] = useState(0);
   const [oculta, setOculta] = useState(false);
   const [claro, setClaro] = useState(false);
+  const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
 
-  const viendo = fase === 'preguntando' ? enBarrido : activo;
-  const hayResultado = (fase === 'preguntando' || fase === 'resultados') && corrida !== null;
-  const resumen = hayResultado ? corrida.resumenes[viendo] : null;
-  const porPunto = personasPorFigura(hayResultado ? corrida.muestra : muestra);
+  const puntos = conexion?.puntos;
+  const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
+  const caso = fase === 'corriendo' || fase === 'resultados' ? casos[viendo] : undefined;
+  const listo = caso?.listo ?? false;
 
-  const orden = useMemo<{ estados: Uint8Array; modo: ModoVuelo }>(() => {
-    const estados = new Uint8Array(PUNTOS).fill(PUNTO.fuera);
-    if (fase === 'simulando') {
-      // Cada punto espera apagado hasta que su agente responde.
-      for (const indice of muestra.indices) estados[indice] = sim.llegadas.current[indice] || PUNTO.pendiente;
-      return { estados, modo: 'aparecer' };
-    }
-    if (!hayResultado) {
-      for (const indice of muestra.indices) estados[indice] = PUNTO.neutra;
-      return { estados, modo: 'cambio' };
-    }
-    corrida.resultados[viendo].respuestas.forEach((respuesta, k) => {
-      estados[corrida.muestra.indices[k]] = PUNTO[respuesta.postura];
+  // Estado de cada punto: fuera de la muestra, esperando a su agente o con su postura.
+  const orden = useMemo<{ estados: Uint8Array; modo: ModoVuelo } | null>(() => {
+    if (!puntos) return null;
+    const estados = new Uint8Array(puntos.length);
+    puntos.forEach((p, i) => {
+      const agente = p.agente ?? 0;
+      if (!muestra.elegido[agente]) estados[i] = PUNTO.fuera;
+      else if (!caso) estados[i] = PUNTO.neutra;
+      else estados[i] = caso.acuerdo[agente] ? ESTADO_POSTURA[posturaDe(caso.acuerdo[agente])] : PUNTO.pendiente;
     });
-    return { estados, modo: fase === 'preguntando' && viendo === 0 ? 'ola' : 'cambio' };
-    // `respondidas` cambia cada vez que llegan respuestas nuevas.
-  }, [hayResultado, corrida, muestra, viendo, fase, respondidas, sim.llegadas]);
+    if (!caso) return { estados, modo: 'cambio' };
+    if (!listo) return { estados, modo: 'aparecer' };
+    return { estados, modo: fase === 'corriendo' ? 'ola' : 'cambio' };
+    // `version` cambia cada vez que llegan respuestas nuevas.
+  }, [puntos, muestra, caso, listo, fase, version]);
 
   useEffect(() => {
-    const nueva = new EscenaEnjambre(lienzo.current!, PERSONAS);
+    if (!puntos) return;
+    const nueva = new EscenaEnjambre(lienzo.current!, puntos);
     nueva.montar();
     escena.current = nueva;
     return () => nueva.destruir();
-  }, []);
-  useEffect(() => escena.current?.fijar(orden.estados, orden.modo), [orden]);
+  }, [puntos]);
+  useEffect(() => {
+    if (orden) escena.current?.fijar(orden.estados, orden.modo);
+  }, [orden]);
+  useEffect(() => escena.current?.latir(fase === 'corriendo' && !listo), [fase, listo, puntos]);
   useEffect(() => {
     document.documentElement.dataset.tema = claro ? 'claro' : 'oscuro';
     escena.current?.actualizarTema();
   }, [claro]);
+  useEffect(() => setFicha(null), [fase, viendo]);
+
+  const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
+  const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
+  const alHablar = useCallback((agente: number | null) => escena.current?.resaltar(agente === null ? [] : puntosDe(agente)), [puntosDe]);
+  useEffect(() => {
+    if (ficha) escena.current?.resaltar(puntosDe(ficha.agente));
+    else if (fase !== 'corriendo') escena.current?.resaltar([]);
+  }, [ficha, fase, puntosDe]);
+
+  const tocar = (e: MouseEvent) => {
+    if (!escena.current || !puntos || fase === 'preparar' || fase === 'cargando') return;
+    const caja = lienzo.current!.getBoundingClientRect();
+    const i = escena.current.cercano(e.clientX - caja.left, e.clientY - caja.top);
+    const agente = i >= 0 ? puntos[i].agente : undefined;
+    if (agente === undefined || !caso?.acuerdo[agente]) return setFicha(null);
+    const [x, y] = escena.current.posicion(i);
+    setFicha({ agente, x, y });
+  };
 
   // Teclas para presentar: H oculta la interfaz, las flechas cambian de variante.
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).closest('textarea, input, select')) return;
       if (e.key === 'h' || e.key === 'H') setOculta((valor) => !valor);
-      if (fase !== 'resultados' || !corrida) return;
-      if (e.key === 'ArrowRight') sim.setActivo(Math.min(corrida.casos.length - 1, activo + 1));
-      if (e.key === 'ArrowLeft') sim.setActivo(Math.max(0, activo - 1));
+      if (fase !== 'resultados') return;
+      if (e.key === 'ArrowRight') sim.setViendo(Math.min(casos.length - 1, viendo + 1));
+      if (e.key === 'ArrowLeft') sim.setViendo(Math.max(0, viendo - 1));
     };
     window.addEventListener('keydown', tecla);
     return () => window.removeEventListener('keydown', tecla);
   });
 
-  const caso = hayResultado ? corrida.casos[viendo] : null;
+  const pct = caso && listo ? porcentajesDe(caso) : null;
+  const motor = conexion?.estado?.motor ?? null;
+  const base = casos.length ? casos.reduce((mejor, c) => (c.listo && porcentajesDe(c).favor > porcentajesDe(mejor).favor ? c : mejor), casos[0]) : undefined;
+  const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
+
   return (
     <div className={estilos.app} data-oculta={oculta || undefined}>
-      <canvas ref={lienzo} className={estilos.lienzo} role="img" aria-label="Chile dibujado con puntos: cada punto es un grupo de personas simuladas. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región." />
+      <canvas
+        ref={lienzo}
+        className={estilos.lienzo}
+        onClick={tocar}
+        role="img"
+        aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
+      />
       <header className={estilos.arriba}>
         <p className={estilos.marca}>{MARCA}</p>
         {caso ? (
           <h1 className={estilos.pregunta}>
             <span>
               Variante {caso.letra}
-              {caso.iteracion && ` · iteración del agente sobre ${caso.iteracion.de}`}
+              {caso.iteracion && ` · reescrita por el agente sobre ${caso.iteracion.de}`}
             </span>
-            {tituloDe(caso)}
+            <q className={estilos.titulo}>{caso.titulo}</q>
+            {caso.iteracion?.cambio && <small>{caso.iteracion.cambio}</small>}
           </h1>
         ) : (
-          <h1 className={estilos.titular}>{fase === 'simulando' ? 'Chile está respondiendo' : PREPARAR.titular}</h1>
+          <h1 className={estilos.titular}>Pregúntale a Chile</h1>
+        )}
+        {caso && caso.texto !== caso.titulo && caso.texto && (
+          <details className={estilos.completo}>
+            <summary>Leer la propuesta completa</summary>
+            <p>{caso.texto}</p>
+          </details>
         )}
       </header>
-      <p className={estilos.nota}>
-        {resumen ? (
-          <>
-            <Figura estado="indecisa" aspecto={2} alto={34} />
+      <div className={estilos.nota}>
+        <Insignia conexion={conexion} agentes={muestra.total} />
+        {pct && (
+          <p className={estilos.indecisas}>
+            <Figura estado="indecisa" aspecto={2} alto={30} />
             <span>
-              <b>{resumen.porcentajes.indecisa} %</b> indecisas se quedan en el mapa
+              <b>{pct.indecisa} %</b> indecisas se quedan en el mapa
             </span>
-          </>
-        ) : (
-          <span>{porPunto < 1.5 ? 'Cada punto es una persona simulada' : `Cada punto son ${formatear(Math.round(porPunto))} personas simuladas`}</span>
+          </p>
         )}
-      </p>
-      {fase === 'simulando' && (
+        {caso && <Validacion caso={caso} />}
+      </div>
+      {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
-          <BloqueAvance respondidas={respondidas} total={muestra.total} porPunto={porPunto} />
+          <BloqueAvance caso={caso} total={muestra.total} metricas={sim.metricas} motor={motor} />
         </div>
       )}
-      {resumen && (
+      {mostrarRedactando && base && (
+        <div className={estilos.avance}>
+          <Redactando base={base} numero={sim.redactando!} />
+        </div>
+      )}
+      {pct && caso && !mostrarRedactando && (
         <>
           <div className={estilos.contra}>
-            <BloquePostura postura="contra" porcentaje={resumen.porcentajes.contra} personas={Math.round(resumen.conteo.contra * porPunto)} aspecto={3} compacto={angosto} />
+            <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
           </div>
           <div className={estilos.favor}>
-            <BloquePostura postura="favor" porcentaje={resumen.porcentajes.favor} personas={Math.round(resumen.conteo.favor * porPunto)} aspecto={1} compacto={angosto} />
+            <BloquePostura postura="favor" porcentaje={pct.favor} personas={caso.conteo.favor} unidad="agentes" aspecto={1} compacto={angosto} />
           </div>
         </>
       )}
+      {puntos && fase === 'corriendo' && conexion && (
+        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={!listo && !oculta} />
+      )}
       <div className={estilos.mando}>
         {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
-        {hayResultado && (
-          <BarraResultado corrida={corrida} viendo={viendo} recorriendo={fase === 'preguntando'} alElegir={sim.setActivo} alVolver={sim.editar} />
+        {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
+          <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
         )}
+        {fase === 'cargando' && <p className={estilos.cargando}>Conectando con el motor de simulación</p>}
       </div>
       <div className={estilos.utiles}>
-        <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
+        {fase === 'corriendo' ? (
+          <Boton variante="secundario" onClick={sim.detener}>
+            Detener
+          </Boton>
+        ) : (
+          <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
+        )}
       </div>
+      {ficha && conexion && (
+        <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
+      )}
       {oculta && (
         <div className={estilos.mostrar}>
           <Boton variante="texto" onClick={() => setOculta(false)}>
@@ -144,6 +200,7 @@ export function AppEnjambre() {
           </Boton>
         </div>
       )}
+      {fase === 'resultados' && !ficha && <p className={estilos.pista}>Toca un punto para conocer a esa persona · {formatear(muestra.total)} agentes</p>}
     </div>
   );
 }

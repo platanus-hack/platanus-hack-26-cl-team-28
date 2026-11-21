@@ -1,26 +1,23 @@
 import { useState, type DragEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
-import { MAXIMO_CASOS } from '../dominio/catalogos';
 import { formatear, letraDe } from '../dominio/textos';
-import type { Simulacion } from '../estado/useSimulacion';
-import { aDocumento, Adjunto } from './Adjunto';
+import { MAXIMO_ITERACIONES, MAXIMO_VARIANTES, type EnVivo } from '../vivo/useEnVivo';
+import { CASOS_VALIDACION } from '../vivo/validacion';
+import { Adjunto } from './Adjunto';
 import estilos from './BarraMando.module.css';
 
 interface Props {
-  sim: Simulacion;
+  sim: EnVivo;
   /** Variante que se está editando. */
   elegida: number;
   alElegir(indice: number): void;
 }
-
-const MAXIMO_ITERACIONES = 4;
 
 /** Donde se arma la pregunta: la propuesta escrita o subida, sus variantes y si el agente itera. */
 export function BarraMando({ sim, elegida, alElegir }: Props) {
   const { borradores } = sim;
   const actual = borradores[Math.min(elegida, borradores.length - 1)];
   const [sobre, setSobre] = useState(false);
-  const cupo = Math.min(MAXIMO_ITERACIONES, MAXIMO_CASOS - borradores.length);
   const agregar = () => {
     sim.agregar();
     alElegir(borradores.length);
@@ -33,8 +30,13 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
     e.preventDefault();
     setSobre(false);
     const archivo = e.dataTransfer.files[0];
-    if (archivo) sim.adjuntar(actual.id, aDocumento(archivo));
+    if (archivo) void sim.adjuntarArchivo(actual.id, archivo);
   };
+  const usarCaso = (k: number) => {
+    const caso = CASOS_VALIDACION[k];
+    sim.fijar(actual.id, { texto: caso.texto, referencia: caso.referencia, documento: undefined, leido: undefined });
+  };
+  const leyendo = borradores.some((b) => b.leyendo);
   return (
     <form
       className={estilos.barra}
@@ -56,7 +58,7 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
             {letraDe(i)}
           </button>
         ))}
-        {borradores.length < MAXIMO_CASOS && (
+        {borradores.length < MAXIMO_VARIANTES && (
           <button type="button" className={estilos.mas} onClick={agregar}>
             Otra variante
           </button>
@@ -71,30 +73,48 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
         <span className="solo-lectores">Propuesta, variante {letraDe(elegida)}</span>
         <textarea
           key={actual.id}
-          rows={2}
+          rows={3}
           value={actual.texto}
-          placeholder={actual.documento ? 'Nombre o resumen de la propuesta (opcional)' : 'Escribe la propuesta o suelta aquí un documento'}
+          placeholder={actual.documento ? 'Contexto o pregunta sobre el documento (opcional)' : 'Escribe la propuesta o suelta aquí un documento'}
           onChange={(e) => sim.cambiarTexto(actual.id, e.target.value)}
         />
       </label>
-      <Adjunto documento={actual.documento} alCambiar={(documento) => sim.adjuntar(actual.id, documento)} />
-      {cupo > 0 && (
-        <label className={estilos.iterar}>
-          <input type="checkbox" checked={sim.iteraciones > 0} onChange={(e) => sim.setIteraciones(e.target.checked ? Math.min(2, cupo) : 0)} />
-          <span>Que un agente proponga iteraciones con más apoyo</span>
-          {sim.iteraciones > 0 && (
-            <select aria-label="Cantidad de iteraciones" value={Math.min(sim.iteraciones, cupo)} onChange={(e) => sim.setIteraciones(+e.target.value)}>
-              {Array.from({ length: cupo }, (_, k) => (
-                <option key={k} value={k + 1}>
-                  {k + 1}
-                </option>
-              ))}
-            </select>
-          )}
-        </label>
+      {actual.referencia && (
+        <p className={estilos.referencia}>
+          Se comparará con <b>{actual.referencia.fuente}</b>, {actual.referencia.fecha}: {actual.referencia.favor} % a favor.
+        </p>
       )}
+      <div className={estilos.casos} aria-label="Casos con encuesta real">
+        <span>Probar con una encuesta real</span>
+        {CASOS_VALIDACION.map((caso, k) => (
+          <button key={caso.corto} type="button" aria-pressed={actual.referencia?.url === caso.referencia.url && actual.texto === caso.texto} onClick={() => usarCaso(k)}>
+            {caso.corto}
+          </button>
+        ))}
+      </div>
+      <Adjunto
+        documento={actual.documento}
+        leido={actual.leido}
+        leyendo={actual.leyendo}
+        error={actual.errorDocumento}
+        alElegir={(archivo) => void sim.adjuntarArchivo(actual.id, archivo)}
+      />
+      <label className={estilos.iterar}>
+        <input type="checkbox" checked={sim.iteraciones > 0} onChange={(e) => sim.setIteraciones(e.target.checked ? 2 : 0)} />
+        <span>Que un agente reescriba la propuesta con las objeciones y vuelva a preguntar</span>
+        {sim.iteraciones > 0 && (
+          <select aria-label="Cantidad de iteraciones" value={sim.iteraciones} onChange={(e) => sim.setIteraciones(+e.target.value)}>
+            {Array.from({ length: MAXIMO_ITERACIONES }, (_, k) => (
+              <option key={k} value={k + 1}>
+                {k + 1}
+              </option>
+            ))}
+          </select>
+        )}
+      </label>
+      {sim.aviso && <p className={estilos.aviso} role="alert">{sim.aviso}</p>}
       <Boton type="submit" variante="primario" disabled={!sim.puedePreguntar}>
-        Preguntar a {formatear(sim.muestra.total)} personas
+        {leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}
       </Boton>
     </form>
   );

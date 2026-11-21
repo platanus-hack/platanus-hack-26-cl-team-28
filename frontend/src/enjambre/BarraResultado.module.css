@@ -56,3 +56,25 @@
     background: var(--relleno-suave);
   }
 }
+
+.pestanas em {
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+}
+
+.pestanas em[data-signo='mas'] {
+  color: var(--favor-texto);
+}
+
+.pestanas em[data-signo='menos'] {
+  color: var(--contra-texto);
+}
+
+.pestanas button[aria-selected='true'] em {
+  color: inherit;
+}
+
+.pestanas button[data-iteracion] {
+  border-style: dashed;
+}

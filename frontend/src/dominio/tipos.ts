@@ -15,6 +15,8 @@ export interface Persona {
   politica: number;
   /** Aspecto del dibujo (peinado y contextura), de 0 a 5. */
   aspecto: number;
+  /** Agente real del motor que este punto dibuja (varios puntos pueden ser el mismo agente). */
+  agente?: number;
 }
 
 export interface Documento {

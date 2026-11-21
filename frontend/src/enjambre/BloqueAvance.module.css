@@ -5,6 +5,14 @@
   pointer-events: none;
 }
 
+.etiqueta {
+  margin-bottom: var(--e3);
+  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
 .cifra {
   font: 500 clamp(3.6rem, 1.6rem + 6.4vw, 8rem) / 0.85 var(--fuente-voz);
   font-variant-numeric: tabular-nums lining-nums;
@@ -18,7 +26,8 @@
 }
 
 .detalle {
-  margin-top: var(--e2);
+  margin-top: var(--e3);
+  font-variant-numeric: tabular-nums;
   font-size: var(--texto-s);
   color: var(--tinta-suave);
 }

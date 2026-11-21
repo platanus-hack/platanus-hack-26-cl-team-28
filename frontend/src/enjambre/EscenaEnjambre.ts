@@ -73,6 +73,10 @@ export class EscenaEnjambre {
   private finVuelo = 0;
   private inicioRotulos = 0;
   private sucio = true;
+  /** Mientras hay agentes pensando, la escena se redibuja siempre para que latan. */
+  private latiendo = false;
+  /** Puntos resaltados con un anillo (la persona que habla o la que se eligió). */
+  private foco: number[] = [];
   private readonly reducir = matchMedia('(prefers-reduced-motion: reduce)');
   private readonly observador: ResizeObserver;
 
@@ -122,6 +126,38 @@ export class EscenaEnjambre {
     this.chile = v('--chile');
     this.chileBorde = v('--chile-borde');
     this.fuente = v('--fuente-ui');
+    this.sucio = true;
+  }
+
+  /** Dónde está dibujado ahora un punto, en píxeles del lienzo. */
+  posicion(i: number): [number, number] {
+    return [this.x[i], this.y[i]];
+  }
+
+  /** El punto visible más cercano a una posición, o -1 si no hay ninguno a menos de `radio` píxeles. */
+  cercano(px: number, py: number, radio = 16): number {
+    let mejor = -1;
+    let distancia = radio * radio;
+    for (let i = 0; i < this.n; i++) {
+      if (this.color[i] === PUNTO.fuera) continue;
+      const dx = this.x[i] - px;
+      const dy = this.y[i] - py;
+      const d = dx * dx + dy * dy;
+      if (d < distancia) {
+        distancia = d;
+        mejor = i;
+      }
+    }
+    return mejor;
+  }
+
+  resaltar(puntos: number[]): void {
+    this.foco = puntos;
+    this.sucio = true;
+  }
+
+  latir(activo: boolean): void {
+    this.latiendo = activo && !this.reducir.matches;
     this.sucio = true;
   }
 
@@ -260,7 +296,7 @@ export class EscenaEnjambre {
     if (document.hidden || !this.ancho) return;
     const ahora = marca / 1000;
     const volando = ahora < this.finVuelo + 0.6;
-    if (!volando && !this.sucio) return;
+    if (!volando && !this.sucio && !this.latiendo && !this.foco.length) return;
     this.sucio = false;
     if (volando) this.mover(ahora);
     this.dibujar(ahora);
@@ -302,14 +338,39 @@ export class EscenaEnjambre {
       ctx.fillStyle = this.colores[estado];
       for (let i = 0; i < this.n; i++) {
         if (this.color[i] !== estado) continue;
+        // Los que siguen pensando laten en ondas que bajan por el país.
+        if (estado === PUNTO.pendiente && this.latiendo) {
+          ctx.globalAlpha = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(ahora * 3.2 - this.casaY[i] * 0.018 + (i % 7)));
+        }
         // Destello de llegada: el punto nace grande y se asienta.
         const recien = (ahora - this.llega[i]) / DESTELLO;
         const tamano = recien < 1 ? lado * (1 + 2.2 * (1 - recien) ** 2) : lado;
         ctx.fillRect(this.x[i] - tamano / 2, this.y[i] - tamano / 2, tamano, tamano);
       }
+      ctx.globalAlpha = 1;
     }
+    this.anillos(ahora);
     const visible = this.inicioRotulos === 0 ? 1 : Math.max(0, Math.min(1, (ahora - this.inicioRotulos) / 0.5));
     if (visible > 0) this.rotulos(visible);
+  }
+
+  private anillos(ahora: number): void {
+    if (!this.foco.length) return;
+    const { ctx } = this;
+    const pulso = 0.5 + 0.5 * Math.sin(ahora * 4);
+    ctx.lineWidth = 2;
+    for (const i of this.foco) {
+      ctx.strokeStyle = this.colores[this.color[i]] || this.tinta;
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.arc(this.x[i], this.y[i], 7 + pulso * 3, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 0.25 * (1 - pulso);
+      ctx.beginPath();
+      ctx.arc(this.x[i], this.y[i], 14 + pulso * 10, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
   }
 
   /**

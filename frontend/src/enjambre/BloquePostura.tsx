@@ -9,12 +9,14 @@ interface Props {
   porcentaje: number;
   personas: number;
   aspecto: number;
+  /** Qué se cuenta: personas simuladas o agentes. */
+  unidad?: string;
   /** En pantallas angostas la criatura no crece: no hay lugar. */
   compacto?: boolean;
 }
 
 /** La cifra de un lado del país: la criatura de esa postura crece con su porcentaje. */
-export function BloquePostura({ postura, porcentaje, personas, aspecto, compacto = false }: Props) {
+export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad = 'personas', compacto = false }: Props) {
   const contado = useConteo(porcentaje);
   const alto = compacto ? 44 : Math.round(64 + contado * 1.5);
   return (
@@ -25,7 +27,7 @@ export function BloquePostura({ postura, porcentaje, personas, aspecto, compacto
         <span>%</span>
       </p>
       <p className={estilos.nombre}>{POSTURA_TEXTO[postura]}</p>
-      <p className={estilos.personas}>{formatear(personas)} personas</p>
+      <p className={estilos.personas}>{formatear(personas)} {unidad}</p>
     </section>
   );
 }

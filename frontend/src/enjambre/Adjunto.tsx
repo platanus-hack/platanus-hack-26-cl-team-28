@@ -1,26 +1,36 @@
 import { useRef } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
+import { formatear } from '../dominio/textos';
 import type { Documento } from '../dominio/tipos';
+import type { DocumentoLeido } from '../vivo/api';
 import estilos from './Adjunto.module.css';
 
 interface Props {
   documento?: Documento;
-  alCambiar(documento: Documento | undefined): void;
+  leido?: DocumentoLeido;
+  leyendo?: boolean;
+  error?: string;
+  alElegir(archivo: File | undefined): void;
 }
 
-const TIPOS = '.pdf,.doc,.docx,.txt,.md,.rtf,.odt';
+const TIPOS = '.pdf,.docx,.txt,.md,.html';
 
 function tamanoLegible(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`;
   return `${(bytes / 1024 / 1024).toFixed(1).replace('.', ',')} MB`;
 }
 
-export function aDocumento(archivo: File): Documento {
-  return { nombre: archivo.name, tamano: archivo.size, archivo };
+function estado({ leido, leyendo, error }: Props): string {
+  if (error) return error;
+  if (leyendo) return 'El agente lo está leyendo';
+  if (!leido) return '';
+  if (leido.largo_original) return `Resumido de ${formatear(leido.largo_original)} caracteres: ${leido.titulo}`;
+  return 'Leído completo';
 }
 
-/** Sube el texto completo de la propuesta (una ley, un proyecto) en vez de escribirlo. */
-export function Adjunto({ documento, alCambiar }: Props) {
+/** Sube el texto completo de la propuesta (una ley, un proyecto); el motor lo lee y, si es largo, lo resume. */
+export function Adjunto(props: Props) {
+  const { documento, leyendo, error, alElegir } = props;
   const entrada = useRef<HTMLInputElement>(null);
   return (
     <div className={estilos.adjunto}>
@@ -33,21 +43,24 @@ export function Adjunto({ documento, alCambiar }: Props) {
         aria-hidden="true"
         onChange={(e) => {
           const archivo = e.target.files?.[0];
-          if (archivo) alCambiar(aDocumento(archivo));
+          if (archivo) alElegir(archivo);
           e.target.value = '';
         }}
       />
       {documento ? (
-        <p className={estilos.archivo}>
+        <div className={estilos.archivo} data-leyendo={leyendo || undefined} data-error={error ? true : undefined}>
           <span className={estilos.nombre}>{documento.nombre}</span>
           <span className={estilos.peso}>{tamanoLegible(documento.tamano)}</span>
-          <Boton variante="texto" onClick={() => alCambiar(undefined)}>
+          <Boton variante="texto" onClick={() => alElegir(undefined)}>
             Quitar
           </Boton>
-        </p>
+          <p className={estilos.estado} aria-live="polite">
+            {estado(props)}
+          </p>
+        </div>
       ) : (
         <Boton variante="texto" onClick={() => entrada.current?.click()}>
-          Subir un documento
+          Subir una ley o documento
         </Boton>
       )}
     </div>

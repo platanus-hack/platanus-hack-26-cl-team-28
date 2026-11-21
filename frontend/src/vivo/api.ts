@@ -1,0 +1,124 @@
+/** Cliente del motor de simulación (backend/servidor). En desarrollo Vite lo atiende en /api. */
+
+export interface MotorInfo {
+  nombre: string;
+  modelo: string;
+  grabado: boolean;
+}
+
+export interface EstadoMotor {
+  motor: MotorInfo;
+  agentes: number;
+  lote: number;
+  concurrencia: number;
+}
+
+export interface AgenteRemoto {
+  i: number;
+  id: string;
+  region: number;
+  comuna: string;
+  lon: number;
+  lat: number;
+  edad: number;
+  genero: number;
+  quintil: number;
+  educacion: number;
+  atributos: Record<string, string>;
+}
+
+export interface DocumentoLeido {
+  nombre: string;
+  titulo: string;
+  texto: string;
+  /** Caracteres del documento original, si se resumió. */
+  largo_original?: number;
+}
+
+export interface Metricas {
+  llamadas: number;
+  costo_usd: number;
+  tokens: number;
+  segundos: number;
+}
+
+export interface CasoPedido {
+  id: string;
+  letra: string;
+  texto: string;
+  documento?: DocumentoLeido;
+}
+
+export interface CasoPublico {
+  id: string;
+  letra: string;
+  texto: string;
+  titulo: string;
+  documento: { nombre: string; titulo: string } | null;
+  iteracion: { de: string; numero: number; cambio: string } | null;
+}
+
+/** Eventos de una corrida, en el orden en que llegan. */
+export type Evento =
+  | { tipo: 'inicio'; motor: MotorInfo; agentes: number; casos: CasoPublico[] }
+  | { tipo: 'respuestas'; caso: number; cache: boolean; r: [number, number, string][]; metricas: Metricas }
+  | { tipo: 'caso_listo'; caso: number; apoyo: number; metricas: Metricas }
+  | { tipo: 'redactando'; numero: number; metricas: Metricas }
+  | ({ tipo: 'caso'; caso: number; metricas: Metricas } & CasoPublico)
+  | { tipo: 'aviso'; mensaje: string }
+  | { tipo: 'fin'; metricas: Metricas }
+  | { tipo: 'error'; mensaje: string };
+
+const BASE = (import.meta.env.VITE_API as string | undefined) ?? '/api';
+const ESPERA_ESTADO = 2500;
+
+async function leer<T>(respuesta: Response): Promise<T> {
+  const datos = await respuesta.json().catch(() => ({}));
+  if (!respuesta.ok) throw new Error((datos as { error?: string }).error ?? `El motor respondió ${respuesta.status}`);
+  return datos as T;
+}
+
+export async function pedirEstado(): Promise<EstadoMotor> {
+  const control = new AbortController();
+  const plazo = window.setTimeout(() => control.abort(), ESPERA_ESTADO);
+  try {
+    return await leer<EstadoMotor>(await fetch(`${BASE}/estado`, { signal: control.signal }));
+  } finally {
+    window.clearTimeout(plazo);
+  }
+}
+
+export async function pedirAgentes(): Promise<AgenteRemoto[]> {
+  return leer<AgenteRemoto[]>(await fetch(`${BASE}/agentes`));
+}
+
+export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
+  const respuesta = await fetch(`${BASE}/documentos`, {
+    method: 'POST',
+    headers: { 'X-Nombre': encodeURIComponent(archivo.name), 'Content-Type': 'application/octet-stream' },
+    body: archivo,
+  });
+  return leer<DocumentoLeido>(respuesta);
+}
+
+/** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
+export async function correrRemoto(
+  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number },
+  alEvento: (evento: Evento) => void,
+): Promise<() => void> {
+  const { id } = await leer<{ id: string }>(
+    await fetch(`${BASE}/corridas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pedido) }),
+  );
+  const fuente = new EventSource(`${BASE}/corridas/${id}/eventos`);
+  const tipos: Evento['tipo'][] = ['inicio', 'respuestas', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'error'];
+  for (const tipo of tipos) {
+    fuente.addEventListener(tipo, (e) => {
+      alEvento({ tipo, ...JSON.parse((e as MessageEvent).data) } as Evento);
+      if (tipo === 'fin' || tipo === 'error') fuente.close();
+    });
+  }
+  return () => {
+    fuente.close();
+    void fetch(`${BASE}/corridas/${id}/cancelar`, { method: 'POST' });
+  };
+}
