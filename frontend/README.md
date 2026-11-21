@@ -3,52 +3,35 @@
 React, TypeScript y Vite. El mapa es un canvas 2D propio, sin librerías de mapas.
 
     npm install
-    npm run dev       # http://127.0.0.1:5280 (diseño 2) y http://127.0.0.1:5280/?d=1 (diseño 1)
-    npm test          # pruebas del dominio (métricas, muestra, simulador de demostración)
+    npm run dev       # http://127.0.0.1:5280 (diseño 2, conectado al motor) y /?d=1 (diseño 1, demostración)
+    npm test          # pruebas del dominio
     npm run build     # compila a dist/
 
-## Conectar el motor de simulación
+En desarrollo, Vite reenvía `/api` al motor en `http://127.0.0.1:8787` (ver `backend/servidor/README.md`). Para
+otro servidor, compila con `VITE_API=https://.../api`. Si el motor no responde, la interfaz entra en modo
+demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la esquina superior derecha.
 
-Hoy las respuestas salen de `crearSimuladorDemostracion` (`src/dominio/simulador.ts`), que las genera en el navegador
-para probar la interfaz. Para conectar el backend basta implementar la misma interfaz y cambiar una línea en
-`src/estado/useSimulacion.ts` (donde dice `crearSimuladorDemostracion`):
+## Cómo se conecta
 
-    interface Simulador {
-      nombre: string;
-      esDemostracion: boolean;   // en falso desaparecen los avisos de demostración
-      simular(casos, personas, alAvanzar?): Promise<ResultadoCaso[]>;
-      proponerIteraciones(base, cantidad): Promise<{ texto, iteracion }[]>;
-    }
+`src/vivo/` es todo lo que habla con el motor:
 
-**Qué recibe `simular`.** Los casos y las personas de la muestra. Cada caso trae `id`, `letra`, `texto` y, si se
-subió un archivo, `documento` (`nombre`, `tamano` y `archivo`, que es el `File` tal cual: una ley completa, por
-ejemplo). Si el caso lo propuso el agente trae `iteracion` (`de`: letra de la variante de origen, `numero`). Cada
-persona trae `region`, `edad`, `genero`, `quintil`, `educacion` y `politica` (catálogos en `src/dominio/catalogos.ts`).
-
-**Qué devuelve.** Por cada caso, una respuesta por persona en el mismo orden:
-
-    { postura: 'favor' | 'contra' | 'indecisa', firmeza: 0..1, accion: índice de ACCIONES, razon: índice de RAZONES }
-
-**Respuestas en vivo.** Mientras los agentes corren en paralelo, llama a `alAvanzar({ caso, persona, respuesta })`
-cada vez que uno termina, en cualquier orden (`persona` es su posición en la lista recibida). El mapa enciende ese
-punto de inmediato. Hoy la interfaz muestra en vivo el caso 0; los demás se ven al terminar. Con un stream (SSE o
-WebSocket) esto es llamar a `alAvanzar` por cada evento y resolver la promesa al final.
-
-**Iteraciones.** Si la persona marca "que un agente proponga iteraciones", la interfaz llama antes a
-`proponerIteraciones(base, cantidad)` con la primera variante y agrega lo que devuelva como variantes nuevas.
-
-Todo lo que se ve en resultados (porcentajes, burbujas por región, cifras) se calcula de esas respuestas en
-`src/dominio/metricas.ts`.
-
-Pendiente de la integración: el mapa dibuja 10.000 puntos (5.000 en pantallas angostas) y cada uno representa a
-una parte igual de la muestra. Si el motor entrega más o menos respuestas que puntos, hay que agregarlas o
-repartirlas por punto antes de pintarlas.
+- `api.ts`: `GET /api/estado`, `GET /api/agentes`, `POST /api/documentos`, `POST /api/corridas` y los eventos de
+  la corrida por `EventSource` (`inicio`, `respuestas`, `caso_listo`, `redactando`, `caso`, `aviso`, `fin`, `error`).
+- `poblacion.ts`: dibuja a cada agente real con varios puntos alrededor del centro de su comuna, para que la
+  densidad del país se lea. Todos los puntos de un agente responden lo mismo.
+- `useEnVivo.ts`: el estado de la herramienta (variantes, muestra, corrida). Las respuestas llegan por lotes y se
+  guardan por agente (acuerdo de 1 a 7 y su frase); 5 a 7 es a favor, 4 indecisa, 1 a 3 en contra. Las variantes
+  que escribe el agente llegan durante la corrida como casos nuevos. Al terminar una variante, la interfaz la
+  muestra unos segundos y pasa a la siguiente.
+- `validacion.ts`: políticas con encuesta Cadem publicada, para comparar en pantalla lo que dijeron los agentes
+  con lo que dijo la gente.
 
 ## Estructura
 
-- `src/dominio/`: tipos, catálogos, población sintética, muestra, simulador y métricas. Sin React.
-- `src/enjambre/`: el diseño principal, "Chile se abre" (escena de puntos, burbujas, barra de mando, opciones).
+- `src/vivo/`: conexión con el motor y estado de la corrida en vivo.
+- `src/enjambre/`: el diseño principal, "Chile se abre" (escena de puntos, burbujas, voces, ficha, validación).
+- `src/dominio/`: tipos, catálogos, métricas y el simulador de demostración del diseño 1. Sin React.
 - `src/mapa/`: la escena del diseño 1 (`?d=1`) y el dibujo de las criaturas, que usan ambos diseños.
-- `src/estado/`: el estado de la herramienta y la corrida.
+- `src/estado/`: el estado del diseño 1 y los borradores de variantes, que comparten ambos.
 - `src/componentes/`: un componente por archivo con su hoja de estilos.
 - `DESIGN.md`: el contrato de diseño.

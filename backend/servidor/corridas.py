@@ -305,7 +305,7 @@ def resumir_documento(motor: Motor, nombre: str, texto: str) -> tuple[dict, Cons
     prompt = (
         f"# Documento: {nombre}\n\n{texto[:400_000]}\n\n"
         "Devuelve `titulo` (nombre corto de la propuesta, máximo 8 palabras) y `resumen` (máximo 220 "
-        "palabras: qué propone, a quién afecta, quién paga, qué gana cada parte y desde cuándo)."
+        "palabras, texto corrido sin markdown ni viñetas: qué propone, a quién afecta, quién paga, qué gana cada parte y desde cuándo)."
     )
     datos, consumo = motor.redactar(SISTEMA_RESUMEN, prompt, ESQUEMA_RESUMEN)
     return {"nombre": nombre, "titulo": datos["titulo"].strip(), "texto": datos["resumen"].strip(), "largo_original": len(texto)}, consumo

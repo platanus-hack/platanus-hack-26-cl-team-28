@@ -40,27 +40,30 @@ export function Voces({ voces, caso, agentes, ubicar, alHablar, activo }: Props)
   const [globos, setGlobos] = useState<Globo[]>([]);
   const vistas = useRef(new Set<number>());
   const clave = useRef(0);
+  const ultima = useRef<Voz | null>(null);
 
   useEffect(() => {
     vistas.current = new Set();
-    setGlobos([]);
+    ultima.current = null;
+    setGlobos((lista) => (lista.length ? [] : lista));
   }, [caso]);
 
   useEffect(() => {
     if (!activo) {
-      setGlobos([]);
+      setGlobos((lista) => (lista.length ? [] : lista));
       alHablar(null);
       return;
     }
     const tic = window.setInterval(() => {
       const candidatas = voces.current.filter((v) => v.caso === caso && !vistas.current.has(v.agente) && v.frase.length > 8);
       // Se alternan posturas para que no hablen solo los de un lado.
-      const ultima = globos[globos.length - 1]?.voz;
-      const voz = candidatas.reverse().find((v) => !ultima || posturaDe(v.acuerdo) !== posturaDe(ultima.acuerdo)) ?? candidatas[0];
+      const previa = ultima.current;
+      const voz = candidatas.reverse().find((v) => !previa || posturaDe(v.acuerdo) !== posturaDe(previa.acuerdo)) ?? candidatas[0];
       if (!voz) return;
       const lugar = ubicar(voz.agente);
       if (!lugar) return;
       vistas.current.add(voz.agente);
+      ultima.current = voz;
       const [x, y] = lugar;
       const lado: 1 | -1 = x < window.innerWidth / 2 ? -1 : 1;
       const nuevo = { clave: clave.current++, voz, x, y, lado };
@@ -68,7 +71,7 @@ export function Voces({ voces, caso, agentes, ubicar, alHablar, activo }: Props)
       alHablar(voz.agente);
     }, CADA);
     return () => window.clearInterval(tic);
-  }, [activo, caso, voces, ubicar, alHablar, globos]);
+  }, [activo, caso, voces, ubicar, alHablar]);
 
   return (
     <div className={estilos.capa} aria-hidden="true">
