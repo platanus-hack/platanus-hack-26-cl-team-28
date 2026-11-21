@@ -79,6 +79,38 @@ sin motor, se cuenta en el navegador entre los agentes que hay.
 Un parámetro que la población no trae (la demostración sin motor) no se dibuja. La edad llega hasta «85+» porque el
 censo la publica con ese tope. Catálogo y reglas en `src/vivo/sociedad.ts`; piezas en `src/enjambre/muestra/`.
 
+**El análisis por grupos (botón de barras, junto al del proceso).** Ocupa el lugar del mapa, como el proceso, y
+contesta una pregunta: quiénes respondieron distinto. Usa a los mismos agentes que se están mirando (con los filtros
+puestos) y cuenta en agentes, sin ponderar, igual que el resto de la pantalla.
+
+- *Cabeza.* La variante (A, B...) y, debajo, una ficha por pregunta de la encuesta con su cifra: tocar una cambia
+  todo el análisis a esa pregunta. Al lado, la pregunta completa y lo que significan el 1 y el 7.
+- *Izquierda, el índice, que a la vez es un gráfico.* Una fila por característica (región, edad, género, educación,
+  trabajo, ingreso, posición política...), ordenadas por su correlación con las notas. Cada fila pone a sus grupos
+  como puntos en una misma escala de 0 a 100: mientras más separados, más divide esa característica. Bajo una línea
+  punteada quedan, apagadas, las que no ordenan las respuestas. Debajo, las demás preguntas de la encuesta con su
+  correlación contra la que se mira.
+- *Centro, la característica elegida.* Título, una frase con el hallazgo (qué grupo queda más alto, cuál más bajo y
+  cuántos puntos los separan) y una fila por grupo: cuántos agentes, el reparto en la escala (1 a 3, 4, 5 a 7), su
+  cifra y la distancia al total. Una línea punteada baja por todas las barras marcando el total. Con otra variante
+  en pantalla, cada barra marca dónde estaba ese grupo en la A y una columna dice cuánto cambió.
+- *Cruce.* «Cruzar con» agrega a cada fila una casilla por grupo de una segunda característica (hasta seis), con su
+  cifra y teñida según su distancia al total: verde sobre él, rojo bajo él.
+- *Watis.* Cada grupo tiene su wati al comienzo de la fila, con el ánimo de su mayoría (contento si la mitad o más
+  respondió de 5 a 7, enojado si la mitad o más respondió de 1 a 3, indeciso si no hay mayoría, apagado con pocos
+  casos). En tablas largas van chicos y en ventanas bajas se retiran.
+- *Frases.* Si la tabla es corta, debajo hablan el grupo más alto y el más bajo por su wati: en el primero, personas
+  que respondieron de 5 a 7; en el segundo, de 1 a 3. El rótulo dice qué parte del grupo son.
+- *Honestidad.* Un grupo con menos de 20 respuestas se muestra apagado, dice «pocos casos» y no entra en las
+  comparaciones; una casilla con menos de 12 no muestra cifra. La correlación de cada característica (eta) va
+  ajustada por su cantidad de grupos, y solo se da por clara si supera lo esperable por azar con esa cantidad de
+  respuestas y de grupos: así las 16 regiones no ganan por ruido ni una muestra chica inventa hallazgos. Cuando
+  la característica no ordena las respuestas, la frase lo dice.
+- *Color.* Ninguno nuevo: los tres de postura, tinta y sus tonos. Una pregunta que no mide postura (Influencia) va
+  en un solo tono.
+
+Cálculo en `src/vivo/analisis.ts` (con pruebas); piezas en `src/enjambre/VistaAnalisis.tsx` y `src/enjambre/analisis/`.
+
 **Pantallas angostas y bajas.** En angostas todo va en una columna; en bajas (hasta 800 px de alto) las cifras bajan
 para no chocar con la tarjeta de la encuesta.
 

@@ -20,6 +20,7 @@ import { Redactando } from './Redactando';
 import { ResultadoEncuesta } from './ResultadoEncuesta';
 import { useAngosto } from './useAngosto';
 import { Validacion } from './Validacion';
+import { VistaAnalisis } from './VistaAnalisis';
 import { VistaProceso } from './VistaProceso';
 import { Voces } from './Voces';
 
@@ -62,6 +63,8 @@ export function AppEnjambre() {
   /** El proceso en lugar del mapa. `montado` sigue un momento más al cerrar, mientras los cuadrados vuelven. */
   const [proceso, setProceso] = useState(false);
   const [procesoMontado, setProcesoMontado] = useState(false);
+  /** El análisis por características de las personas, también en lugar del mapa. */
+  const [analisis, setAnalisis] = useState(false);
   const mostrar = useRef<HTMLDivElement>(null);
   const izquierda = useRef<HTMLDivElement>(null);
   const derecha = useRef<HTMLDivElement>(null);
@@ -171,6 +174,7 @@ export function AppEnjambre() {
         // El foco no se queda en algo invisible: pasa al botón que devuelve la interfaz.
         window.setTimeout(() => mostrar.current?.querySelector('button')?.focus(), 0);
       }
+      if (e.key === 'Escape') setAnalisis(false);
       if (fase !== 'resultados') return;
       if (e.key === 'ArrowRight') sim.setViendo(Math.min(casos.length - 1, viendo + 1));
       if (e.key === 'ArrowLeft') sim.setViendo(Math.max(0, viendo - 1));
@@ -183,15 +187,29 @@ export function AppEnjambre() {
   const hayProceso = !!caso;
   const alternarProceso = () => {
     setFicha(null);
+    setAnalisis(false);
     if (!proceso) setProcesoMontado(true);
     setProceso(!proceso);
   };
-  // Sin corrida en pantalla no hay proceso que mostrar.
+  // El análisis y el proceso ocupan el mismo lugar: al abrir uno, el otro se cierra.
+  const alternarAnalisis = () => {
+    setFicha(null);
+    setProceso(false);
+    setAnalisis(!analisis);
+  };
+  // Sin corrida en pantalla no hay proceso ni análisis que mostrar. En angosto no hay botón para volver del análisis.
   useEffect(() => {
     if (hayProceso) return;
     setProceso(false);
     setProcesoMontado(false);
+    setAnalisis(false);
   }, [hayProceso]);
+  useEffect(() => {
+    const estrecha = matchMedia('(max-width: 899px)');
+    const cerrar = () => estrecha.matches && setAnalisis(false);
+    estrecha.addEventListener('change', cerrar);
+    return () => estrecha.removeEventListener('change', cerrar);
+  }, []);
 
   const pct = caso && listo ? porcentajesDe(caso) : null;
   const motor = conexion?.estado?.motor ?? null;
@@ -207,7 +225,7 @@ export function AppEnjambre() {
   }, [orden, fase, viendo, conEncuesta, revisarTapados]);
 
   return (
-    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || undefined} data-encuesta={conEncuesta || undefined}>
+    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || analisis || undefined} data-encuesta={conEncuesta || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -337,7 +355,8 @@ export function AppEnjambre() {
           alCerrado={() => setProcesoMontado(false)}
         />
       )}
-      {puntos && !procesoMontado && (fase === 'corriendo' || fase === 'resultados') && conexion && (
+      {analisis && conexion && caso && <VistaAnalisis sim={sim} conexion={conexion} />}
+      {puntos && !procesoMontado && !analisis && (fase === 'corriendo' || fase === 'resultados') && conexion && (
         <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
       )}
       <div className={estilos.zoom} role="group" aria-label="Acercamiento del mapa">
@@ -348,6 +367,13 @@ export function AppEnjambre() {
               <circle cx="3" cy="3.6" r="1.9" />
               <circle cx="3" cy="12.4" r="1.9" />
               <circle cx="13" cy="8" r="1.9" />
+            </svg>
+          </button>
+        )}
+        {hayProceso && (
+          <button type="button" className={estilos.verProceso} aria-pressed={analisis} title={analisis ? 'Volver al mapa' : 'Analizar por grupos'} aria-label={analisis ? 'Volver al mapa' : 'Analizar los resultados por características de las personas'} onClick={alternarAnalisis}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 13.5V8.5M8 13.5V2.5M13 13.5V6" strokeWidth="2.6" />
             </svg>
           </button>
         )}

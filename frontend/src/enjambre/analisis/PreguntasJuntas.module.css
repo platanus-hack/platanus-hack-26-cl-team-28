@@ -1,0 +1,85 @@
+/* Las otras preguntas frente a la que se analiza, con el mismo esqueleto de la lista de arriba. */
+.juntas {
+  display: grid;
+  gap: var(--e2);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.juntas header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding-right: var(--e2);
+}
+
+.juntas h2,
+.juntas header span {
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.juntas ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.juntas button {
+  display: grid;
+  grid-template-columns: minmax(0, 10.4rem) minmax(3rem, 1fr) 2.6rem;
+  align-items: center;
+  column-gap: var(--e3);
+  width: 100%;
+  min-height: 26px;
+  padding: 0 var(--e2);
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  text-align: left;
+}
+
+.juntas button > span:first-child {
+  font-weight: 550;
+}
+
+.juntas button b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.barra {
+  height: 6px;
+  background: var(--relleno-suave);
+}
+
+.barra i {
+  display: block;
+  height: 100%;
+  background: var(--tinta-suave);
+  transition: width 420ms var(--curva-salida);
+}
+
+/* Una correlación negativa crece desde la derecha: las preguntas van al revés. */
+.barra[data-negativa] i {
+  margin-left: auto;
+  background: var(--contra);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .juntas button:hover {
+    color: var(--tinta);
+  }
+}
+
+@media (max-height: 800px) {
+  .juntas button {
+    min-height: 22px;
+  }
+}

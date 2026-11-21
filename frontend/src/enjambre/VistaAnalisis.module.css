@@ -1,0 +1,395 @@
+/*
+ * El análisis ocupa el lugar del mapa, como el proceso. Arriba, qué variante y qué pregunta se
+ * miran; a la izquierda, las características ordenadas; al centro, la elegida grupo por grupo.
+ * Abajo queda libre la franja de los botones que vuelven al mapa.
+ */
+.vista {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--e5);
+  padding: var(--e5) max(28px, 3.5vw) 84px;
+  background: var(--mar);
+  color: var(--tinta);
+  animation: abrir 360ms var(--curva-salida) backwards;
+}
+
+@keyframes abrir {
+  from {
+    opacity: 0;
+    scale: 0.985;
+  }
+}
+
+.cabeza {
+  display: grid;
+  gap: var(--e4);
+  min-width: 0;
+}
+
+.variante {
+  display: flex;
+  align-items: center;
+  gap: var(--e4);
+  min-width: 0;
+}
+
+.variantes {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+.variantes button {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--relleno-suave);
+  color: var(--tinta-suave);
+  font: 650 var(--texto-m) / 1 var(--fuente-voz);
+}
+
+.variantes button[aria-pressed='true'] {
+  background: var(--tinta);
+  color: var(--papel);
+}
+
+.variantes button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.titulo {
+  overflow: hidden;
+  min-width: 0;
+  margin: 0;
+  font: 500 clamp(1.1rem, 0.9rem + 0.7vw, 1.6rem) / 1.2 var(--fuente-voz);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Las preguntas de la encuesta: cada una con su cifra, y la elegida con su texto completo al lado. */
+.preguntas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.preguntas button {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  height: 36px;
+  padding: 0 var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background var(--rapido),
+    color var(--rapido),
+    border-color var(--rapido);
+}
+
+.preguntas button b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta);
+}
+
+.preguntas button[aria-pressed='true'] {
+  border-color: var(--tinta);
+  background: var(--tinta);
+  color: var(--mar);
+}
+
+.preguntas button[aria-pressed='true'] b {
+  color: inherit;
+}
+
+.preguntas p {
+  flex: 1 1 18rem;
+  min-width: 0;
+  margin: 0 0 0 var(--e3);
+  font-size: var(--texto-s);
+  line-height: 1.3;
+  color: var(--tinta);
+  text-wrap: pretty;
+}
+
+.preguntas p span {
+  color: var(--tinta-suave);
+}
+
+.cuerpo {
+  display: grid;
+  grid-template-columns: minmax(17rem, 21.5rem) minmax(0, 1fr);
+  gap: clamp(24px, 3.4vw, 64px);
+  min-height: 0;
+}
+
+.lado {
+  display: grid;
+  grid-template-rows: minmax(0, auto) auto;
+  gap: var(--e4);
+  align-content: start;
+  min-height: 0;
+}
+
+.centro {
+  display: grid;
+  grid-template-rows: auto minmax(0, auto) auto minmax(0, 1fr);
+  align-content: start;
+  gap: var(--e3);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* El título y los controles en una línea; la frase del hallazgo debajo, a todo el ancho. */
+.encabezado {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e2) var(--e5);
+}
+
+.encabezado h2 {
+  grid-area: 1 / 1;
+}
+
+.controles {
+  grid-area: 1 / 2;
+}
+
+.encabezado h2 {
+  margin: 0;
+  font: 600 clamp(1.5rem, 1.1rem + 1.3vw, 2.3rem) / 1.05 var(--fuente-voz);
+  letter-spacing: -0.02em;
+}
+
+.hallazgo {
+  grid-column: 1 / -1;
+  max-width: 58rem;
+  margin: 0;
+  font-size: var(--texto-m);
+  line-height: 1.35;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+
+.hallazgo b {
+  font-weight: 650;
+  color: var(--tinta);
+}
+
+.controles {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.controles label {
+  display: flex;
+  align-items: center;
+  gap: var(--e2);
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}
+
+.controles select,
+.controles button {
+  height: 36px;
+  border: 1px solid var(--linea-suave);
+  border-radius: 3px;
+  background-color: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 600;
+}
+
+.controles select {
+  max-width: 13rem;
+  padding: 0 30px 0 var(--e3);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%2314171f' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  appearance: none;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.controles select option {
+  background: var(--papel);
+  color: var(--tinta);
+}
+
+.controles button {
+  padding: 0 var(--e3);
+  color: var(--tinta-suave);
+  white-space: nowrap;
+}
+
+.controles button[aria-pressed='true'] {
+  border-color: var(--tinta);
+  background: var(--tinta);
+  color: var(--mar);
+}
+
+/* Al pie: la leyenda o, mientras se lee una fila, su detalle. Siempre una sola línea. */
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e4);
+  min-height: 28px;
+  padding-top: var(--e2);
+  border-top: 1px solid var(--linea-suave);
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+}
+
+.pie p {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.pie p b {
+  font-weight: 650;
+  color: var(--tinta);
+}
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--e4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leyenda li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leyenda li::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--color);
+}
+
+.leyenda [data-postura='favor'] {
+  --color: var(--favor);
+}
+
+.leyenda [data-postura='contra'] {
+  --color: var(--contra);
+}
+
+.leyenda [data-postura='indecisa'] {
+  --color: var(--indecisa);
+}
+
+.vista[data-neutra] .leyenda [data-postura='contra'] {
+  --color: color-mix(in srgb, var(--tinta-suave) 30%, transparent);
+}
+
+.vista[data-neutra] .leyenda [data-postura='indecisa'] {
+  --color: color-mix(in srgb, var(--tinta-suave) 60%, transparent);
+}
+
+.vista[data-neutra] .leyenda [data-postura='favor'] {
+  --color: var(--tinta-suave);
+}
+
+.leyenda [data-marca='total']::before {
+  width: 0;
+  height: 12px;
+  border-left: 1px dashed var(--tinta);
+  background: none;
+}
+
+.leyenda [data-marca='antes']::before {
+  width: 2px;
+  height: 14px;
+  background: var(--tinta);
+}
+
+.leyenda [data-marca='casilla']::before {
+  background: color-mix(in srgb, var(--favor) 40%, transparent);
+}
+
+.vista[data-neutra] .leyenda [data-marca='casilla']::before {
+  background: color-mix(in srgb, var(--tinta-suave) 40%, transparent);
+}
+
+.vacio {
+  align-self: center;
+  justify-self: center;
+  font-size: var(--texto-l);
+  color: var(--tinta-suave);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .variantes button[aria-pressed='false']:not(:disabled):hover,
+  .preguntas button[aria-pressed='false']:hover,
+  .controles button[aria-pressed='false']:hover {
+    color: var(--tinta);
+  }
+
+  .preguntas button[aria-pressed='false']:hover,
+  .controles button[aria-pressed='false']:hover,
+  .controles select:hover {
+    border-color: var(--tinta-suave);
+  }
+}
+
+/* En ventanas bajas se aprieta el aire, no el contenido. */
+@media (max-height: 800px) {
+  .vista {
+    gap: var(--e4);
+    padding-top: var(--e4);
+  }
+
+  .cabeza {
+    gap: var(--e3);
+  }
+
+  .lado {
+    gap: var(--e3);
+  }
+}
+
+/* Con poco ancho, el texto de la pregunta baja a su propia línea y los controles van bajo el título. */
+@media (max-width: 1180px) {
+  .preguntas p {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+
+  .encabezado {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .controles {
+    grid-area: 3 / 1;
+  }
+
+  .cuerpo {
+    grid-template-columns: minmax(15rem, 17.5rem) minmax(0, 1fr);
+    gap: var(--e5);
+  }
+}

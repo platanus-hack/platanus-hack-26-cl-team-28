@@ -1,0 +1,163 @@
+/* El índice de la vista: cada característica con sus grupos puestos en una misma escala de 0 a 100. */
+.lista {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--e2);
+  min-height: 0;
+}
+
+.lista header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  padding-right: var(--e2);
+}
+
+.lista h2,
+.lista header span {
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.lista ol {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+
+.lista ol::-webkit-scrollbar {
+  display: none;
+}
+
+/* Desde aquí hacia abajo las características no ordenan las respuestas. */
+.lista li[data-corte] {
+  margin-top: var(--e2);
+  padding-top: var(--e2);
+  border-top: 1px dashed var(--linea-suave);
+}
+
+.lista button {
+  display: grid;
+  grid-template-columns: minmax(0, 10.4rem) minmax(3rem, 1fr) 2.6rem;
+  align-items: center;
+  column-gap: var(--e3);
+  width: 100%;
+  min-height: 32px;
+  padding: 0 var(--e2);
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  text-align: left;
+  transition:
+    background var(--rapido),
+    color var(--rapido);
+}
+
+.lista button > span:first-child {
+  overflow: hidden;
+  font-weight: 550;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lista button b {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.lista button[aria-pressed='true'] {
+  background: var(--relleno-suave);
+  color: var(--tinta);
+}
+
+.lista li[data-tenue] button[aria-pressed='false'] {
+  color: color-mix(in srgb, var(--tinta-suave) 62%, transparent);
+}
+
+/* La franja: una línea de 0 a 100, una marca en el total y un punto por grupo. */
+.franja {
+  position: relative;
+  height: 14px;
+  background: linear-gradient(var(--linea-suave), var(--linea-suave)) center / 100% 1px no-repeat;
+}
+
+.franja i {
+  position: absolute;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  translate: -50% -50%;
+  transition: left var(--medio) var(--curva-salida);
+}
+
+.franja .total {
+  width: 1px;
+  height: 14px;
+  border-radius: 0;
+  background: var(--tinta-suave);
+}
+
+.lista button[aria-pressed='true'] .franja i[data-extremo='mayor'] {
+  background: var(--favor);
+}
+
+.lista button[aria-pressed='true'] .franja i[data-extremo='menor'] {
+  background: var(--contra);
+}
+
+.lista[data-neutra] button[aria-pressed='true'] .franja i[data-extremo] {
+  background: var(--tinta);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lista button[aria-pressed='false']:hover {
+    color: var(--tinta);
+  }
+}
+
+@media (max-height: 800px) {
+  .lista button {
+    min-height: 26px;
+  }
+}
+
+/* Si hay más abajo, el borde inferior se desvanece para avisar que la lista sigue. */
+@supports (animation-timeline: scroll()) {
+  .lista ol {
+    animation: sigueLista linear both;
+    animation-timeline: scroll(self);
+  }
+
+  @keyframes sigueLista {
+    from {
+      mask-image: linear-gradient(#000 calc(100% - 18px), transparent);
+    }
+
+    95% {
+      mask-image: linear-gradient(#000 calc(100% - 18px), transparent);
+    }
+
+    to {
+      mask-image: linear-gradient(#000 100%, transparent);
+    }
+  }
+}
+
+@media (max-height: 700px) {
+  .lista button {
+    min-height: 23px;
+  }
+}

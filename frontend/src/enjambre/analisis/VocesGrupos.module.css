@@ -1,0 +1,107 @@
+/* Dos columnas: a la izquierda habla el grupo más alto y a la derecha el más bajo. */
+.voces {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--e5);
+  min-height: 0;
+  overflow: hidden;
+  padding-top: var(--e3);
+  animation: aparecer 420ms var(--curva-salida) backwards;
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+/* Cada grupo habla por su wati: el mismo de su fila en la tabla, más grande y con el ánimo de quien habla. */
+.voces > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-self: start;
+  gap: var(--e2) var(--e4);
+  min-width: 0;
+}
+
+.figura {
+  display: grid;
+  grid-row: 1 / span 3;
+  align-self: start;
+  place-items: center;
+}
+
+.voces h3,
+.voces figure {
+  grid-column: 2;
+}
+
+.voces [data-lado='alto'] {
+  --color: var(--favor);
+}
+
+.voces [data-lado='bajo'] {
+  --color: var(--contra);
+}
+
+.voces[data-neutra] [data-lado='alto'] {
+  --color: var(--tinta-suave);
+}
+
+.voces[data-neutra] [data-lado='bajo'] {
+  --color: var(--linea-suave);
+}
+
+.voces h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px var(--e2);
+  margin: 0;
+  font-size: var(--texto-m);
+  font-weight: 650;
+}
+
+.voces h3 span {
+  font-size: var(--texto-xs);
+  font-weight: 500;
+  color: var(--tinta-suave);
+}
+
+.voces figure {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.voces blockquote {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 0;
+  font-size: var(--texto-m);
+  line-height: 1.35;
+  text-wrap: pretty;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.voces figcaption {
+  font-size: var(--texto-xs);
+  color: var(--tinta-suave);
+}
+
+/* En ventanas bajas no hay lugar para las frases: mandan la tabla y su pie. */
+@media (max-height: 759px) {
+  .voces {
+    display: none;
+  }
+}
+
+/* Con poco alto o poco ancho cabe una sola frase por grupo. */
+@media (max-height: 859px), (max-width: 1180px) {
+  .voces figure:nth-of-type(n + 2) {
+    display: none;
+  }
+}
