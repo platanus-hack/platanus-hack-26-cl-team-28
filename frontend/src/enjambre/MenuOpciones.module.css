@@ -63,3 +63,32 @@
     max-height: calc(100dvh - 5rem);
   }
 }
+
+.ejemplos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e2);
+}
+
+.ejemplos p {
+  width: 100%;
+  font-size: var(--texto-s);
+  font-weight: 600;
+}
+
+.ejemplos button {
+  min-height: 40px;
+  padding: 0 var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ejemplos button:hover {
+    border-color: var(--tinta-suave);
+  }
+}

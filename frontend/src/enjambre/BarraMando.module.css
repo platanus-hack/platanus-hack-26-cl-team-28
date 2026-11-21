@@ -1,7 +1,7 @@
 .barra {
   display: grid;
   gap: var(--e3);
-  width: min(100%, 31rem);
+  width: min(100%, 27rem);
   max-width: 100%;
   padding: var(--e4);
   border: 1px solid var(--linea-suave);
@@ -53,8 +53,8 @@
   border: 1px solid var(--tinta-suave);
   border-radius: var(--radio);
   background: var(--mar);
-  font-size: 1.15rem;
-  line-height: 1.4;
+  font-size: var(--texto-m);
+  line-height: 1.35;
   resize: none;
   field-sizing: content;
 }
@@ -163,11 +163,6 @@
   .casos button:hover {
     border-color: var(--tinta-suave);
   }
-}
-
-.barra > button[type='submit'] {
-  min-height: 60px;
-  font-size: 1.15rem;
 }
 
 /* Ventanas bajas: el mando se aprieta para dejarle lugar al titular. */

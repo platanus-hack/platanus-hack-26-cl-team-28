@@ -2,7 +2,6 @@ import { useState, type DragEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { formatear, letraDe } from '../dominio/textos';
 import { MAXIMO_ITERACIONES, MAXIMO_VARIANTES, type EnVivo } from '../vivo/useEnVivo';
-import { CASOS_VALIDACION } from '../vivo/validacion';
 import { Adjunto } from './Adjunto';
 import estilos from './BarraMando.module.css';
 
@@ -31,10 +30,6 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
     setSobre(false);
     const archivo = e.dataTransfer.files[0];
     if (archivo) void sim.adjuntarArchivo(actual.id, archivo);
-  };
-  const usarCaso = (k: number) => {
-    const caso = CASOS_VALIDACION[k];
-    sim.fijar(actual.id, { texto: caso.texto, referencia: caso.referencia, documento: undefined, leido: undefined });
   };
   const leyendo = borradores.some((b) => b.leyendo);
   return (
@@ -73,7 +68,7 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
         <span className="solo-lectores">Propuesta, variante {letraDe(elegida)}</span>
         <textarea
           key={actual.id}
-          rows={3}
+          rows={2}
           value={actual.texto}
           placeholder={actual.documento ? 'Contexto o pregunta sobre el documento (opcional)' : 'Escribe la propuesta o suelta aquí un documento'}
           onChange={(e) => sim.cambiarTexto(actual.id, e.target.value)}
@@ -84,19 +79,6 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
           Sin motor conectado: las respuestas se sortean en el navegador y no se comparan con encuestas.
         </p>
       )}
-      {actual.referencia && !sim.conexion?.demo && (
-        <p className={estilos.referencia}>
-          Se comparará con <b>{actual.referencia.fuente}</b>, {actual.referencia.fecha}: {actual.referencia.favor} % a favor.
-        </p>
-      )}
-      <div className={estilos.casos} aria-label="Casos con encuesta real">
-        <span>Probar con una encuesta real</span>
-        {CASOS_VALIDACION.map((caso, k) => (
-          <button key={caso.corto} type="button" aria-pressed={actual.referencia?.url === caso.referencia.url && actual.texto === caso.texto} onClick={() => usarCaso(k)}>
-            {caso.corto}
-          </button>
-        ))}
-      </div>
       <Adjunto
         documento={actual.documento}
         leido={actual.leido}
@@ -106,7 +88,7 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
       />
       <label className={estilos.iterar}>
         <input type="checkbox" checked={sim.iteraciones > 0} onChange={(e) => sim.setIteraciones(e.target.checked ? 2 : 0)} />
-        <span>Que un agente reescriba la propuesta con las objeciones y vuelva a preguntar</span>
+        <span>Que un agente proponga una versión con más apoyo</span>
         {sim.iteraciones > 0 && (
           <select aria-label="Cantidad de iteraciones" value={sim.iteraciones} onChange={(e) => sim.setIteraciones(+e.target.value)}>
             {Array.from({ length: MAXIMO_ITERACIONES }, (_, k) => (

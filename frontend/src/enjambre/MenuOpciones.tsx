@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { FiltrosMuestra } from '../componentes/preparar/FiltrosMuestra';
 import { TAMANOS_AGENTES, type EnVivo } from '../vivo/useEnVivo';
+import { CASOS_VALIDACION } from '../vivo/validacion';
 import estilos from './MenuOpciones.module.css';
 
 interface Props {
@@ -39,6 +40,24 @@ export function MenuOpciones({ sim, claro, alCambiarTema, alOcultar }: Props) {
       {abierto && (
         <div className={estilos.panel} id="panel-opciones" role="region" aria-label="Opciones">
           <FiltrosMuestra sim={sim} tamanos={TAMANOS_AGENTES} sinPolitica rotuloTamano="Agentes a consultar (cada uno es una persona del censo)" />
+          {!sim.conexion?.demo && (
+            <div className={estilos.ejemplos}>
+              <p>Probar con una encuesta real</p>
+              {CASOS_VALIDACION.map((caso) => (
+                <button
+                  key={caso.corto}
+                  type="button"
+                  onClick={() => {
+                    const primera = sim.borradores[0];
+                    sim.fijar(primera.id, { texto: caso.texto, referencia: caso.referencia, documento: undefined, leido: undefined });
+                    setAbierto(false);
+                  }}
+                >
+                  {caso.corto}
+                </button>
+              ))}
+            </div>
+          )}
           <div className={estilos.vista}>
             <Boton variante="secundario" onClick={alCambiarTema}>
               {claro ? 'Fondo oscuro' : 'Fondo claro'}

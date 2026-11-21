@@ -57,7 +57,6 @@ export function AppEnjambre() {
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
   const angosto = useAngosto();
-  const [climax, setClimax] = useState(false);
   const mostrar = useRef<HTMLDivElement>(null);
   const app = useRef<HTMLDivElement>(null);
   const mando = useRef<HTMLDivElement>(null);
@@ -109,21 +108,6 @@ export function AppEnjambre() {
   }, [claro]);
   useEffect(() => setFicha(null), [fase, viendo]);
 
-  // Cuando la primera variante termina y tiene encuesta real, la comparación ocupa el centro unos segundos.
-  const primeraLista = casos[0]?.listo ?? false;
-  const conReferencia = !!casos[0]?.referencia;
-  useEffect(() => {
-    if (fase !== 'corriendo' || !primeraLista || !conReferencia || conexion?.demo) return;
-    // Entra cuando los puntos ya llegaron a sus burbujas, para no tapar el vuelo.
-    const entra = window.setTimeout(() => setClimax(true), 3500);
-    const sale = window.setTimeout(() => setClimax(false), 9000);
-    return () => {
-      window.clearTimeout(entra);
-      window.clearTimeout(sale);
-      setClimax(false);
-    };
-  }, [fase, primeraLista, conReferencia, conexion]);
-
   const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
   const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
   const alHablar = useCallback((agentes: number[]) => escena.current?.resaltar(agentes.flatMap(puntosDe)), [puntosDe]);
@@ -165,7 +149,7 @@ export function AppEnjambre() {
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
 
   return (
-    <div className={estilos.app} ref={app} data-fase={fase} data-oculta={oculta || undefined} data-climax={climax || undefined}>
+    <div className={estilos.app} ref={app} data-fase={fase} data-oculta={oculta || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -184,14 +168,7 @@ export function AppEnjambre() {
             {caso.iteracion?.cambio && listo && <small>{caso.iteracion.cambio}</small>}
           </h1>
         ) : (
-          <>
-            <h1 className={estilos.titular}>Sabe cómo reacciona Chile a una ley antes de aprobarla</h1>
-            <p className={estilos.bajada}>
-              {conexion?.demo
-                ? 'Cada punto es una persona simulada.'
-                : `${formatear(muestra.total)} personas reales del Censo 2024, cada una con su agente de IA. Validado contra encuestas Cadem.`}
-            </p>
-          </>
+          <h1 className={estilos.titular}>¿Cómo respondería Chile?</h1>
         )}
         {caso && caso.texto !== caso.titulo && caso.texto && (
           <details className={estilos.completo}>
@@ -210,7 +187,7 @@ export function AppEnjambre() {
             </span>
           </p>
         )}
-        {caso && !climax && !conexion?.demo && <Validacion casos={casos} viendo={viendo} />}
+        {caso && !conexion?.demo && <Validacion casos={casos} viendo={viendo} />}
       </div>
       {fase === 'corriendo' && caso && !listo && (
         <div className={estilos.avance}>
@@ -258,11 +235,6 @@ export function AppEnjambre() {
           <MenuOpciones sim={sim} claro={claro} alCambiarTema={() => setClaro(!claro)} alOcultar={() => setOculta(true)} />
         )}
       </div>
-      {climax && (
-        <div className={estilos.climax}>
-          <Validacion casos={casos} viendo={0} grande />
-        </div>
-      )}
       {ficha && conexion && (
         <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} alCerrar={() => setFicha(null)} />
       )}

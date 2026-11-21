@@ -344,18 +344,7 @@
 
   .app[data-fase='preparar'] .titular,
   .app[data-fase='cargando'] .titular {
-    font-size: clamp(1.5rem, min(0.9rem + 3.3vw, (100cqh - 7.5rem) / 4.1), 4.6rem);
-  }
-
-  @container (max-height: 300px) {
-    .bajada {
-      display: none;
-    }
-
-    .app[data-fase='preparar'] .titular,
-    .app[data-fase='cargando'] .titular {
-      font-size: clamp(1.4rem, min(0.9rem + 3.3vw, 100cqh / 4.2), 4.6rem);
-    }
+    font-size: clamp(1.5rem, min(1rem + 3.4vw, 100cqh / 3.3), 4.4rem);
   }
 
   .app[data-fase='preparar'] .mando {
