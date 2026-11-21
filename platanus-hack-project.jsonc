@@ -1,9 +1,9 @@
 {
   // Your project's name, as it will appear on the voting page.
-  "project-name": "<FILL THIS>",
+  "project-name": "Not Dropout",
 
   // Short one-line summary of your project (in Spanish).
-  "project-oneliner-spanish": "<FILL THIS>",
+  "project-oneliner-spanish": "Que pasaria si se aplicara un sistema de prediccion de poblacion en Chile?",
 
   // Brief description of your project (in Spanish).
   "project-description-spanish": "<FILL THIS>",
