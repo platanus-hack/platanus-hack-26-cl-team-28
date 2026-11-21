@@ -2,10 +2,12 @@
 """Descarga el Censo de Población y Vivienda 2024 (INE, Chile).
 
 Uso:
-    uv run python -I scripts/descargar_censo.py data/censo2024
+    uv run python -I scripts/descargar_censo.py data/censo2024 [--cartografia]
 
 Baja microdatos (Parquet), datos agregados, tabulados y documentación desde las
 fuentes oficiales del INE, verifica cada archivo y escribe MANIFEST.json.
+Con --cartografia baja además la cartografía en GeoParquet de las 16 regiones (unos
+800 MB) y deja solo las capas comunal y de límite urbano, que usa scripts/construir_comunas.py.
 Es reejecutable: lo ya descargado y verificado no se vuelve a bajar.
 Solo usa la biblioteca estándar.
 """
@@ -52,6 +54,11 @@ DEL_BUCKET = [
     ("Resultados_CPV2024_Aplicación_DEGURBA.pdf", "docs", False),
     ("Glosario_CPV2024_Dashboard_DEGURBA.pdf", "docs", False),
 ]
+
+# Cartografía por región: de cada zip se guardan solo las comunas y sus zonas urbanas.
+CODIGOS_REGION = range(1, 17)
+CARTOGRAFIA = [(f"Cartografia/GEOPARQUET/Cartografía_censo2024_R{r:02d}.zip", "cartografia", True) for r in CODIGOS_REGION]
+SOLO_CARTOGRAFIA = ("_Comunal.parquet", "_Limite_Urbano.parquet")
 
 # (ruta bajo wp-content/uploads, subcarpeta de destino)
 DEL_PORTAL = [
@@ -144,14 +151,18 @@ def descargar(url, destino):
     return total, h.hexdigest()
 
 
-def extraer(ruta_zip, carpeta):
-    """Extrae en un directorio nuevo y vacío y mueve los archivos a la carpeta."""
+def extraer(ruta_zip, carpeta, solo=None):
+    """Extrae en un directorio nuevo y vacío y mueve los archivos a la carpeta.
+
+    Con `solo` (una terminación o una tupla de ellas), guarda únicamente esos archivos."""
     extraidos = []
     with tempfile.TemporaryDirectory(dir=carpeta, prefix=".extraccion-") as tmp:
         with zipfile.ZipFile(ruta_zip) as z:
             z.extractall(tmp)
         for origen in sorted(Path(tmp).rglob("*")):
             if not origen.is_file() or origen.is_symlink():
+                continue
+            if solo and not nfc(origen.name).endswith(solo):
                 continue
             destino = carpeta / nombre_local(origen.name)
             shutil.move(origen, destino)
@@ -161,10 +172,18 @@ def extraer(ruta_zip, carpeta):
     return extraidos
 
 
-def vigente(previo, carpeta, md5_publicado):
-    """True si la entrada del manifiesto sigue respaldada por los archivos en disco."""
+def vigente(previo, carpeta, md5_publicado, solo=None):
+    """True si la entrada del manifiesto sigue respaldada por los archivos en disco.
+
+    Con `solo`, además debe haber un archivo extraído con cada terminación: si se pide una capa
+    nueva de un zip ya bajado, se vuelve a bajar."""
     if not previo or previo.get("md5_publicado") != md5_publicado:
         return False
+    if solo:
+        terminaciones = (solo,) if isinstance(solo, str) else solo
+        nombres = [a["archivo"] for a in previo.get("extraidos", [])]
+        if not all(any(n.endswith(t) for n in nombres) for t in terminaciones):
+            return False
     archivos = previo.get("extraidos") or [{"archivo": previo["archivo"], "bytes": previo["bytes"]}]
     return all(
         (carpeta / a["archivo"]).is_file() and (carpeta / a["archivo"]).stat().st_size == a["bytes"]
@@ -173,9 +192,12 @@ def vigente(previo, carpeta, md5_publicado):
 
 
 def main():
-    if len(sys.argv) != 2:
+    argumentos = sys.argv[1:]
+    con_cartografia = "--cartografia" in argumentos
+    argumentos = [a for a in argumentos if a != "--cartografia"]
+    if len(argumentos) != 1:
         sys.exit(__doc__)
-    raiz = Path(sys.argv[1])
+    raiz = Path(argumentos[0])
     raiz.mkdir(parents=True, exist_ok=True)
     ruta_manifiesto = raiz / "MANIFEST.json"
     manifiesto = json.loads(ruta_manifiesto.read_text()) if ruta_manifiesto.exists() else {}
@@ -183,7 +205,7 @@ def main():
 
     bucket = listar_bucket()
     tareas = []
-    for objeto, sub, extraer_zip in DEL_BUCKET:
+    for objeto, sub, extraer_zip in DEL_BUCKET + (CARTOGRAFIA if con_cartografia else []):
         meta = bucket.get(nfc(objeto))
         if meta is None:
             sys.exit(f"ERROR: {objeto} ya no está en el bucket; revisa la lista DEL_BUCKET")
@@ -193,6 +215,7 @@ def main():
                 "archivo": nombre_local(objeto),
                 "sub": sub,
                 "extraer": extraer_zip,
+                "solo": SOLO_CARTOGRAFIA if sub == "cartografia" else None,
                 "md5_publicado": base64.b64decode(meta["md5Hash"]).hex(),
                 "actualizado_en_origen": meta["updated"],
             }
@@ -204,6 +227,7 @@ def main():
                 "archivo": nombre_local(ruta),
                 "sub": sub,
                 "extraer": False,
+                "solo": None,
                 "md5_publicado": None,
                 "actualizado_en_origen": None,
             }
@@ -214,7 +238,7 @@ def main():
         carpeta = raiz / t["sub"]
         carpeta.mkdir(parents=True, exist_ok=True)
         previo = previos.get(t["url"])
-        if vigente(previo, carpeta, t["md5_publicado"]):
+        if vigente(previo, carpeta, t["md5_publicado"], t["solo"]):
             print(f"ok       {t['sub']}/{t['archivo']}")
             entradas.append(previo)
             continue
@@ -235,7 +259,7 @@ def main():
             "descargado_en": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
         if t["extraer"]:
-            entrada["extraidos"] = extraer(destino, carpeta)
+            entrada["extraidos"] = extraer(destino, carpeta, t["solo"])
             destino.unlink()
         entradas.append(entrada)
         # Se guarda tras cada archivo para poder retomar una descarga interrumpida.

@@ -1,5 +1,6 @@
 import datos from '../datos/geografia.json';
 import { crearAzar } from '../dominio/azar';
+import { dentro } from '../dominio/poblacion';
 import { aGeografia, aMundo, ALTO_MUNDO, ANCHO_MUNDO, LAT_NORTE, LON_OESTE } from './proyeccion';
 
 type Anillo = number[][];
@@ -12,6 +13,54 @@ interface Geografia {
 const geografia = datos as Geografia;
 
 export const REGIONES_GEO: Anillo[][] = geografia.regions;
+
+/** Una zona urbana (ciudad o pueblo) de una comuna, con cuántas personas viven en ella. */
+export interface ZonaUrbana {
+  personas: number;
+  anillos: Anillo[];
+}
+
+/**
+ * Una comuna de la cartografía del Censo 2024 (`backend/scripts/construir_comunas.py`): sus
+ * anillos en [lon, lat], sin las islas oceánicas que el mapa no dibuja, un punto que con
+ * certeza cae dentro (para cuando no tiene anillos dibujables o el sorteo de un lugar falla) y
+ * sus zonas urbanas, dentro del límite urbano del INE.
+ */
+export interface ComunaGeo {
+  region: number;
+  anillos: Anillo[];
+  interior: number[];
+  urbano?: ZonaUrbana[];
+}
+
+/** Comunas por código INE. */
+export type ComunasGeo = Record<string, ComunaGeo>;
+
+let comunas: ComunasGeo | null = null;
+let cargando: Promise<ComunasGeo> | null = null;
+
+/**
+ * Los polígonos de las comunas. Pesan unos 375 KB, así que van en un archivo aparte que se pide
+ * recién al conectarse; si no llega, queda vacío y cada punto se ubica como antes, por región.
+ */
+export function cargarComunas(): Promise<ComunasGeo> {
+  cargando ??= import('../datos/comunas.json')
+    .then((modulo) => (comunas = (modulo.default as { comunas: ComunasGeo }).comunas))
+    .catch(() => (comunas = {}));
+  return cargando;
+}
+
+/** Las comunas, si ya se cargaron. */
+export function comunasCargadas(): ComunasGeo | null {
+  return comunas;
+}
+
+/** Si un punto cae dentro de un polígono de varios anillos, por paridad: respeta los huecos. */
+export function dentroDe(lon: number, lat: number, anillos: Anillo[]): boolean {
+  let adentro = false;
+  for (const anillo of anillos) if (dentro(lon, lat, anillo)) adentro = !adentro;
+  return adentro;
+}
 
 function trazar(anillos: Anillo[]): Path2D {
   const camino = new Path2D();

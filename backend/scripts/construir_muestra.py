@@ -97,7 +97,7 @@ SOLO_OCUPADOS = ["categoria_ocupacional", "tiene_contrato", "sindicato"]
 
 COLUMNAS_CASEN = sorted(
     set(DEL_HOGAR) | set(DE_LA_PERSONA)
-    | {"folio", "id_persona", "region", "area", "expr", "expr_osig", "edad", "sexo", "pco1", "ecivil", "esc",
+    | {"folio", "id_persona", "region", "comuna", "area", "expr", "expr_osig", "edad", "sexo", "pco1", "ecivil", "esc",
        "activ", "oficio1_08", "lugar_nac", "pueblos_indigenas", "disc_wg", "o28c", "o28a_hr", "o28a_min",
        "s5", "genero", "ten_viv", "v1", "ind_hacina", "r17a", "depen_fun", "e3", "depen"}
 )
@@ -194,7 +194,13 @@ def emparejar_por_prediccion(rec, don, clases, peso, k, rng, min_don=10):
             rango = np.empty(len(r))
             rango[np.argsort(pred_r[r], kind="stable")] = np.arange(len(r))
             cuantil = (rango + rng.random(len(r))) / len(r)
-            pos = np.searchsorted(acum, cuantil) + rng.integers(-(k // 2), k // 2 + 1, len(r))
+            # La ventana de vecinos se corre hacia adentro en las orillas: si se recortara, los hogares
+            # de más arriba repetirían al donante más rico de la clase y el ingreso medio subiría.
+            mitad = k // 2
+            pos = np.searchsorted(acum, cuantil)
+            if len(d) > 2 * mitad:
+                pos = np.clip(pos, mitad, len(d) - 1 - mitad)
+            pos = pos + rng.integers(-mitad, mitad + 1, len(r))
             elegido[r] = d[np.clip(pos, 0, len(d) - 1)]
             nivel[r] = i
     if (elegido < 0).any():
@@ -236,7 +242,7 @@ def rasgos_hogar(per, hog):
     jefe = per[per["rol"] == 1].drop_duplicates("hk").set_index("hk")
     for c in ("sexo", "edad10", "educ5", "activ", "ciuo", "inmig", "indig"):
         r["j_" + c] = jefe[c]
-    r = r.join(hog.set_index("hk")[["region", "area", "ten", "viv", "hacin", "inet"]])
+    r = r.join(hog.set_index("hk")[["region", "comuna", "area", "ten", "viv", "hacin", "inet"]])
     r["macro"] = r["region"].map(MACROZONA)
     r["tam5"] = r["tam"].clip(upper=5)
     # Composición por edad: 0 solo adultos menores de 65, 1 con menores de 18, 2 con mayores de 65, 3 con ambos.
@@ -251,7 +257,32 @@ def rasgos_hogar(per, hog):
 
 
 PREDICTORES = ["region", "area", "tam6", "j_sexo", "j_edad10", "j_educ5", "j_activ", "j_ciuo", "j_inmig", "j_indig",
-               "ten", "viv", "hacin", "inet", "n_ocup", "n_men18", "n_65", "n_ocup_alto", "max_educ"]
+               "ten", "viv", "hacin", "inet", "n_ocup", "n_men18", "n_65", "n_ocup_alto", "max_educ", "nivel_comuna"]
+
+
+def nivel_comunal(con, censo):
+    """Escolaridad media de los adultos (25 años o más) de cada comuna, según el censo.
+
+    Es el contexto de la comuna en el modelo de ingreso: ordena a los hogares de las comunas
+    donde Casen tiene pocos casos, que no alcanzan a tener donantes propios (ver `imputar_casen`).
+    Se mide en el censo completo, no en la muestra, para que no tenga ruido.
+    """
+    P = f"'{(censo / 'microdatos' / 'personas_censo2024.parquet').as_posix()}'"
+    filas = con.execute(
+        f"select comuna, region, avg(escolaridad) from {P} where edad_quinquenal >= 25 and escolaridad >= 0 group by all"
+    ).fetchall()
+    return pd.DataFrame(filas, columns=["comuna", "region", "esc_comuna"])
+
+
+def con_nivel_comunal(r, niveles):
+    """Agrega `nivel_comuna`: la escolaridad media de la comuna en tramos de medio año.
+
+    Las comunas que no están en el censo (no debería pasar) toman la media de su región."""
+    esc = r["comuna"].map(niveles.set_index("comuna")["esc_comuna"])
+    por_region = niveles.groupby("region")["esc_comuna"].mean()
+    esc = esc.fillna(r["region"].map(por_region)).fillna(niveles["esc_comuna"].mean())
+    r["nivel_comuna"] = (esc * 2).round().astype("int64")
+    return r
 
 
 def predecir_ingreso(don, rec):
@@ -363,7 +394,7 @@ def estandarizar_censo(per, hog):
     p["estciv"] = recodificar(per["p23_est_civil"], {1: 1, 2: 1, 3: 1, 4: 2, 5: 2, 6: 2, 7: 2, 8: 2}, 9, 0)
     p["sdpa"] = per["parentesco"] == 16
     p["nh"] = per["hijos_en_hogar"].fillna(0).clip(upper=3).astype("int64")
-    h = pd.DataFrame({"hk": hog["id_vivienda"] * 100 + hog["id_hogar"], "region": hog["region"], "area": hog["area"]})
+    h = pd.DataFrame({"hk": hog["id_vivienda"] * 100 + hog["id_hogar"], "region": hog["region"], "comuna": hog["comuna"], "area": hog["area"]})
     h["ten"] = recodificar(hog["p12_tenencia_viv"], {1: 1, 2: 1, 3: 2, 4: 2, 5: 3, 6: 3, 7: 4, 8: 4, 9: 4}, 9, 9)
     h["viv"] = recodificar(hog["p2_tipo_vivienda"], {1: 1, 3: 2}, 3, 3)
     h["hacin"] = recodificar(hog["indice_hacinamiento"], {1: 1, 2: 2, 3: 3}, 9, 9)
@@ -389,7 +420,8 @@ def estandarizar_casen(c):
     hijastros = (c["pco1"] == 6).groupby(p["hk"]).transform("sum")
     p["nh"] = np.select([p["rol"] == 1, p["rol"] == 2], [hijos, hijos + hijastros], 0).clip(max=3).astype("int64")
     jefe = c[c["pco1"] == 1].drop_duplicates("folio")
-    h = pd.DataFrame({"hk": jefe["folio"].astype("int64"), "region": jefe["region"].astype("int64"), "area": jefe["area"].astype("int64")})
+    h = pd.DataFrame({"hk": jefe["folio"].astype("int64"), "region": jefe["region"].astype("int64"),
+                      "comuna": jefe["comuna"].astype("int64"), "area": jefe["area"].astype("int64")})
     h["ten"] = recodificar(jefe["ten_viv"], {1: 1, 2: 2, 3: 3, 4: 4}, 9, 9)
     h["viv"] = recodificar(jefe["v1"], {1: 1, 2: 1, 3: 1, 4: 2, 5: 2}, 3, 3)
     h["hacin"] = recodificar(jefe["ind_hacina"], {1: 1, 2: 2, 3: 3, 4: 3}, 9, 9)
@@ -428,11 +460,12 @@ def leer_casen(con, casen_dir):
     return casen, cp, ch
 
 
-def imputar_casen(per, hog, casen, cp, ch, rng, avisar=lambda texto: print(texto, flush=True)):
+def imputar_casen(per, hog, casen, cp, ch, rng, niveles, avisar=lambda texto: print(texto, flush=True)):
     """Pasos 3 y 4: copia a hogares y personas del censo los datos de un donante parecido de Casen.
 
     `per` y `hog` son las personas y los hogares del censo, ya con la edad completa, los datos
     de familia y la llave `hk`. Sirve igual para una muestra que para una región entera.
+    `niveles` es la escolaridad media de cada comuna (`nivel_comunal`), el contexto del ingreso.
     Devuelve (personas con las columnas imputadas, hogares, datos para el informe).
     """
     en_hogar = (per["tipo_operativo"] == 2).to_numpy()
@@ -440,14 +473,26 @@ def imputar_casen(per, hog, casen, cp, ch, rng, avisar=lambda texto: print(texto
 
 
     avisar("3. Emparejando hogares (ingresos, vehículos, redes, alimentación, discriminación) ...")
-    dh = rasgos_hogar(cp, ch).merge(casen[casen["pco1"] == 1].drop_duplicates("folio")[["folio", "expr", *DEL_HOGAR]],
+    dh = con_nivel_comunal(rasgos_hogar(cp, ch), niveles).merge(casen[casen["pco1"] == 1].drop_duplicates("folio")[["folio", "expr", *DEL_HOGAR]],
                                    left_on="hk", right_on="folio")
-    hh = rasgos_hogar(rp, rh)
+    hh = con_nivel_comunal(rasgos_hogar(rp, rh), niveles)
     hh = hog[["hk"]].merge(hh, on="hk", how="left")  # mismo orden que `hog`
     dh["pred"], hh["pred"], r2 = predecir_ingreso(dh, hh)
     clases = [["region", "area", "tam5", "comp", "j_inmig", "j_indig"], ["macro", "area", "tam5", "comp", "j_inmig", "j_indig"],
               ["area", "tam5", "comp", "j_inmig"], ["tam5", "comp"], ["tam5"]]
-    don_h, nivel_h = emparejar_por_prediccion(hh, dh, clases, "expr", VECINOS, rng)
+    # Etapa 1, el orden: un ingreso tentativo de un donante de la misma comuna, si Casen tiene al menos
+    # diez ahí. Así cada comuna toma la distribución de ingresos que Casen observa en ella, incluida la
+    # parte que los rasgos del hogar no explican (patrimonio, redes), que es la que separa a Vitacura.
+    tentativo, _ = emparejar_por_prediccion(hh, dh, [["region", "area", "comuna", "comp"], ["region", "area", "comuna"], *clases],
+                                            "expr", VECINOS, rng)
+    ingreso = np.log1p(dh["ypchautcor"].to_numpy("float64"))
+    # Etapa 2, la calibración: dentro de las clases regionales, ese orden se cruza con el ingreso real de
+    # los donantes. Cada región queda con la distribución de Casen, aunque Casen no sea representativa
+    # por comuna, y cada comuna conserva su lugar dentro de la región. Los empates (ingreso cero) se
+    # rompen al azar.
+    orden_r = hh.assign(pred=ingreso[tentativo] + rng.random(len(hh)) * 1e-6)
+    orden_d = dh.assign(pred=ingreso + rng.random(len(dh)) * 1e-6)
+    don_h, nivel_h = emparejar_por_prediccion(orden_r, orden_d, clases, "expr", VECINOS, rng)
     for origen, destino in DEL_HOGAR.items():
         hog[destino] = dh[origen].to_numpy()[don_h]
     hog["n_vehiculos"] = hog["n_vehiculos"].where(hog["tiene_vehiculo"] == 1, 0)
@@ -563,7 +608,8 @@ def main():
 
     print("2. Leyendo Casen ...", flush=True)
     casen, cp, ch = leer_casen(con, casen_dir)
-    per, hog, imputacion = imputar_casen(per, hog, casen, cp, ch, rng)
+    niveles = nivel_comunal(con, censo)
+    per, hog, imputacion = imputar_casen(per, hog, casen, cp, ch, rng, niveles)
     r2, nivel_h, nivel_p = imputacion["r2"], imputacion["nivel_h"], imputacion["nivel_p"]
 
     print("5. Escribiendo resultados ...", flush=True)
@@ -813,9 +859,12 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
         f"Los hogares entran completos, con todos sus integrantes. Aparte se tomó 1 de cada {PASO} personas en viviendas colectivas y en situación de calle ({miles((~en_hogar).sum())} personas).",
         "2. **Edad.** En las 51 comunas donde el censo solo publica el tramo quinquenal, la edad exacta se sorteó según la distribución de su región, sexo y tramo.",
         "3. **Familia.** Hijos, hermanos y educación de los padres se dedujeron del parentesco dentro del hogar. Solo existen para quienes viven juntos.",
-        f"4. **Hogares.** Con Casen se ajustó un modelo del ingreso per cápita según región, área, tamaño, características de la jefatura, ocupados, educación, tenencia, tipo de vivienda, hacinamiento e internet. "
-        f"Dentro de cada combinación de región, área, tamaño y composición por edad (con menores de 18, con mayores de 65, con ambos o con ninguno), los hogares de la muestra y los de Casen se ordenan por su ingreso predicho, y cada hogar de la muestra recibe un donante de Casen que ocupa su misma posición relativa (con un margen aleatorio de {VECINOS} vecinos). "
-        "Se empareja por posición y no por valor porque el censo registra algo menos de empleo y educación que Casen; así la distribución de ingresos de cada clase queda igual a la de Casen. De ese donante se copian ingresos, vehículos, redes de apoyo, inseguridad alimentaria y discriminación.",
+        f"4. **Hogares.** Con Casen se ajustó un modelo del ingreso per cápita según región, área, tamaño, características de la jefatura, ocupados, educación, tenencia, tipo de vivienda, hacinamiento, internet y el nivel de su comuna (la escolaridad media de sus adultos en el censo, en tramos de medio año). "
+        f"El emparejamiento va en dos etapas. Primero, el orden: cada hogar recibe un ingreso tentativo de un hogar de Casen de su misma comuna y composición por edad (con menores de 18, con mayores de 65, con ambos o con ninguno), el que ocupa su misma posición relativa según el ingreso predicho; si Casen tiene menos de 10 hogares así en la comuna, se busca en su región. "
+        f"Después, la calibración: dentro de cada combinación de región, área, tamaño y composición por edad, los hogares se ordenan por ese ingreso tentativo, los de Casen por su ingreso real, y cada hogar recibe el donante que ocupa su misma posición relativa (con un margen aleatorio de {VECINOS} vecinos). "
+        "Así cada comuna conserva la distribución de ingresos que Casen observa en ella, y cada región queda igual a Casen aunque Casen no sea representativa por comuna. "
+        "Con un solo emparejamiento, por el ingreso predicho, las diferencias entre comunas de una misma región se aplastaban: Vitacura quedaba con 54 % de quintil V y Cerro Navia con 5 %, cuando Casen da 88 % y 3 %. "
+        "Se empareja por posición y no por valor porque el censo registra algo menos de empleo y educación que Casen. De ese donante se copian ingresos, vehículos, redes de apoyo, inseguridad alimentaria y discriminación.",
         "5. **Personas.** A cada persona se le sorteó un donante de Casen del mismo sexo, edad, educación, actividad y discapacidad, y en lo posible del mismo decil, región, ocupación y parentesco. "
         "El decil es el que se imputó a su hogar en el paso anterior, y los integrantes de un hogar se emparejan además por el sistema de salud de su jefatura. De ese donante se copian previsión, datos del trabajo, participación y cuidados.",
         "6. **Sorteos aparte.** El tiempo de traslado, el género, los hijos de quienes el censo no pregunta y el tipo de colegio de los menores tienen cada uno su propio emparejamiento, con las llaves que más les importan.",
@@ -849,7 +898,7 @@ def documentar(contexto, per, hog, casen, cp, descripcion, etiquetas, censo, con
         "",
         f"- **Personas fuera de hogares.** Las {miles((~en_hogar).sum())} personas en viviendas colectivas o en situación de calle no tienen datos de Casen, porque esa encuesta solo cubre viviendas particulares.",
         "- **No respuesta del censo.** Los `-99` y `-66` del censo se conservan tal cual, salvo la edad.",
-        "- **Comunas.** Casen no es representativa por comuna. Los datos imputados son fiables por región y por grupos sociales, no para comparar comunas entre sí.",
+        "- **Comunas.** Casen no es representativa por comuna. El ingreso de cada comuna sigue la distribución que Casen observa en ella (ver el paso 4), así que hereda su ruido: en las comunas con pocos casos en Casen es una estimación débil, y en las que no alcanzan 10 hogares por composición se usa la de su región. Los demás datos imputados son fiables por región y por grupos sociales, no para comparar comunas entre sí.",
         "- **Relaciones no medidas.** Una relación entre dos datos imputados por separado (por ejemplo, tiempo de traslado y participación en organizaciones) solo refleja lo que ambos comparten con la edad, la educación, el ingreso y las demás llaves.",
         "- **Familia fuera del hogar.** No hay hermanos ni educación de los padres para quienes no viven con ellos. Casen 2024 tampoco lo pregunta.",
         "- **Discriminación.** Los motivos se copian del hogar donante, que coincide en si la jefatura es inmigrante o indígena, pero no en todo lo demás.",

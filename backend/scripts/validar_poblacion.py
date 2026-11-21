@@ -46,6 +46,12 @@ MAX_DISTRIBUCION = 2.0
 # una diferencia menor que eso no se distingue del error de la propia encuesta.
 MAX_DISTRIBUCION_CEP = 2.8
 MAX_CORRELACION = 0.05
+#: Por comuna: casos mínimos en Casen para comparar, y lo que se exige al porcentaje de quintil V.
+#: La pendiente es la de la población contra Casen; 1 sería el mismo gradiente y menos de 1, aplastado.
+#: El ruido de Casen en cada comuna la baja algo aunque la población estuviera perfecta.
+CASOS_COMUNA = 300
+MIN_CORRELACION_COMUNA = 0.95
+MIN_PENDIENTE_COMUNA = 0.9
 
 # Datos del censo (observados) y de Casen (imputados), con la misma definición en ambas fuentes.
 OBSERVADAS = {
@@ -378,6 +384,36 @@ def main():
     peor_ingreso = max(abs(pob[r][1] / fuente[r][1] - 1) for r in pob)
     informe.comprobar("pobreza de cada región", peor_region <= MAX_DISTRIBUCION, f"diferencia máxima de {numero(peor_region, 2)} puntos")
     informe.comprobar("ingreso medio de cada región", peor_ingreso <= 0.05, f"diferencia máxima de {numero(100 * peor_ingreso)} %")
+    informe.texto("")
+
+    informe.texto(
+        "### Por comuna",
+        "",
+        f"Porcentaje de personas de {edad_minima} años o más en el quintil V de ingreso, en las comunas con al menos {CASOS_COMUNA} casos en Casen. "
+        "Casen no es representativa por comuna, así que no se exige que cada cifra calce, sino que se mantengan el orden y la distancia entre comunas: "
+        "que la población no aplaste las diferencias entre, por ejemplo, Vitacura y La Pintana.",
+    )
+    por_comuna = lambda vista, peso: {
+        c: (r, q5, n)
+        for c, r, q5, n in con.execute(
+            f"select comuna, any_value(region), 100 * sum({peso} * (quintil_ingreso = 5)::int) / sum({peso}), count(*) from {vista} group by 1"
+        ).fetchall()
+    }
+    fuente = por_comuna("casen_personas where quintil_ingreso between 1 and 5", "expr")
+    pob = por_comuna("personas where quintil_ingreso between 1 and 5", "1")
+    comparables = sorted((c for c, (_, _, n) in fuente.items() if n >= CASOS_COMUNA and c in pob), key=lambda c: -fuente[c][1])
+    xs = np.array([fuente[c][1] for c in comparables])
+    ys = np.array([pob[c][1] for c in comparables])
+    correlacion = float(np.corrcoef(xs, ys)[0, 1])
+    pendiente = float(np.polyfit(xs, ys, 1)[0])
+    nombres = dict(con.execute("select comuna, nombre_comuna from comunas").fetchall())
+    muestra = comparables[:8] + comparables[-8:]
+    informe.tabla(["Comuna", "Región", "Quintil V Casen %", "Quintil V población %", "Diferencia", "Casos Casen"],
+                  [[nombres.get(c, str(c)), regiones[fuente[c][0]], numero(fuente[c][1]), numero(pob[c][1]), numero(pob[c][1] - fuente[c][1], 1), miles(fuente[c][2])] for c in muestra])
+    informe.texto(f"Están las ocho comunas con más y las ocho con menos quintil V según Casen, de {len(comparables)} comparables.", "")
+    informe.comprobar("orden de las comunas por quintil V", correlacion >= MIN_CORRELACION_COMUNA, f"correlación de {numero(correlacion, 3)} entre Casen y la población en {len(comparables)} comunas")
+    informe.comprobar("distancia entre comunas por quintil V", pendiente >= MIN_PENDIENTE_COMUNA,
+                      f"pendiente de {numero(pendiente, 2)} (1 sería el mismo gradiente que Casen); error medio de {numero(float(np.mean(np.abs(ys - xs))), 1)} puntos")
     informe.texto("")
 
     informe.texto(

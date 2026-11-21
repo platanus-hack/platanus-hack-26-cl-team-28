@@ -4,18 +4,46 @@ que usa el servidor, sin copias que se desalineen.
 
 Lo que el servidor fija del banco de pruebas:
 - Redacción 1 de las instrucciones y las preguntas en su orden.
-- El perfil general en prosa, por secciones (`scripts/personas_muestra.py`).
+- El perfil en prosa, por secciones (`scripts/personas_muestra.py`), con el filtro de datos de
+  `scripts/filtro_perfil.py`: al modelo no le llega todo lo que se sabe de la persona, sino el
+  núcleo más los datos de los temas que toca la política. `PERFIL` en el entorno elige el
+  nivel: `tematico` (por defecto), `nucleo` o `completo` (sin filtro, como antes).
 - Sin pregunta de control cuando responde Claude: ahí la primera respuesta sí depende del
   perfil. El modelo local la lleva, como en el banco (`CFG_LOCAL`).
+
+Las preguntas son las del banco salvo que la corrida traiga las suyas (`preguntas_de`): la
+interfaz deja editarlas. Todas se responden en la misma escala de 1 a 7, y la primera es la que
+decide la postura de cada persona (a favor, indecisa o en contra).
 """
 
+import functools
 import importlib.util
+import os
+import sys
+import threading
+from collections import OrderedDict
 from pathlib import Path
 
-_RUTA = Path(__file__).resolve().parent.parent / "scripts" / "probar_modelo.py"
-_spec = importlib.util.spec_from_file_location("probar_modelo", _RUTA)
-banco = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(banco)
+_SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
+
+
+def _cargar(nombre: str):
+    """Un script del banco como módulo. Queda registrado: si otro script lo importa, es el mismo."""
+    if nombre in sys.modules:
+        return sys.modules[nombre]
+    spec = importlib.util.spec_from_file_location(nombre, _SCRIPTS / f"{nombre}.py")
+    modulo = importlib.util.module_from_spec(spec)
+    sys.modules[nombre] = modulo
+    try:
+        spec.loader.exec_module(modulo)
+    except BaseException:
+        del sys.modules[nombre]
+        raise
+    return modulo
+
+
+banco = _cargar("probar_modelo")
+filtro = _cargar("filtro_perfil")
 
 PREGUNTAS: list[str] = banco.PREGUNTAS
 CLAVES: list[str] = banco.CLAVES
@@ -23,26 +51,124 @@ CLAVES: list[str] = banco.CLAVES
 #: Cómo arma el banco los mensajes cuando responde Claude, en lotes.
 CFG = {"orden": list(range(len(CLAVES))), "control": False, "etiqueta": None, "redaccion": 1, "perfil": "prosa"}
 
+#: Cuánto del perfil lee el modelo: uno de `filtro.NIVELES`.
+NIVEL: str = os.environ.get("PERFIL", "").strip().lower() or "tematico"
+if NIVEL not in filtro.NIVELES:
+    raise SystemExit(f"PERFIL={NIVEL!r} no existe; los niveles son {', '.join(filtro.NIVELES)}")
+#: Lo que distingue a este perfil del completo en la caché de respuestas (vacío si va completo:
+#: las respuestas guardadas antes del filtro se dieron con el perfil completo y siguen sirviendo).
+VERSION_PERFIL: str = "" if NIVEL == "completo" else f"{NIVEL}:{filtro.VERSION}"
 
-def cfg_local(url: str, temperatura: float) -> dict:
+# Perfiles ya escritos con un filtro, por persona: en una corrida cada persona se repite en cada variante.
+PERFILES_GUARDADOS = 60_000
+_perfiles: OrderedDict[tuple[str, frozenset], dict] = OrderedDict()
+_cerrojo = threading.Lock()
+
+
+#: Límites de una encuesta escrita en la interfaz.
+MAXIMO_PREGUNTAS = 10
+LARGO_PREGUNTA = 300
+
+
+def preguntas_de(pedidas) -> list[str]:
+    """Las preguntas de una corrida: las pedidas, ya limpias, o las del banco si no viene ninguna."""
+    if pedidas is None:
+        return list(PREGUNTAS)
+    if not isinstance(pedidas, list) or not all(isinstance(p, str) for p in pedidas):
+        raise ValueError("Las preguntas deben venir como una lista de textos")
+    limpias = [" ".join(p.split()) for p in pedidas]
+    limpias = [p for p in limpias if p]
+    if not limpias:
+        raise ValueError("La encuesta necesita al menos una pregunta")
+    if len(limpias) > MAXIMO_PREGUNTAS:
+        raise ValueError(f"La encuesta acepta hasta {MAXIMO_PREGUNTAS} preguntas")
+    largas = [k for k, p in enumerate(limpias, start=1) if len(p) > LARGO_PREGUNTA]
+    if largas:
+        raise ValueError(f"La pregunta {largas[0]} es muy larga: el máximo son {LARGO_PREGUNTA} caracteres")
+    if len(set(limpias)) < len(limpias):
+        raise ValueError("Hay preguntas repetidas en la encuesta")
+    return limpias
+
+
+def cfg_de(preguntas: list[str] | None = None) -> dict:
+    """La configuración del banco para estas preguntas (las suyas si no se dan)."""
+    if preguntas is None or list(preguntas) == PREGUNTAS:
+        return CFG
+    return {**CFG, "orden": list(range(len(preguntas))), "preguntas": list(preguntas)}
+
+
+def cfg_local(url: str, temperatura: float, preguntas: list[str] | None = None) -> dict:
     """Lo que necesita `banco.encuestar` para preguntar al modelo local, una persona por llamada."""
-    return {**CFG, "control": True, "url": url, "temperatura": temperatura, "logprobs": False}
+    return {**cfg_de(preguntas), "control": True, "url": url, "temperatura": temperatura, "logprobs": False}
 
 
-def persona_de(agente) -> dict:
+def tema_de(politica: str, preguntas: list[str] | None = None) -> str:
+    """El texto en que el filtro del perfil busca los temas: la política y las preguntas que no
+    son las del banco. Una pregunta nueva puede necesitar datos que la política sola no pide."""
+    propias = [p for p in preguntas or [] if p not in PREGUNTAS]
+    return politica if not propias else politica.rstrip() + "\n\n" + "\n".join(propias)
+
+
+@functools.lru_cache(maxsize=256)
+def datos_de(politica: str) -> frozenset | None:
+    """Los datos del perfil que se entregan para esta política; None es el perfil completo."""
+    return filtro.datos_para(politica, NIVEL)
+
+
+def temas_de(politica: str) -> list[str]:
+    """Los temas que el filtro detecta en la política, si el nivel los usa."""
+    return filtro.temas_de(politica) if NIVEL == "tematico" else []
+
+
+@functools.lru_cache(maxsize=1)
+def redactor():
+    """(módulo que escribe los perfiles, etiquetas, secciones).
+
+    Ese script necesita DuckDB, así que se carga solo cuando hay tabla de agentes."""
+    perfiles = _cargar("personas_muestra")
+    return perfiles, perfiles.cargar_etiquetas(), list(perfiles.SECCIONES)
+
+
+def perfil_de(agente, datos: frozenset | None = None) -> dict:
+    """El perfil por secciones con solo los datos pedidos.
+
+    Sin filtro va el completo. También cuando el agente no trae su fila de la tabla (los del
+    archivo fijo de respaldo vienen con el perfil ya escrito): no hay con qué reescribirlo."""
+    if datos is None or agente.fila is None:
+        return agente.perfil
+    clave = (agente.id, datos)
+    with _cerrojo:
+        if clave in _perfiles:
+            _perfiles.move_to_end(clave)
+            return _perfiles[clave]
+    perfiles, etiquetas, secciones = redactor()
+    escrito, _ = perfiles.describir(agente.fila, etiquetas, secciones, con_cep=True, datos=datos)
+    with _cerrojo:
+        _perfiles[clave] = escrito
+        while len(_perfiles) > PERFILES_GUARDADOS:
+            _perfiles.popitem(last=False)
+    return escrito
+
+
+def persona_de(agente, datos: frozenset | None = None) -> dict:
     """El agente en la forma que esperan las funciones del banco de pruebas."""
-    return {"id": agente.id, "perfil": agente.perfil}
+    return {"id": agente.id, "perfil": perfil_de(agente, datos)}
 
 
-def sistema_con_politica(politica: str) -> str:
+def sistema_con_politica(politica: str, preguntas: list[str] | None = None) -> str:
     """Mensaje de sistema tal como lo arma el banco: instrucciones, tema y preguntas."""
-    return banco.mensajes(politica, {}, CFG)[0]["content"]
+    return banco.mensajes(politica, {}, cfg_de(preguntas))[0]["content"]
 
 
 #: Todo lo que el banco le dice al modelo además del tema: si cambia, la caché no se reutiliza.
 VERSION: str = sistema_con_politica("")
 
 
-def perfil(agente) -> str:
+def version_de(preguntas: list[str] | None = None) -> str:
+    """Lo mismo que `VERSION`, con las preguntas de una corrida."""
+    return VERSION if preguntas is None else sistema_con_politica("", preguntas)
+
+
+def perfil(agente, datos: frozenset | None = None) -> str:
     """El perfil que lee el modelo: el texto del banco, una línea por sección."""
-    return banco.prosa_de(persona_de(agente)) or ""
+    return banco.prosa_de(persona_de(agente, datos)) or ""

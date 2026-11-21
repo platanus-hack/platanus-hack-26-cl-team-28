@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { mezclar } from '../dominio/azar';
-import { EDAD_MAXIMA } from '../dominio/catalogos';
+import { EDAD_MAXIMA, REGIONES } from '../dominio/catalogos';
 import { porcentajes, type Conteo, type Porcentajes } from '../dominio/metricas';
-import { FILTROS_INICIALES, SIN_FILTRO } from '../dominio/muestra';
+import { FILTROS_INICIALES, repartirPorRegion, SIN_FILTRO } from '../dominio/muestra';
 import { letraDe } from '../dominio/textos';
 import type { Filtros, Persona, Postura } from '../dominio/tipos';
 import { useBorradores } from '../estado/useBorradores';
+import { cargarComunas, comunasCargadas } from '../mapa/geografia';
 import {
   correrRemoto,
   pedirEstado,
@@ -18,6 +19,7 @@ import {
   type Metricas,
 } from './api';
 import { agentesDeDemostracion, correrDemostracion } from './demoLocal';
+import { guardarEncuesta, LARGO_PREGUNTA, leerEncuestaGuardada, limpiarPreguntas, MAXIMO_PREGUNTAS, mismasPreguntas, PREGUNTAS_BASE } from './encuesta';
 import { poblacionDeAgentes } from './poblacion';
 import { CASOS_VALIDACION, type Referencia } from './validacion';
 
@@ -123,7 +125,16 @@ function elegir(agentes: AgenteRemoto[], filtros: Filtros): MuestraVivo {
   const posibles = agentes.filter((a) => coincide(a, filtros));
   // Orden sorteado pero fijo: al achicar la muestra no se pierde una región entera.
   posibles.sort((a, b) => mezclar(a.i, 31) - mezclar(b.i, 31));
-  const tomados = posibles.slice(0, filtros.tamano).map((a) => a.i);
+  // Cada región aporta en proporción a las personas que representa, igual que en el motor.
+  const porRegion: AgenteRemoto[][] = REGIONES.map(() => []);
+  for (const a of posibles) porRegion[a.region]?.push(a);
+  const cuotas = repartirPorRegion(
+    filtros.tamano,
+    porRegion.map((lista) => lista.reduce((suma, a) => suma + (a.representa ?? 1), 0)),
+    porRegion.map((lista) => lista.length),
+  );
+  const entra = new Set(porRegion.flatMap((lista, region) => lista.slice(0, cuotas[region])));
+  const tomados = posibles.filter((a) => entra.has(a)).map((a) => a.i);
   const elegido = new Uint8Array(agentes.length);
   for (const i of tomados) elegido[i] = 1;
   return { agentes: tomados, elegido, disponibles: posibles.length, total: tomados.length };
@@ -153,6 +164,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const pedida = useRef(JSON.stringify(FILTROS_DE_PARTIDA));
   const [buscando, setBuscando] = useState(false);
   const [iteraciones, setIteraciones] = useState(0);
+  /** La encuesta que se está escribiendo; puede traer preguntas vacías mientras se edita. */
+  const [preguntas, setPreguntasEscritas] = useState<string[]>(PREGUNTAS_BASE);
+  /** La encuesta de la corrida en pantalla: no cambia aunque después se edite la otra. */
+  const [encuesta, setEncuesta] = useState<string[]>([]);
   const [fase, setFase] = useState<FaseVivo>('cargando');
   const [viendo, setViendo] = useState(0);
   const [version, setVersion] = useState(0);
@@ -172,6 +187,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       let estado: EstadoMotor | null = null;
       let agentes: AgenteRemoto[];
       let muestra: Conexion['muestra'] = null;
+      // Los polígonos de las comunas llegan antes que los puntos: cada persona se ubica una vez.
+      const comunas = cargarComunas();
       try {
         estado = await pedirEstado();
         const remota = await pedirMuestra(FILTROS_DE_PARTIDA);
@@ -181,9 +198,14 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
         estado = null;
         agentes = agentesDeDemostracion(regiones);
       }
+      const geo = await comunas;
       if (!vigente) return;
       const porAgente = Math.max(1, Math.round(puntosDeseados / Math.max(1, agentes.length)));
-      setConexion({ estado, agentes, puntos: poblacionDeAgentes(agentes, porAgente, regiones), demo: estado === null, muestra });
+      setConexion({ estado, agentes, puntos: poblacionDeAgentes(agentes, porAgente, regiones, geo), demo: estado === null, muestra });
+      // La encuesta parte con las preguntas del motor, salvo que la persona haya dejado escrita la suya.
+      const dePartida = estado?.preguntas?.length ? estado.preguntas : PREGUNTAS_BASE;
+      const editable = estado?.motor.preguntas_editables !== false;
+      setPreguntasEscritas((editable && leerEncuestaGuardada()) || dePartida);
       setFase('preparar');
     })();
     return () => {
@@ -212,7 +234,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
             previa && {
               ...previa,
               agentes: remota.agentes,
-              puntos: poblacionDeAgentes(remota.agentes, porAgente, regiones),
+              puntos: poblacionDeAgentes(remota.agentes, porAgente, regiones, comunasCargadas() ?? {}),
               muestra: { id: remota.id, disponibles: remota.disponibles, representadas: remota.representadas },
             },
         );
@@ -294,6 +316,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     (evento: Evento) => {
       const lista = casos.current;
       switch (evento.tipo) {
+        case 'inicio':
+          // El motor confirma con qué preguntas corre (la corrida grabada trae las suyas).
+          if (evento.preguntas?.length) setEncuesta(evento.preguntas);
+          break;
         case 'respuestas': {
           const caso = lista[evento.caso];
           if (!caso) return;
@@ -360,7 +386,21 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
 
   const listos = borradores.filter((b) => (b.texto.trim() || b.leido) && !b.leyendo);
   const leyendo = borradores.some((b) => b.leyendo);
-  const puedePreguntar = !!conexion && fase === 'preparar' && listos.length > 0 && !leyendo && !buscando && muestra.total > 0;
+  const preguntasBase = conexion?.estado?.preguntas?.length ? conexion.estado.preguntas : PREGUNTAS_BASE;
+  const encuestaEditable = conexion?.estado?.motor.preguntas_editables !== false;
+  const maximoPreguntas = conexion?.estado?.maximo_preguntas ?? MAXIMO_PREGUNTAS;
+  const porPreguntar = useMemo(() => limpiarPreguntas(preguntas).slice(0, maximoPreguntas), [preguntas, maximoPreguntas]);
+  const puedePreguntar =
+    !!conexion && fase === 'preparar' && listos.length > 0 && !leyendo && !buscando && muestra.total > 0 && porPreguntar.length > 0;
+  const setPreguntas = useCallback(
+    (lista: string[]) => {
+      setPreguntasEscritas(lista);
+      const limpias = limpiarPreguntas(lista);
+      // Solo se recuerda una encuesta distinta de la de partida: así, si el motor cambia la suya, se nota.
+      guardarEncuesta(limpias.length && !mismasPreguntas(limpias, preguntasBase) ? limpias : null);
+    },
+    [preguntasBase],
+  );
 
   const preguntar = useCallback(async () => {
     if (!puedePreguntar || !conexion) return;
@@ -380,12 +420,14 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setRedactando(null);
     setViendo(0);
     setCorrida(muestra);
+    setEncuesta(porPreguntar);
     setFase('corriendo');
     const pedido = {
       casos: pedidos,
       muestra: conexion.muestra?.id,
       agentes: muestra.agentes,
       iteraciones: Math.min(iteraciones, MAXIMO_VARIANTES + 2 - pedidos.length),
+      preguntas: porPreguntar,
     };
     try {
       cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento);
@@ -393,7 +435,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       setAviso(humano(error, 'El motor de simulación no respondió. Intenta de nuevo en unos segundos.'));
       setFase('preparar');
     }
-  }, [puedePreguntar, conexion, listos, nuevoCaso, muestra.agentes, iteraciones, alEvento]);
+  }, [puedePreguntar, conexion, listos, nuevoCaso, muestra.agentes, iteraciones, alEvento, porPreguntar]);
 
   // Recorrido automático: cada variante respondida queda unos segundos y se pasa a la siguiente.
   const casoActual = casos.current[viendo];
@@ -440,6 +482,18 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setFiltros,
     iteraciones,
     setIteraciones,
+    /** La encuesta que se está escribiendo para la próxima corrida. */
+    preguntas,
+    setPreguntas,
+    /** Las preguntas de partida del motor, para volver a ellas. */
+    preguntasBase,
+    /** Cuántas preguntas se van a hacer: las escritas, sin vacías ni repetidas. */
+    porPreguntar: porPreguntar.length,
+    encuestaEditable,
+    maximoPreguntas,
+    largoPregunta: conexion?.estado?.largo_pregunta ?? LARGO_PREGUNTA,
+    /** Las preguntas de la corrida en pantalla, en el orden de las notas de cada agente. */
+    encuesta,
     fase,
     viendo,
     setViendo,

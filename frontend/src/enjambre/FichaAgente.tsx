@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { Figura } from '../componentes/comunes/Figura';
 import { REGIONES } from '../dominio/catalogos';
 import type { AgenteRemoto } from '../vivo/api';
+import { corta } from '../vivo/encuesta';
 import { posturaDe, type CasoVivo } from '../vivo/useEnVivo';
+import { FiguraWati } from './FiguraWati';
+import { rasgosDe } from './wati';
 import estilos from './FichaAgente.module.css';
 import { quienEs } from './Voces';
 
@@ -20,8 +22,6 @@ interface Props {
 const ANCHO = 380;
 const POSTURA = { favor: 'A favor', contra: 'En contra', indecisa: 'No se decide' } as const;
 const ESCALA = [1, 2, 3, 4, 5, 6, 7];
-/** Las preguntas del banco de pruebas, dichas en corto; la pregunta completa va al pasar el cursor. */
-const CORTAS = ['Está de acuerdo', 'Quedaría satisfecha', 'Le parece justa', 'Confía en el Estado', 'La cumpliría', 'Cree que funcionará'];
 
 /** Cómo se dice en la ficha cada dato que manda el motor (los grupos del perfil general). */
 const DATOS: [string, (valor: string) => string][] = [
@@ -44,7 +44,7 @@ function datos(a: Record<string, string>): string[] {
 }
 
 /**
- * La persona detrás de un punto, como una credencial: su criatura y su postura en la franja
+ * La persona detrás de un punto, como una credencial: su wati y su postura en la franja
  * de color, lo que dijo, cuánto apoyó cada variante en la misma escala de 1 a 7 que respondió,
  * y lo que el censo sabe de ella.
  */
@@ -80,7 +80,7 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
       aria-label={`Agente: ${quienEs(agente)}`}
     >
       <header className={estilos.franja}>
-        <Figura estado={postura} aspecto={agente.i % 6} alto={66} />
+        <FiguraWati estado={postura} rasgos={rasgosDe(`${agente.id}#0`)} alto={66} />
         <p className={estilos.postura}>
           {POSTURA[postura]}
           {acuerdo > 0 && (
@@ -119,11 +119,12 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
             })}
           </ol>
         )}
-        {notas && preguntas && (
+        {notas && preguntas && preguntas.length > 0 && (
           <ol className={estilos.encuesta} aria-label={`Sus respuestas a la encuesta${casos.length > 1 ? `, variante ${caso.letra}` : ''}`}>
             {preguntas.map((pregunta, k) => (
               <li key={pregunta} data-postura={posturaDe(notas[k])} title={pregunta}>
-                <p>{CORTAS[k] ?? pregunta}</p>
+                {/* Las preguntas de partida van dichas en corto; la completa aparece al pasar el cursor. */}
+                <p>{corta(pregunta)}</p>
                 <span aria-hidden="true">
                   {ESCALA.map((n) => (
                     <i key={n} data-lleno={n <= notas[k] || undefined} />

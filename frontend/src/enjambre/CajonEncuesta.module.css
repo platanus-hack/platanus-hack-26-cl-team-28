@@ -1,0 +1,208 @@
+/*
+ * Cajón de la encuesta: la misma hoja a todo el alto del cajón de la muestra, pegada al borde
+ * derecho. Arriba cuántas preguntas son; debajo, cada una en su campo.
+ */
+.cajon {
+  position: fixed;
+  inset: 0 0 0 auto;
+  z-index: 6;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: min(100vw, 25.5rem);
+  border-left: 1px solid var(--linea-suave);
+  background: var(--papel);
+  color: var(--tinta);
+  animation: entrar 360ms var(--curva-salida) both;
+}
+
+.cajon:focus {
+  outline: none;
+}
+
+@keyframes entrar {
+  from {
+    translate: 100% 0;
+  }
+}
+
+.cabeza {
+  position: relative;
+  padding: var(--e5) var(--e5) var(--e4);
+}
+
+.cuenta {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e3);
+  padding-right: 44px;
+}
+
+.cuenta b {
+  font: 600 clamp(2.6rem, 1.8rem + 2.4vh, 3.6rem) / 0.9 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.cuenta span {
+  font-size: var(--texto-s);
+  line-height: 1.25;
+  color: var(--tinta-suave);
+}
+
+.cerrar {
+  position: absolute;
+  top: var(--e3);
+  right: var(--e3);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--tinta-suave);
+}
+
+.cerrar svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.cuerpo {
+  display: grid;
+  align-content: start;
+  gap: var(--e3);
+  padding: var(--e2) var(--e5) var(--e5);
+  overflow-y: auto;
+}
+
+.preguntas {
+  display: grid;
+  gap: var(--e3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada pregunta: su número a la izquierda, el campo y, debajo, su nota y sus acciones. */
+.preguntas li {
+  display: grid;
+  grid-template-columns: 1.4rem minmax(0, 1fr);
+  column-gap: var(--e2);
+}
+
+.numero {
+  padding-top: var(--e2);
+  font: 600 1.25rem/1.2 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+}
+
+.preguntas textarea {
+  display: block;
+  width: 100%;
+  min-height: 3.3rem;
+  padding: var(--e2) var(--e3);
+  border: 0;
+  border-bottom: 2px solid var(--tinta-suave);
+  border-radius: 0;
+  background: var(--mar);
+  color: var(--tinta);
+  font-size: var(--texto-m);
+  line-height: 1.35;
+  resize: none;
+  field-sizing: content;
+}
+
+.preguntas textarea[aria-invalid] {
+  border-bottom-color: var(--indecisa);
+}
+
+.preguntas textarea[readonly] {
+  border-bottom-color: var(--linea-suave);
+  color: var(--tinta-suave);
+}
+
+.pie {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: var(--e3);
+  min-height: 32px;
+}
+
+.pie p {
+  flex: 1;
+  font-size: var(--texto-xs);
+  line-height: 1.25;
+  color: var(--tinta-suave);
+}
+
+.pie button,
+.restablecer {
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.agregar {
+  justify-self: start;
+  min-height: 40px;
+  margin-left: calc(1.4rem + var(--e2));
+  padding: 0 var(--e4);
+  border: 0;
+  border-radius: 999px;
+  background: var(--tinta);
+  color: var(--papel);
+  font-size: var(--texto-s);
+  font-weight: 650;
+}
+
+.agregar:disabled {
+  background: var(--relleno-suave);
+  color: var(--tinta-suave);
+}
+
+.ayuda {
+  margin-left: calc(1.4rem + var(--e2));
+  font-size: var(--texto-s);
+  line-height: 1.4;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+
+.final {
+  padding: var(--e3) var(--e5) var(--e4);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.restablecer {
+  min-height: 36px;
+  font-weight: 650;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cerrar:hover {
+    color: var(--tinta);
+  }
+
+  .pie button:hover,
+  .restablecer:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cajon {
+    animation: none;
+  }
+}

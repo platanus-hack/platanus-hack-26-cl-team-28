@@ -1,8 +1,9 @@
-import { Figura } from '../componentes/comunes/Figura';
 import { POSTURA_TEXTO } from '../contenido';
 import { formatear } from '../dominio/textos';
 import estilos from './BloquePostura.module.css';
+import { FiguraWati } from './FiguraWati';
 import { useConteo } from './useConteo';
+import { rasgosDe } from './wati';
 
 interface Props {
   postura: 'favor' | 'contra';
@@ -15,17 +16,17 @@ interface Props {
   nota?: string;
   /** Qué se cuenta: personas simuladas o agentes. */
   unidad?: string;
-  /** En pantallas angostas la criatura no crece: no hay lugar. */
+  /** En pantallas angostas el wati no crece: no hay lugar. */
   compacto?: boolean;
 }
 
-/** La cifra de un lado del país: la criatura de esa postura crece con su porcentaje. */
+/** La cifra de un lado del país: el wati de esa postura crece con su porcentaje. */
 export function BloquePostura({ postura, porcentaje, personas, aspecto, unidad = 'personas', compacto = false, encabezado, nota }: Props) {
   const contado = useConteo(porcentaje);
   const alto = compacto ? 44 : Math.round(56 + contado * 0.75);
   return (
     <section className={estilos.bloque} data-postura={postura} data-compacto={compacto || undefined} aria-label={`${porcentaje} % ${POSTURA_TEXTO[postura]}`}>
-      <Figura estado={postura} aspecto={aspecto} alto={alto} />
+      <FiguraWati estado={postura} rasgos={rasgosDe(`${postura}#${aspecto}`)} alto={alto} />
       <p className={estilos.cifra} aria-hidden="true">
         {Math.round(contado)}
         <span>%</span>

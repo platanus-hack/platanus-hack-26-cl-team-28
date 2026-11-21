@@ -19,13 +19,18 @@ demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la e
   nivel de clusterización pide una muestra nueva y el mapa solo reacomoda los puntos),
   `POST /api/documentos`, `POST /api/corridas` y los eventos de
   la corrida por `EventSource` (`inicio`, `respuestas`, `caso_listo`, `voces`, `redactando`, `caso`, `aviso`, `fin`, `falla`).
-- `poblacion.ts`: dibuja a cada agente real con varios puntos alrededor del centro de su comuna, para que la
-  densidad del país se lea. Todos los puntos de un agente responden lo mismo.
+- `poblacion.ts`: dibuja a cada agente real con varios puntos dentro de su comuna (`datos/comunas.json`, de
+  `backend/scripts/construir_comunas.py`): en una de sus ciudades o pueblos si vive en zona urbana, en el resto
+  de la comuna si vive en zona rural. Todos los puntos de un agente responden lo mismo.
 - `useEnVivo.ts`: el estado de la herramienta (variantes, muestra, corrida). Las respuestas llegan por lotes y se
-  guardan por agente (sus seis notas de 1 a 7); con la primera, 5 a 7 es a favor, 4 indecisa, 1 a 3 en contra. Las
+  guardan por agente (sus notas de 1 a 7, una por pregunta); con la primera, 5 a 7 es a favor, 4 indecisa, 1 a 3 en contra. Las
   frases llegan aparte (`voces`), solo para algunas personas. Las variantes
   que escribe el agente llegan durante la corrida como casos nuevos. Al terminar una variante, la interfaz la
   muestra unos segundos y pasa a la siguiente.
+- `encuesta.ts`: las preguntas de la encuesta. Se editan en el cajón «Encuesta» (`enjambre/CajonEncuesta.tsx`), quedan
+  guardadas en el navegador y viajan en cada corrida. `resumirEncuesta` saca el resultado de cada pregunta, que
+  se muestra junto a las cifras (`enjambre/ResultadoEncuesta.tsx`): reparto entre en desacuerdo, al medio y de
+  acuerdo, y la diferencia con la variante A. La primera pregunta decide el color de cada punto.
 - `validacion.ts`: políticas con encuesta Cadem publicada, para comparar en pantalla lo que dijeron los agentes
   con lo que dijo la gente.
 

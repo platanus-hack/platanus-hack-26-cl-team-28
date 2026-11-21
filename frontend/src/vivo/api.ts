@@ -5,6 +5,8 @@ export interface MotorInfo {
   nombre: string;
   modelo: string;
   grabado: boolean;
+  /** Falso si el motor solo responde sus preguntas de partida (la corrida grabada). */
+  preguntas_editables?: boolean;
 }
 
 /** La población de la que el motor sortea a los agentes. */
@@ -26,8 +28,11 @@ export interface EstadoMotor {
   poblacion?: PoblacionInfo;
   lote: number;
   concurrencia: number;
-  /** Las preguntas de la encuesta, en el orden de las notas. */
+  /** Las preguntas de partida de la encuesta, en el orden de las notas. */
   preguntas?: string[];
+  /** Cuántas preguntas acepta una encuesta y el largo máximo de cada una. */
+  maximo_preguntas?: number;
+  largo_pregunta?: number;
 }
 
 export interface AgenteRemoto {
@@ -35,6 +40,8 @@ export interface AgenteRemoto {
   id: string;
   region: number;
   comuna: string;
+  /** Código INE de la comuna (0 o ausente si no se reconoce): el punto se dibuja dentro de ella. */
+  cod_comuna?: number;
   lon: number;
   lat: number;
   edad: number;
@@ -91,7 +98,7 @@ export interface CasoPublico {
 
 /** Eventos de una corrida, en el orden en que llegan. */
 export type Evento =
-  | { tipo: 'inicio'; motor: MotorInfo; agentes: number; casos: CasoPublico[] }
+  | { tipo: 'inicio'; motor: MotorInfo; agentes: number; casos: CasoPublico[]; preguntas?: string[] }
   // Cada fila: agente, acuerdo (la primera pregunta), frase si ya la tiene, y sus notas a todas las preguntas.
   | { tipo: 'respuestas'; caso: number; cache: boolean; r: [number, number, string, number[]?][]; metricas: Metricas }
   // Frases pedidas aparte, después de responder, a unas pocas personas: [agente, frase].
@@ -145,7 +152,7 @@ export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
 
 /** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
 export async function correrRemoto(
-  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number },
+  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; preguntas?: string[] },
   alEvento: (evento: Evento) => void,
 ): Promise<() => void> {
   const { id } = await leer<{ id: string }>(

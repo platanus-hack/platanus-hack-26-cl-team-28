@@ -10,10 +10,12 @@ interface Props {
   /** Variante que se está editando. */
   elegida: number;
   alElegir(indice: number): void;
+  /** Abre el cajón donde se lee y se cambia la encuesta. */
+  alAbrirEncuesta(): void;
 }
 
 /** Donde se arma la pregunta: la propuesta escrita o subida, sus variantes y si el agente itera. */
-export function BarraMando({ sim, elegida, alElegir }: Props) {
+export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
   const { borradores } = sim;
   const actual = borradores[Math.min(elegida, borradores.length - 1)];
   const [sobre, setSobre] = useState(false);
@@ -99,6 +101,12 @@ export function BarraMando({ sim, elegida, alElegir }: Props) {
           </select>
         )}
       </label>
+      <button type="button" className={estilos.encuesta} aria-haspopup="dialog" onClick={alAbrirEncuesta}>
+        <span>
+          Encuesta de {sim.porPreguntar} {sim.porPreguntar === 1 ? 'pregunta' : 'preguntas'}
+        </span>
+        <b>{sim.encuestaEditable ? 'Editar' : 'Ver'}</b>
+      </button>
       {sim.aviso && <p className={estilos.aviso} role="alert">{sim.aviso}</p>}
       <Boton type="submit" variante="primario" disabled={!sim.puedePreguntar}>
         {leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}

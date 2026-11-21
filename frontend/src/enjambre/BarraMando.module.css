@@ -97,6 +97,28 @@
   appearance: none;
 }
 
+/* La encuesta que se va a hacer: cuántas preguntas son y la puerta para cambiarlas. */
+.encuesta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--linea-suave);
+  background: transparent;
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  text-align: left;
+}
+
+.encuesta b {
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .pestanas button[aria-selected='false']:hover,
   .pestanas .mas:hover {

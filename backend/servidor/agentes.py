@@ -4,7 +4,8 @@ Cada agente es una persona real y anonimizada de la muestra, de 14 años o más,
 Casen y opiniones de la CEP imputados (ver contexto/muestra/README.md y actitudes.md). Su
 perfil es el texto general por secciones que escribe scripts/personas_muestra.py. Aquí se
 cargan, se ubican en el centroide de su comuna y se resumen en los campos que usa la
-interfaz para filtrar y dibujar.
+interfaz para filtrar y dibujar. Los que salen de la tabla de agentes guardan además su
+fila, para escribir el perfil con solo los datos que pide cada política (metodo.perfil_de).
 """
 
 import csv
@@ -64,6 +65,9 @@ class Agente:
     perfil: dict
     region: int
     comuna: str
+    #: Código INE de la comuna (0 si no se reconoce): la interfaz lo usa para dibujar a la
+    #: persona dentro del polígono de su comuna.
+    codigo_comuna: int
     lon: float
     lat: float
     edad: int
@@ -74,6 +78,9 @@ class Agente:
     politica: int
     #: A cuántas personas representa en la muestra en que viene (depende del nivel de reducción).
     representa: int = 1
+    #: Sus columnas de la tabla de agentes, para reescribir el perfil con un filtro de datos.
+    #: None en los del archivo fijo, que traen el perfil ya escrito. No viaja a la interfaz.
+    fila: dict | None = None
 
     def publico(self) -> dict:
         return {
@@ -81,6 +88,7 @@ class Agente:
             "id": self.id,
             "region": self.region,
             "comuna": self.comuna,
+            "cod_comuna": self.codigo_comuna,
             "lon": self.lon,
             "lat": self.lat,
             "edad": self.edad,
@@ -93,19 +101,22 @@ class Agente:
         }
 
 
-def cargar_comunas() -> dict[tuple[int, str], tuple[float, float]]:
+def cargar_comunas() -> dict[tuple[int, str], tuple[float, float, int]]:
+    """{(código de región, nombre normalizado): (lon, lat, código de comuna)}."""
     with open(ARCHIVO_COMUNAS, encoding="utf-8") as f:
         return {
-            (int(fila["region"]), normalizar(fila["nombre"])): (float(fila["lon"]), float(fila["lat"]))
+            (int(fila["region"]), normalizar(fila["nombre"])): (float(fila["lon"]), float(fila["lat"]), int(fila["comuna"]))
             for fila in csv.DictReader(f)
         }
 
 
-def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos: dict, comunas: dict) -> Agente:
+def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos: dict, comunas: dict, fila: dict | None = None) -> Agente:
     """Arma un agente con lo que entrega scripts/personas_muestra.py de una persona."""
     region = CODIGO_A_INDICE[datos["region"]]
     comuna = datos.get("comuna") or ""
-    lon, lat = comunas.get((datos["region"], normalizar(comuna)), (None, None))
+    lon, lat, codigo = comunas.get((datos["region"], normalizar(comuna)), (None, None, 0))
+    if isinstance((fila or {}).get("comuna"), int) and fila["comuna"] > 0:
+        codigo = fila["comuna"]
     if lon is None:
         # Sin centroide conocido: la capital regional que usa la interfaz se encarga.
         lon, lat = 0.0, 0.0
@@ -119,6 +130,7 @@ def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos
         perfil=perfil,
         region=region,
         comuna=comuna,
+        codigo_comuna=codigo,
         lon=lon,
         lat=lat,
         edad=datos["edad"],
@@ -127,6 +139,7 @@ def agente_de(indice: int, identificador: str, perfil: dict, grupos: dict, datos
         educacion=EDUCACION.get(datos.get("educacion") or "", 1),
         # La escala de 1 a 10 de la CEP en cinco tramos; los menores de 18 y quienes no se ubican van aparte.
         politica=(datos["posicion_politica"] - 1) // 2 if datos.get("posicion_politica") else 5,
+        fila=fila,
     )
 
 

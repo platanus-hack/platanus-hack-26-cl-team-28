@@ -18,7 +18,8 @@ set -euo pipefail
 modelo="${1:-qwen9}"
 # El contexto se reparte entre los slots. Un perfil completo de scripts/personas_muestra.py son
 # unos 1.200 tokens (hasta 1.400) y con la política y las preguntas el prompt pasa de 2.000:
-# cada slot necesita unos 2.560. Con perfiles cortos (--secciones) alcanza con menos.
+# cada slot necesita unos 2.560. Con perfiles cortos (--secciones, o el filtro de scripts/filtro_perfil.py,
+# que deja el perfil en 390 a 650 tokens) alcanza con menos; con el filtro no se ha medido todavía.
 slots=16
 ctx=40960
 case "$modelo" in

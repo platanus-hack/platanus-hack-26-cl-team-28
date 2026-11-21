@@ -19,6 +19,8 @@ Cada línea trae `perfil` (el texto por secciones que lee el modelo), `grupos` (
 
 Un perfil completo son unos 4.200 caracteres (cerca de 1.200 tokens), en nueve secciones. Con `--secciones` se puede generar uno más corto.
 
+Estos archivos traen el perfil completo. El motor del sitio no lo entrega entero: aplica el filtro de `scripts/filtro_perfil.py` según el texto de cada política. Para correr el banco con el mismo recorte, genera la población con `--filtro nucleo` (unos 390 tokens por persona) o con `--temas trabajo,familia-derechos` (el núcleo más esos temas); `uv run python -I scripts/filtro_perfil.py TEXTO.md` dice qué temas detecta el filtro en un texto.
+
 ## Un caso
 
 Un caso es cualquier cosa sobre la que se quiera estimar una respuesta: un proyecto de ley, una medida municipal, una pregunta de opinión. Es una carpeta con esta forma; todo es opcional salvo un texto:
@@ -60,5 +62,5 @@ Para validar contra más encuestas reales está `datos-pruebas/`, en la raíz de
 
 ## Casos
 
-- `sala_cuna/`: proyecto de Sala Cuna Universal, variantes A a E. Sus resultados hasta el 21-11-2026 se hicieron con perfiles más cortos (`sala_cuna/personas_*.jsonl`), no con los de `poblacion/`. Eran solo adultos: 731 de las 800 personas de `poblacion/regiones_50.jsonl` son las mismas, y con `--edad-minima 18` lo son todas. Sus ingresos imputados pueden diferir, porque el emparejamiento de hogares se corrigió después (ahora distingue hogares con niños y con adultos mayores).
+- `sala_cuna/`: proyecto de Sala Cuna Universal, variantes A a E. `resultados_ab_perfil_haiku.jsonl` (con su `_personas.jsonl`) es la comparación del perfil completo con el filtrado: 200 personas de la tabla de agentes, tres brazos, hecha con `scripts/comparar_perfiles.py`. `resultados_atribucion_perfil_haiku.jsonl` es la segunda, con subagentes: 400 personas y cinco recortes del perfil (campo `brazo`), para ver qué datos explican los cambios; su `_personas.jsonl` trae el lote y las opiniones con que se desagrega. Sus resultados hasta el 21-11-2026 se hicieron con perfiles más cortos (`sala_cuna/personas_*.jsonl`), no con los de `poblacion/`. Eran solo adultos: 731 de las 800 personas de `poblacion/regiones_50.jsonl` son las mismas, y con `--edad-minima 18` lo son todas. Sus ingresos imputados pueden diferir, porque el emparejamiento de hogares se corrigió después (ahora distingue hogares con niños y con adultos mayores).
 - `personas.jsonl`, `politica_ejemplo.md` y `resultados_Qwen*.jsonl` en esta carpeta son las primeras pruebas de velocidad, con atributos de relleno sorteados al azar.

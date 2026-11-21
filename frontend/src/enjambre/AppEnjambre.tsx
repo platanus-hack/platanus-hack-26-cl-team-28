@@ -8,11 +8,13 @@ import { BarraMando } from './BarraMando';
 import { BarraResultado } from './BarraResultado';
 import { BloqueAvance } from './BloqueAvance';
 import { BloquePostura } from './BloquePostura';
-import { EscenaEnjambre, PUNTO, type ModoVuelo } from './EscenaEnjambre';
+import { CajonEncuesta } from './CajonEncuesta';
+import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { Insignia } from './Insignia';
 import { MenuOpciones } from './MenuOpciones';
 import { Redactando } from './Redactando';
+import { ResultadoEncuesta } from './ResultadoEncuesta';
 import { useAngosto } from './useAngosto';
 import { Validacion } from './Validacion';
 import { VistaProceso } from './VistaProceso';
@@ -49,12 +51,41 @@ export function AppEnjambre() {
   const [oculta, setOculta] = useState(false);
   const [claro, setClaro] = useState(false);
   const [ficha, setFicha] = useState<{ agente: number; x: number; y: number } | null>(null);
+  const [encuestaAbierta, setEncuestaAbierta] = useState(false);
+  const cerrarEncuesta = useCallback(() => setEncuestaAbierta(false), []);
   const angosto = useAngosto();
   const [zoom, setZoom] = useState(1);
   /** El proceso en lugar del mapa. `montado` sigue un momento más al cerrar, mientras los cuadrados vuelven. */
   const [proceso, setProceso] = useState(false);
   const [procesoMontado, setProcesoMontado] = useState(false);
   const mostrar = useRef<HTMLDivElement>(null);
+  const izquierda = useRef<HTMLDivElement>(null);
+  const derecha = useRef<HTMLDivElement>(null);
+  const revision = useRef(0);
+
+  // Con el mapa acercado, cada bloque de los costados se retira solo si tiene puntos o rótulos
+  // debajo; los demás siguen a la vista. Se marca en el DOM (`data-tapa`) y lo aplica el CSS.
+  const revisarTapados = useCallback(() => {
+    cancelAnimationFrame(revision.current);
+    revision.current = requestAnimationFrame(() => {
+      const actual = escena.current;
+      const caja = lienzo.current?.getBoundingClientRect();
+      const bloques = [izquierda.current, derecha.current].flatMap((columna) => (columna ? (Array.from(columna.children) as HTMLElement[]) : []));
+      const acercado = !!actual && !!caja && actual.nivel() > 1;
+      const tapan = acercado
+        ? actual.tapan(
+            bloques.map((bloque) => {
+              const r = bloque.getBoundingClientRect();
+              return { x: r.left - caja.left, y: r.top - caja.top, ancho: r.width, alto: r.height };
+            }),
+          )
+        : [];
+      bloques.forEach((bloque, k) => {
+        if (tapan[k]) bloque.dataset.tapa = '';
+        else delete bloque.dataset.tapa;
+      });
+    });
+  }, []);
 
   const puntos = conexion?.puntos;
   const porAgente = conexion && conexion.agentes.length ? conexion.puntos.length / conexion.agentes.length : 1;
@@ -86,6 +117,7 @@ export function AppEnjambre() {
     nueva.alCambiarVista = (nivel) => {
       setZoom(nivel);
       setFicha(null);
+      revisarTapados();
     };
     nueva.montar();
     escena.current = nueva;
@@ -100,6 +132,7 @@ export function AppEnjambre() {
   useEffect(() => {
     if (orden) escena.current?.fijar(orden.estados, orden.modo);
   }, [orden]);
+  useEffect(() => () => cancelAnimationFrame(revision.current), []);
   useEffect(() => escena.current?.latir(fase === 'corriendo' && !listo), [fase, listo, puntos]);
   useEffect(() => {
     document.documentElement.dataset.tema = claro ? 'claro' : 'oscuro';
@@ -160,9 +193,17 @@ export function AppEnjambre() {
   const motor = conexion?.estado?.motor ?? null;
   const base = casos.length ? casos.reduce((mejor, c) => (c.listo && porcentajesDe(c).favor > porcentajesDe(mejor).favor ? c : mejor), casos[0]) : undefined;
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
+  // El resultado de cada pregunta aparece junto con las cifras, cuando la variante ya terminó de responder.
+  const conEncuesta = !!caso && listo && sim.encuesta.length > 0 && !mostrarRedactando;
+  // Cuando los puntos cambian de lugar, o los bloques de tamaño, se vuelve a revisar al terminar el vuelo.
+  useEffect(() => {
+    revisarTapados();
+    const espera = window.setTimeout(revisarTapados, 2000);
+    return () => window.clearTimeout(espera);
+  }, [orden, fase, viendo, conEncuesta, revisarTapados]);
 
   return (
-    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || undefined}>
+    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || undefined} data-encuesta={conEncuesta || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -171,7 +212,7 @@ export function AppEnjambre() {
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
       {/* Dos columnas: en cada una, cada bloque va debajo del anterior y nada se pisa. */}
-      <div className={estilos.izquierda}>
+      <div ref={izquierda} className={estilos.izquierda}>
       <header className={estilos.arriba}>
         {caso ? (
           <h1 className={estilos.pregunta}>
@@ -202,19 +243,27 @@ export function AppEnjambre() {
           <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
         </div>
       )}
+      {conEncuesta && caso && (
+        <div className={estilos.encuesta}>
+          <ResultadoEncuesta casos={casos} viendo={viendo} preguntas={sim.encuesta} agentes={muestra.agentes} version={version} />
+        </div>
+      )}
       <div className={estilos.mando}>
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
-        {fase === 'preparar' && <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} />}
+        {fase === 'preparar' && (
+          <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={() => setEncuestaAbierta(true)} />
+        )}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
           <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
         )}
         {fase === 'cargando' && <p className={estilos.cargando}>Conectando con el motor de simulación</p>}
       </div>
       </div>
-      <div className={estilos.derecha}>
+      <div ref={derecha} className={estilos.derecha}>
       <div className={estilos.nota}>
         <Insignia conexion={conexion} agentes={muestra.total} indecisas={pct?.indecisa} />
-        {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} />}
+        {/* La encuesta real preguntó por el acuerdo: solo se compara si la primera pregunta sigue siendo esa. */}
+        {caso && !conexion?.demo && !sim.filtrada && sim.encuesta[0] === sim.preguntasBase[0] && <Validacion casos={casos} />}
         {caso && sim.filtrada && (
           <p className={estilos.filtro}>
             Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes, según los filtros
@@ -275,7 +324,7 @@ export function AppEnjambre() {
             <path d="M2 6h8" />
           </svg>
         </button>
-        <button type="button" data-mapa aria-label="Acercar" disabled={zoom >= 8} onClick={() => escena.current?.acercar(1.5)}>
+        <button type="button" data-mapa aria-label="Acercar" disabled={zoom >= ZOOM_MAXIMO} onClick={() => escena.current?.acercar(1.5)}>
           <svg viewBox="0 0 12 12" aria-hidden="true">
             <path d="M2 6h8M6 2v8" />
           </svg>
@@ -287,8 +336,9 @@ export function AppEnjambre() {
         )}
       </div>
       {ficha && conexion && (
-        <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} preguntas={conexion.estado?.preguntas} alCerrar={() => setFicha(null)} />
+        <FichaAgente agente={conexion.agentes[ficha.agente]} casos={casos} viendo={viendo} x={ficha.x} y={ficha.y} preguntas={sim.encuesta} alCerrar={() => setFicha(null)} />
       )}
+      {encuestaAbierta && fase === 'preparar' && <CajonEncuesta sim={sim} alCerrar={cerrarEncuesta} />}
       {oculta && (
         <div className={estilos.mostrar} ref={mostrar}>
           <Boton variante="texto" onClick={() => setOculta(false)}>

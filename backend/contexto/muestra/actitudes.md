@@ -11,10 +11,10 @@ Cada persona recibe un donante de la CEP de su misma celda, sorteado con probabi
 
 | Nivel | Llaves | Personas | % |
 |---|---|---|---|
-| 1 | sexo, edad7, educ4, macro, nse3, activ, rel4 | 25.084 | 17,4 |
-| 2 | sexo, edad7, educ4, macro, nse3, rel4 | 18.582 | 12,9 |
-| 3 | sexo, edad7, educ4, nse3, rel4 | 57.632 | 39,9 |
-| 4 | sexo, edad7, educ4, rel4 | 28.749 | 19,9 |
+| 1 | sexo, edad7, educ4, macro, nse3, activ, rel4 | 24.786 | 17,1 |
+| 2 | sexo, edad7, educ4, macro, nse3, rel4 | 18.544 | 12,8 |
+| 3 | sexo, edad7, educ4, nse3, rel4 | 57.338 | 39,7 |
+| 4 | sexo, edad7, educ4, rel4 | 29.379 | 20,3 |
 | 5 | sexo, edad7, educ4 | 13.083 | 9,1 |
 | 6 | sexo, edad3, educ4 | 492 | 0,3 |
 | 7 | sexo, edad3 | 906 | 0,6 |
@@ -109,25 +109,25 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 6,4 | 5,9 |
-| No sabe | 9,7 | 10,5 |
+| No contesta | 6,4 | 6,0 |
+| No sabe | 9,7 | 10,4 |
 | 1 Izquierda | 7,4 | 7,6 |
-| 2 | 1,7 | 1,6 |
+| 2 | 1,7 | 1,7 |
 | 3 | 5,1 | 5,3 |
-| 4 | 6,7 | 6,3 |
-| 5 | 32,5 | 33,5 |
-| 6 | 8,9 | 8,3 |
+| 4 | 6,7 | 6,2 |
+| 5 | 32,5 | 33,3 |
+| 6 | 8,9 | 8,5 |
 | 7 | 6,5 | 6,7 |
 | 8 | 4,9 | 4,7 |
-| 9 | 1,3 | 1,0 |
-| 10 Derecha | 8,9 | 8,5 |
+| 9 | 1,3 | 1,1 |
+| 10 Derecha | 8,9 | 8,4 |
 
 ### `partido`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 1,8 | 1,2 |
-| No sabe | 1,6 | 2,3 |
+| No sabe | 1,6 | 2,2 |
 | Democracia Cristiana | 6,3 | 6,0 |
 | Partido Comunista | 4,1 | 4,1 |
 | Partido Por la Democracia | 1,1 | 1,1 |
@@ -135,8 +135,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | Renovación Nacional | 3,9 | 4,5 |
 | Unión Demócrata Independiente | 2,1 | 2,2 |
 | Otros | 0,3 | 0,1 |
-| Ninguno | 52,1 | 53,7 |
-| Partido de la Gente | 6,8 | 6,0 |
+| Ninguno | 52,1 | 53,6 |
+| Partido de la Gente | 6,8 | 6,1 |
 | Partido Republicano | 6,4 | 5,7 |
 | Partido Liberal | 1,3 | 1,7 |
 | Frente Amplio | 2,8 | 3,2 |
@@ -147,9 +147,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 1,0 | 1,1 |
-| No sabe | 4,2 | 4,2 |
-| Aprueba | 34,5 | 34,4 |
-| Desaprueba | 51,6 | 52,3 |
+| No sabe | 4,2 | 4,3 |
+| Aprueba | 34,5 | 34,3 |
+| Desaprueba | 51,6 | 52,4 |
 | No aprueba ni desaprueba | 8,8 | 8,0 |
 
 ### `confianza_gobierno`
@@ -159,31 +159,31 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,5 | 0,4 |
 | No sabe | 0,5 | 0,5 |
 | Mucha confianza | 8,1 | 7,8 |
-| Bastante confianza | 19,7 | 20,4 |
-| Poca confianza | 44,0 | 44,4 |
-| Nada de confianza | 27,1 | 26,5 |
+| Bastante confianza | 19,7 | 20,3 |
+| Poca confianza | 44,0 | 44,5 |
+| Nada de confianza | 27,1 | 26,4 |
 
 ### `confianza_congreso`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,5 | 0,3 |
-| No sabe | 1,6 | 1,7 |
-| Mucha confianza | 1,7 | 1,5 |
+| No contesta | 0,5 | 0,4 |
+| No sabe | 1,6 | 1,8 |
+| Mucha confianza | 1,7 | 1,6 |
 | Bastante confianza | 11,3 | 11,3 |
 | Poca confianza | 53,2 | 53,7 |
-| Nada de confianza | 31,7 | 31,4 |
+| Nada de confianza | 31,7 | 31,3 |
 
 ### `confianza_municipalidades`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,2 | 0,1 |
+| No contesta | 0,2 | 0,0 |
 | No sabe | 0,7 | 0,9 |
 | Mucha confianza | 6,9 | 7,7 |
-| Bastante confianza | 26,6 | 27,5 |
+| Bastante confianza | 26,6 | 27,4 |
 | Poca confianza | 49,7 | 49,1 |
-| Nada de confianza | 15,8 | 14,8 |
+| Nada de confianza | 15,8 | 14,9 |
 
 ### `responsabilidad_sustento`
 
@@ -191,13 +191,13 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,7 | 0,4 |
 | No sabe | 0,7 | 0,6 |
-| 1 La principal responsabilidad está en el Estado | 14,2 | 14,0 |
+| 1 La principal responsabilidad está en el Estado | 14,2 | 13,8 |
 | 2 | 1,5 | 1,4 |
-| 3 | 4,0 | 4,0 |
-| 4 | 6,4 | 6,5 |
+| 3 | 4,0 | 4,1 |
+| 4 | 6,4 | 6,6 |
 | 5 | 21,0 | 22,0 |
-| 6 | 11,6 | 12,2 |
-| 7 | 10,8 | 10,2 |
+| 6 | 11,6 | 12,3 |
+| 7 | 10,8 | 10,1 |
 | 8 | 5,8 | 5,9 |
 | 9 | 1,8 | 1,6 |
 | 10 La principal responsabilidad está en las personas | 21,6 | 21,1 |
@@ -208,11 +208,11 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,6 | 0,3 |
 | No sabe | 0,1 | 0,0 |
-| Muy interesado | 8,7 | 8,0 |
+| Muy interesado | 8,7 | 7,9 |
 | Bastante interesado | 9,9 | 10,1 |
 | Algo interesado | 22,7 | 24,5 |
-| No muy interesado | 16,7 | 16,6 |
-| Nada interesado | 41,3 | 40,5 |
+| No muy interesado | 16,7 | 16,7 |
+| Nada interesado | 41,3 | 40,4 |
 
 ### `voto_segunda_vuelta_2025`
 
@@ -222,9 +222,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 0,7 | 0,5 |
 | No aplica | 11,8 | 12,0 |
 | Jeannette Jara | 28,1 | 28,7 |
-| José Antonio Kast | 39,9 | 40,7 |
-| Votó en blanco | 3,1 | 2,9 |
-| Votó nulo | 8,9 | 8,4 |
+| José Antonio Kast | 39,9 | 40,8 |
+| Votó en blanco | 3,1 | 3,0 |
+| Votó nulo | 8,9 | 8,3 |
 
 ### `aprueba_gobierno_anterior`
 
@@ -232,9 +232,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 1,0 | 0,9 |
 | No sabe | 1,8 | 2,2 |
-| Aprueba | 32,8 | 33,2 |
-| Desaprueba | 57,9 | 56,8 |
-| No aprueba ni desaprueba | 6,5 | 6,9 |
+| Aprueba | 32,8 | 33,1 |
+| Desaprueba | 57,9 | 57,0 |
+| No aprueba ni desaprueba | 6,5 | 6,8 |
 
 ### `votaria_voluntario`
 
@@ -251,11 +251,11 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,8 | 0,3 |
 | No sabe | 0,2 | 0,1 |
-| Redes sociales (por ejemplo, Whatsapp, Facebook, Tiktok, Instagram, Youtube, Twitter/X) | 32,9 | 32,6 |
-| Televisión (incluye aplicaciones de TV o acceso online) | 36,5 | 36,7 |
-| Diarios en formato impreso u online | 4,1 | 4,3 |
+| Redes sociales (por ejemplo, Whatsapp, Facebook, Tiktok, Instagram, Youtube, Twitter/X) | 32,9 | 32,5 |
+| Televisión (incluye aplicaciones de TV o acceso online) | 36,5 | 36,8 |
+| Diarios en formato impreso u online | 4,1 | 4,4 |
 | Radio y podcasts (incluye radio por internet o acceso vía internet) | 9,6 | 10,1 |
-| Sitios web | 8,2 | 7,5 |
+| Sitios web | 8,2 | 7,4 |
 | Otro | 1,2 | 1,2 |
 | De ninguna parte | 6,6 | 7,2 |
 
@@ -268,18 +268,18 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | Corrupción | 4,7 | 4,3 |
 | Delincuencia, asaltos y robos | 32,6 | 33,8 |
 | Derechos humanos | 0,7 | 0,7 |
-| Educación | 7,8 | 7,5 |
-| Empleo | 3,7 | 4,1 |
+| Educación | 7,8 | 7,6 |
+| Empleo | 3,7 | 3,9 |
 | Pobreza | 3,0 | 3,0 |
-| Protección del medio ambiente | 1,0 | 0,7 |
+| Protección del medio ambiente | 1,0 | 0,8 |
 | Narcotráfico | 10,2 | 10,4 |
 | Salud | 13,8 | 12,8 |
 | Sueldos | 2,3 | 2,0 |
-| Transporte público | 1,7 | 1,5 |
+| Transporte público | 1,7 | 1,4 |
 | Vivienda | 2,7 | 2,7 |
-| Inmigración | 1,9 | 1,9 |
-| Desigualdad | 2,0 | 2,3 |
-| Alzas de precios, inflación | 1,3 | 1,5 |
+| Inmigración | 1,9 | 2,0 |
+| Desigualdad | 2,0 | 2,2 |
+| Alzas de precios, inflación | 1,3 | 1,4 |
 | Violencia | 3,1 | 3,0 |
 
 ### `problema_2`
@@ -288,45 +288,45 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,0 | 0,0 |
 | No aplica | 0,0 | 0,0 |
-| Pensiones | 4,7 | 4,2 |
-| Corrupción | 3,9 | 4,1 |
-| Delincuencia, asaltos y robos | 14,4 | 13,8 |
+| Pensiones | 4,7 | 4,3 |
+| Corrupción | 3,9 | 4,2 |
+| Delincuencia, asaltos y robos | 14,4 | 13,7 |
 | Derechos humanos | 1,4 | 1,5 |
 | Educación | 10,6 | 11,4 |
-| Empleo | 6,8 | 6,5 |
+| Empleo | 6,8 | 6,6 |
 | Pobreza | 6,6 | 7,1 |
 | Protección del medio ambiente | 1,2 | 1,8 |
-| Narcotráfico | 11,4 | 10,5 |
-| Salud | 12,7 | 12,4 |
-| Sueldos | 4,7 | 5,2 |
-| Transporte público | 1,9 | 1,9 |
-| Vivienda | 3,7 | 4,4 |
+| Narcotráfico | 11,4 | 10,4 |
+| Salud | 12,7 | 12,5 |
+| Sueldos | 4,7 | 5,1 |
+| Transporte público | 1,9 | 2,0 |
+| Vivienda | 3,7 | 4,3 |
 | Inmigración | 5,2 | 5,0 |
 | Desigualdad | 2,8 | 2,6 |
 | Alzas de precios, inflación | 2,8 | 2,9 |
-| Violencia | 5,2 | 4,5 |
+| Violencia | 5,2 | 4,6 |
 
 ### `problema_3`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,0 | 0,2 |
+| No contesta | 0,0 | 0,1 |
 | No sabe | 0,0 | 0,1 |
 | No aplica | 0,0 | 0,0 |
-| Pensiones | 6,5 | 7,0 |
+| Pensiones | 6,5 | 6,9 |
 | Corrupción | 5,3 | 5,9 |
-| Delincuencia, asaltos y robos | 9,6 | 8,9 |
+| Delincuencia, asaltos y robos | 9,6 | 9,0 |
 | Derechos humanos | 1,0 | 1,0 |
-| Educación | 10,1 | 9,5 |
+| Educación | 10,1 | 9,4 |
 | Empleo | 7,3 | 6,9 |
-| Pobreza | 6,8 | 6,8 |
-| Protección del medio ambiente | 2,3 | 2,4 |
+| Pobreza | 6,8 | 6,6 |
+| Protección del medio ambiente | 2,3 | 2,3 |
 | Narcotráfico | 6,7 | 6,9 |
 | Salud | 15,5 | 16,3 |
 | Sueldos | 5,6 | 6,5 |
 | Transporte público | 1,5 | 1,8 |
 | Vivienda | 4,8 | 4,3 |
-| Inmigración | 6,1 | 5,5 |
+| Inmigración | 6,1 | 5,6 |
 | Desigualdad | 3,7 | 3,8 |
 | Alzas de precios, inflación | 3,0 | 2,8 |
 | Violencia | 4,0 | 3,5 |
@@ -338,8 +338,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,1 | 0,1 |
 | No sabe | 1,7 | 1,9 |
 | Progresando | 18,4 | 18,0 |
-| Estancado | 53,5 | 55,5 |
-| En decadencia | 26,2 | 24,4 |
+| Estancado | 53,5 | 55,6 |
+| En decadencia | 26,2 | 24,3 |
 
 ### `situacion_politica`
 
@@ -348,31 +348,31 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,5 | 0,4 |
 | No sabe | 2,3 | 2,7 |
 | Muy buena | 0,7 | 0,7 |
-| Buena | 10,8 | 11,1 |
-| Ni buena ni mala | 34,1 | 33,6 |
-| Mala | 36,3 | 37,2 |
-| Muy mala | 15,3 | 14,3 |
+| Buena | 10,8 | 11,0 |
+| Ni buena ni mala | 34,1 | 33,7 |
+| Mala | 36,3 | 37,3 |
+| Muy mala | 15,3 | 14,2 |
 
 ### `apoyo_democracia`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,9 | 0,7 |
-| No sabe | 3,5 | 4,0 |
-| La democracia siempre es preferible | 53,5 | 53,5 |
+| No sabe | 3,5 | 4,1 |
+| La democracia siempre es preferible | 53,5 | 53,4 |
 | A veces un régimen autoritario puede ser preferible | 14,5 | 14,2 |
-| Da lo mismo un régimen democrático que uno autoritario | 27,6 | 27,6 |
+| Da lo mismo un régimen democrático que uno autoritario | 27,6 | 27,5 |
 
 ### `funciona_democracia`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,6 | 0,5 |
-| No sabe | 1,9 | 2,1 |
-| Muy mal | 9,0 | 7,9 |
+| No sabe | 1,9 | 2,2 |
+| Muy mal | 9,0 | 8,0 |
 | Mal | 17,6 | 17,8 |
-| Regular | 50,1 | 50,6 |
-| Bien | 17,9 | 18,2 |
+| Regular | 50,1 | 50,7 |
+| Bien | 17,9 | 18,0 |
 | Muy bien | 3,0 | 2,8 |
 
 ### `economia_pais`
@@ -381,8 +381,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,2 | 0,1 |
 | No sabe | 0,2 | 0,2 |
-| Muy mala | 13,7 | 12,5 |
-| Mala | 31,7 | 31,8 |
+| Muy mala | 13,7 | 12,3 |
+| Mala | 31,7 | 31,9 |
 | Ni buena, ni mala | 43,4 | 45,3 |
 | Buena | 10,4 | 9,8 |
 | Muy buena | 0,4 | 0,3 |
@@ -393,9 +393,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,1 | 0,1 |
 | No sabe | 2,8 | 3,8 |
-| Mejorará | 32,3 | 33,2 |
-| No cambiará | 33,3 | 32,6 |
-| Empeorará | 31,5 | 30,4 |
+| Mejorará | 32,3 | 33,0 |
+| No cambiará | 33,3 | 32,7 |
+| Empeorará | 31,5 | 30,3 |
 
 ### `economia_personal`
 
@@ -405,8 +405,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 0,0 | 0,0 |
 | Muy mala | 2,9 | 2,9 |
 | Mala | 18,3 | 17,6 |
-| Ni buena, ni mala | 53,7 | 53,2 |
-| Buena | 23,4 | 24,6 |
+| Ni buena, ni mala | 53,7 | 53,3 |
+| Buena | 23,4 | 24,5 |
 | Muy buena | 1,7 | 1,6 |
 
 ### `economia_personal_futuro`
@@ -414,10 +414,10 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No sabe | 0,8 | 1,1 |
-| Mucho mejor | 7,8 | 7,1 |
+| Mucho mejor | 7,8 | 6,9 |
 | Mejor | 30,5 | 30,5 |
-| Igual | 48,4 | 49,2 |
-| Peor | 10,4 | 10,2 |
+| Igual | 48,4 | 49,5 |
+| Peor | 10,4 | 10,1 |
 | Mucho peor | 2,0 | 1,8 |
 
 ### `ingresos_alcanzan`
@@ -427,9 +427,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,2 | 0,1 |
 | No sabe | 0,0 | 0,0 |
 | Les alcanza bien, pueden ahorrar | 13,1 | 13,3 |
-| Les alcanza justo, sin grandes dificultades | 49,7 | 50,9 |
-| No les alcanza, tienen algunas dificultades | 28,7 | 28,3 |
-| No les alcanza, tienen grandes dificultades | 8,3 | 7,4 |
+| Les alcanza justo, sin grandes dificultades | 49,7 | 51,0 |
+| No les alcanza, tienen algunas dificultades | 28,7 | 28,2 |
+| No les alcanza, tienen grandes dificultades | 8,3 | 7,3 |
 
 ### `preocupa_deudas`
 
@@ -437,51 +437,51 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,0 | 0,0 |
 | No sabe | 0,1 | 0,1 |
-| Nada preocupado | 7,5 | 7,2 |
+| Nada preocupado | 7,5 | 7,1 |
 | 1 | 1,5 | 1,3 |
 | 2 | 2,6 | 2,8 |
 | 3 | 1,6 | 1,6 |
 | 4 | 2,0 | 2,4 |
-| 5 | 7,7 | 7,5 |
-| 6 | 3,9 | 3,9 |
-| 7 | 6,5 | 6,4 |
-| 8 | 10,2 | 9,9 |
-| 9 | 5,1 | 5,1 |
-| Muy preocupado | 51,4 | 51,8 |
+| 5 | 7,7 | 7,6 |
+| 6 | 3,9 | 4,0 |
+| 7 | 6,5 | 6,5 |
+| 8 | 10,2 | 9,8 |
+| 9 | 5,1 | 5,0 |
+| Muy preocupado | 51,4 | 51,9 |
 
 ### `preocupa_enfermedad`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| Nada preocupado | 3,1 | 2,8 |
-| 1 | 1,0 | 0,9 |
+| Nada preocupado | 3,1 | 2,9 |
+| 1 | 1,0 | 0,8 |
 | 2 | 0,7 | 0,8 |
 | 3 | 1,6 | 1,9 |
-| 4 | 2,0 | 1,9 |
+| 4 | 2,0 | 1,8 |
 | 5 | 4,6 | 3,4 |
 | 6 | 2,7 | 2,6 |
-| 7 | 6,2 | 6,3 |
+| 7 | 6,2 | 6,4 |
 | 8 | 7,9 | 9,1 |
 | 9 | 6,1 | 5,7 |
-| Muy preocupado | 64,1 | 64,7 |
+| Muy preocupado | 64,1 | 64,6 |
 
 ### `preocupa_pension`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,2 | 0,2 |
+| No contesta | 0,2 | 0,3 |
 | No sabe | 0,3 | 0,2 |
 | Nada preocupado | 5,9 | 4,8 |
 | 1 | 1,1 | 1,3 |
-| 2 | 0,8 | 1,2 |
-| 3 | 1,9 | 2,1 |
+| 2 | 0,8 | 1,1 |
+| 3 | 1,9 | 2,0 |
 | 4 | 2,1 | 1,7 |
-| 5 | 6,2 | 6,0 |
+| 5 | 6,2 | 6,2 |
 | 6 | 3,7 | 3,6 |
-| 7 | 7,3 | 6,9 |
+| 7 | 7,3 | 7,0 |
 | 8 | 7,8 | 8,3 |
-| 9 | 5,6 | 5,8 |
-| Muy preocupado | 57,3 | 57,7 |
+| 9 | 5,6 | 5,7 |
+| Muy preocupado | 57,3 | 57,8 |
 
 ### `clase_subjetiva`
 
@@ -489,16 +489,16 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,3 | 0,3 |
 | No sabe | 0,3 | 0,2 |
-| Nivel más bajo | 4,8 | 5,1 |
-| 2 | 6,3 | 5,6 |
+| Nivel más bajo | 4,8 | 4,9 |
+| 2 | 6,3 | 5,7 |
 | 3 | 12,0 | 11,7 |
 | 4 | 20,6 | 22,0 |
-| 5 | 35,2 | 35,1 |
-| 6 | 11,5 | 11,9 |
+| 5 | 35,2 | 35,2 |
+| 6 | 11,5 | 11,8 |
 | 7 | 5,0 | 4,5 |
 | 8 | 2,2 | 1,9 |
 | 9 | 0,4 | 0,5 |
-| Nivel más alto | 1,4 | 1,3 |
+| Nivel más alto | 1,4 | 1,2 |
 
 ### `menos_estado_economia`
 
@@ -507,22 +507,22 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,9 | 0,6 |
 | No sabe | 2,8 | 3,2 |
 | Muy de acuerdo | 4,6 | 4,0 |
-| De acuerdo | 19,6 | 20,4 |
-| Ni de acuerdo ni en desacuerdo | 24,3 | 22,8 |
-| En desacuerdo | 38,6 | 39,7 |
-| Muy en desacuerdo | 9,2 | 9,4 |
+| De acuerdo | 19,6 | 20,3 |
+| Ni de acuerdo ni en desacuerdo | 24,3 | 23,1 |
+| En desacuerdo | 38,6 | 39,4 |
+| Muy en desacuerdo | 9,2 | 9,3 |
 
 ### `estado_burocracia`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,5 | 0,5 |
-| No sabe | 2,1 | 2,4 |
-| Muy de acuerdo | 12,1 | 11,5 |
+| No sabe | 2,1 | 2,3 |
+| Muy de acuerdo | 12,1 | 11,6 |
 | De acuerdo | 40,1 | 41,6 |
-| Ni de acuerdo ni en desacuerdo | 24,9 | 25,0 |
-| En desacuerdo | 16,6 | 15,9 |
-| Muy en desacuerdo | 3,6 | 3,1 |
+| Ni de acuerdo ni en desacuerdo | 24,9 | 25,2 |
+| En desacuerdo | 16,6 | 15,8 |
+| Muy en desacuerdo | 3,6 | 3,0 |
 
 ### `reducir_gasto_publico`
 
@@ -532,8 +532,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 2,8 | 3,3 |
 | Muy de acuerdo | 10,2 | 8,9 |
 | De acuerdo | 23,9 | 26,5 |
-| Ni de acuerdo ni en desacuerdo | 20,6 | 18,2 |
-| En desacuerdo | 28,5 | 29,2 |
+| Ni de acuerdo ni en desacuerdo | 20,6 | 18,4 |
+| En desacuerdo | 28,5 | 29,1 |
 | Muy en desacuerdo | 12,8 | 13,0 |
 
 ### `empleados_publicos`
@@ -541,30 +541,30 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,3 | 0,2 |
-| No sabe | 2,8 | 2,8 |
+| No sabe | 2,8 | 2,9 |
 | Demasiado alto | 40,7 | 39,5 |
 | Alto | 25,7 | 27,4 |
-| Adecuado | 15,4 | 15,0 |
+| Adecuado | 15,4 | 15,1 |
 | Bajo | 12,2 | 12,2 |
-| Demasiado bajo | 2,8 | 2,8 |
+| Demasiado bajo | 2,8 | 2,7 |
 
 ### `libertades_o_seguridad`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 1,0 | 1,0 |
-| No sabe | 1,3 | 1,2 |
+| No contesta | 1,0 | 0,9 |
+| No sabe | 1,3 | 1,3 |
 | Se deben garantizar las libertades públicas y privadas, aunque eso impida controlar la delincuencia | 6,0 | 5,6 |
 | 1 | 1,8 | 1,9 |
 | 2 | 2,1 | 2,0 |
 | 3 | 3,4 | 3,9 |
-| 4 | 6,5 | 5,9 |
-| 5 | 25,7 | 24,9 |
-| 6 | 10,3 | 10,0 |
-| 7 | 10,8 | 12,4 |
+| 4 | 6,5 | 6,0 |
+| 5 | 25,7 | 24,8 |
+| 6 | 10,3 | 10,1 |
+| 7 | 10,8 | 12,1 |
 | 8 | 6,0 | 5,5 |
 | 9 | 1,9 | 1,9 |
-| Se deben suprimir las libertades públicas y privadas para controlar la delincuencia | 23,2 | 23,8 |
+| Se deben suprimir las libertades públicas y privadas para controlar la delincuencia | 23,2 | 23,9 |
 
 ### `causa_delincuencia`
 
@@ -572,42 +572,42 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,4 | 0,2 |
 | No sabe | 0,2 | 0,2 |
-| La inmigración irregular | 17,7 | 18,0 |
-| La falta de condenas o bajas penas que reciben los delincuentes | 25,2 | 26,3 |
-| La pobreza y falta de oportunidades | 11,8 | 12,4 |
+| La inmigración irregular | 17,7 | 17,9 |
+| La falta de condenas o bajas penas que reciben los delincuentes | 25,2 | 26,4 |
+| La pobreza y falta de oportunidades | 11,8 | 12,5 |
 | La pérdida de valores en la sociedad | 3,7 | 3,2 |
-| La crisis de la familia | 2,5 | 2,4 |
-| El consumo de drogas y alcohol | 10,0 | 9,1 |
+| La crisis de la familia | 2,5 | 2,3 |
+| El consumo de drogas y alcohol | 10,0 | 9,0 |
 | Las restricciones de las policías | 1,0 | 1,0 |
 | La falta de capacitación de las policías | 2,1 | 2,5 |
 | La desigualdad | 5,9 | 5,5 |
 | La validación de la violencia durante el estallido social | 4,5 | 4,5 |
-| Las bandas de narcotráfico | 14,1 | 14,0 |
+| Las bandas de narcotráfico | 14,1 | 14,2 |
 | Otra | 0,8 | 0,7 |
 
 ### `justifica_marchas`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,3 | 0,0 |
+| No contesta | 0,3 | 0,1 |
 | No sabe | 0,1 | 0,1 |
-| Siempre | 23,9 | 24,6 |
-| Casi siempre | 11,0 | 10,8 |
+| Siempre | 23,9 | 24,3 |
+| Casi siempre | 11,0 | 10,9 |
 | A veces | 25,8 | 25,9 |
 | Casi nunca | 9,7 | 9,4 |
-| Nunca | 29,2 | 29,2 |
+| Nunca | 29,2 | 29,4 |
 
 ### `justifica_fuerza_carabineros`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,5 | 0,3 |
+| No contesta | 0,5 | 0,2 |
 | No sabe | 0,4 | 0,1 |
-| Siempre | 31,6 | 30,2 |
+| Siempre | 31,6 | 30,3 |
 | Casi siempre | 15,0 | 15,4 |
-| A veces | 28,8 | 29,8 |
-| Casi nunca | 7,7 | 8,1 |
-| Nunca | 16,0 | 16,1 |
+| A veces | 28,8 | 29,9 |
+| Casi nunca | 7,7 | 8,2 |
+| Nunca | 16,0 | 15,8 |
 
 ### `apertura_inmigracion`
 
@@ -615,14 +615,14 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,3 | 0,3 |
 | No sabe | 0,7 | 0,7 |
-| Prohibir toda inmigración | 26,0 | 24,9 |
+| Prohibir toda inmigración | 26,0 | 24,7 |
 | 2 | 6,3 | 6,2 |
-| 3 | 13,3 | 12,9 |
+| 3 | 13,3 | 13,1 |
 | 4 | 9,6 | 11,4 |
 | 5 | 23,0 | 23,3 |
 | 6 | 7,1 | 6,7 |
-| 7 | 4,5 | 4,8 |
-| 8 | 2,1 | 2,6 |
+| 7 | 4,5 | 4,7 |
+| 8 | 2,1 | 2,5 |
 | 9 | 0,9 | 0,7 |
 | Permitir libremente toda inmigración | 6,1 | 5,6 |
 
@@ -633,37 +633,37 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,5 | 0,6 |
 | No sabe | 0,6 | 0,5 |
 | Muy de acuerdo | 24,0 | 23,1 |
-| De acuerdo | 43,1 | 43,8 |
-| Ni de acuerdo ni en desacuerdo | 16,8 | 17,2 |
+| De acuerdo | 43,1 | 43,9 |
+| Ni de acuerdo ni en desacuerdo | 16,8 | 17,0 |
 | En desacuerdo | 11,2 | 11,3 |
-| Muy en desacuerdo | 3,7 | 3,5 |
+| Muy en desacuerdo | 3,7 | 3,6 |
 
 ### `inmigrantes_aporte`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,2 | 0,2 |
-| No sabe | 0,9 | 1,0 |
+| No sabe | 0,9 | 1,1 |
 | Muy de acuerdo | 7,0 | 7,0 |
-| De acuerdo | 29,2 | 29,6 |
-| Ni de acuerdo ni en desacuerdo | 30,6 | 30,2 |
-| En desacuerdo | 25,9 | 26,6 |
-| Muy en desacuerdo | 6,1 | 5,4 |
+| De acuerdo | 29,2 | 29,7 |
+| Ni de acuerdo ni en desacuerdo | 30,6 | 30,4 |
+| En desacuerdo | 25,9 | 26,3 |
+| Muy en desacuerdo | 6,1 | 5,3 |
 
 ### `hijos_ideal`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,2 | 0,2 |
-| 0 | 10,6 | 10,3 |
-| 1 | 15,6 | 15,2 |
-| 2 | 37,9 | 39,0 |
-| 3 | 18,9 | 18,5 |
-| 4 | 8,6 | 8,1 |
-| 5 | 3,5 | 4,0 |
-| 6 | 2,3 | 2,0 |
+| 0 | 10,6 | 10,4 |
+| 1 | 15,6 | 15,1 |
+| 2 | 37,9 | 39,1 |
+| 3 | 18,9 | 18,7 |
+| 4 | 8,6 | 8,0 |
+| 5 | 3,5 | 3,9 |
+| 6 | 2,3 | 2,1 |
 | 7 | 0,6 | 0,8 |
-| 8 | 0,7 | 0,6 |
+| 8 | 0,7 | 0,5 |
 | 10 | 0,6 | 0,5 |
 | 12 | 0,4 | 0,6 |
 | 18 | 0,0 | 0,0 |
@@ -675,11 +675,11 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,4 | 0,4 |
 | No sabe | 0,2 | 0,1 |
-| Muy en desacuerdo | 8,2 | 6,8 |
-| En desacuerdo | 34,0 | 34,4 |
+| Muy en desacuerdo | 8,2 | 6,9 |
+| En desacuerdo | 34,0 | 34,5 |
 | Ni de acuerdo ni en desacuerdo | 16,7 | 17,1 |
-| De acuerdo | 31,8 | 32,2 |
-| Muy de acuerdo | 8,7 | 9,0 |
+| De acuerdo | 31,8 | 32,0 |
+| Muy de acuerdo | 8,7 | 8,9 |
 
 ### `hijos_restringen_carrera`
 
@@ -687,11 +687,11 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,2 | 0,1 |
 | No sabe | 0,4 | 0,3 |
-| Muy en desacuerdo | 4,8 | 4,2 |
-| En desacuerdo | 29,2 | 30,8 |
-| Ni de acuerdo ni en desacuerdo | 19,4 | 17,7 |
+| Muy en desacuerdo | 4,8 | 4,3 |
+| En desacuerdo | 29,2 | 30,5 |
+| Ni de acuerdo ni en desacuerdo | 19,4 | 17,8 |
 | De acuerdo | 36,9 | 38,2 |
-| Muy de acuerdo | 9,1 | 8,7 |
+| Muy de acuerdo | 9,1 | 8,8 |
 
 ### `confianza_fuerzas_armadas`
 
@@ -701,8 +701,8 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 1,1 | 0,9 |
 | Mucha confianza | 22,6 | 23,6 |
 | Bastante confianza | 34,8 | 35,6 |
-| Poca confianza | 29,5 | 27,6 |
-| Nada de confianza | 11,6 | 12,0 |
+| Poca confianza | 29,5 | 27,7 |
+| Nada de confianza | 11,6 | 11,9 |
 
 ### `confianza_carabineros`
 
@@ -710,20 +710,20 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,1 | 0,0 |
 | No sabe | 0,2 | 0,1 |
-| Mucha confianza | 22,8 | 21,9 |
-| Bastante confianza | 35,5 | 35,7 |
+| Mucha confianza | 22,8 | 22,0 |
+| Bastante confianza | 35,5 | 35,8 |
 | Poca confianza | 31,3 | 32,1 |
-| Nada de confianza | 10,1 | 10,1 |
+| Nada de confianza | 10,1 | 9,9 |
 
 ### `confianza_tribunales`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
-| No contesta | 0,2 | 0,1 |
+| No contesta | 0,2 | 0,0 |
 | No sabe | 1,3 | 1,3 |
 | Mucha confianza | 5,5 | 4,7 |
-| Bastante confianza | 19,0 | 20,1 |
-| Poca confianza | 48,4 | 48,2 |
+| Bastante confianza | 19,0 | 20,0 |
+| Poca confianza | 48,4 | 48,4 |
 | Nada de confianza | 25,7 | 25,6 |
 
 ### `confianza_partidos`
@@ -734,7 +734,7 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 1,1 | 1,5 |
 | Mucha confianza | 0,8 | 1,0 |
 | Bastante confianza | 5,4 | 5,9 |
-| Poca confianza | 42,9 | 43,4 |
+| Poca confianza | 42,9 | 43,5 |
 | Nada de confianza | 49,2 | 47,7 |
 
 ### `confianza_empresas`
@@ -743,21 +743,21 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,5 | 0,4 |
 | No sabe | 2,7 | 3,1 |
-| Mucha confianza | 6,4 | 6,4 |
-| Bastante confianza | 25,3 | 25,8 |
-| Poca confianza | 44,3 | 42,3 |
-| Nada de confianza | 20,7 | 22,0 |
+| Mucha confianza | 6,4 | 6,5 |
+| Bastante confianza | 25,3 | 26,0 |
+| Poca confianza | 44,3 | 42,2 |
+| Nada de confianza | 20,7 | 21,9 |
 
 ### `confianza_sindicatos`
 
 | Respuesta | CEP % | Muestra % |
 |---|---|---|
 | No contesta | 0,5 | 0,6 |
-| No sabe | 4,3 | 5,0 |
-| Mucha confianza | 5,5 | 6,5 |
+| No sabe | 4,3 | 4,9 |
+| Mucha confianza | 5,5 | 6,4 |
 | Bastante confianza | 22,9 | 21,9 |
-| Poca confianza | 45,5 | 46,3 |
-| Nada de confianza | 21,3 | 19,7 |
+| Poca confianza | 45,5 | 46,7 |
+| Nada de confianza | 21,3 | 19,5 |
 
 ### `confianza_sistema_salud`
 
@@ -766,9 +766,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,2 | 0,1 |
 | No sabe | 0,1 | 0,1 |
 | Mucha confianza | 6,3 | 6,6 |
-| Bastante confianza | 24,1 | 23,5 |
-| Poca confianza | 53,9 | 54,9 |
-| Nada de confianza | 15,4 | 14,7 |
+| Bastante confianza | 24,1 | 23,6 |
+| Poca confianza | 53,9 | 55,1 |
+| Nada de confianza | 15,4 | 14,5 |
 
 ### `confianza_sistema_pensiones`
 
@@ -778,7 +778,7 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No sabe | 1,2 | 1,4 |
 | Mucha confianza | 4,1 | 4,9 |
 | Bastante confianza | 13,3 | 13,2 |
-| Poca confianza | 53,3 | 53,3 |
+| Poca confianza | 53,3 | 53,5 |
 | Nada de confianza | 27,7 | 26,8 |
 
 ### `confianza_television`
@@ -788,7 +788,7 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,1 | 0,0 |
 | No sabe | 0,3 | 0,4 |
 | Mucha confianza | 3,1 | 2,8 |
-| Bastante confianza | 11,5 | 12,3 |
+| Bastante confianza | 11,5 | 12,4 |
 | Poca confianza | 48,4 | 48,9 |
 | Nada de confianza | 36,7 | 35,5 |
 
@@ -799,9 +799,9 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 | No contesta | 0,3 | 0,3 |
 | No sabe | 2,1 | 2,4 |
 | Mucha confianza | 3,5 | 3,3 |
-| Bastante confianza | 10,6 | 11,0 |
-| Poca confianza | 46,7 | 47,1 |
-| Nada de confianza | 36,7 | 36,0 |
+| Bastante confianza | 10,6 | 11,1 |
+| Poca confianza | 46,7 | 47,2 |
+| Nada de confianza | 36,7 | 35,9 |
 
 ### `confianza_iglesia_catolica`
 
@@ -809,10 +809,10 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,7 | 0,6 |
 | No sabe | 0,9 | 0,7 |
-| Mucha confianza | 11,2 | 13,8 |
-| Bastante confianza | 18,8 | 19,0 |
-| Poca confianza | 39,4 | 41,0 |
-| Nada de confianza | 28,9 | 24,9 |
+| Mucha confianza | 11,2 | 13,7 |
+| Bastante confianza | 18,8 | 19,2 |
+| Poca confianza | 39,4 | 40,8 |
+| Nada de confianza | 28,9 | 25,0 |
 
 ### `confianza_universidades`
 
@@ -820,10 +820,10 @@ Porcentaje de cada respuesta en la CEP (ponderada) y en la muestra con los datos
 |---|---|---|
 | No contesta | 0,3 | 0,1 |
 | No sabe | 1,9 | 2,0 |
-| Mucha confianza | 18,6 | 18,6 |
+| Mucha confianza | 18,6 | 18,8 |
 | Bastante confianza | 42,6 | 44,9 |
-| Poca confianza | 31,0 | 27,6 |
-| Nada de confianza | 5,7 | 6,7 |
+| Poca confianza | 31,0 | 27,5 |
+| Nada de confianza | 5,7 | 6,6 |
 
 ### Por grupo
 
@@ -831,21 +831,21 @@ Posición política media (de 1 a 10, entre quienes se ubican) y porcentaje que 
 
 | Grupo | Casos CEP | Posición CEP | Posición muestra | Aprueba CEP % | Aprueba muestra % |
 |---|---|---|---|---|---|
-| sexo: Hombre | 536 | 5,38 | 5,33 | 36,3 | 37,9 |
-| sexo: Mujer | 930 | 5,45 | 5,40 | 32,6 | 31,3 |
-| edad3: 18 a 34 | 374 | 5,12 | 5,06 | 27,8 | 30,2 |
-| edad3: 35 a 54 | 477 | 5,57 | 5,50 | 40,0 | 38,7 |
-| edad3: 55 o más | 615 | 5,55 | 5,54 | 34,5 | 34,1 |
-| educ4: Menos que media completa | 476 | 5,63 | 5,68 | 32,1 | 35,3 |
-| educ4: Media completa | 579 | 5,38 | 5,35 | 34,8 | 35,4 |
-| educ4: Técnica completa | 158 | 5,27 | 5,19 | 39,0 | 36,6 |
-| educ4: Universitaria completa | 251 | 5,35 | 5,10 | 34,8 | 29,9 |
-| nse3: Bajo | 238 | 5,43 | 5,71 | 31,0 | 33,7 |
-| nse3: Medio | 791 | 5,40 | 5,41 | 34,6 | 35,4 |
-| nse3: Alto | 437 | 5,43 | 5,21 | 35,7 | 32,9 |
-| rel4: Católica | 717 | 5,66 | 5,51 | 39,1 | 37,0 |
-| rel4: Evangélica | 275 | 5,76 | 5,74 | 43,6 | 40,6 |
-| rel4: Ninguna | 404 | 4,88 | 4,78 | 25,0 | 25,3 |
-| rel4: Otra | 52 | 5,62 | 5,58 | 17,5 | 32,4 |
+| sexo: Hombre | 536 | 5,38 | 5,32 | 36,3 | 37,9 |
+| sexo: Mujer | 930 | 5,45 | 5,40 | 32,6 | 31,0 |
+| edad3: 18 a 34 | 374 | 5,12 | 5,07 | 27,8 | 30,0 |
+| edad3: 35 a 54 | 477 | 5,57 | 5,51 | 40,0 | 38,7 |
+| edad3: 55 o más | 615 | 5,55 | 5,51 | 34,5 | 33,8 |
+| educ4: Menos que media completa | 476 | 5,63 | 5,66 | 32,1 | 35,1 |
+| educ4: Media completa | 579 | 5,38 | 5,35 | 34,8 | 35,2 |
+| educ4: Técnica completa | 158 | 5,27 | 5,20 | 39,0 | 36,4 |
+| educ4: Universitaria completa | 251 | 5,35 | 5,11 | 34,8 | 30,1 |
+| nse3: Bajo | 238 | 5,43 | 5,70 | 31,0 | 33,5 |
+| nse3: Medio | 791 | 5,40 | 5,41 | 34,6 | 35,2 |
+| nse3: Alto | 437 | 5,43 | 5,21 | 35,7 | 33,0 |
+| rel4: Católica | 717 | 5,66 | 5,50 | 39,1 | 36,6 |
+| rel4: Evangélica | 275 | 5,76 | 5,74 | 43,6 | 40,5 |
+| rel4: Ninguna | 404 | 4,88 | 4,80 | 25,0 | 25,5 |
+| rel4: Otra | 52 | 5,62 | 5,58 | 17,5 | 32,5 |
 
 Fuentes: Centro de Estudios Públicos, Encuesta CEP N° 96, abril-mayo 2026; INE, Censo de Población y Vivienda 2024.

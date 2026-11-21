@@ -30,14 +30,15 @@ export function agentesDeDemostracion(regiones: Anillo[][]): AgenteRemoto[] {
  * según el texto y sin frases. La interfaz lo rotula como demostración.
  */
 export function correrDemostracion(
-  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number },
+  pedido: { casos: CasoPedido[]; agentes: number[]; iteraciones: number; preguntas?: string[] },
   alEvento: (evento: Evento) => void,
 ): () => void {
   let cancelado = false;
   const inicio = performance.now();
   const metricas = (): Metricas => ({ llamadas: 0, costo_usd: 0, tokens: 0, segundos: Math.round((performance.now() - inicio) / 100) / 10 });
   const casos = pedido.casos.map((c) => ({ id: c.id, letra: c.letra, texto: c.texto, titulo: c.texto, documento: null, iteracion: null }));
-  alEvento({ tipo: 'inicio', motor: { nombre: 'Demostración', modelo: 'sin motor', grabado: true }, agentes: pedido.agentes.length, casos });
+  const preguntas = pedido.preguntas ?? [];
+  alEvento({ tipo: 'inicio', motor: { nombre: 'Demostración', modelo: 'sin motor', grabado: true }, agentes: pedido.agentes.length, casos, preguntas });
   const tareas: { caso: number; agentes: number[] }[] = [];
   casos.forEach((_, k) => {
     for (let i = 0; i < pedido.agentes.length; i += LOTE) tareas.push({ caso: k, agentes: pedido.agentes.slice(i, i + LOTE) });
@@ -51,9 +52,16 @@ export function correrDemostracion(
       return;
     }
     const semilla = hashTexto(casos[tarea.caso].texto);
-    const r = tarea.agentes.map((a): [number, number, string] => {
+    const nota = (valor: number) => Math.max(1, Math.min(7, Math.round(valor)));
+    const r = tarea.agentes.map((a): [number, number, string, number[]] => {
       const base = 4 + (mezclar(semilla, a) - 0.5) * 5 + (mezclar(semilla, 7) - 0.5) * 2;
-      return [a, Math.max(1, Math.min(7, Math.round(base))), ''];
+      // Las demás preguntas se sortean alrededor de la primera, cada una con su propio sesgo.
+      const notas = preguntas.map((pregunta, k) => {
+        if (k === 0) return nota(base);
+        const propia = hashTexto(pregunta);
+        return nota(base + (mezclar(propia, 3) - 0.5) * 2.4 + (mezclar(propia, a) - 0.5) * 3);
+      });
+      return [a, nota(base), '', notas];
     });
     alEvento({ tipo: 'respuestas', caso: tarea.caso, cache: false, r, metricas: metricas() });
     restantes[tarea.caso] -= 1;

@@ -1,6 +1,6 @@
 # Tabla de agentes
 
-`data/agentes/` tiene 1.546.322 agentes que representan a las 15.463.163 personas de 14 años o más de `data/chile/`: 1 de cada 10. Es la tabla que usa el motor del sitio para filtrar y sacar la muestra, y por eso se versiona (103 MB, un archivo por región). La escribe `scripts/reducir_poblacion.py`.
+`data/agentes/` tiene 1.546.322 agentes que representan a las 15.463.163 personas de 14 años o más de `data/chile/`: 1 de cada 10. Es la tabla que usa el motor del sitio para filtrar y sacar la muestra, y por eso se versiona (102 MB, un archivo por región). La escribe `scripts/reducir_poblacion.py`.
 
 Cada fila es una persona real del censo, con todas sus columnas (las mismas de `data/chile/chile.parquet`), más a cuántas personas representa en cada nivel de reducción. Los niveles son anidados: quien representa a 1.000 es uno de los que representan a 100.
 
@@ -29,12 +29,12 @@ Diferencia máxima, en puntos porcentuales, entre la población completa y los a
 | Zona urbana o rural | 2 | 0,00 | 0,01 | 0,16 |
 | Nivel educativo | 12 | 0,05 | 0,14 | 0,48 |
 | Situación en la fuerza de trabajo | 3 | 0,00 | 0,15 | 0,25 |
-| Decil de ingreso del hogar | 10 | 0,03 | 0,19 | 0,27 |
-| Previsión de salud | 6 | 0,04 | 0,12 | 0,12 |
-| Tipo de colegio de los menores | 5 | 0,11 | 0,40 | 0,61 |
-| Posición política | 12 | 0,04 | 0,15 | 0,37 |
-| Evaluación del gobierno | 5 | 0,01 | 0,23 | 0,60 |
-| Confianza en el gobierno | 6 | 0,03 | 0,10 | 0,59 |
+| Decil de ingreso del hogar | 10 | 0,04 | 0,16 | 0,59 |
+| Previsión de salud | 6 | 0,01 | 0,14 | 0,64 |
+| Tipo de colegio de los menores | 5 | 0,18 | 0,37 | 1,13 |
+| Posición política | 12 | 0,05 | 0,38 | 0,65 |
+| Evaluación del gobierno | 5 | 0,03 | 0,16 | 0,20 |
+| Confianza en el gobierno | 6 | 0,01 | 0,38 | 0,73 |
 
 Lo que entra en el orden de los grupos (comuna, zona, sexo, edad) calza casi exacto; lo demás difiere por el azar de elegir a uno por grupo, que crece al reducir más: con menos agentes hay menos casos de cada tipo.
 

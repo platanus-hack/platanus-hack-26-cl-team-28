@@ -46,7 +46,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import imputar_cep as cep_  # noqa: E402
-from construir_muestra import SEMILLA, completar_edad, derivar_familia, emparejar, imputar_casen, leer_casen  # noqa: E402
+from construir_muestra import SEMILLA, completar_edad, derivar_familia, emparejar, imputar_casen, leer_casen, nivel_comunal  # noqa: E402
 
 # Edad desde la cual una persona es una fila de la población.
 EDAD_MINIMA = 14
@@ -91,6 +91,7 @@ def main():
     regiones = [r for (r,) in con.execute(f"select distinct region from {P} order by 1").fetchall()]
     print("1. Leyendo Casen ...", flush=True)
     casen, cp, ch = leer_casen(con, casen_dir)
+    escolaridad_comunal = nivel_comunal(con, censo)
 
     print("2. Censo y Casen, región por región ...", flush=True)
     n_per = n_hog = 0
@@ -101,7 +102,7 @@ def main():
         per = completar_edad(per, edades, rng)
         per = derivar_familia(per)
         hog["hk"] = hog["id_vivienda"] * 100 + hog["id_hogar"]
-        per, hog, info = imputar_casen(per, hog, casen, cp, ch, rng, avisar=callar)
+        per, hog, info = imputar_casen(per, hog, casen, cp, ch, rng, escolaridad_comunal, avisar=callar)
 
         hog.insert(0, "id_hogar_muestra", np.arange(n_hog + 1, n_hog + len(hog) + 1))
         per.insert(0, "id_persona_muestra", np.arange(n_per + 1, n_per + len(per) + 1))

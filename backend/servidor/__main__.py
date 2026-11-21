@@ -4,11 +4,12 @@
     MOTOR=grabado python3 -m servidor            # sin red: repite una corrida real guardada
 
 Rutas:
-    GET  /api/estado                  motor, modelo, población disponible y preguntas
+    GET  /api/estado                  motor, modelo, población disponible y las preguntas de partida
     POST /api/muestra                 {filtros, tamano}: filtra la población y sortea hasta `tamano` agentes
     GET  /api/agentes                 la muestra por defecto (sin filtros), como lista
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre. Devuelve texto o resumen
-    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones}
+    POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones,
+                                      preguntas?:[texto]}: la encuesta de la corrida; sin ella, la de partida
     GET  /api/corridas/<id>/eventos   eventos de la corrida (text/event-stream)
     POST /api/corridas/<id>/cancelar
 """
@@ -21,6 +22,7 @@ from urllib.parse import unquote, urlparse
 
 from collections import OrderedDict
 
+from . import metodo
 from .corridas import Cache, Caso, Corrida, resumir_documento
 from .documentos import DocumentoIlegible, extraer_texto
 from .motor import elegir_motor
@@ -105,7 +107,8 @@ class Manejador(BaseHTTPRequestHandler):
         ruta = urlparse(self.path).path
         if ruta == "/api/estado":
             poblacion = POBLACION.describir()
-            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas})
+            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": MOTOR.preguntas,
+                                    "maximo_preguntas": metodo.MAXIMO_PREGUNTAS, "largo_pregunta": metodo.LARGO_PREGUNTA})
         if ruta == "/api/agentes":
             return self._json(200, [a.publico() for a in sacar_muestra(None, TAMANO_POR_DEFECTO).agentes])
         partes = ruta.strip("/").split("/")
@@ -167,10 +170,11 @@ class Manejador(BaseHTTPRequestHandler):
             raise ValueError("La muestra quedó vacía")
         iteraciones = 0 if MOTOR.grabado else max(0, min(MAXIMO_ITERACIONES, int(pedido.get("iteraciones", 0))))
         lote = max(1, min(25, int(pedido.get("lote", LOTE))))
-        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS)
+        preguntas = MOTOR.preguntas_de(pedido.get("preguntas"))
+        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS, preguntas)
         CORRIDAS[corrida.id] = corrida
         threading.Thread(target=corrida.correr, daemon=True).start()
-        self._json(201, {"id": corrida.id, "motor": MOTOR.describir(), "agentes": len(elegidos)})
+        self._json(201, {"id": corrida.id, "motor": MOTOR.describir(), "agentes": len(elegidos), "preguntas": preguntas})
 
     def _eventos(self, identificador: str):
         corrida = CORRIDAS.get(identificador)
@@ -213,7 +217,7 @@ def main():
     descripcion = MOTOR.describir()
     poblacion = POBLACION.describir()
     print(f"Simulador en http://127.0.0.1:{puerto} · {poblacion['fuente']}: {poblacion['agentes']:,} agentes por {poblacion['personas']:,} personas · "
-          f"motor {descripcion['nombre']} ({descripcion['modelo']})".replace(",", "."), flush=True)
+          f"motor {descripcion['nombre']} ({descripcion['modelo']}) · perfil {descripcion['perfil']}".replace(",", "."), flush=True)
     servidor.serve_forever()
 
 

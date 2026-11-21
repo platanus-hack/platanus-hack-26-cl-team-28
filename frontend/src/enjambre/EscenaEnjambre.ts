@@ -1,7 +1,9 @@
+import { mezclar } from '../dominio/azar';
 import { REGIONES } from '../dominio/catalogos';
 import type { Persona } from '../dominio/tipos';
-import { REGIONES_GEO } from '../mapa/geografia';
+import { cargarComunas, comunasCargadas, REGIONES_GEO } from '../mapa/geografia';
 import { puntoEnBurbuja, radioDe, type Burbuja } from './disposicion';
+import { CARAS, celdaWati, CELDA_ALTO, CELDA_ANCHO, crearAtlasWati, crearSpriteWati, PIES_RELATIVO, poseDe, QUIETO, rasgosDe, TONOS, VARIANTES, type Animo, type AtlasWati } from './wati';
 
 /** Estado de cada punto. El número es también su color. */
 export const PUNTO = { fuera: 0, neutra: 1, favor: 2, contra: 3, indecisa: 4, pendiente: 5 } as const;
@@ -49,7 +51,37 @@ const ENTRE_FILAS = 4;
 const ENTRE_FILAS_MAXIMO = 16;
 const SEPARA_ROTULO = 9;
 
-const ZOOM_MAXIMO = 8;
+/** Cuánto se puede acercar el mapa: lo bastante para separar las comunas de Santiago y ver a cada wati. */
+export const ZOOM_MAXIMO = 64;
+
+/**
+ * Al acercar, cada cuadrado se vuelve un wati. La mezcla depende del tamaño del cuadrado en
+ * pantalla (píxeles): así en una pantalla chica la transformación llega más tarde.
+ */
+const WATI_DESDE = 10;
+const WATI_HASTA = 12.5;
+/** Alto de la celda del wati respecto del lado del cuadrado. */
+const WATI_ALTO = 2.2;
+/** Ancho de las zonas en que se ralea la multitud, en anchos de wati, y cuántos caben en una zona con una sola persona más. */
+const ZONA_WATIS = 2.5;
+/** Opacidad de los watis que no son de la persona elegida mientras hay una elegida. */
+const ATENUADO = 0.45;
+/**
+ * Watis muy de cerca: alto máximo de su dibujo (píxeles). Los que están en reposo salen de un
+ * atlas grande; los que bostezan, de una hoja que se va llenando con los que aparecen.
+ */
+const ALTO_GRANDE = 128;
+const HOJA_GRANDE = 1536;
+const POR_ZONA = 1.6;
+/** Los watis respiran y bostezan solo desde este alto en pantalla (píxeles): de lejos quedan quietos. */
+const WATI_ANIMA = 56;
+/** Respirar no necesita 60 cuadros por segundo: con solo watis en movimiento se redibuja a unos 20. */
+const RESPIRO = 1 / 21;
+
+/** Estados sin postura: sus watis varían poco de tono para no parecer de un color de respuesta. */
+const SIN_POSTURA: number[] = [PUNTO.fuera, PUNTO.neutra, PUNTO.pendiente];
+/** Cara de cada estado (en el orden de `PUNTO`): triste en contra, seria si no se decide. */
+const ANIMOS: Animo[] = ['alegre', 'alegre', 'alegre', 'triste', 'seria', 'alegre'];
 
 const suave = (p: number) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2);
 const azar = (i: number, sal: number) => (Math.sin(i * 12.9898 + sal * 78.233) * 43758.5453) % 1;
@@ -81,6 +113,34 @@ export class EscenaEnjambre {
   private inicioIdos = 0;
   private color!: Uint8Array;
   private estados!: Uint8Array;
+  /** Rasgos de cada wati, fijos por persona: semilla de su animación, adorno y tono. */
+  private semilla!: Uint32Array;
+  private variante!: Uint8Array;
+  private tono!: Uint8Array;
+  /** Orden fijo en que aparecen los watis al ralear una multitud (ver `ralear`): menor, antes. */
+  private prioridad!: Float32Array;
+  /** Watis que quedaron dibujados en el último cuadro: solo esos se pueden elegir con un clic. */
+  private mostrado!: Uint8Array;
+  /** Marca rápida de los puntos de `foco`, para no buscarlos en la lista por cada wati. */
+  private enFoco!: Uint8Array;
+  /** Hoja con los watis dibujados en los colores del tema; se arma la primera vez que hace falta. */
+  private atlas: AtlasWati | null = null;
+  /** Watis muy de cerca: cada combinación se dibuja aparte, a buena resolución, la primera vez que aparece. */
+  private atlasGrande: AtlasWati | null = null;
+  private hojaGrande: HTMLCanvasElement | null = null;
+  private lugaresGrandes = new Map<number, number>();
+  /** Capa con el mapa ya pintado y la vista con que se pintó (ver `pintarMapa`). */
+  private readonly capaMapa = document.createElement('canvas');
+  private claveMapa = '';
+  private esperaAtlas = 0;
+  /** Cuánto se ve el wati en vez del cuadrado (0 a 1) y su alto en unidades del mapa, del último cuadro. */
+  private mezcla = 0;
+  private altoWati = 0;
+  private ultimoCuadro = 0;
+  /** Índices de los watis visibles, ordenados de arriba abajo (los de abajo quedan delante). */
+  private visibles = new Int32Array(0);
+  /** Nivel (potencia de dos) de las zonas del raleo; ver `watis`. */
+  private nivelZona = NaN;
   private burbujas: Burbuja[] = [];
   private etiquetas: Etiqueta[] = [];
   private colores: string[] = [];
@@ -88,8 +148,11 @@ export class EscenaEnjambre {
   private fondo = '';
   private chile = '';
   private chileBorde = '';
+  private comunaBorde = '';
   private fuente = '';
   private silueta = new Path2D();
+  /** Límites de las comunas, tenues bajo los de las regiones. Vacío hasta que cargan los polígonos. */
+  private comunas = new Path2D();
   private ancho = 0;
   private alto = 0;
   private dpr = 1;
@@ -139,6 +202,20 @@ export class EscenaEnjambre {
     this.nace = crear().fill(-10);
     this.color = new Uint8Array(n).fill(PUNTO.neutra);
     this.estados = new Uint8Array(n).fill(PUNTO.neutra);
+    this.semilla = new Uint32Array(n);
+    this.variante = new Uint8Array(n);
+    this.tono = new Uint8Array(n);
+    this.prioridad = new Float32Array(n);
+    this.mostrado = new Uint8Array(n);
+    this.enFoco = new Uint8Array(n);
+    this.visibles = new Int32Array(n);
+    this.personas.forEach((persona, i) => {
+      const rasgos = rasgosDe(persona.clave ?? `#${persona.id}`);
+      this.semilla[i] = rasgos.semilla;
+      this.variante[i] = rasgos.variante;
+      this.tono[i] = rasgos.tono;
+      this.prioridad[i] = mezclar(rasgos.semilla, 9);
+    });
   }
 
   /**
@@ -265,6 +342,7 @@ export class EscenaEnjambre {
 
   destruir(): void {
     cancelAnimationFrame(this.cuadro);
+    clearTimeout(this.esperaAtlas);
     this.observador.disconnect();
     document.removeEventListener('wheel', this.rueda);
     document.removeEventListener('gesturestart', this.gesto);
@@ -284,7 +362,10 @@ export class EscenaEnjambre {
     this.fondo = v('--mar');
     this.chile = v('--chile');
     this.chileBorde = v('--chile-borde');
+    this.comunaBorde = v('--comuna-borde');
     this.fuente = v('--fuente-ui');
+    this.programarAtlas();
+    this.claveMapa = '';
     this.sucio = true;
   }
 
@@ -377,11 +458,14 @@ export class EscenaEnjambre {
   /** El punto visible más cercano a una posición, o -1 si no hay ninguno a menos de `radio` píxeles. */
   cercano(px: number, py: number, radio = 16): number {
     let mejor = -1;
-    let distancia = radio * radio;
+    // Con watis se apunta al centro del cuerpo, y el radio alcanza a cubrirlo.
+    const alcance = Math.max(radio, this.altoWati * this.zoom * 0.4 * this.mezcla);
+    let distancia = alcance * alcance;
     for (let i = 0; i < this.n; i++) {
       if (this.color[i] === PUNTO.fuera) continue;
+      if (this.mezcla > 0 && !this.mostrado[i]) continue;
       const dx = this.x[i] * this.zoom + this.ox - px;
-      const dy = this.y[i] * this.zoom + this.oy - py;
+      const dy = this.centroY(i) * this.zoom + this.oy - py;
       const d = dx * dx + dy * dy;
       if (d < distancia) {
         distancia = d;
@@ -391,8 +475,44 @@ export class EscenaEnjambre {
     return mejor;
   }
 
+  /**
+   * Cuáles de estas cajas (en píxeles del lienzo) tienen debajo algún punto de la muestra o algún
+   * rótulo de región, en el lugar donde quedan al terminar su vuelo. Los puntos fuera de la muestra
+   * son fondo: no cuentan. Sirve para retirar un panel solo si tapa lo que se está mirando.
+   */
+  tapan(cajas: { x: number; y: number; ancho: number; alto: number }[], margen = 6): boolean[] {
+    const tapa = cajas.map(() => false);
+    const dentro = (k: number, x: number, y: number) => {
+      const c = cajas[k];
+      return x >= c.x - margen && x <= c.x + c.ancho + margen && y >= c.y - margen && y <= c.y + c.alto + margen;
+    };
+    for (let i = 0; i < this.n; i++) {
+      if (this.estados[i] === PUNTO.fuera) continue;
+      const x = this.haciaX[i] * this.zoom + this.ox;
+      const y = this.haciaY[i] * this.zoom + this.oy;
+      for (let k = 0; k < cajas.length; k++) if (!tapa[k] && dentro(k, x, y)) tapa[k] = true;
+    }
+    if (this.etiquetas.length) {
+      const letra = this.letra / Math.sqrt(this.zoom);
+      this.ctx.font = `650 ${letra}px ${this.fuente}`;
+      for (const e of this.etiquetas) {
+        const ancho = this.ctx.measureText(e.texto).width;
+        const inicio = e.lado === 1 ? e.x : e.x - ancho;
+        // El rótulo se revisa en sus dos extremos y al medio, a la altura de su línea.
+        for (const wx of [inicio, inicio + ancho / 2, inicio + ancho]) {
+          const x = wx * this.zoom + this.ox;
+          const y = e.y * this.zoom + this.oy;
+          for (let k = 0; k < cajas.length; k++) if (!tapa[k] && dentro(k, x, y)) tapa[k] = true;
+        }
+      }
+    }
+    return tapa;
+  }
+
   resaltar(puntos: number[]): void {
+    for (const i of this.foco) if (i < this.n) this.enFoco[i] = 0;
     this.foco = puntos;
+    for (const i of puntos) if (i < this.n) this.enFoco[i] = 1;
     this.sucio = true;
   }
 
@@ -456,12 +576,19 @@ export class EscenaEnjambre {
     this.zoom = 1;
     this.ox = 0;
     this.oy = 0;
+    // Al cambiar el tamaño la vista vuelve a completa: la interfaz se entera.
+    this.alCambiarVista?.(1);
     this.lienzo.width = Math.round(this.ancho * this.dpr);
     this.lienzo.height = Math.round(this.alto * this.dpr);
     this.u = (this.alto - this.margen() * 2) / GRADOS;
     // El tamaño del punto crece con la pantalla: en un proyector se tiene que ver desde el fondo de la sala.
     this.paso = Math.max(2, Math.min(4.6, this.ancho / 450, this.alto / 250));
     this.letra = Math.round(Math.max(11, Math.min(15, this.alto / 70)));
+    // El tamaño de los watis depende de la pantalla: su atlas se vuelve a armar.
+    if (this.atlas && this.atlas.celdaAlto !== this.altoAtlas()) this.programarAtlas();
+    if (this.atlasGrande && this.atlasGrande.celdaAlto !== this.altoGrande()) this.atlasGrande = null;
+    this.hojaGrande = null;
+    this.claveMapa = '';
     this.silueta = new Path2D();
     for (const region of REGIONES_GEO) {
       for (const anillo of region) {
@@ -474,10 +601,35 @@ export class EscenaEnjambre {
         this.silueta.closePath();
       }
     }
+    this.trazarComunas();
     this.personas.forEach((persona, i) => {
       [this.casaX[i], this.casaY[i]] = this.proyectar(Math.max(LON_MINIMA, persona.lon), persona.lat);
     });
     this.destinos('inmediato');
+  }
+
+  /** Arma los límites comunales con la escala actual; si los polígonos no han llegado, los pide. */
+  private trazarComunas(): void {
+    const comunas = comunasCargadas();
+    if (!comunas) {
+      void cargarComunas().then(() => {
+        if (this.ancho) this.trazarComunas();
+        this.sucio = true;
+      });
+      return;
+    }
+    this.claveMapa = '';
+    this.comunas = new Path2D();
+    for (const comuna of Object.values(comunas)) {
+      for (const anillo of comuna.anillos) {
+        anillo.forEach(([lon, lat], i) => {
+          const [x, y] = this.proyectar(lon, lat);
+          if (i === 0) this.comunas.moveTo(x, y);
+          else this.comunas.lineTo(x, y);
+        });
+        this.comunas.closePath();
+      }
+    }
   }
 
   /** Calcula a dónde va cada punto según su estado: a su burbuja o de vuelta a casa. */
@@ -607,7 +759,11 @@ export class EscenaEnjambre {
     if (document.hidden || !this.ancho) return;
     const ahora = marca / 1000;
     const volando = ahora < this.finVuelo + 0.6;
-    if (!volando && !this.sucio && !this.latiendo && !this.foco.length) return;
+    const urgente = volando || this.sucio || this.latiendo || this.foco.length > 0;
+    // Con watis cerca la escena nunca queda quieta: respiran.
+    const respiran = this.animados();
+    if (!urgente && (!respiran || ahora - this.ultimoCuadro < RESPIRO)) return;
+    this.ultimoCuadro = ahora;
     this.sucio = false;
     if (volando) this.mover(ahora);
     this.dibujar(ahora);
@@ -634,20 +790,56 @@ export class EscenaEnjambre {
     }
   }
 
-  private dibujar(ahora: number): void {
-    const { ctx, dpr } = this;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  /**
+   * El país con sus límites, en una capa aparte que solo se vuelve a pintar cuando cambia la vista:
+   * mientras los watis respiran, cada cuadro la copia en vez de trazar otra vez miles de comunas.
+   */
+  private pintarMapa(): void {
+    const clave = `${this.zoom},${this.ox},${this.oy},${this.lienzo.width},${this.lienzo.height}`;
+    if (clave === this.claveMapa) return;
+    this.claveMapa = clave;
+    const capa = this.capaMapa;
+    if (capa.width !== this.lienzo.width || capa.height !== this.lienzo.height) {
+      capa.width = this.lienzo.width;
+      capa.height = this.lienzo.height;
+    }
+    const ctx = capa.getContext('2d')!;
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     ctx.fillStyle = this.fondo;
     ctx.fillRect(0, 0, this.ancho, this.alto);
     ctx.translate(this.ox, this.oy);
     ctx.scale(this.zoom, this.zoom);
     ctx.fillStyle = this.chile;
     ctx.fill(this.silueta);
+    ctx.strokeStyle = this.comunaBorde;
+    ctx.lineWidth = 0.6 / this.zoom;
+    ctx.stroke(this.comunas);
     ctx.strokeStyle = this.chileBorde;
     ctx.lineWidth = 1 / this.zoom;
     ctx.stroke(this.silueta);
+  }
+
+  private dibujar(ahora: number): void {
+    const { ctx, dpr } = this;
+    this.pintarMapa();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(this.capaMapa, 0, 0);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.translate(this.ox, this.oy);
+    ctx.scale(this.zoom, this.zoom);
     // Al acercar, los puntos crecen menos que el mapa: así se separan y se ve a cada persona.
     const lado = Math.max(1.4, Math.min(this.paso, this.pasoActual * 1.12) * 0.66) / this.zoom ** 0.3;
+    // De cerca el cuadrado se encoge y en su lugar aparece el wati.
+    const mezcla = Math.max(0, Math.min(1, (lado * this.zoom - WATI_DESDE) / (WATI_HASTA - WATI_DESDE)));
+    this.mezcla = mezcla;
+    this.altoWati = lado * WATI_ALTO * (0.55 + 0.45 * mezcla);
+    const ladoPunto = lado * (1 - mezcla);
+    // Solo se dibuja lo que se ve: con el mapa acercado, la mayoría de los puntos queda fuera.
+    const borde = lado * 4;
+    const x0 = -this.ox / this.zoom - borde;
+    const x1 = (this.ancho - this.ox) / this.zoom + borde;
+    const y0 = -this.oy / this.zoom - borde;
+    const y1 = (this.alto - this.oy) / this.zoom + borde;
     const ido = this.idos.length ? (ahora - this.inicioIdos) / DESAPARECER : 1;
     if (ido >= 1) this.idos = [];
     for (const estado of [PUNTO.fuera, PUNTO.pendiente, PUNTO.neutra, PUNTO.indecisa, PUNTO.contra, PUNTO.favor]) {
@@ -658,15 +850,16 @@ export class EscenaEnjambre {
           if (this.idos[k + 2] === estado) ctx.fillRect(this.idos[k] - tamano / 2, this.idos[k + 1] - tamano / 2, tamano, tamano);
         }
       }
-      for (let i = 0; i < this.n; i++) {
+      for (let i = 0; i < this.n && mezcla < 1; i++) {
         if (this.color[i] !== estado) continue;
+        if (this.x[i] < x0 || this.x[i] > x1 || this.y[i] < y0 || this.y[i] > y1) continue;
         // Los que siguen pensando laten en ondas que bajan por el país.
         if (estado === PUNTO.pendiente && this.latiendo) {
           ctx.globalAlpha = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(ahora * 3.2 - this.casaY[i] * 0.018 + (i % 7)));
         }
         // Destello de llegada: el punto nace grande y se asienta.
         const recien = (ahora - this.llega[i]) / DESTELLO;
-        let tamano = recien < 1 ? lado * (1 + 2.2 * (1 - recien) ** 2) : lado;
+        let tamano = recien < 1 ? ladoPunto * (1 + 2.2 * (1 - recien) ** 2) : ladoPunto;
         // Quien apareció en su lugar crece desde nada.
         const crecido = (ahora - this.nace[i]) / APARECER;
         if (crecido < 1) {
@@ -677,28 +870,247 @@ export class EscenaEnjambre {
       }
       ctx.globalAlpha = 1;
     }
+    if (mezcla > 0) this.watis(ahora, mezcla);
     this.anillos(ahora);
     const visible = this.inicioRotulos === 0 ? 1 : Math.max(0, Math.min(1, (ahora - this.inicioRotulos) / 0.5));
     if (visible > 0) this.rotulos(visible);
   }
 
+  /** Alto en píxeles del lienzo del wati más grande que se puede ver (a zoom máximo). */
+  private altoMaximo(): number {
+    const lado = Math.max(1.4, this.paso * 0.66) / ZOOM_MAXIMO ** 0.3;
+    return Math.ceil(lado * WATI_ALTO * ZOOM_MAXIMO * this.dpr);
+  }
+
+  /** Alto de las celdas del atlas. Más grandes que esto, los watis salen de la hoja grande. */
+  private altoAtlas(): number {
+    return Math.min(48, this.altoMaximo());
+  }
+
+  private altoGrande(): number {
+    return Math.min(ALTO_GRANDE, this.altoMaximo());
+  }
+
+  /** Cuántos watis caben en la hoja de los que bostezan. */
+  private capacidadGrande(): number {
+    const alto = this.altoGrande();
+    return Math.floor(HOJA_GRANDE / Math.ceil((alto * CELDA_ANCHO) / CELDA_ALTO)) * Math.floor(HOJA_GRANDE / alto);
+  }
+
+  /**
+   * Lugar en la hoja grande del wati con estos rasgos (una cara de bostezo): se dibuja ahí la
+   * primera vez que aparece. Una sola hoja (y no un lienzo por wati) para que el navegador la tenga
+   * en la GPU. Si está llena devuelve null: la hoja solo se vacía al empezar un cuadro.
+   */
+  private grande(estado: number, tono: number, variante: number, cuadro: number): [number, number, number, number] | null {
+    const alto = this.altoGrande();
+    const ancho = Math.ceil((alto * CELDA_ANCHO) / CELDA_ALTO);
+    if (!this.hojaGrande) {
+      this.hojaGrande = document.createElement('canvas');
+      this.hojaGrande.width = this.hojaGrande.height = HOJA_GRANDE;
+      this.lugaresGrandes.clear();
+    }
+    const columnas = Math.floor(HOJA_GRANDE / ancho);
+    const clave = ((estado * TONOS + tono) * VARIANTES + variante) * CARAS + cuadro;
+    let lugar = this.lugaresGrandes.get(clave);
+    if (lugar === undefined) {
+      if (this.lugaresGrandes.size >= this.capacidadGrande()) return null;
+      const ctx = this.hojaGrande.getContext('2d')!;
+      lugar = this.lugaresGrandes.size;
+      this.lugaresGrandes.set(clave, lugar);
+      const sprite = crearSpriteWati(this.colores[estado], SIN_POSTURA.includes(estado), tono, variante, cuadro, alto, ANIMOS[estado]);
+      ctx.drawImage(sprite, (lugar % columnas) * ancho, Math.floor(lugar / columnas) * alto);
+    }
+    return [(lugar % columnas) * ancho, Math.floor(lugar / columnas) * alto, ancho, alto];
+  }
+
+  /** El atlas se arma apenas la página queda libre, para que el primer acercamiento no tironee. */
+  private programarAtlas(): void {
+    this.atlas = null;
+    this.atlasGrande = null;
+    this.hojaGrande = null;
+    clearTimeout(this.esperaAtlas);
+    this.esperaAtlas = window.setTimeout(() => {
+      if (!this.atlas && this.colores.length) this.atlas = crearAtlasWati(this.colores, this.altoAtlas(), SIN_POSTURA, CARAS, ANIMOS);
+      // El grande, después y aparte, para no trabar la página de una vez.
+      this.esperaAtlas = window.setTimeout(() => {
+        if (!this.atlasGrande && this.colores.length) this.atlasGrande = crearAtlasWati(this.colores, this.altoGrande(), SIN_POSTURA, 1, ANIMOS);
+      }, 800);
+    }, 500);
+  }
+
+  /**
+   * Los watis a la vista, de arriba abajo para que los de abajo queden delante. Cada uno respira
+   * a su ritmo y de vez en cuando bosteza; los que siguen pensando laten como los puntos.
+   */
+  private watis(ahora: number, mezcla: number): void {
+    this.atlas ??= crearAtlasWati(this.colores, this.altoAtlas(), SIN_POSTURA, CARAS, ANIMOS);
+    const { ctx, atlas } = this;
+    const alto = this.altoWati;
+    const ancho = (alto * CELDA_ANCHO) / CELDA_ALTO;
+    // Vista en coordenadas del mapa. El wati crece hacia arriba desde sus pies: se incluye a los
+    // que están un poco más abajo del borde inferior.
+    const x0 = -this.ox / this.zoom - ancho;
+    const x1 = (this.ancho - this.ox) / this.zoom + ancho;
+    const y0 = -this.oy / this.zoom - alto * 0.2;
+    const y1 = (this.alto - this.oy) / this.zoom + alto;
+    // La zona del raleo es una potencia de dos y no cambia con cada paso de la rueda: solo cuando el
+    // zoom se aleja bastante de ella (si no, un zoom que oscila la haría saltar de ida y vuelta).
+    // Se cuenta a la gente de las zonas enteras, aunque el borde de la pantalla las corte: si no,
+    // al mover la vista cambiaría la cuenta y los watis del borde parpadearían.
+    const ideal = Math.log2(ancho * ZONA_WATIS);
+    if (!(Math.abs(ideal - this.nivelZona) < 0.8)) this.nivelZona = Math.round(ideal);
+    const zona = 2 ** this.nivelZona;
+    const zx0 = Math.floor(x0 / zona) * zona;
+    const zx1 = Math.ceil(x1 / zona) * zona;
+    const zy0 = Math.floor(y0 / zona) * zona;
+    const zy1 = Math.ceil(y1 / zona) * zona;
+    let cuantos = 0;
+    for (let i = 0; i < this.n; i++) {
+      if (this.x[i] >= zx0 && this.x[i] < zx1 && this.y[i] >= zy0 && this.y[i] < zy1) this.visibles[cuantos++] = i;
+    }
+    const raleados = this.ralear(this.visibles.subarray(0, cuantos), zona);
+    let enVista = 0;
+    for (const i of raleados) {
+      if (this.x[i] >= x0 && this.x[i] <= x1 && this.y[i] >= y0 && this.y[i] <= y1) raleados[enVista++] = i;
+    }
+    const lista = raleados.subarray(0, enVista).sort((a, b) => this.y[a] - this.y[b]);
+    this.mostrado.fill(0);
+    const quieto = !this.animados();
+    // De muy cerca el atlas se vería borroso: salen del atlas grande (y los que bostezan, de la hoja).
+    const enGrande = alto * this.zoom * this.dpr > atlas.celdaAlto * 1.15;
+    if (enGrande) {
+      this.atlasGrande ??= crearAtlasWati(this.colores, this.altoGrande(), SIN_POSTURA, 1, ANIMOS);
+      // La hoja de los bostezos se vacía solo entre cuadros, nunca a mitad de uno.
+      if (this.lugaresGrandes.size > this.capacidadGrande() * 0.75) this.hojaGrande = null;
+    }
+    for (const i of lista) {
+      const estado = this.color[i];
+      let escala = 1;
+      const recien = (ahora - this.llega[i]) / DESTELLO;
+      if (recien < 1) escala *= 1 + 0.6 * (1 - recien) ** 2;
+      const crecido = (ahora - this.nace[i]) / APARECER;
+      if (crecido < 1) {
+        if (crecido <= 0) continue;
+        escala *= suave(crecido);
+      }
+      this.mostrado[i] = 1;
+      // Con alguien elegido, el resto da un paso atrás para que se distinga su grupo.
+      const atenuado = this.foco.length && !this.enFoco[i] ? ATENUADO : 1;
+      ctx.globalAlpha =
+        atenuado *
+        (estado === PUNTO.pendiente && this.latiendo ? mezcla * (0.45 + 0.55 * (0.5 + 0.5 * Math.sin(ahora * 3.2 - this.casaY[i] * 0.018 + (i % 7)))) : mezcla);
+      const pose = quieto ? QUIETO : poseDe(ahora, this.semilla[i]);
+      let fuente: CanvasImageSource = atlas.lienzo;
+      let [sx, sy] = [0, 0];
+      let [sw, sh] = [atlas.celdaAncho, atlas.celdaAlto];
+      const bostezo = enGrande && pose.cuadro > 0 ? this.grande(estado, this.tono[i], this.variante[i], pose.cuadro) : null;
+      if (bostezo) {
+        [sx, sy, sw, sh] = bostezo;
+        fuente = this.hojaGrande!;
+      } else if (enGrande) {
+        const grande = this.atlasGrande!;
+        [sx, sy] = celdaWati(grande, estado, this.tono[i], this.variante[i], 0);
+        [sw, sh] = [grande.celdaAncho, grande.celdaAlto];
+        fuente = grande.lienzo;
+      } else {
+        [sx, sy] = celdaWati(atlas, estado, this.tono[i], this.variante[i], pose.cuadro);
+      }
+      const dw = ancho * escala * pose.ancho;
+      const dh = alto * escala * pose.alto;
+      const pies = this.y[i] + alto * 0.06;
+      if (this.enFoco[i]) {
+        this.marcaFoco(i, pies - alto * 0.03, ancho, mezcla, ahora);
+        ctx.globalAlpha = mezcla;
+      }
+      if (pose.giro) {
+        ctx.save();
+        ctx.translate(this.x[i], pies);
+        ctx.rotate(pose.giro);
+        ctx.drawImage(fuente, sx, sy, sw, sh, -dw / 2, -dh * PIES_RELATIVO, dw, dh);
+        ctx.restore();
+      } else {
+        ctx.drawImage(fuente, sx, sy, sw, sh, this.x[i] - dw / 2, pies - dh * PIES_RELATIVO, dw, dh);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /**
+   * Ralea la multitud: el mapa se divide en zonas de unos pocos watis de ancho y en cada una se
+   * muestra solo una parte, que crece menos que la cantidad de gente (≈ 1,6·n^⅓). Donde hay más
+   * personas se siguen viendo más watis, pero sin amontonarse. Quién aparece lo decide su
+   * prioridad fija: al acercar, las zonas se achican y van apareciendo más sin cambiar a los que ya
+   * estaban. Deja la lista compactada al principio del mismo arreglo.
+   */
+  private ralear(lista: Int32Array, zona: number): Int32Array {
+    const cuenta = new Map<number, number>();
+    const clave = (i: number) => Math.floor(this.x[i] / zona) * 131071 + Math.floor(this.y[i] / zona);
+    for (const i of lista) {
+      const k = clave(i);
+      cuenta.set(k, (cuenta.get(k) ?? 0) + 1);
+    }
+    let quedan = 0;
+    for (const i of lista) {
+      const n = cuenta.get(clave(i))!;
+      const caben = Math.min(n, POR_ZONA * n ** (1 / 3));
+      if (this.prioridad[i] * n < caben || this.enFoco[i]) lista[quedan++] = i;
+    }
+    return lista.subarray(0, quedan);
+  }
+
+  /** Si los watis a la vista se mueven: solo de cerca, y nunca con «reducir movimiento». */
+  private animados(): boolean {
+    return this.mezcla > 0 && this.altoWati * this.zoom >= WATI_ANIMA && !this.reducir.matches;
+  }
+
+  /** Dónde está el centro del cuerpo de un punto en el mapa: con watis, más arriba que sus pies. */
+  private centroY(i: number): number {
+    return this.y[i] - this.altoWati * 0.42 * this.mezcla;
+  }
+
+  /** Anillos alrededor de los puntos resaltados. Con watis se van: los marca `marcaFoco`. */
   private anillos(ahora: number): void {
-    if (!this.foco.length) return;
+    const queda = 1 - this.mezcla;
+    if (!this.foco.length || queda <= 0) return;
     const { ctx } = this;
     const pulso = 0.5 + 0.5 * Math.sin(ahora * 4);
     ctx.lineWidth = 2 / this.zoom;
     for (const i of this.foco) {
       ctx.strokeStyle = this.colores[this.color[i]] || this.tinta;
-      ctx.globalAlpha = 0.9;
+      ctx.globalAlpha = 0.9 * queda;
       ctx.beginPath();
       ctx.arc(this.x[i], this.y[i], (7 + pulso * 3) / this.zoom, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.globalAlpha = 0.25 * (1 - pulso);
+      ctx.globalAlpha = 0.25 * (1 - pulso) * queda;
       ctx.beginPath();
       ctx.arc(this.x[i], this.y[i], (14 + pulso * 10) / this.zoom, 0, Math.PI * 2);
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
+  }
+
+  /**
+   * Marca de un wati resaltado: un óvalo en el suelo, bajo sus pies, que late suave. Se dibuja
+   * justo antes del wati, así él queda parado encima y los de adelante lo pueden tapar.
+   */
+  private marcaFoco(i: number, pies: number, ancho: number, mezcla: number, ahora: number): void {
+    const { ctx } = this;
+    const pulso = 0.5 + 0.5 * Math.sin(ahora * 4);
+    const rx = ancho * 0.5;
+    const ry = ancho * 0.17;
+    ctx.fillStyle = ctx.strokeStyle = this.colores[this.color[i]] || this.tinta;
+    ctx.lineWidth = Math.max(1.5 / this.zoom, ancho * 0.045);
+    ctx.globalAlpha = 0.22 * mezcla;
+    ctx.beginPath();
+    ctx.ellipse(this.x[i], pies, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalAlpha = 0.95 * mezcla;
+    ctx.stroke();
+    ctx.globalAlpha = 0.45 * (1 - pulso) * mezcla;
+    ctx.beginPath();
+    ctx.ellipse(this.x[i], pies, rx * (1.1 + 0.3 * pulso), ry * (1.1 + 0.3 * pulso), 0, 0, Math.PI * 2);
+    ctx.stroke();
   }
 
   /** Los rótulos van siempre junto a su burbuja, del lado de afuera, en una sola línea. */

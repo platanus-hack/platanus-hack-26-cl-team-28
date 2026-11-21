@@ -120,9 +120,19 @@ def gramatica(n):
     return 'root ::= "[" ' + ' "," '.join("d" for _ in range(n)) + ' "]"\nd ::= [1-7]'
 
 
+def preguntas_de(cfg):
+    """Las preguntas de esta corrida: las de `cfg` si las trae (el servidor deja configurarlas
+    por corrida, sin tocar las del módulo), o las del banco."""
+    return cfg.get("preguntas") or PREGUNTAS
+
+
+def claves_de(cfg):
+    return [f"p{i}" for i in range(1, len(preguntas_de(cfg)) + 1)]
+
+
 def cuantas(cfg):
     """Respuestas que se piden en cada llamada."""
-    return len(CLAVES) + (1 if cfg["control"] else 0)
+    return len(preguntas_de(cfg)) + (1 if cfg["control"] else 0)
 
 
 def carpeta_del_caso(ruta):
@@ -170,7 +180,7 @@ def grupos(persona):
 def mensajes(politica, persona, cfg):
     """Todo lo que es igual para todos va en el mensaje de sistema y queda en caché;
     el mensaje de usuario lleva solo el perfil, que es lo único que cambia."""
-    textos = ([CONTROL] if cfg["control"] else []) + [PREGUNTAS[k] for k in cfg["orden"]]
+    textos = ([CONTROL] if cfg["control"] else []) + [preguntas_de(cfg)[k] for k in cfg["orden"]]
     preguntas = "\n".join(f"{i}. {texto}" for i, texto in enumerate(textos, start=1))
     formato = FORMATO.format(n=len(textos), claves=",".join(f"r{i}" for i in range(1, len(textos) + 1)))
     texto = politica.strip()
@@ -251,7 +261,7 @@ def encuestar(politica, persona, semilla, cfg):
         if len(respuestas) == cuantas(cfg) and all(type(v) is int and 1 <= v <= 7 for v in respuestas):
             if cfg["control"]:
                 registro["control"] = respuestas.pop(0)
-            registro["respuestas"] = dict(zip(CLAVES, en_orden_canonico(respuestas, cfg["orden"])))
+            registro["respuestas"] = dict(zip(claves_de(cfg), en_orden_canonico(respuestas, cfg["orden"])))
             registro["valida"] = True
     except (TypeError, ValueError):
         pass

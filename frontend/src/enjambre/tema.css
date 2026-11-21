@@ -15,20 +15,23 @@
   --tinta-suave: #aab1c0;
   --linea-suave: #2b3140;
   --relleno-suave: #1e2430;
-  --favor: #2ec4a6;
-  --favor-texto: #4fdcc0;
-  --contra: #ff6b4f;
-  --contra-texto: #ff8a73;
-  --indecisa: #f5b942;
-  --indecisa-texto: #f5b942;
+  /* Colores de los watis: saturados, el amarillo claro y el verde sin tirar a azul. */
+  --favor: #24d07f;
+  --favor-texto: #4fe39b;
+  --contra: #ff4f36;
+  --contra-texto: #ff7a63;
+  --indecisa: #ffd43a;
+  --indecisa-texto: #ffd43a;
   --foco: #9dbcff;
   --tinta-fuerte: #fff;
   --tinta-figura: #12151c;
-  --punto-neutro: #e9e3d6;
+  --punto-neutro: #f6e7c1;
   --punto-fuera: #343b49;
-  --punto-pendiente: #3f4758;
+  --punto-pendiente: #434d68;
   --chile: #151923;
   --chile-borde: #3d4556;
+  /* Límites de las comunas: apenas más claros que el país, bajo los de las regiones. */
+  --comuna-borde: #232835;
 }
 
 :root[data-diseno='enjambre'][data-tema='claro'] {
@@ -40,20 +43,21 @@
   --tinta-suave: #515a6b;
   --linea-suave: #cfd3da;
   --relleno-suave: #e9e6dd;
-  --favor: #12907f;
-  --favor-texto: #0d6f63;
-  --contra: #e4573d;
+  --favor: #0fb366;
+  --favor-texto: #0b7a45;
+  --contra: #f2402a;
   --contra-texto: #b3311b;
-  --indecisa: #e9a425;
+  --indecisa: #ffc81f;
   --indecisa-texto: #7a5200;
   --foco: #2450d6;
   --tinta-fuerte: #000;
   --tinta-figura: #14171f;
-  --punto-neutro: #252a35;
+  --punto-neutro: #7c89ad;
   --punto-fuera: #cbc7bc;
-  --punto-pendiente: #bcb8ac;
+  --punto-pendiente: #c7bc9f;
   --chile: #fbf9f4;
   --chile-borde: #b3aea0;
+  --comuna-borde: #e4e0d6;
 }
 
 :root[data-diseno='enjambre']:not([data-tema='claro']) select {

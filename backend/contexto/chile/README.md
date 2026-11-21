@@ -40,7 +40,7 @@ Lo imputado sirve para que el conjunto se parezca a Chile, no para afirmar nada 
 
 - **La composición es la del censo.** El censo registra menos ocupados y más trabajadores independientes que Casen, y más católicos que la CEP. La imputación respeta lo que el censo dice de cada persona, así que la población tiene, por ejemplo, 49,7 % de empleados del sector privado entre los ocupados, cuando Casen dice 59,4 %.
 - **Entre Casen y la CEP no hay validación posible.** Ninguna fuente mide a la vez el ingreso y las opiniones. Esa relación existe solo a través del sexo, la edad, la educación, la zona, la actividad y el nivel socioeconómico.
-- **Bajo la región, lo imputado es débil.** Casen es representativa por región y la CEP solo del país. Lo del censo sí vale por comuna.
+- **Bajo la región, lo imputado es débil.** Casen es representativa por región y la CEP solo del país. Lo del censo sí vale por comuna. El ingreso es la excepción: cada hogar toma primero un ingreso tentativo de un hogar de Casen de su misma comuna, y después se calibra con su región, así que el quintil V de cada comuna calza con Casen (correlación de 0,99 en las 147 comunas con al menos 300 casos; `validacion.md`, «Por comuna») y cada región sigue igual a Casen. Hereda el ruido de Casen: en las comunas con pocos casos es una estimación débil, y en las que no tienen 10 hogares de una composición se usa la distribución de su región.
 - **Fechas distintas.** El censo es de marzo a julio de 2024, Casen de noviembre de 2024 a febrero de 2025 y la CEP de abril y mayo de 2026.
 - **Personas fuera de hogares** (viviendas colectivas y situación de calle): no tienen datos de Casen.
 
