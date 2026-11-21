@@ -1,7 +1,8 @@
 .bloque {
   display: grid;
   justify-items: start;
-  width: min(100%, 24rem);
+  width: 100%;
+  min-width: 0;
   pointer-events: none;
 }
 
@@ -56,11 +57,6 @@
   background: var(--tinta);
 }
 
-@media (min-width: 900px) {
-  .bloque {
-    width: min(30vw, 24rem);
-  }
-}
 
 @media (max-width: 899px) {
   .cifra {
