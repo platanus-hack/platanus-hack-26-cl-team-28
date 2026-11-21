@@ -122,6 +122,21 @@ def tema_con_clima(caso):
     return f"{tema_del_caso(caso)}\n\nCómo se ve este tema en Chile: {_climas[caso['id']]}"
 
 
+_notas = None
+
+
+def tema_con_noticias(caso):
+    """El caso más la nota que escribió antes un agente con búsqueda web (`validar_banco.py noticias`)."""
+    global _notas
+    if _notas is None:
+        import json
+        from pathlib import Path
+
+        ruta = Path(__file__).resolve().parent.parent / "data" / "pruebas" / "banco" / "noticias.jsonl"
+        _notas = {f["caso"]: f["nota"] for f in map(json.loads, ruta.read_text(encoding="utf-8").splitlines())}
+    return f"{tema_del_caso(caso)}\n\n# Lo que se ha informado sobre el tema\n\n{_notas[caso['id']]}"
+
+
 # Casos del banco que no se usan como referencia: la cifra publicada parece mal transcrita.
 DUDOSOS = {"c704-bloqueo"}
 _reservas = None
@@ -158,6 +173,43 @@ def tema_con_referencias(caso):
     )
 
 
+# Cuánto perfil conviene dar. `demografia` deja fuera todo lo imputado desde la CEP (posición
+# política, cómo ve el país y confianza en instituciones): es el perfil que se puede armar solo
+# con el censo y Casen.
+SECCIONES_CEP = ("politica", "pais", "confianza")
+DEMOGRAFIA = frozenset(clave for clave, seccion in filtro.DATOS.items() if seccion not in SECCIONES_CEP)
+
+# Casos de la CEP cuya respuesta está en el perfil del propio agente (viene de su donante de la
+# encuesta): caso -> (dato del perfil, columna de la tabla). La escala va de 1, muy de acuerdo, a
+# 5, muy en desacuerdo. Sirven para medir el parecido persona a persona: se le oculta ese dato y
+# se compara lo que el modelo predice con lo que esa persona de la CEP contestó de verdad.
+OCULTOS = {
+    "cep96-estado-economia": ("menos_estado", "menos_estado_economia"),
+    "cep96-burocracia": ("estado_burocracia", "estado_burocracia"),
+    "cep96-recorte": ("reducir_gasto", "reducir_gasto_publico"),
+    "cep96-criminalidad": ("inmigrantes_criminalidad", "inmigrantes_criminalidad"),
+    "cep96-aporte-economico": ("inmigrantes_aporte", "inmigrantes_aporte"),
+}
+
+
+def sin_el_dato(base):
+    """Los datos del perfil para un caso de OCULTOS, sin el dato que se quiere predecir."""
+    def datos(caso, tematicos):
+        todos = {"completo": frozenset(filtro.DATOS), "demografia": DEMOGRAFIA, "tematico": tematicos}[base]
+        return frozenset(todos - {OCULTOS[caso["id"]][0]})
+    return datos
+
+
+def verdad_oculta(caso, agente):
+    valor = (agente.fila or {}).get(OCULTOS[caso["id"]][1])
+    return valor if isinstance(valor, int) and 1 <= valor <= 5 else None
+
+
+def _prob(**extra):
+    return {"preguntas": pregunta_directa, "instrucciones": PREDICTOR, "formato": FORMATO_PROBABILIDAD,
+            "lote": lote_probabilidad, "probabilidades": True, **extra}
+
+
 METODOS = {
     # Lo que hace el sitio: las seis preguntas del banco sobre «esta política», perfil temático.
     "sitio": {},
@@ -173,6 +225,21 @@ METODOS = {
     "prob_clima": {"tema": tema_con_clima, "preguntas": pregunta_directa, "instrucciones": PREDICTOR, "formato": FORMATO_PROBABILIDAD, "lote": lote_probabilidad, "probabilidades": True},
     # Probabilidades, con resultados reales de otras preguntas como referencia.
     "prob_referencias": {"tema": tema_con_referencias, "tema_filtro": tema_del_caso, "preguntas": pregunta_directa, "instrucciones": PREDICTOR, "formato": FORMATO_PROBABILIDAD, "lote": lote_probabilidad, "probabilidades": True},
+    # Probabilidades, con una nota de noticias buscada en la web antes de preguntar.
+    "prob_noticias": _prob(tema=tema_con_noticias, tema_filtro=tema_del_caso),
+    # El mismo método con otro modelo respondiendo por los agentes (se corre con --modelo).
+    "prob_sonnet": _prob(),
+    "prob_opus": _prob(),
+    # El mismo método otra vez: cuánto cambia el resultado sin cambiar nada.
+    "probabilidad_b": _prob(),
+    # Cuánto perfil: todo, solo el núcleo, o solo censo y Casen (sin nada de la CEP).
+    "prob_completo": _prob(nivel="completo"),
+    "prob_nucleo": _prob(nivel="nucleo"),
+    "prob_demografia": _prob(datos=lambda caso, tematicos: DEMOGRAFIA),
+    # Parecido persona a persona: se oculta el dato que se pregunta (solo casos de OCULTOS).
+    "oculto_completo": _prob(datos=sin_el_dato("completo"), verdad=verdad_oculta),
+    "oculto_tematico": _prob(datos=sin_el_dato("tematico"), verdad=verdad_oculta),
+    "oculto_demografia": _prob(datos=sin_el_dato("demografia"), verdad=verdad_oculta),
     "probabilidad": {"preguntas": pregunta_directa, "instrucciones": PREDICTOR, "formato": FORMATO_PROBABILIDAD, "lote": lote_probabilidad, "probabilidades": True},
 }
 
@@ -187,6 +254,8 @@ def armar(m, caso, agentes):
     sistema = f"{instrucciones}\n\n{formato}\n\n# Tema de la encuesta\n\n{texto}\n\n# Preguntas\n\n{lista}"
     nivel = m.get("nivel", "tematico")
     datos = filtro.datos_para(metodo.tema_de(m.get("tema_filtro", lambda c: texto)(caso), preguntas), nivel)
+    if "datos" in m:
+        datos = m["datos"](caso, datos if datos is not None else frozenset(filtro.DATOS))
     if datos is not None and m.get("datos_extra"):
         datos = frozenset(datos | set(m["datos_extra"]))
     if datos is not None and m.get("datos_menos"):
