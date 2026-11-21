@@ -1,16 +1,16 @@
 .hueco {
   --reserva-franja: 0px;
   position: relative;
+  background: var(--mar);
+}
+
+/* En pantallas angostas el mapa va arriba y la franja de regiones sigue debajo, fuera del lienzo. */
+.escena {
+  position: relative;
   height: 72dvh;
   min-height: 420px;
   overflow: hidden;
   border-bottom: var(--trazo) solid var(--tinta);
-  background: var(--mar);
-}
-
-.escena {
-  position: absolute;
-  inset: 0;
 }
 
 .lienzo {
@@ -47,6 +47,12 @@
 @media (min-width: 1080px) {
   .hueco {
     --reserva-franja: 200px;
+    overflow: hidden;
+  }
+
+  .escena {
+    position: absolute;
+    inset: 0;
     height: auto;
     min-height: 0;
     border-bottom: 0;

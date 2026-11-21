@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { POSTURA_TITULO } from '../../contenido';
 import { accionDe, describirPersona, detallarPersona, vozDe } from '../../dominio/textos';
 import type { Corrida } from '../../estado/corrida';
@@ -17,8 +18,14 @@ interface Props {
 export function FichaPersona({ corrida, posicion, activo, alCerrar }: Props) {
   const persona = corrida.personas[posicion];
   const actual = corrida.resultados[activo].respuestas[posicion];
+  const ficha = useRef<HTMLElement>(null);
+  // Al elegir a alguien, la ficha se trae a la vista: puede haber quedado fuera del scroll de la hoja.
+  useEffect(() => {
+    const suave = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    ficha.current?.scrollIntoView({ block: 'nearest', behavior: suave ? 'smooth' : 'auto' });
+  }, [posicion]);
   return (
-    <section className={estilos.ficha} aria-labelledby="titulo-ficha">
+    <section className={estilos.ficha} aria-labelledby="titulo-ficha" ref={ficha}>
       <header>
         <Figura estado={actual.postura} aspecto={persona.aspecto} alto={64} />
         <div>

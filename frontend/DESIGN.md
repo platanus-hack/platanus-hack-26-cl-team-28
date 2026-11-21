@@ -31,14 +31,14 @@ Direcciones consideradas:
 Recurso propio: la franja de regiones corre de norte a sur pegada al mapa, unida a cada región con líneas guía, y la multitud cambia de postura con un salto
 al cambiar de variante, de modo que se ve quién cambia de opinión.
 
-Paleta de tres tintas de imprenta sobre mar frío: azul cobalto (a favor), mostaza (indecisa) y bermellón (en contra),
-con tinta azul negra para el trazo. El color nunca va solo: a favor levanta los brazos y sonríe, indecisa se ladea
-bajo un signo de pregunta, en contra se eriza en púas y frunce el ceño. Toda barra lleva su porcentaje escrito.
+Tres colores de postura sobre mar frío: verde azulado (a favor), ámbar (indecisa) y bermellón (en contra). El color
+nunca va solo: a favor levanta los brazos y entrecierra los ojos, indecisa se ladea con una ceja levantada bajo un
+signo de pregunta, en contra se eriza y baja los párpados. Toda barra lleva su porcentaje escrito.
 
-Las figuras no son personas dibujadas: son criaturas blandas y redondas, con pies chicos, ojos grandes con brillo,
-mejillas y algo en la cabeza (un brote, un mechón, orejas, una antena). Antes de responder cada una tiene su propio
-color pastel; al responder toma el color de su postura y cambia de cara. Una multitud de siluetas
-humanas sobre un mapa resultaba inquietante; una mascota abstracta representa a un grupo sin retratar a nadie.
+Las figuras no son personas dibujadas: son criaturas de forma simple, con cuerpo de color plano, contorno del mismo
+tono, pies cortos, dos ojos de tinta y algo en la cabeza (una hoja, un mechón, orejas, una antena). Antes de
+responder cada una tiene un tono apagado propio; al responder toma el color de su postura y cambia de cara. Se
+probaron ojos con brillo y mejillas y se descartaron por infantiles.
 
 **Densidad según la distancia.** De lejos, las figuras que quedarían encimadas se funden en una sola más grande, con
 la postura de la mayoría de su grupo: Santiago se ve como pocas figuras grandes y un pueblo como una chica, así la

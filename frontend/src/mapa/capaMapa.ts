@@ -1,8 +1,6 @@
 import type { Camara } from './camara';
-import { OCEANO, ROTULOS, type Caminos, type Cumbre, type Ola } from './geografia';
+import { ROTULOS, type Caminos, type Cumbre, type Ola } from './geografia';
 
-/** Bajo esta escala (píxeles por grado) el nombre del océano estorba más de lo que orienta. */
-const ESCALA_MINIMA_OCEANO = 12;
 const ALTO_ROTULO = 17;
 const PRIORIDAD = ['Santiago', 'Punta Arenas', 'Arica', 'Concepción', 'Antofagasta', 'Puerto Montt', 'La Serena', 'Coyhaique'];
 const ROTULOS_POR_PRIORIDAD = [...ROTULOS].sort((a, b) => PRIORIDAD.indexOf(a.texto) - PRIORIDAD.indexOf(b.texto));
@@ -51,7 +49,7 @@ function cumbres(ctx: CanvasRenderingContext2D, lista: Cumbre[], colores: Colore
   ctx.globalAlpha = 1;
 }
 
-/** Capa que solo cambia con la cámara: mar, países vecinos, regiones, cordillera y nombres de países. */
+/** Capa que solo cambia con la cámara: mar, países vecinos, regiones y cordillera. */
 export function dibujarMapa(l: Lienzo, camara: Camara, caminos: Caminos, cordillera: Cumbre[], colores: Colores): void {
   const { ctx, ancho, alto, dpr } = l;
   const k = camara.escala;
@@ -77,19 +75,6 @@ export function dibujarMapa(l: Lienzo, camara: Camara, caminos: Caminos, cordill
   ctx.stroke(caminos.chile);
   cumbres(ctx, cordillera, colores, k);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  if (k < ESCALA_MINIMA_OCEANO) return;
-  const [x, y] = camara.aPantalla(OCEANO.x, OCEANO.y);
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(-Math.PI / 2);
-  ctx.font = `600 11px ${colores.fuenteUi}`;
-  ctx.letterSpacing = '0.24em';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = colores.tintaSuave;
-  ctx.globalAlpha = 0.75;
-  ctx.fillText(OCEANO.texto, 0, 0);
-  ctx.restore();
 }
 
 export function dibujarOlas(l: Lienzo, camara: Camara, olas: Ola[], colores: Colores, tiempo: number): void {

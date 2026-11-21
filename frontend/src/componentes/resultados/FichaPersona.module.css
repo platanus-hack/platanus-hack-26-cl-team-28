@@ -6,6 +6,7 @@
   padding: var(--e4);
   border: var(--trazo) solid var(--tinta);
   border-radius: var(--radio);
+  scroll-margin: var(--e5);
 }
 
 .ficha header {

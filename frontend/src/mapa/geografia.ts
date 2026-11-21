@@ -149,14 +149,6 @@ export const ROTULOS: Rotulo[] = CIUDADES.map(([texto, lon, lat, haciaElMar]) =>
   return { texto, x, y, xTexto: aMundo(borde, lat)[0], haciaElMar };
 });
 
-/** Nombre del océano, escrito de abajo hacia arriba a lo largo de la costa. */
-export const OCEANO = { texto: 'OCÉANO PACÍFICO', ...punto(-74.6, -29.5) };
-
-function punto(lon: number, lat: number): { x: number; y: number } {
-  const [x, y] = aMundo(lon, lat);
-  return { x, y };
-}
-
 export interface Caja {
   x: number;
   y: number;

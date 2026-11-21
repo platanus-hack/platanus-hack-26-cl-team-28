@@ -5,6 +5,8 @@ interface Opciones {
   /** Punto del que sale el globo (la cabeza de la figura). */
   x: number;
   y: number;
+  /** Punto bajo los pies: si el globo no cabe arriba, sale desde aquí hacia abajo. */
+  yPies: number;
   /** Ancho del lienzo, para no salirse por los lados. */
   ancho: number;
   colores: Colores;
@@ -37,12 +39,14 @@ export function dibujarGlobo(ctx: CanvasRenderingContext2D, o: Opciones): void {
   const ancho = Math.max(...lineas.map((linea) => ctx.measureText(linea).width)) + RELLENO * 2;
   const alto = lineas.length * INTERLINEA + RELLENO * 1.4;
   const izquierda = Math.max(8, Math.min(o.ancho - ancho - 8, o.x - ancho * 0.3));
-  const arriba = o.y - COLA - alto;
+  const cabe = o.y - COLA - alto > 6;
+  const arriba = cabe ? o.y - COLA - alto : o.yPies + COLA;
+  const borde = cabe ? arriba + alto - 1 : arriba + 1;
   ctx.beginPath();
   ctx.roundRect(izquierda, arriba, ancho, alto, 10);
-  ctx.moveTo(o.x - 6, arriba + alto - 1);
-  ctx.lineTo(o.x, o.y);
-  ctx.lineTo(o.x + 8, arriba + alto - 1);
+  ctx.moveTo(o.x - 6, borde);
+  ctx.lineTo(o.x, cabe ? o.y : o.yPies);
+  ctx.lineTo(o.x + 8, borde);
   ctx.fillStyle = o.colores.papel;
   ctx.strokeStyle = o.colores.tinta;
   ctx.lineWidth = 1.5;

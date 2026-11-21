@@ -20,22 +20,20 @@
   --linea-suave: #c5ccd4;
   --relleno-suave: #eef2f4;
 
-  --favor: #2450d6;
-  --favor-texto: #1c3fae;
-  --contra: #e0432b;
-  --contra-texto: #b02c18;
-  --indecisa: #f0b429;
-  /* Cuerpos de las criaturas antes de responder: cada una tiene su color, más suave que los de postura. */
-  --pastel-1: #bfe8d2;
-  --pastel-2: #dccff6;
-  --pastel-3: #ffd8c0;
-  --pastel-4: #ffcde0;
-  --pastel-5: #c2e6f4;
-  --pastel-6: #e6efb2;
-  --rubor: #ff7f9c;
-  --brote: #5cc08a;
-  --ojo: #fff;
-  --indecisa-texto: #765300;
+  /* Posturas: verde azulado, ámbar y bermellón. Las variantes -texto cumplen contraste sobre papel. */
+  --favor: #1a9484;
+  --favor-texto: #0d6f63;
+  --contra: #e4573d;
+  --contra-texto: #b3311b;
+  --indecisa: #eeaa32;
+  --indecisa-texto: #7a5200;
+  /* Cuerpos de las criaturas antes de responder: tonos apagados, uno por aspecto. */
+  --cuerpo-1: #a9bfd6;
+  --cuerpo-2: #d9b3ae;
+  --cuerpo-3: #dcc79a;
+  --cuerpo-4: #b3c8a8;
+  --cuerpo-5: #c2b6da;
+  --cuerpo-6: #e3bd9f;
   --foco: #2450d6;
 
   --fuente-voz: 'Newsreader Variable', Georgia, 'Times New Roman', serif;

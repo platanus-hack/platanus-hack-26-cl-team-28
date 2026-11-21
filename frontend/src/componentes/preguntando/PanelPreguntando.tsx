@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { POSTURA_TEXTO } from '../../contenido';
 import { personasPorFigura } from '../../dominio/muestra';
 import { formatear } from '../../dominio/textos';
@@ -14,6 +15,8 @@ interface Props {
   /** Qué tan al sur está cada persona de la muestra, de 0 a 1: el orden en que la pregunta la alcanza. */
   avances: number[];
 }
+
+const ESTADOS = { lista: 'Respondida', actual: 'Preguntando', espera: 'En espera' } as const;
 
 /** Mientras la pregunta recorre el país: el conteo de respuestas crece al ritmo del mapa. */
 export function PanelPreguntando({ sim, avances }: Props) {
@@ -36,11 +39,12 @@ export function PanelPreguntando({ sim, avances }: Props) {
       <ul className={estilos.conteo} aria-hidden="true">
         {POSTURAS.map((postura, i) => (
           <li key={postura}>
-            <Figura estado={postura} aspecto={i + 1} alto={72} />
-            <p>
-              <b>{formatear(Math.round(conteo[postura] * porFigura))}</b>
-              {POSTURA_TEXTO[postura]}
-            </p>
+            <Figura estado={postura} aspecto={i + 1} alto={46} />
+            <span className={estilos.nombre}>{POSTURA_TEXTO[postura]}</span>
+            <span className={estilos.barra}>
+              <i data-postura={postura} style={{ '--parte': conteo[postura] / (respuestas.length || 1) } as CSSProperties} />
+            </span>
+            <b>{formatear(Math.round(conteo[postura] * porFigura))}</b>
           </li>
         ))}
       </ul>
@@ -51,11 +55,17 @@ export function PanelPreguntando({ sim, avances }: Props) {
             <li key={caso.id} data-estado={estado}>
               <b>{caso.letra}</b>
               <p>{caso.texto}</p>
-              <span className={estilos.avance}>
-                {estado === 'lista' && <BarraPosturas porcentajes={corrida.resumenes[i].porcentajes} conTexto={false} />}
-                {estado === 'actual' && <progress max={1} value={avance} aria-label={`Avance de la variante ${caso.letra}`} />}
-              </span>
-              <em>{estado === 'lista' ? 'Respondida' : estado === 'actual' ? 'Preguntando' : 'En espera'}</em>
+              <em>{ESTADOS[estado]}</em>
+              {estado === 'lista' && (
+                <span className={estilos.avance}>
+                  <BarraPosturas porcentajes={corrida.resumenes[i].porcentajes} conTexto={false} />
+                </span>
+              )}
+              {estado === 'actual' && (
+                <span className={estilos.avance}>
+                  <progress max={1} value={avance} aria-label={`Avance de la variante ${caso.letra}`} />
+                </span>
+              )}
             </li>
           );
         })}

@@ -21,10 +21,7 @@ export function leerTokens(): Colores & Tintas {
     favor: v('--favor'),
     contra: v('--contra'),
     indecisa: v('--indecisa'),
-    pasteles: [1, 2, 3, 4, 5, 6].map((n) => v(`--pastel-${n}`)),
-    rubor: v('--rubor'),
-    brote: v('--brote'),
-    ojo: v('--ojo'),
+    cuerpos: [1, 2, 3, 4, 5, 6].map((n) => v(`--cuerpo-${n}`)),
     fuenteUi: v('--fuente-ui'),
     fuenteMano: v('--fuente-mano'),
   };

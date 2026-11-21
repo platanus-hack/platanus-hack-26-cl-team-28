@@ -200,7 +200,7 @@ export class EscenaMapa {
     const { multitud } = this.o;
     const [x, y] = this.camara.aPantalla(multitud.x[this.elegida], multitud.y[this.elegida]);
     const altoFigura = this.personas.altoDe(this.camara, this.elegida);
-    dibujarGlobo(this.ctx, { texto: this.frase, x, y: y - altoFigura * 0.8, ancho: this.ancho, colores: this.colores });
+    dibujarGlobo(this.ctx, { texto: this.frase, x, y: y - altoFigura * 0.8, yPies: y + 4, ancho: this.ancho, colores: this.colores });
   }
 
   private contorno(): void {
