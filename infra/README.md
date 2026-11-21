@@ -6,7 +6,7 @@ sesión de una o más cuentas de Claude.
 
     cd infra
     terraform init
-    terraform apply        # crea la máquina, la IP fija y el grupo de seguridad
+    terraform apply        # crea la máquina y el grupo de seguridad
 
 El estado de Terraform está en el bucket `ph26-whatif-tfstate-337227272524` (perfil `japs`).
 
@@ -49,4 +49,5 @@ Dos archivos en `/etc/ph26` de la máquina, que se crean a mano una vez:
 | 10.000 | 105 s | 5,6 % de los lotes falló por el límite de una sola cuenta |
 
 Lo que limita es la CPU (cada lote es un proceso de la CLI) y, desde unos 90 agentes por segundo, la
-suscripción. Para apagar la máquina sin perderla: detenerla en la consola; la IP se conserva.
+suscripción. La máquina no tiene IP fija (la cuenta ya usa sus cinco direcciones elásticas): si se detiene y se
+vuelve a encender, cambia de IP y hay que actualizar el registro A del dominio.

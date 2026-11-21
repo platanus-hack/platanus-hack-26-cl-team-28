@@ -102,16 +102,13 @@ resource "aws_instance" "motor" {
   }
 }
 
-resource "aws_eip" "publica" {
-  instance = aws_instance.motor.id
-  domain   = "vpc"
-  tags     = { Name = "ph26-whatif" }
-}
+# Sin IP fija: la cuenta ya usa sus cinco direcciones elásticas. La IP pública se mantiene mientras la
+# máquina no se detenga; si se detiene y vuelve a partir, hay que actualizar el registro del dominio.
 
 output "ip" {
-  value = aws_eip.publica.public_ip
+  value = aws_instance.motor.public_ip
 }
 
 output "ssh" {
-  value = "ssh -i ~/.ssh/ph26_whatif ubuntu@${aws_eip.publica.public_ip}"
+  value = "ssh -i ~/.ssh/ph26_whatif ubuntu@${aws_instance.motor.public_ip}"
 }
