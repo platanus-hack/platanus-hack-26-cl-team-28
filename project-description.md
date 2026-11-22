@@ -1,8 +1,8 @@
 # What If Chile
 
-¿Cómo reaccionarían distintos grupos de Chile a una nueva política pública? **What If Chile** simula su respuesta para que puedas comparar versiones de una propuesta, explorar quiénes la apoyarían y detectar dónde aparecen las principales objeciones.
-
 **Pruébalo en [whatif.japs.ing](https://whatif.japs.ing/)**
+
+¿Cómo reaccionarían distintos grupos de Chile a una nueva política pública? **What If Chile** simula su respuesta para que puedas comparar versiones de una propuesta, explorar quiénes la apoyarían y detectar dónde aparecen las principales objeciones.
 
 Describe una medida, elige a qué población quieres consultar y compara el apoyo, el rechazo y la indecisión entre alternativas. Puedes explorar los resultados por territorio y por características como edad, educación o situación laboral. Por ejemplo, puedes comparar la aceptación de una nueva cárcel en la región, en la comuna o en el barrio de las personas consultadas.
 
