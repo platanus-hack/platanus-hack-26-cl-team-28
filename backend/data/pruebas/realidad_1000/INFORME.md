@@ -450,3 +450,44 @@ Veinte propuestas que podría escribir el público, sin encuesta real (`LOCOS` e
 - Quedan tibias: el bono de un millón (60 %) y el transporte gratis (54 %). Bajar el voto a 16 años cae de 42 a 21 %, sin encuesta con que saber cuál está más cerca.
 
 Sirve como prueba de humo después de cambiar el método: `correr integrado --casos locos` y comparar con lo de arriba.
+
+## 8. Ficha de validación: cuánto nos parecemos a la realidad (22-11-2026)
+
+Es la cifra que se puede citar del motor actual. Se reproduce con `uv run python scripts/contraste_ficha.py` y el detalle por pregunta queda en `ficha_validacion.csv`.
+
+### Contra qué se comparó
+
+- **164 preguntas con resultado real publicado:** 120 del banco del equipo, 40 del benchmark de Rai y 4 aparte (los plebiscitos constitucionales de 2022 y 2023, con más de 6 millones de votos cada uno, y dos paneles).
+- **27 encuestas distintas de 10 entidades,** entre 2014 y 2026. Cadem aporta 17; el resto son CEP, Bicentenario UC, Criteria, Datavoz, Ipsos, Activa Research, UDP y Feedback Research, y el Ministerio del Medio Ambiente.
+- **29.854 entrevistas reales** detrás de esas encuestas, contando cada encuesta una vez. Faltan cuatro encuestas cuyo tamaño no está transcrito, así que la cifra real es mayor.
+- **1.466 entrevistas individuales de la CEP 96,** con las que se compararon 370 cortes por segmento (sexo, edad, educación, zona, posición política, voto, religión).
+
+### A cuántos puntos queda el motor
+
+Error en puntos porcentuales del porcentaje de acuerdo, en las 82 preguntas que no se usaron para ajustar nada (42 de prueba del banco y las 40 de Rai), con 200 agentes:
+
+| Medida | Motor anterior | Motor actual |
+|---|---|---|
+| Error medio | 16,2 (IC 95 %: 13,9 a 18,6) | 8,2 (IC 95 %: 6,9 a 9,7) |
+| Mediana | 14,3 | 6,5 |
+| 8 de cada 10 preguntas quedan a | ±25,9 | ±12,0 |
+| 9 de cada 10 preguntas quedan a | ±32,0 | ±17,5 |
+| Preguntas a ±5 puntos | 13 % | 38 % |
+| Preguntas a ±10 puntos | 33 % | 71 % |
+| Mayoría del mismo lado que la encuesta | 67 % | 88 % |
+
+En el porcentaje en desacuerdo (76 preguntas que lo publican) el error medio es 6,5 y la mediana 5,5.
+
+Por segmento, con los microdatos de la CEP: los grupos se mueven en la misma dirección que en la realidad, la distancia entre izquierda y derecha es de 21 puntos contra 25 reales (antes 51), y el error de cada segmento frente a su total es de 4,7 puntos.
+
+**La frase para el pitch:** contrastamos el simulador con 164 preguntas de 27 encuestas reales (unas 30 mil entrevistas, 2014 a 2026). En las preguntas que no usamos para ajustarlo, el resultado queda en promedio a 8 puntos de la encuesta, a ±12 en 8 de cada 10 casos, y del mismo lado de la mayoría en casi 9 de cada 10.
+
+### Qué hace cada parte
+
+- **Los agentes** (Haiku, perfiles del Censo, Casen y CEP) deciden quién apoya y quién no: el mapa, las regiones, los grupos y las frases. Son el 98 % de las llamadas.
+- **El ancla** (una llamada a Opus por propuesta) fija cuánto suma el país, y los agentes lo reparten sin cambiar su orden. Corre a la par de los primeros lotes: el tiempo total de una corrida de 1.000 agentes sigue en 35 a 42 segundos y las primeras respuestas aparecen a los 5 a 8 segundos, unos pocos segundos más tarde que sin ancla.
+- Donde los agentes por sí solos y el ancla coinciden (a menos de 10 puntos, la mitad de las preguntas de validación), ambos quedan a 6 a 9 puntos de la encuesta. Donde discrepan, el ancla acierta más: los agentes solos quedan a 18 a 32 puntos y el ancla a 5 a 11.
+
+### Probado y descartado: preguntar a los agentes qué porcentaje cree que apoya
+
+Se probó preguntarle a cada agente, además de su opinión, «de cada 100 adultos en Chile, ¿cuántos crees que están de acuerdo?», para que el total saliera de la propia población simulada. No sirve: la expectativa media queda aplastada hacia el centro (varía 5 a 10 puntos entre preguntas cuando la realidad varía 18 a 20) y con 10 a 14 puntos de sesgo hacia abajo, que es lo que el modelo trae aprendido y no lo que dice cada perfil. Error de 13,6 a 18,1 en validación, peor que el ancla en todos los tramos, incluidos los casos borde donde agentes y ancla discrepan (18 a 20 contra 5 a 10). No se habilita.

@@ -158,6 +158,11 @@ como las dio el modelo y el reparto se rehace al entregar; el pronóstico queda 
 evento `caso_listo` trae `ancla` (los dos porcentajes pronosticados) y `motor.ancla` en `/api/estado` dice con
 qué modelo. Con ancla vuelve a haber personas sin postura (nota 4): las que el pronóstico deja sin decidir.
 
+Validación (`scripts/contraste_ficha.py`): 164 preguntas de 27 encuestas reales (unas 30 mil entrevistas, 2014 a
+2026). En las 82 que no se usaron para ajustar, el % de acuerdo queda en promedio a 8,2 puntos de la encuesta (IC
+95 %: 6,9 a 9,7), a ±12 en 8 de cada 10 y del mismo lado de la mayoría en 88 %; antes, 16,2. Preguntarle a los
+agentes qué porcentaje cree que apoya, para no depender del ancla, se probó y queda peor (13,6 a 18,1).
+
 Lo que no se pudo mejorar: el pronóstico tiene un techo de unos 7 a 9 puntos que no bajó con un modelo más
 grande, promediando repeticiones, con referencias reales ni recalibrando. Con el modelo local no hay ancla y
 la pregunta de apoyo es la del banco.

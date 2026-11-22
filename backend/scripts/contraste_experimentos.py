@@ -140,6 +140,69 @@ def leer_postura(datos, agentes):
 
 
 POSTURA = {"esquema": ESQUEMA_POSTURA, "leer": leer_postura, "lote": LOTE_POSTURA}
+# Pregunta de expectativa: además de su opinión, cada persona dice cuántos de cada 100 chilenos cree que
+# están de acuerdo. Es una pregunta real de encuestas («¿quién cree usted que ganará?»), que en elecciones
+# suele acertar más que la intención declarada; aquí sirve para que el total salga de los mismos agentes.
+EXPECTATIVA = (
+    "\n\nAdemás, para cada persona responde una pregunta más, como la respondería ella: «De cada 100 adultos en "
+    "Chile, ¿cuántos crees que están de acuerdo con lo que plantea el tema?». Es lo que esa persona cree que piensa "
+    "la gente, no su propia opinión: un entero de 0 a 100."
+)
+LOTE_EXPECTATIVA = (
+    "Vienen varias personas, numeradas. Responde la encuesta por separado como cada una de ellas, sin que una influya en otra. "
+    "Para cada persona devuelve `i` (su número), `p` (sus 5 respuestas, enteros de 1 a 7, en el orden de las preguntas) y "
+    "`e` (de cada 100 adultos en Chile, cuántos cree esa persona que están de acuerdo)."
+)
+ESQUEMA_EXPECTATIVA = {"type": "object", "properties": {"r": {"type": "array", "items": {"type": "object", "properties": {
+    "i": {"type": "integer"}, "p": {"type": "array", "items": {"type": "integer"}}, "e": {"type": "integer"}},
+    "required": ["i", "p", "e"], "additionalProperties": False}}}, "required": ["r"], "additionalProperties": False}
+
+
+def leer_expectativa(datos, agentes):
+    salida, vistos = [], set()
+    for f in datos.get("r", []):
+        k, p, e = f.get("i"), f.get("p"), f.get("e")
+        if not isinstance(k, int) or not 0 <= k < len(agentes) or k in vistos or not motor.notas_validas(p, 5):
+            continue
+        if not (type(e) is int and 0 <= e <= 100):
+            continue
+        vistos.add(k)
+        r = motor.Respuesta(agentes[k].indice, p)
+        r.extra = {"e": e}
+        salida.append(r)
+    return salida
+
+
+# Lo mismo con probabilidades en vez de notas (el método `probabilidad` del banco), más la expectativa.
+LOTE_PROB_EXPECTATIVA = (
+    "Vienen varias personas, numeradas. Estima por separado para cada una, sin que una influya en otra. Para cada persona "
+    "devuelve `i` (su número), `p` (dos enteros de 0 a 100: probabilidad de que responda «de acuerdo» y de que responda "
+    "«en desacuerdo») y `e` (de cada 100 adultos en Chile, cuántos cree esa persona que están de acuerdo)."
+)
+
+
+def leer_prob_expectativa(datos, agentes):
+    salida, vistos = [], set()
+    for f in datos.get("r", []):
+        k, p, e = f.get("i"), f.get("p"), f.get("e")
+        if not isinstance(k, int) or not 0 <= k < len(agentes) or k in vistos:
+            continue
+        if not (isinstance(p, list) and len(p) == 2 and all(type(x) is int and 0 <= x <= 100 for x in p) and sum(p) <= 100):
+            continue
+        if not (type(e) is int and 0 <= e <= 100):
+            continue
+        vistos.add(k)
+        r = motor.Respuesta(agentes[k].indice, p)
+        r.extra = {"e": e}
+        salida.append(r)
+    return salida
+
+
+def sistema_prob_expectativa(texto):
+    return (f"{metodos_banco.PREDICTOR}\n\n{metodos_banco.FORMATO_PROBABILIDAD}{EXPECTATIVA}\n\n# Tema de la encuesta\n\n{texto}"
+            f"\n\n# Pregunta\n\n{metodo.APOYO}")
+
+
 SECCIONES_CEP = ("politica", "pais", "confianza")
 solo_demografia = lambda datos: frozenset(k for k in datos if metodo.filtro.DATOS.get(k) not in SECCIONES_CEP)  # noqa: E731
 
@@ -148,6 +211,10 @@ VARIANTES = {
     "sitio": {},
     # El motor después de integrar los cambios (servidor/metodo.py): debe dar lo mismo que `directa_sin_identidad`.
     "integrado": {"integrado": True},
+    # El motor integrado, sin ancla externa: el total sale de lo que los mismos agentes creen que piensa la gente.
+    "expectativa": {"integrado": True, "agregar": EXPECTATIVA, "lote": LOTE_EXPECTATIVA, "esquema": ESQUEMA_EXPECTATIVA, "leer": leer_expectativa},
+    "prob_expectativa": {"integrado": True, "propio": sistema_prob_expectativa, "lote": LOTE_PROB_EXPECTATIVA, "esquema": ESQUEMA_EXPECTATIVA,
+                         "leer": leer_prob_expectativa},
     # Ronda 2: la postura explícita de Rai sobre Haiku, sola y con los cambios de perfil y de pregunta.
     "postura": {**POSTURA, "sistema": con_postura},
     "postura_sin_identidad": {**POSTURA, "sistema": con_postura, "datos": sin_identidad},
@@ -263,7 +330,7 @@ def leer(variante, ids):
         for linea in ruta.read_text(encoding="utf-8").splitlines():
             f = json.loads(linea)
             if "notas" in f and f["agente"] in ids:
-                filas.append({"caso": f["caso"], "agente": f["agente"], **{f"p{i + 1}": v for i, v in enumerate(f["notas"])}})
+                filas.append({"caso": f["caso"], "agente": f["agente"], **{f"p{i + 1}": v for i, v in enumerate(f["notas"])}, **({"e": f["e"]} if "e" in f else {})})
     return pd.DataFrame(filas).drop_duplicates(["caso", "agente"]) if filas else pd.DataFrame(columns=["caso", "agente", "p1"])
 
 
@@ -295,6 +362,12 @@ def correr(args):
         if v.get("integrado"):
             # El motor tal como quedó: su pregunta de apoyo y su perfil sin etiquetas políticas.
             sistema, datos = metodo.sistema_con_politica(texto), metodo.datos_de(texto)
+            if "propio" in v:
+                sistema = v["propio"](texto)
+            if "agregar" in v:
+                # Va junto al formato de respuesta, antes del tema.
+                cabeza, marca, cola = sistema.partition("\n\n# Tema de la encuesta")
+                sistema = cabeza + v["agregar"] + marca + cola
         else:
             # Las variantes se definen sobre el método anterior del sitio: preguntas del banco y perfil temático entero.
             sistema = metodo.sistema_del_banco(texto)
@@ -314,7 +387,7 @@ def correr(args):
                 r = v.get("leer", motor.leer_lote)(crudo, lote)
                 with cerrojo:
                     for x in r:
-                        salida.write(json.dumps({"caso": caso["id"], "agente": por_indice[x.agente].id, "lote": k, "notas": x.respuestas}, ensure_ascii=False) + "\n")
+                        salida.write(json.dumps({"caso": caso["id"], "agente": por_indice[x.agente].id, "lote": k, "notas": x.respuestas, **getattr(x, "extra", {})}, ensure_ascii=False) + "\n")
                     salida.write(json.dumps({"caso": caso["id"], "lote": k, "llamada": True, "costo_usd": consumo.costo_usd}) + "\n")
                     salida.flush()
                 return len(r), len(lote)
