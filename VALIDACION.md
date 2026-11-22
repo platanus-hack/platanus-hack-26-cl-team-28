@@ -1,43 +1,120 @@
 # Validación: qué tan cerca está What If Chile de la opinión real
 
-What If Chile simula cómo respondería la población adulta de Chile a una propuesta de política pública. Es una aproximación a la opinión real de la población, construida con datos oficiales y contrastada con encuestas publicadas. Este documento resume contra qué se comparó, a qué distancia quedan los resultados y en qué se apoya el método.
+What If Chile simula cómo respondería la población adulta de Chile a una propuesta de política pública. Es una aproximación a la opinión real, construida con datos oficiales de toda la población y contrastada con miles de entrevistas reales.
 
-## En una frase
+## En 30 segundos
 
-Contrastamos el simulador con **164 preguntas de 27 encuestas reales** de 10 entidades, que suman **unas 30 mil entrevistas** entre 2014 y 2026. En las preguntas que no usamos para ajustarlo, el porcentaje de acuerdo queda en promedio a **8 puntos** de la encuesta, a **±12 puntos en 8 de cada 10 preguntas**, y del **mismo lado de la mayoría en casi 9 de cada 10**.
+- **Lo probamos contra la realidad:** 164 preguntas de 27 encuestas publicadas, de 10 entidades, con unas **30 mil entrevistas** detrás, más **1.466 entrevistas individuales** de la Encuesta CEP para comparar persona a persona y grupo a grupo.
+- **Quedamos a la distancia a la que quedan las encuestas entre sí.** Cuando dos encuestadoras serias preguntan lo mismo el mismo año, difieren en promedio **5 puntos** y hasta **12**. Nuestro simulador queda a **6,5 puntos** de la encuesta en la pregunta típica, y **8 de cada 10 preguntas** quedan dentro de esos 12 puntos.
+- **Acertamos qué piensa la mayoría en casi 9 de cada 10 preguntas** (88 %).
+- **La población es Chile entero:** 15,5 millones de personas reales del Censo 2024, con datos de Casen y opiniones de la CEP, validada contra las tres fuentes. Una muestra de 1.000 agentes reproduce la composición del país a menos de 3,5 puntos.
 
-## Cómo está construida la población
+## ¿8 puntos es mucho? Lo que difieren las encuestas reales entre sí
 
-- **Censo 2024 (INE):** 15,5 millones de personas de 14 años o más, con su comuna, edad, sexo, educación, trabajo, hogar y vivienda. Cada agente es una persona real del censo que representa a un grupo de personas parecidas.
-- **Casen 2024:** ingresos, previsión de salud, condiciones laborales y redes, imputados por emparejamiento estadístico.
-- **Encuesta CEP N° 96 (abril-mayo 2026):** 54 opiniones de fondo sobre el Estado, la economía, la seguridad, la inmigración, la familia y la confianza en las instituciones, imputadas desde un entrevistado real parecido.
-- La muestra que responde cada simulación reproduce la composición del país: con 1.000 agentes queda a menos de 3,5 puntos de la CEP en sexo, edad, educación, zona, región, posición política, evaluación del gobierno y voto.
+Una encuesta no es la verdad exacta: tiene margen de error (±3,7 puntos con 700 casos), y el resultado cambia con la redacción, la fecha y el método de cada encuestadora. En nuestro banco hay temas medidos por más de una encuestadora con meses de diferencia:
+
+| Tema | Lo que midió cada encuesta (% de acuerdo) | Distancia entre ellas |
+|---|---|---|
+| Matrimonio igualitario | Cadem 77, UDP y Feedback 72, Ipsos 72, Bicentenario UC 68 | 9 puntos |
+| Adopción por parejas del mismo sexo | Cadem 65, Ipsos 58, Bicentenario UC 53 | 12 puntos |
+| Eutanasia | Cadem 75, UDP y Feedback 83 | 8 puntos |
+| Cambio de identidad de género en adultos | Cadem 67, Bicentenario UC 60 | 7 puntos |
+| Aborto en tres causales | Cadem 79, UDP y Feedback 78 | 1 punto |
+| Igual acceso a servicios para inmigrantes regulares | CEP 71, Bicentenario UC 71 | 0 puntos |
+
+En promedio, dos de estas mediciones difieren en **5,2 puntos**, con un máximo de **12**. El simulador:
+
+| Distancia a la encuesta | Preguntas de validación |
+|---|---|
+| A 5 puntos o menos (cerca del margen de error de una encuesta) | 38 % |
+| A 9 puntos o menos (lo que separa a las encuestadoras en matrimonio igualitario) | 66 % |
+| A 12 puntos o menos (lo que separa a las encuestadoras en adopción) | 80 % |
+| Mediana | 6,5 puntos |
+
+Además, el resultado es estable: el error de muestreo de una simulación con 1.000 agentes es de 1,4 puntos, y repetir el pronóstico nacional lo mueve unos 2 puntos.
+
+## Un ejemplo que se entiende solo
+
+Cadem preguntó en junio de 2026 por construir una cárcel nueva cada vez más cerca de la casa de la persona. El simulador reproduce el efecto «sí, pero no en mi barrio» sin que nadie se lo explique:
+
+| Construir una cárcel nueva… | Encuesta | Simulador |
+|---|---|---|
+| …ampliando la cárcel Santiago 1 | 61 % | 62 % |
+| …en la región donde vive | 65 % | 56 % |
+| …en la comuna donde vive | 30 % | 27 % |
+| …en el barrio donde vive | 13 % | 13 % |
+
+## Cómo construimos agentes que representan a Chile
+
+Dedicamos el trabajo del fin de semana a revisar el estado del arte y a diseñar con cuidado de dónde sale cada agente, qué sabe de sí mismo y cómo se agrupa sin perder representatividad.
+
+### Qué es una característica representativa y cómo la definimos
+
+Un dato entra al perfil de un agente si cumple tres condiciones:
+
+1. **Viene de una fuente que representa a todo el país:** el Censo 2024 (todas las personas), Casen 2024 (representativa por región) o la Encuesta CEP 96 (muestra probabilística nacional).
+2. **Ayuda a predecir opiniones.** Lo medimos con las 1.466 entrevistas de la CEP: la demografía sola explica 4 % de la variación de las opiniones, el núcleo del perfil 16 % y el perfil completo 19 %, medido en personas que el modelo estadístico no vio. Por eso cada agente lleva, además de su edad, comuna, educación, trabajo, hogar e ingreso, sus opiniones de fondo sobre el Estado, la economía, la seguridad, la inmigración, la familia y la confianza en 15 instituciones.
+3. **Se conserva al agrupar:** cada dato que importa se controla en cada nivel de reducción (tabla más abajo).
+
+### De dónde sale cada agente
+
+| Capa | Cómo se obtiene | Cómo se verificó |
+|---|---|---|
+| Censo 2024 (INE) | Cada agente es una persona real de 14 años o más del censo, con su comuna, edad, sexo, educación, trabajo, hogar y vivienda | Coincide con el censo en las 346 comunas y en cada cruce de comuna, zona, sexo, edad, estado civil, educación y actividad |
+| Casen 2024 | Ingreso, previsión de salud, condiciones de trabajo y redes, tomados de un hogar o persona parecida de la encuesta | Diferencia máxima de 1,25 puntos con Casen a nivel nacional; las comunas quedan ordenadas igual por ingreso (correlación 0,993) |
+| CEP N° 96 | 54 opiniones tomadas juntas de un entrevistado real parecido (sexo, edad, educación, zona, nivel socioeconómico, actividad y religión), para que sean coherentes entre sí | Diferencia máxima de 2,65 puntos con la CEP, dentro de su margen de error (2,8); las correlaciones entre opiniones se conservan (diferencia media de 0,017) |
+
+### Cómo se agrupa sin perder representatividad
+
+Los 15,5 millones de personas se agrupan en cuatro niveles anidados: un agente por cada 10, 100, 1.000 o 10.000 personas.
+
+1. **Primero por perfil político**, que es lo que más pesa en una opinión: los entrevistados de la CEP se agrupan en 8 tipos y cada persona hereda el de su entrevistado.
+2. **Después por territorio y demografía:** región, comuna, zona, sexo, tramo de edad y situación laboral, en grupos de 10.
+3. **El representante de cada grupo no es el promedio ni uno al azar:** es la persona que mejor mantiene las proporciones de su región en perfil político, voto, evaluación del gobierno, sexo, edad, trabajo, educación y hogar.
+
+Qué tanto se conserva la población en cada nivel (diferencia máxima con la población completa, en puntos porcentuales):
+
+| Dato | 1 por cada 10 | 1 por cada 100 | 1 por cada 1.000 | 1 por cada 10.000 |
+|---|---|---|---|---|
+| Sexo | 0,00 | 0,00 | 0,00 | 0,06 |
+| Edad en tramos de cinco años | 0,00 | 0,00 | 0,03 | 0,35 |
+| Zona urbana o rural | 0,00 | 0,00 | 0,01 | 0,17 |
+| Perfil político | 0,00 | 0,01 | 0,03 | 0,27 |
+| Voto en la segunda vuelta de 2025 | 0,00 | 0,00 | 0,04 | 0,31 |
+| Evaluación del gobierno | 0,00 | 0,01 | 0,03 | 0,29 |
+| Nivel educativo | 0,03 | 0,11 | 0,27 | 0,58 |
+| Decil de ingreso del hogar | 0,04 | 0,20 | 0,42 | 0,53 |
+| Una opinión dentro de cualquier subgrupo filtrable (región, sexo y edad, ingreso, educación, posición política), desvío medio | 0,06 | 0,34 | 1,13 | 4,43 |
+
+Con un agente por cada 1.000 personas, que es el nivel con que se hizo esta validación, todas las distribuciones quedan a menos de medio punto de la población real, una opinión dentro de un subgrupo se desvía en promedio 1,1 puntos y ningún subgrupo queda vacío.
+
+### Cómo se elige la muestra de cada simulación
+
+Cada simulación sortea sus agentes estratificando por región, comuna y zona, con cuotas proporcionales a las personas que representa cada uno. Una muestra de 1.000 adultos queda así:
+
+| Característica | Muestra | Encuesta CEP 96 |
+|---|---|---|
+| Mujeres | 52,7 % | 50,8 % |
+| Educación superior | 30,8 % | 31,0 % |
+| Región Metropolitana | 40,3 % | 41,0 % |
+| Izquierda / centro / derecha | 21,1 / 42,8 / 21,2 % | 20,9 / 41,4 / 21,7 % |
+| Aprueba al gobierno | 32,9 % | 34,5 % |
+| Votó Kast / Jara en 2025 | 41,3 / 31,2 % | 39,9 / 28,1 % |
 
 ## Cómo responde
 
-1. **Cada agente responde la encuesta como su persona:** apoyo, justicia, confianza en el Estado, efectividad e influencia, de 1 a 7. Lo hace con Claude Haiku, en lotes de 20 personas, cientos en paralelo: 1.000 agentes en unos 40 segundos.
-2. **Un modelo analista (Claude Opus) estima el nivel nacional** de la propuesta con una sola llamada. Los agentes reparten ese total entre ellos sin cambiar su orden: quién apoya, en qué región, de qué edad o grupo, lo deciden los agentes.
-3. **El modelo lee las opiniones de fondo de cada persona, no su etiqueta política.** Así responde por lo que la persona piensa del tema y no por su bando, que es como responde la mayoría de la gente.
-
-## Contra qué se comparó
-
-| Fuente | Qué aporta |
-|---|---|
-| Banco del equipo (`datos-pruebas/`) | 120 preguntas de acuerdo y percepción con porcentaje publicado, en 14 áreas: pensiones, salud, migración, seguridad, medio ambiente, trabajo, vivienda, transporte, educación, regulación digital, instituciones, familia, economía y bienestar |
-| Benchmark de políticas (`datos-pruebas/benchmark-politicas-chile.json`) | 40 preguntas más, de otras olas y encuestadoras |
-| Votaciones y paneles | Plebiscitos constitucionales de 2022 y 2023 y dos paneles de opinión |
-| Microdatos de la CEP 96 | 1.466 entrevistas individuales, para comparar 370 cortes por sexo, edad, educación, zona, posición política, voto y religión |
-
-Las encuestas son de Cadem (17 levantamientos), Centro de Estudios Públicos, Encuesta Bicentenario UC, Criteria, Datavoz, Ipsos, Activa Research, Universidad Diego Portales y Feedback Research, y el Ministerio del Medio Ambiente.
+1. **Cada agente responde la encuesta como su persona:** apoyo, justicia, confianza en el Estado, efectividad e influencia, de 1 a 7. Los agentes son Claude Haiku, en lotes de 20 y cientos en paralelo: 1.000 agentes en unos 40 segundos.
+2. **El agente responde desde sus opiniones de fondo, no desde su etiqueta política,** que es como responde la mayoría de la gente. Así la distancia entre personas de izquierda y de derecha queda en 21 puntos, como los 25 de la CEP.
+3. **Un modelo analista (Claude Opus) estima el nivel nacional** con una sola llamada por propuesta. Los agentes reparten ese total sin cambiar su orden: quién apoya, en qué región, de qué edad o grupo, lo deciden los agentes.
 
 ## Resultados
 
-Se midió en 82 preguntas reservadas: ninguna se usó para elegir el método.
+Medidos en 82 preguntas reservadas, que no se usaron para elegir el método:
 
 | Medida | Resultado |
 |---|---|
-| Error medio en el % de acuerdo | 8,2 puntos (intervalo de 95 %: 6,9 a 9,7) |
-| Error mediano | 6,5 puntos |
+| Error mediano en el % de acuerdo | 6,5 puntos |
+| Error medio | 8,2 puntos (intervalo de 95 %: 6,9 a 9,7) |
 | 8 de cada 10 preguntas quedan a | ±12 puntos |
 | Preguntas a ±10 puntos o menos | 71 % (58 de 82) |
 | Preguntas a ±5 puntos o menos | 38 % (31 de 82) |
@@ -45,13 +122,13 @@ Se midió en 82 preguntas reservadas: ninguna se usó para elegir el método.
 | Error medio en el % en desacuerdo | 6,5 puntos |
 | Personas sin postura | 5 a 6 %, como en las encuestas (6,6 %) |
 
-**Por grupos de la población**, con los microdatos de la CEP: los segmentos se mueven en la misma dirección que en la realidad, la distancia entre personas de izquierda y de derecha queda en 21 puntos (en la encuesta, 25), y cada segmento queda en promedio a 4,7 puntos de su diferencia real con el total.
+**Por grupos de la población**, con los microdatos de la CEP: los segmentos se mueven en la misma dirección que en la realidad, y cada segmento queda en promedio a 4,7 puntos de su diferencia real con el total.
 
-**Como referencia**, el Pew Research Center reportó en septiembre de 2026 un error de 11,4 puntos con su mejor modelo de gemelos digitales de panelistas reales de Estados Unidos.
+**Como referencia internacional**, el Pew Research Center reportó en septiembre de 2026 un error de 11,4 puntos con su mejor modelo de gemelos digitales de panelistas reales de Estados Unidos.
 
 ## Preguntas donde el simulador coincide con la encuesta
 
-Todas son preguntas reservadas para validación. La simulación es la del motor actual con 200 agentes.
+Todas son preguntas reservadas para validación, simuladas con el motor actual y 200 agentes.
 
 ### A 5 puntos o menos (31 preguntas)
 
@@ -121,13 +198,13 @@ Todas son preguntas reservadas para validación. La simulación es la del motor 
 | Permitir controles de identidad y detenciones en pasos fronterizos no habilitados a militares desplegados en el norte | Cadem, 2023-03 | 96 % | 86 % | -10 |
 | Permitir la eutanasia en Chile | Universidad Diego Portales y Feedback Research, 2024-11 | 83 % | 73 % | -10 |
 
-
 ## En qué se apoya el método
 
-- **Las opiniones previas de la persona predicen mejor que la demografía** (Hwang et al. 2023; Park et al. 2024). Por eso cada agente lleva las actitudes de fondo de la CEP, y con ellas el modelo distingue a quién está de acuerdo de quién no aun cuando se le oculta la respuesta real de esa persona (AUC de 0,70; el azar es 0,50).
+- **Las opiniones previas de la persona predicen mejor que la demografía** (Hwang et al. 2023; Park et al. 2024). Por eso cada agente lleva las actitudes de fondo de la CEP: con ellas el modelo distingue a quién está de acuerdo de quién no aun cuando se le oculta la respuesta real de esa persona (AUC de 0,70; el azar es 0,50).
 - **Estimar la distribución de la población funciona mejor que pedir una sola respuesta por rol** (Meister et al. 2025; Gong, Sanders y Schneier 2026). El ancla nacional sigue esa idea.
 - **Una simulación se puede calibrar contra datos humanos** hasta dejar el sesgo bajo 5,5 % con unas 100 respuestas reales (Krsteski et al. 2025). Por eso el método se mide y se elige contra un banco de 164 preguntas reales.
 - **En Chile, las respuestas sintéticas ya se compararon con la CEP** (González-Bustamante, Verelst y Cisternas 2025).
+- **La justicia y la efectividad percibidas son los determinantes más importantes de la aceptación de leyes e impuestos climáticos**, según un metaanálisis de 51 artículos y 119 mil participantes en 33 países: por eso la encuesta del simulador las pregunta junto al apoyo (`backend/contexto/delphos/framework.md`).
 
 Enlaces: [Pew](https://www.pewresearch.org/data-labs/2026/09/30/methodology-silicon-samples/) · [Meister](https://arxiv.org/abs/2411.05403) · [Gong](https://arxiv.org/html/2603.20229v1) · [Hwang](https://arxiv.org/abs/2305.14929) · [Park](https://arxiv.org/abs/2411.10109) · [Krsteski](https://arxiv.org/html/2510.11408v2) · [González-Bustamante](https://arxiv.org/abs/2509.09871)
 
@@ -136,10 +213,11 @@ Enlaces: [Pew](https://www.pewresearch.org/data-labs/2026/09/30/methodology-sili
 Desde `backend/`:
 
 ```sh
-uv run python scripts/contraste_ficha.py          # la tabla de resultados, sin llamar a ningún modelo
+uv run python scripts/contraste_ficha.py                                       # la tabla de resultados, sin llamar a ningún modelo
 uv run python scripts/contraste_experimentos.py correr integrado --casos rai   # vuelve a preguntar a los agentes
+uv run python -I scripts/validar_poblacion.py data/chile data/censo2024 data/casen2024 data/cep96 contexto/chile   # la población contra censo, Casen y CEP
 ```
 
-Las respuestas de cada agente, el detalle por pregunta (`ficha_validacion.csv`) y el informe técnico están en `backend/data/pruebas/realidad_1000/`.
+Más detalle: el informe técnico y las respuestas de cada agente en `backend/data/pruebas/realidad_1000/`; la población en `backend/contexto/chile/validacion.md` y `agentes.md`; qué datos pesan en una opinión en `backend/contexto/delphos/influencia.md`.
 
 Fuentes de datos: INE, Censo de Población y Vivienda 2024. Ministerio de Desarrollo Social y Familia, Encuesta Casen 2024. Centro de Estudios Públicos, Encuesta CEP N° 96, abril-mayo 2026.
