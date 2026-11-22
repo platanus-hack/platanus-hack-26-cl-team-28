@@ -287,3 +287,18 @@
   font-weight: 400;
   color: var(--tinta-suave);
 }
+
+/* Teléfono: las columnas no caben a lo ancho; la tabla se desliza de lado y el nombre del grupo queda fijo. */
+@media (max-width: 899px) {
+  .tabla {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .nombre {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--mar);
+  }
+}

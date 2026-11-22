@@ -2,7 +2,7 @@ import { mezclar } from '../dominio/azar';
 import { REGIONES } from '../dominio/catalogos';
 import type { Persona } from '../dominio/tipos';
 import { cargarComunas, comunasCargadas, REGIONES_GEO } from '../mapa/geografia';
-import { puntoEnBurbuja, radioDe, ubicarBurbujas, type Burbuja } from './disposicion';
+import { disponerResultado, puntoEnBurbuja, radioDe, type Burbuja, type NivelRotulo } from './disposicion';
 import { CARAS, celdaWati, CELDA_ALTO, CELDA_ANCHO, crearAtlasWati, crearSpriteWati, PIES_RELATIVO, poseDe, QUIETO, rasgosDe, TONOS, VARIANTES, type Animo, type AtlasWati } from './wati';
 
 /** Estado de cada punto. El número es también su color. */
@@ -19,7 +19,21 @@ interface Etiqueta {
   y: number;
   lado: 1 | -1;
   region: number;
+  /** El nombre va en negrita y el valor, más tenue; `texto` es los dos juntos. */
+  nombre: string;
+  valor: string;
   texto: string;
+}
+
+/**
+ * Franjas del lienzo que tapa la interfaz, en píxeles. En el teléfono la barra de arriba y la hoja
+ * de abajo; sin bordes, la escena usa las columnas de escritorio (ver `lateral`).
+ */
+export interface Bordes {
+  arriba: number;
+  abajo: number;
+  izquierda: number;
+  derecha: number;
 }
 
 /** Con menos personas que esto en la región, el porcentaje engaña: se muestra cuántas son. */
@@ -47,6 +61,8 @@ const ANCHO_CON_CIFRAS = 900;
 
 /** Disposición del resultado por filas (píxeles). */
 const MARGEN_FILAS = 18;
+/** Alto de cada franja del perfil del país (píxeles). */
+const FRANJA_PERFIL = 4;
 const SEPARA_ROTULO = 9;
 
 /** Cuánto se puede acercar el mapa: lo bastante para separar las comunas de Santiago y ver a cada wati. */
@@ -155,6 +171,9 @@ export class EscenaEnjambre {
   /** Bordes izquierdo y derecho del país dibujado, en píxeles: las burbujas quedan siempre por fuera. */
   private paisIzq = 0;
   private paisDer = 0;
+  /** Los mismos bordes por franja de alto (cada `FRANJA_PERFIL` píxeles): Chile es angosto en el norte. */
+  private perfilIzq = new Float32Array(0);
+  private perfilDer = new Float32Array(0);
   /** Límites de las comunas, tenues bajo los de las regiones. Vacío hasta que cargan los polígonos. */
   private comunas = new Path2D();
   private ancho = 0;
@@ -174,8 +193,13 @@ export class EscenaEnjambre {
   private zoom = 1;
   private ox = 0;
   private oy = 0;
-  private agarre: [number, number] | null = null;
+  /** Los dedos (o el mouse) apoyados sobre el lienzo, con su última posición en la pantalla. */
+  private punteros = new Map<number, { x: number; y: number }>();
+  /** Al pellizcar: la distancia y el acercamiento del comienzo, y el punto del mapa que quedó entre los dedos. */
+  private pellizco: { d0: number; z0: number; cx: number; cy: number } | null = null;
   private arrastro = false;
+  /** Lo que tapa la interfaz en el teléfono; null en escritorio. */
+  private bordes: Bordes | null = null;
   private zoomAlPellizcar = 1;
   /** Acercamiento animado de los botones: de dónde viene la vista y adónde va. */
   private transicion: { inicio: number; z0: number; ox0: number; oy0: number; z1: number; ox1: number; oy1: number } | null = null;
@@ -376,6 +400,26 @@ export class EscenaEnjambre {
     this.sucio = true;
   }
 
+  /**
+   * Avisa qué franjas del lienzo tapa la interfaz: el país y las burbujas se acomodan en lo que queda.
+   * La vista vuelve a completa, y los puntos se deslizan a su nuevo lugar.
+   */
+  fijarBordes(bordes: Bordes | null): void {
+    const antes = this.bordes;
+    const iguales =
+      antes === bordes ||
+      (!!antes && !!bordes && (['arriba', 'abajo', 'izquierda', 'derecha'] as const).every((lado) => Math.abs(antes[lado] - bordes[lado]) <= 1));
+    if (iguales) return;
+    this.bordes = bordes;
+    if (!this.ancho) return;
+    this.transicion = null;
+    this.zoom = 1;
+    this.ox = 0;
+    this.oy = 0;
+    this.alCambiarVista?.(1);
+    this.reproyectar(this.reducir.matches ? 'inmediato' : 'cambio');
+  }
+
   /** Dónde está dibujado ahora un punto, en píxeles del lienzo. */
   posicion(i: number): [number, number] {
     return [this.x[i] * this.zoom + this.ox, this.y[i] * this.zoom + this.oy];
@@ -414,8 +458,9 @@ export class EscenaEnjambre {
   }
 
   private irA(z1: number, ox1: number, oy1: number): void {
+    const [oyMinimo, oyMaximo] = this.limitesY(z1);
     ox1 = Math.min(0, Math.max(this.ancho * (1 - z1), ox1));
-    oy1 = Math.min(0, Math.max(this.alto * (1 - z1), oy1));
+    oy1 = Math.min(oyMaximo, Math.max(oyMinimo, oy1));
     if (this.reducir.matches) {
       this.transicion = null;
       this.zoom = z1;
@@ -470,10 +515,21 @@ export class EscenaEnjambre {
     return valor;
   }
 
+  /**
+   * Cuánto se puede correr la vista en alto con un acercamiento dado. Con bordes, lo que queda tapado
+   * por la barra o la hoja se puede traer a la franja libre; sin ellos, nunca se ve más allá del lienzo.
+   */
+  private limitesY(z: number): [number, number] {
+    const arriba = this.bordes?.arriba ?? 0;
+    const abajo = this.alto - (this.bordes?.abajo ?? 0);
+    return [abajo * (1 - z), arriba * (1 - z)];
+  }
+
   /** La vista nunca deja ver más allá de los bordes del lienzo. */
   private acotar(): void {
+    const [oyMinimo, oyMaximo] = this.limitesY(this.zoom);
     this.ox = Math.min(0, Math.max(this.ancho * (1 - this.zoom), this.ox));
-    this.oy = Math.min(0, Math.max(this.alto * (1 - this.zoom), this.oy));
+    this.oy = Math.min(oyMaximo, Math.max(oyMinimo, this.oy));
     this.sucio = true;
     this.alCambiarVista?.(this.zoom);
   }
@@ -492,37 +548,72 @@ export class EscenaEnjambre {
     this.acercar(Math.exp(-paso * (pellizco ? 0.012 : 0.0016)), e.clientX - caja.left, e.clientY - caja.top);
   };
 
-  /** Safari entrega el pellizco como eventos de gesto propios. */
+  /**
+   * Safari entrega el pellizco del trackpad (y también el de la pantalla) como eventos de gesto
+   * propios. Con dos dedos sobre el lienzo, el pellizco ya lo siguen los eventos de puntero: este no se suma.
+   */
   private readonly gesto = (e: Event): void => {
     e.preventDefault();
+    if (this.punteros.size > 1) return;
     const { scale, clientX, clientY } = e as Event & { scale: number; clientX: number; clientY: number };
     if (e.type === 'gesturestart') this.zoomAlPellizcar = this.zoom;
     const caja = this.lienzo.getBoundingClientRect();
     this.acercar((this.zoomAlPellizcar * scale) / this.zoom, clientX - caja.left, clientY - caja.top);
   };
 
+  /** Dónde está el punto medio entre los dos primeros dedos, en el lienzo, y cuánto los separa. */
+  private entreDedos(): { mx: number; my: number; d: number } {
+    const [a, b] = [...this.punteros.values()];
+    const caja = this.lienzo.getBoundingClientRect();
+    return { mx: (a.x + b.x) / 2 - caja.left, my: (a.y + b.y) / 2 - caja.top, d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)) };
+  }
+
   private readonly baja = (e: PointerEvent): void => {
-    this.arrastro = false;
-    if (this.zoom === 1) return;
-    this.agarre = [e.clientX, e.clientY];
+    if (!this.punteros.size) this.arrastro = false;
+    this.punteros.set(e.pointerId, { x: e.clientX, y: e.clientY });
     this.lienzo.setPointerCapture(e.pointerId);
+    if (this.punteros.size !== 2) return;
+    // Con dos dedos se pellizca: acerca o aleja y, al mover los dos juntos, corre el mapa.
+    const { mx, my, d } = this.entreDedos();
+    this.transicion = null;
+    this.pellizco = { d0: d, z0: this.zoom, cx: (mx - this.ox) / this.zoom, cy: (my - this.oy) / this.zoom };
+    // El toque que termina un pellizco no abre la ficha de nadie.
+    this.arrastro = true;
   };
 
   private readonly mueve = (e: PointerEvent): void => {
-    if (!this.agarre) return;
-    const dx = e.clientX - this.agarre[0];
-    const dy = e.clientY - this.agarre[1];
+    const dedo = this.punteros.get(e.pointerId);
+    if (!dedo) return;
+    const dx = e.clientX - dedo.x;
+    const dy = e.clientY - dedo.y;
+    if (this.pellizco && this.punteros.size >= 2) {
+      dedo.x = e.clientX;
+      dedo.y = e.clientY;
+      const { mx, my, d } = this.entreDedos();
+      const zoom = Math.max(1, Math.min(ZOOM_MAXIMO, (this.pellizco.z0 * d) / this.pellizco.d0));
+      // El punto del mapa que empezó entre los dedos sigue entre ellos.
+      this.zoom = zoom;
+      this.ox = mx - this.pellizco.cx * zoom;
+      this.oy = my - this.pellizco.cy * zoom;
+      this.acotar();
+      return;
+    }
+    // Con un solo dedo se arrastra, y solo con el mapa acercado: a vista completa no hay adónde ir.
+    if (this.zoom === 1) return;
     if (!this.arrastro && Math.hypot(dx, dy) < 4) return;
     this.arrastro = true;
-    this.agarre = [e.clientX, e.clientY];
+    dedo.x = e.clientX;
+    dedo.y = e.clientY;
     this.transicion = null;
     this.ox += dx;
     this.oy += dy;
     this.acotar();
   };
 
-  private readonly sube = (): void => {
-    this.agarre = null;
+  private readonly sube = (e: PointerEvent): void => {
+    this.punteros.delete(e.pointerId);
+    // Al levantar uno de los dos dedos se sigue arrastrando con el otro, desde donde está.
+    if (this.punteros.size < 2) this.pellizco = null;
   };
 
   /** El punto visible más cercano a una posición, o -1 si no hay ninguno a menos de `radio` píxeles. */
@@ -621,7 +712,7 @@ export class EscenaEnjambre {
   }
 
   private proyectar(lon: number, lat: number): [number, number] {
-    return [this.ancho / 2 + (lon - LON_CENTRO) * ESTRECHEZ * this.u, this.margen() + (LAT_NORTE - lat) * this.u];
+    return [this.ancho / 2 + (lon - LON_CENTRO) * ESTRECHEZ * this.u, this.margenArriba() + (LAT_NORTE - lat) * this.u];
   }
 
   /**
@@ -629,6 +720,7 @@ export class EscenaEnjambre {
    * AppEnjambre.module.css: margen más min(33vw, 27rem)). Ni burbujas ni rótulos entran ahí.
    */
   private lateral(): number {
+    if (this.bordes) return Math.max(8, this.bordes.izquierda, this.bordes.derecha);
     if (this.ancho < ANCHO_CON_CIFRAS) return 4;
     const margenLado = Math.max(16, Math.min(40, this.ancho * 0.026));
     return margenLado + Math.min(this.ancho * 0.33, 432) + 14;
@@ -636,6 +728,16 @@ export class EscenaEnjambre {
 
   private margen(): number {
     return Math.max(18, this.alto * 0.03);
+  }
+
+  /** Aire sobre el norte del país: bajo la barra, si la hay. */
+  private margenArriba(): number {
+    return this.bordes ? this.bordes.arriba + 10 : this.margen();
+  }
+
+  /** Aire bajo Magallanes: sobre la hoja, si la hay. */
+  private margenAbajo(): number {
+    return this.bordes ? this.bordes.abajo + 10 : this.margen();
   }
 
   private medir(): void {
@@ -650,7 +752,15 @@ export class EscenaEnjambre {
     this.alCambiarVista?.(1);
     this.lienzo.width = Math.round(this.ancho * this.dpr);
     this.lienzo.height = Math.round(this.alto * this.dpr);
-    this.u = (this.alto - this.margen() * 2) / GRADOS;
+    this.reproyectar('inmediato');
+  }
+
+  /**
+   * Vuelve a proyectar el país con el tamaño y los bordes actuales, y manda cada punto a su lugar.
+   * Rehace los trazos de las comunas: se llama al cambiar de tamaño o de bordes, nunca por cuadro.
+   */
+  private reproyectar(modo: ModoVuelo): void {
+    this.u = Math.max(1, this.alto - this.margenArriba() - this.margenAbajo()) / GRADOS;
     // El tamaño del punto crece con la pantalla: en un proyector se tiene que ver desde el fondo de la sala.
     this.paso = Math.max(2, Math.min(4.6, this.ancho / 450, this.alto / 250));
     this.letra = Math.round(Math.max(11, Math.min(15, this.alto / 70)));
@@ -662,6 +772,9 @@ export class EscenaEnjambre {
     this.silueta = new Path2D();
     this.paisIzq = Infinity;
     this.paisDer = -Infinity;
+    const franjas = Math.ceil(this.alto / FRANJA_PERFIL) + 1;
+    this.perfilIzq = new Float32Array(franjas).fill(Infinity);
+    this.perfilDer = new Float32Array(franjas).fill(-Infinity);
     for (const region of REGIONES_GEO) {
       for (const anillo of region) {
         if (anillo[0][0] < LON_MINIMA) continue;
@@ -669,6 +782,11 @@ export class EscenaEnjambre {
           const [x, y] = this.proyectar(lon, lat);
           this.paisIzq = Math.min(this.paisIzq, x);
           this.paisDer = Math.max(this.paisDer, x);
+          const franja = Math.floor(y / FRANJA_PERFIL);
+          if (franja >= 0 && franja < franjas) {
+            this.perfilIzq[franja] = Math.min(this.perfilIzq[franja], x);
+            this.perfilDer[franja] = Math.max(this.perfilDer[franja], x);
+          }
           if (i === 0) this.silueta.moveTo(x, y);
           else this.silueta.lineTo(x, y);
         });
@@ -679,7 +797,14 @@ export class EscenaEnjambre {
     this.personas.forEach((persona, i) => {
       [this.casaX[i], this.casaY[i]] = this.proyectar(Math.max(LON_MINIMA, persona.lon), persona.lat);
     });
-    this.destinos('inmediato');
+    // Mientras los agentes responden, todos esperan en casa: las burbujas se arman al terminar.
+    if (this.abierta) return this.destinos(modo);
+    const ahora = performance.now() / 1000;
+    this.burbujas = [];
+    this.etiquetas = [];
+    for (let i = 0; i < this.n; i++) this.volar(i, this.casaX[i], this.casaY[i], modo, ahora);
+    this.finVuelo = Math.max(this.finVuelo, ahora + (modo === 'inmediato' ? 0 : 0.4 + VUELO));
+    this.sucio = true;
   }
 
   /** Arma los límites comunales con la escala actual; si los polígonos no han llegado, los pide. */
@@ -732,57 +857,61 @@ export class EscenaEnjambre {
       // Las burbujas parten donde termina el país (su punto más ancho, de Antofagasta a Magallanes) y
       // un poco más allá: ninguna fila lo tapa. Solo en pantallas donde los nombres no caben se acercan.
       const holgura = Math.max(12, this.paso * 3);
-      let bordeDer = (Number.isFinite(this.paisDer) ? this.paisDer : this.ancho / 2 + 3.4 * ESTRECHEZ * this.u) + holgura;
-      let bordeIzq = (Number.isFinite(this.paisIzq) ? this.paisIzq : this.ancho / 2 - 4.5 * ESTRECHEZ * this.u) - holgura;
-      let lateral = this.lateral();
-      const textos = regiones.map((region) => ({
-        region,
-        favor: this.textoDe(region, grupos[PUNTO.favor][region], total[region]),
-        contra: this.textoDe(region, grupos[PUNTO.contra][region], total[region]),
-      }));
+      const bordeDer = (Number.isFinite(this.paisDer) ? this.paisDer : this.ancho / 2 + 3.4 * ESTRECHEZ * this.u) + holgura;
+      const bordeIzq = (Number.isFinite(this.paisIzq) ? this.paisIzq : this.ancho / 2 - 4.5 * ESTRECHEZ * this.u) - holgura;
+      const lista = (lado: 1 | -1, region: number) => grupos[lado === 1 ? PUNTO.favor : PUNTO.contra][region];
+      const textos = new Map<string, { nombre: string; valor: string }>();
+      const textoEn = (lado: 1 | -1, region: number, nivel: NivelRotulo) => {
+        const clave = `${lado}${region}${nivel}`;
+        let texto = textos.get(clave);
+        if (!texto) textos.set(clave, (texto = this.textoDe(region, lista(lado, region), total[region], nivel)));
+        return texto;
+      };
       this.ctx.font = `650 ${this.letra}px ${this.fuente}`;
-      const anchoTexto = (t: string) => this.ctx.measureText(t).width;
-      // En espacios estrechos las columnas laterales pueden ocupar todo el ancho útil.
-      // Reservar primero los nombres evita que una burbuja los empuje fuera del lienzo.
-      const anchoRotulo = Math.max(...textos.flatMap((t) => [anchoTexto(t.favor), anchoTexto(t.contra)]), 0);
-      const semiancho = this.ancho / 2;
-      lateral = Math.min(lateral, Math.max(4, semiancho - anchoRotulo - SEPARA_ROTULO - 8));
-      const limiteBorde = Math.max(0, semiancho - lateral - anchoRotulo - SEPARA_ROTULO - 8);
-      bordeDer = Math.min(bordeDer, semiancho + limiteBorde);
-      bordeIzq = Math.max(bordeIzq, semiancho - limiteBorde);
-      let paso = this.paso;
-      const pisoPaso = Math.max(1.6, this.paso * 0.45);
-      const lados = [[PUNTO.favor, 1, bordeDer], [PUNTO.contra, -1, bordeIzq]] as const;
-      let armado: { estado: typeof PUNTO.favor | typeof PUNTO.contra; lado: 1 | -1; puestas: Burbuja[] }[] = [];
-      for (let intento = 0; intento < 60; intento++) {
-        armado = lados.map(([estado, lado, borde]) => {
-          const pedidos = regiones.map((region, k) => ({
-            y: this.proyectar(0, REGIONES[region].capitalLat)[1],
-            r: radioDe(grupos[estado][region].length, paso),
-            anchoTexto: SEPARA_ROTULO + anchoTexto(lado === 1 ? textos[k].favor : textos[k].contra),
-            altoTexto: this.letra * 1.3,
-          }));
-          return { estado, lado, puestas: ubicarBurbujas(pedidos, lado, borde, MARGEN_FILAS, this.alto - MARGEN_FILAS) };
-        });
-        const cabe = armado.every(({ lado, puestas }) => puestas.every((b, k) => {
-          const ancho = anchoTexto(lado === 1 ? textos[k].favor : textos[k].contra);
-          return lado === 1 ? b.x + b.r + SEPARA_ROTULO + ancho <= this.ancho - lateral : b.x - b.r - SEPARA_ROTULO - ancho >= lateral;
-        }));
-        // Achicar ayuda solo hasta cierto punto: lo que choca en el centro del país son los nombres,
-        // que no se achican. Más abajo de este piso los puntos dejan de verse y nada se gana.
-        if (cabe || intento === 59 || paso * 0.92 < pisoPaso) break;
-        paso *= 0.92;
-      }
+      const anchos = new Map<string, number>();
+      const medir = (texto: string) => {
+        let ancho = anchos.get(texto);
+        if (ancho === undefined) anchos.set(texto, (ancho = this.ctx.measureText(texto).width));
+        return ancho;
+      };
+      // En el teléfono ninguna burbuja puede salir del lienzo: si los nombres no caben, se abrevian.
+      const acotado = !!this.bordes;
+      const disposicion = disponerResultado({
+        filas: regiones.map((region) => ({
+          y: this.proyectar(0, REGIONES[region].capitalLat)[1],
+          radio: (lado, paso) => radioDe(lista(lado, region).length, paso),
+          texto: (lado, nivel) => {
+            const { nombre, valor } = textoEn(lado, region, nivel);
+            return nombre + valor;
+          },
+        })),
+        ancho: this.ancho,
+        arriba: acotado ? this.margenArriba() - 4 : MARGEN_FILAS,
+        abajo: acotado ? this.alto - this.margenAbajo() + 4 : this.alto - MARGEN_FILAS,
+        lateral: this.lateral(),
+        bordeIzq,
+        bordeDer,
+        paso: this.paso,
+        pisoPaso: acotado ? Math.max(1.3, this.paso * 0.45) : Math.max(1.6, this.paso * 0.45),
+        altoTexto: this.letra * 1.3,
+        separa: SEPARA_ROTULO,
+        niveles: acotado ? ['completo', 'abreviado', 'cifra'] : ['completo'],
+        medir,
+        acotado,
+        bordeEntre: acotado ? (lado, desde, hasta) => this.bordeEntre(lado, desde, hasta, holgura) : undefined,
+      });
+      const { paso, nivel } = disposicion;
       this.pasoActual = paso;
-      for (const { estado, lado, puestas } of armado) {
+      this.lienzo.dataset.nivel = nivel;
+      for (const [estado, lado, puestas] of [[PUNTO.favor, 1, disposicion.favor], [PUNTO.contra, -1, disposicion.contra]] as const) {
         regiones.forEach((region, k) => {
           const burbuja = puestas[k];
-          const texto = lado === 1 ? textos[k].favor : textos[k].contra;
-          this.etiquetas.push({ x: burbuja.x + lado * (burbuja.r + SEPARA_ROTULO), y: burbuja.y, lado, region, texto });
-          const lista = grupos[estado][region];
-          if (!lista.length) return;
+          const { nombre, valor } = textoEn(lado, region, nivel);
+          this.etiquetas.push({ x: burbuja.x + lado * (burbuja.r + SEPARA_ROTULO), y: burbuja.y, lado, region, nombre, valor, texto: nombre + valor });
+          const puntos = grupos[estado][region];
+          if (!puntos.length) return;
           this.burbujas.push(burbuja);
-          lista.forEach((i, orden) => {
+          puntos.forEach((i, orden) => {
             const [dx, dy] = puntoEnBurbuja(orden, paso);
             this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
             pendiente[i] = 1;
@@ -792,7 +921,10 @@ export class EscenaEnjambre {
     }
     // Para comprobar desde fuera que cada región quedó rotulada a ambos lados.
     this.lienzo.dataset.regiones = String(this.etiquetas.filter((e) => e.lado === 1).length);
-    this.lienzo.dataset.rotulos = this.etiquetas.map((e) => `${e.lado === 1 ? 'F' : 'C'}:${e.texto}@${Math.round(e.x)},${Math.round(e.y)}`).join('|');
+    this.ctx.font = `650 ${this.letra}px ${this.fuente}`;
+    this.lienzo.dataset.rotulos = this.etiquetas
+      .map((e) => `${e.lado === 1 ? 'F' : 'C'}:${e.texto}@${Math.round(e.x)},${Math.round(e.y)},${Math.round(this.ctx.measureText(e.texto).width)}`)
+      .join('|');
     for (let i = 0; i < this.n; i++) if (!pendiente[i]) this.volar(i, this.casaX[i], this.casaY[i], modo, ahora);
     if (modo === 'inmediato') this.color.set(this.estados);
     const espera = modo === 'ola' ? 1.7 : modo === 'cambio' ? 0.4 : 0;
@@ -801,14 +933,35 @@ export class EscenaEnjambre {
     this.sucio = true;
   }
 
-  /** "Maule 58 %": nombre de la región y qué parte de ella tomó esa postura. */
-  private textoDe(region: number, lista: number[], total: number): string {
-    const nombre = REGIONES[region].corto;
+  /**
+   * Dónde termina el país entre dos alturas, más `holgura`: lo más afuera que llega en esa franja. Sin
+   * país en la franja (sobre el norte o bajo el sur), el centro de la pantalla.
+   */
+  private bordeEntre(lado: 1 | -1, desde: number, hasta: number, holgura: number): number {
+    const perfil = lado === 1 ? this.perfilDer : this.perfilIzq;
+    let borde = lado === 1 ? -Infinity : Infinity;
+    const primera = Math.max(0, Math.floor(desde / FRANJA_PERFIL));
+    const ultima = Math.min(perfil.length - 1, Math.floor(hasta / FRANJA_PERFIL));
+    for (let k = primera; k <= ultima; k++) borde = lado === 1 ? Math.max(borde, perfil[k]) : Math.min(borde, perfil[k]);
+    if (!Number.isFinite(borde)) borde = this.ancho / 2;
+    return borde + lado * holgura;
+  }
+
+  /**
+   * "Maule 58 %": nombre de la región y qué parte de ella tomó esa postura. Con poco lugar el nombre
+   * se abrevia ("Valpo. 61 %") o se omite ("61 %"): la lista por región de la hoja dice cuál es cuál.
+   */
+  private textoDe(region: number, lista: number[], total: number, nivel: NivelRotulo): { nombre: string; valor: string } {
+    const nombre = nivel === 'completo' ? REGIONES[region].corto : nivel === 'abreviado' ? REGIONES[region].abreviado : '';
+    const espacio = nombre ? ' ' : '';
     const personas = new Set(lista.map((i) => this.personas[i].agente ?? i)).size;
     // Con muy poca gente en la región el porcentaje engaña: se dice cuántas personas son.
     const enRegion = lista.length ? Math.max(1, Math.round((total / lista.length) * personas)) : MINIMO_PARA_PORCENTAJE;
-    if (lista.length && enRegion < MINIMO_PARA_PORCENTAJE) return `${nombre} ${personas} ${personas === 1 ? 'persona' : 'personas'}`;
-    return `${nombre} ${Math.round((lista.length / total) * 100)} %`;
+    if (lista.length && enRegion < MINIMO_PARA_PORCENTAJE) {
+      const unidad = nivel === 'completo' ? (personas === 1 ? 'persona' : 'personas') : 'pers.';
+      return { nombre, valor: `${espacio}${personas} ${unidad}` };
+    }
+    return { nombre, valor: `${espacio}${Math.round((lista.length / total) * 100)} %` };
   }
 
   private volar(i: number, x: number, y: number, modo: ModoVuelo, ahora: number): void {
@@ -829,7 +982,7 @@ export class EscenaEnjambre {
     this.haciaY[i] = y;
     this.dura[i] = VUELO;
     // En la ola, el norte responde primero.
-    const norteSur = (this.casaY[i] - this.margen()) / (this.alto - this.margen() * 2);
+    const norteSur = (this.casaY[i] - this.margenArriba()) / Math.max(1, this.alto - this.margenArriba() - this.margenAbajo());
     this.sale[i] = ahora + (modo === 'ola' ? norteSur * 1.3 : 0) + Math.abs(azar(i, 4)) * 0.4;
   }
 
@@ -1211,9 +1364,7 @@ export class EscenaEnjambre {
     ctx.globalAlpha = visible;
     ctx.textBaseline = 'middle';
     for (const e of this.etiquetas) {
-      const corte = e.texto.indexOf(' ', REGIONES[e.region].corto.length);
-      const nombre = e.texto.slice(0, corte);
-      const valor = e.texto.slice(corte);
+      const { nombre, valor } = e;
       ctx.font = `650 ${letra}px ${this.fuente}`;
       const anchoNombre = ctx.measureText(nombre).width;
       const anchoTotal = ctx.measureText(e.texto).width;

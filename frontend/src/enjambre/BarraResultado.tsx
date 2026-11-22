@@ -12,6 +12,8 @@ interface Props {
   alElegir(indice: number): void;
   alVolver(): void;
   acciones?: ReactNode;
+  /** En el asomo de la hoja del teléfono: papeletas bajas en una fila que se desliza, sin acciones. */
+  compacta?: boolean;
 }
 
 export function diferencia(caso: CasoVivo, base: CasoVivo): number {
@@ -19,9 +21,9 @@ export function diferencia(caso: CasoVivo, base: CasoVivo): number {
 }
 
 /** La postura más frecuente de cada variante y su diferencia de apoyo respecto de la A. */
-export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver, acciones }: Props) {
+export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver, acciones, compacta = false }: Props) {
   return (
-    <nav className={estilos.barra} aria-label="Variantes">
+    <nav className={estilos.barra} aria-label="Variantes" data-compacta={compacta || undefined}>
       <div role="tablist" aria-label="Variante en pantalla" className={estilos.pestanas}>
         {casos.map((caso, i) => {
           const pct = porcentajesDe(caso);
@@ -61,10 +63,12 @@ export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver, a
           );
         })}
       </div>
-      <div className={estilos.acciones}>
-        {!corriendo && <Boton variante="secundario" onClick={alVolver}>Nueva pregunta</Boton>}
-        {acciones}
-      </div>
+      {!compacta && (
+        <div className={estilos.acciones}>
+          {!corriendo && <Boton variante="secundario" onClick={alVolver}>Nueva pregunta</Boton>}
+          {acciones}
+        </div>
+      )}
     </nav>
   );
 }

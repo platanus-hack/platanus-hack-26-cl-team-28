@@ -47,7 +47,7 @@ const ALCANCE = 0.3;
 /** Tope del tamaño de la cifra, en rem (el máximo del `clamp` de `.cifra` en BloquePostura.module.css). */
 const CIFRA_MAXIMA_REM = 11;
 
-/** La cifra de un lado del país: los watis de esa postura crecen con su porcentaje y cuentan quiénes la marcan. */
+/** La cifra de un lado del país y los watis que cuentan quiénes marcan esa postura. */
 export function BloquePostura({ postura, porcentaje, personas, aspecto, rasgos = [], unidad = 'personas', porAgente, compacto = false, encabezado, nota, tapaMapa, revisionMapa, zoomMapa }: Props) {
   const bloque = useRef<HTMLElement>(null);
   const cifra = useRef<HTMLParagraphElement>(null);
@@ -97,9 +97,9 @@ export function BloquePostura({ postura, porcentaje, personas, aspecto, rasgos =
   // Aun con la cifra achicada, al costado no pueden tapar el mapa: si lo tapan, también van debajo.
   const [tapan, setTapan] = useState(false);
   const apilado = medidas.grande || tapan;
-  // El principal crece un poco con el porcentaje; si los tres no caben al lado de la cifra, se achican juntos.
-  const crece = compacto ? 1 : 0.8 + (0.4 * contado) / 100;
-  const deseado = (medidas.altoCifra || 90) * RESPECTO_CIFRA * crece;
+  // Ambas posturas usan el mismo tamaño; si no caben, los watis se achican juntos.
+  const escalaWati = compacto ? 1 : 0.85;
+  const deseado = (medidas.altoCifra || 90) * RESPECTO_CIFRA * escalaWati;
   const proporciones = PROPORCION.slice(0, lista.length);
   const anchoWatis = (deseado * CELDA_ANCHO * proporciones.reduce((a, b) => a + b, 0)) / CELDA_ALTO + ESPACIO_WATIS * (lista.length - 1);
   const lugar = apilado ? medidas.columna : medidas.ancho - medidas.anchoCifra - ESPACIO_FILA;

@@ -122,6 +122,8 @@ export class EscenaProceso {
     this.actualizarTema();
     this.observador.observe(this.lienzo);
     this.lienzo.addEventListener('pointermove', this.mueve);
+    // Con el dedo no hay «pasar por encima»: el toque mismo elige a quién se señala.
+    this.lienzo.addEventListener('pointerdown', this.mueve);
     this.lienzo.addEventListener('pointerleave', this.sale);
     this.lienzo.addEventListener('click', this.toca);
     void document.fonts.ready.then(() => {
@@ -136,6 +138,7 @@ export class EscenaProceso {
     cancelAnimationFrame(this.cuadro);
     this.observador.disconnect();
     this.lienzo.removeEventListener('pointermove', this.mueve);
+    this.lienzo.removeEventListener('pointerdown', this.mueve);
     this.lienzo.removeEventListener('pointerleave', this.sale);
     this.lienzo.removeEventListener('click', this.toca);
   }

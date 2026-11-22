@@ -1,0 +1,72 @@
+.voces {
+  display: grid;
+  gap: var(--e3);
+}
+
+.lista {
+  display: grid;
+  gap: var(--e2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Cada voz es un globo en el color de su postura, como en el mapa del escritorio. */
+.voz {
+  display: grid;
+  gap: var(--e1);
+  width: 100%;
+  padding: var(--e3) var(--e4);
+  border: 0;
+  border-radius: var(--radio);
+  background: var(--color);
+  color: var(--tinta-figura);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.voz[data-postura='favor'] {
+  --color: var(--favor);
+}
+
+.voz[data-postura='contra'] {
+  --color: var(--contra);
+}
+
+.voz[data-postura='indecisa'] {
+  --color: var(--indecisa);
+}
+
+.voz q {
+  font: 500 1rem / 1.3 var(--fuente-voz);
+  quotes: '«' '»';
+}
+
+.voz span {
+  font: 600 var(--texto-xs) / 1.2 var(--fuente-ui);
+  opacity: 0.8;
+}
+
+.voz:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.mas {
+  justify-self: center;
+  min-height: 44px;
+  padding: 0 var(--e4);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  cursor: pointer;
+}
+
+.vacio {
+  margin: 0;
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}

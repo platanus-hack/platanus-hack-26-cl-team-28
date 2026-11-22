@@ -65,23 +65,37 @@ export function ConRasgos({ rasgos, postura, unidad, porAgente, hacia = 'derecha
       onClick={() => hay && setAbierta((antes) => !antes)}
     >
       {children(hay ? id : undefined)}
-      {hay && (
-        <span role="tooltip" id={id} className={estilos.tarjeta} data-postura={postura}>
-          {rasgos.map((rasgo) => (
-            <span key={rasgo.clave} className={estilos.rasgo}>
-              <span className={estilos.dimension}>{rasgo.dimension}</span>
-              <strong className={estilos.grupo}>{rasgo.grupo}</strong>
-              <span className={estilos.cifra}>
-                <b>{rasgo.parte} %</b> {POSTURA_TEXTO[postura]} · {puntos(rasgo.parte - rasgo.base)} sobre el total
-              </span>
-              <span className={estilos.agentes}>
-                {formatear(rasgo.agentes)} {unidad}
-                {porAgente ? ` ≈ ${personasAprox(rasgo.agentes * porAgente)}` : ''}
-              </span>
-            </span>
-          ))}
+      {hay && <TarjetaRasgos id={id} rasgos={rasgos} postura={postura} unidad={unidad} porAgente={porAgente} />}
+    </span>
+  );
+}
+
+interface PropsTarjeta {
+  rasgos: readonly RasgoVoto[];
+  postura: Postura;
+  unidad: string;
+  porAgente?: number | null;
+  /** Con id es la tarjeta flotante de un wati; sin él, una lista fija dentro de la página (la hoja del teléfono). */
+  id?: string;
+}
+
+/** Las características que más distinguen a una postura: el grupo, qué parte de él y cuánto sobre el total. */
+export function TarjetaRasgos({ rasgos, postura, unidad, porAgente, id }: PropsTarjeta) {
+  return (
+    <span role={id ? 'tooltip' : undefined} id={id} className={id ? estilos.tarjeta : estilos.estatica} data-postura={postura}>
+      {rasgos.map((rasgo) => (
+        <span key={rasgo.clave} className={estilos.rasgo}>
+          <span className={estilos.dimension}>{rasgo.dimension}</span>
+          <strong className={estilos.grupo}>{rasgo.grupo}</strong>
+          <span className={estilos.cifra}>
+            <b>{rasgo.parte} %</b> {POSTURA_TEXTO[postura]} · {puntos(rasgo.parte - rasgo.base)} sobre el total
+          </span>
+          <span className={estilos.agentes}>
+            {formatear(rasgo.agentes)} {unidad}
+            {porAgente ? ` ≈ ${personasAprox(rasgo.agentes * porAgente)}` : ''}
+          </span>
         </span>
-      )}
+      ))}
     </span>
   );
 }

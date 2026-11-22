@@ -416,3 +416,48 @@
     gap: var(--e5);
   }
 }
+
+/*
+ * Teléfono: todo en una columna que se desplaza. Primero la pregunta y los grupos (lo que se busca),
+ * después las características para elegir otra. «Volver al mapa» queda arriba, sobre el título.
+ */
+@media (max-width: 899px) {
+  .vista {
+    display: block;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: calc(max(var(--e3), env(safe-area-inset-top)) + 60px) var(--e4) calc(var(--e6) + env(safe-area-inset-bottom));
+  }
+
+  .cuerpo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--e6);
+    margin-top: var(--e5);
+  }
+
+  .centro {
+    order: -1;
+  }
+
+  .variante {
+    flex-wrap: wrap;
+    gap: var(--e2) var(--e3);
+  }
+
+  .titulo {
+    --lineas-titulo: 2;
+    flex-basis: 100%;
+    font-size: 1.1rem;
+  }
+
+  .variantes button,
+  .preguntas button {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .controles {
+    flex-wrap: wrap;
+  }
+}

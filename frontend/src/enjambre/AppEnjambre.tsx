@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { formatear, personasAprox } from '../dominio/textos';
 import { REGIONES_GEO } from '../mapa/geografia';
@@ -12,7 +12,7 @@ import { BloqueAvance } from './BloqueAvance';
 import { BloquePostura } from './BloquePostura';
 import { CajonEncuesta } from './CajonEncuesta';
 import { ConexionMcp } from './ConexionMcp';
-import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type ModoVuelo } from './EscenaEnjambre';
+import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type Bordes, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { FiguraWati } from './FiguraWati';
 import { Insignia } from './Insignia';
@@ -21,7 +21,15 @@ import { MenuOpciones } from './MenuOpciones';
 import { Propuesta } from './Propuesta';
 import { Redactando } from './Redactando';
 import { ResultadoEncuesta } from './ResultadoEncuesta';
-import { useAngosto } from './useAngosto';
+import { DisposicionMovil } from './movil/DisposicionMovil';
+import movilEstilos from './movil/DisposicionMovil.module.css';
+import type { Tope } from './movil/hoja';
+import { ListaVoces } from './movil/ListaVoces';
+import { MenuMas } from './movil/MenuMas';
+import { PorRegion } from './movil/PorRegion';
+import { Quienes } from './movil/Quienes';
+import { ResumenPostura } from './movil/ResumenPostura';
+import { useAngosto, useMovil } from './useAngosto';
 import { usePanelLateral } from './usePanelLateral';
 import { Validacion } from './Validacion';
 import { VistaAnalisis } from './VistaAnalisis';
@@ -80,6 +88,11 @@ export function AppEnjambre() {
     botonEncuesta.current?.focus();
   }, [cerrarPanelEncuesta]);
   const angosto = useAngosto();
+  /** En el teléfono la interfaz no va a los costados del país: barra arriba y hoja abajo (ver movil/). */
+  const movil = useMovil();
+  /** Lo que tapan la barra y la hoja en el teléfono; se guarda por si la escena se arma después. */
+  const ultimosBordes = useRef<Bordes | null>(null);
+  const [hojaCompleta, setHojaCompleta] = useState(false);
   const [zoom, setZoom] = useState(1);
   /** El proceso en lugar del mapa. `montado` sigue un momento más al cerrar, mientras los cuadrados vuelven. */
   const [proceso, setProceso] = useState(false);
@@ -142,6 +155,7 @@ export function AppEnjambre() {
     if (!puntos) return;
     if (escena.current) return escena.current.reemplazar(puntos);
     const nueva = new EscenaEnjambre(lienzo.current!, puntos);
+    nueva.fijarBordes(ultimosBordes.current);
     nueva.alCambiarVista = (nivel) => {
       setZoom(nivel);
       setFicha(null);
@@ -158,6 +172,18 @@ export function AppEnjambre() {
     },
     [],
   );
+  // En el teléfono el mapa se acomoda en lo que dejan libre la barra y la hoja; en escritorio, a los costados.
+  const alCambiarBordes = useCallback((bordes: Bordes) => {
+    ultimosBordes.current = bordes;
+    escena.current?.fijarBordes(bordes);
+  }, []);
+  useLayoutEffect(() => {
+    if (movil) return;
+    ultimosBordes.current = null;
+    escena.current?.fijarBordes(null);
+    setHojaCompleta(false);
+  }, [movil]);
+  const alCambiarTope = useCallback((tope: Tope) => setHojaCompleta(tope === 'completa'), []);
   useEffect(() => {
     if (orden) escena.current?.fijar(orden.estados, orden.modo);
   }, [orden]);
@@ -273,7 +299,6 @@ export function AppEnjambre() {
     return () => window.removeEventListener('keydown', tecla);
   });
 
-  // En pantallas angostas el grupo de botones no se muestra, así que el proceso tampoco se abre.
   const hayProceso = !!caso;
   const alternarProceso = () => {
     setFicha(null);
@@ -287,7 +312,7 @@ export function AppEnjambre() {
     setProceso(false);
     setAnalisis(!analisis);
   };
-  // Sin corrida en pantalla no hay proceso ni análisis que mostrar. En angosto no hay botón para volver del análisis.
+  // Sin corrida en pantalla no hay proceso ni análisis que mostrar.
   useEffect(() => {
     if (hayProceso) return;
     setProceso(false);
@@ -360,17 +385,12 @@ export function AppEnjambre() {
   });
   // Con el mapa tapado por completo no se dibuja: el proceso lo cubre al terminar de abrirse (sus
   // cuadrados salen del mapa, que debe verse mientras vuelan) y el análisis, de inmediato.
+  // En el teléfono, con la hoja subida entera, el mapa tampoco se ve.
   useEffect(() => {
-    if (!proceso && !analisis) return escena.current?.pausar(false);
-    const espera = window.setTimeout(() => escena.current?.pausar(true), analisis ? 400 : 1300);
+    if (!proceso && !analisis && !hojaCompleta) return escena.current?.pausar(false);
+    const espera = window.setTimeout(() => escena.current?.pausar(true), analisis ? 400 : hojaCompleta && !proceso ? 320 : 1300);
     return () => window.clearTimeout(espera);
-  }, [proceso, analisis, puntos]);
-  useEffect(() => {
-    const estrecha = matchMedia('(max-width: 899px)');
-    const cerrar = () => estrecha.matches && setAnalisis(false);
-    estrecha.addEventListener('change', cerrar);
-    return () => estrecha.removeEventListener('change', cerrar);
-  }, []);
+  }, [proceso, analisis, hojaCompleta, puntos]);
 
   const pct = caso && listo ? porcentajesDe(caso) : null;
   const agentesAnalisis = conexion?.agentes;
@@ -400,8 +420,148 @@ export function AppEnjambre() {
     return () => window.clearTimeout(espera);
   }, [orden, fase, viendo, conEncuesta, revisarTapados]);
 
+  const barraMando = (
+    <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={(boton) => {
+      botonEncuesta.current = boton;
+      abrirEncuesta();
+    }} />
+  );
+
+  // ─── Teléfono: el menú de la barra, lo que asoma de la hoja y lo que hay debajo, según la fase ───
+  const menuMovil = (
+    <MenuMas
+      sim={sim}
+      claro={claro}
+      alCambiarTema={() => setClaro((valor) => !valor)}
+      conHistorial={!!conexion && !conexion.demo}
+      alUsarHistorial={(textos) => {
+        sim.cargar(textos);
+        sim.volver();
+      }}
+      alVerHistorial={(id) => {
+        setFicha(null);
+        return sim.reabrir(id);
+      }}
+    />
+  );
+  const borrador = sim.borradores[Math.min(editando, sim.borradores.length - 1)];
+  const asomoMovil =
+    !conexion || fase === 'cargando' ? (
+      <p className={movilEstilos.cargando}>Conectando con el motor de simulación</p>
+    ) : fase === 'preparar' ? (
+      <div className={movilEstilos.preparar}>
+        <h2>Preparar consulta</h2>
+        <p>
+          {borrador?.texto.trim() ? <q>{borrador.texto.trim()}</q> : `Para ${formatear(muestra.total)} agentes del Censo 2024`}
+        </p>
+      </div>
+    ) : pct && caso ? (
+      <div className={movilEstilos.resumen}>
+        <ResumenPostura porcentajes={pct} conteo={caso.conteo} porAgente={sim.personasPorAgente} />
+        {casos.length > 1 && <BarraResultado compacta casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />}
+        {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
+      </div>
+    ) : caso ? (
+      <BloqueAvance key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
+    ) : null;
+  const seccionMuestra = (
+    <section className={movilEstilos.seccion}>
+      <h2>Muestra</h2>
+      <Insignia conexion={conexion} agentes={muestra.total} porAgente={sim.personasPorAgente} />
+      {caso && sim.filtrada && (
+        <p className={estilos.filtro}>
+          Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes{sim.personasPorAgente ? ` (≈ ${personasAprox(muestra.total * sim.personasPorAgente)})` : ''}, según los filtros
+        </p>
+      )}
+    </section>
+  );
+  const deltaMovil = pct && caso && viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : null;
+  const conversosMovil = deltaMovil && caso ? textoConversos(casos[0], caso, muestra.agentes) : undefined;
+  const cuerpoMovil =
+    fase === 'preparar' ? (
+      <div className={movilEstilos.secciones}>
+        <div className={movilEstilos.mando}>{barraMando}</div>
+        {seccionMuestra}
+      </div>
+    ) : (
+      <div className={movilEstilos.secciones}>
+        {deltaMovil && (
+          <section className={movilEstilos.seccion}>
+            <h2>Contra la variante A</h2>
+            <p className={movilEstilos.cambio} data-baja={deltaMovil.startsWith('-') || undefined}>{deltaMovil}</p>
+            {conversosMovil && <p className={movilEstilos.nota}>{conversosMovil}</p>}
+          </section>
+        )}
+        {caso?.iteracion?.cambio && (
+          <section className={movilEstilos.seccion}>
+            <h2>Qué cambió el agente</h2>
+            <p className={movilEstilos.nota}>{sinCorte(caso.iteracion.cambio)}</p>
+          </section>
+        )}
+        {conEncuesta && caso && (
+          <section className={movilEstilos.seccion}>
+            <ResultadoEncuesta casos={casos} viendo={viendo} preguntas={sim.encuesta} agentes={muestra.agentes} version={version} />
+          </section>
+        )}
+        {caso && listo && !conexion?.demo && !sim.filtrada && casos[0]?.referencia && (
+          <section className={movilEstilos.seccion}>
+            <h2>Encuesta real y agentes{casos.length > 1 ? `, variante ${casos[0].letra}` : ''}</h2>
+            <Validacion casos={casos} enLinea />
+          </section>
+        )}
+        {rasgos && (
+          <section className={movilEstilos.seccion}>
+            <h2>Quiénes</h2>
+            <Quienes rasgos={rasgos} porAgente={sim.personasPorAgente} />
+          </section>
+        )}
+        {caso && listo && conexion && (
+          <section className={movilEstilos.seccion}>
+            <h2>Por región</h2>
+            <PorRegion caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} version={version} />
+          </section>
+        )}
+        {caso && conexion && (
+          <section className={movilEstilos.seccion}>
+            <h2>Voces</h2>
+            <ListaVoces caso={caso} agentes={conexion.agentes} muestra={muestra.agentes} version={version} alElegir={(agente) => {
+              const lugar = ubicar(agente);
+              setFicha({ agente, x: lugar?.[0] ?? 0, y: lugar?.[1] ?? 0 });
+            }} />
+          </section>
+        )}
+        {seccionMuestra}
+        {caso && (
+          <section className={movilEstilos.seccion} aria-label="Otras vistas">
+            <div className={movilEstilos.acciones}>
+              <button type="button" className={movilEstilos.accion} onClick={alternarProceso}>
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M4 4.2 11.6 8M4 11.8 11.6 8" />
+                  <circle cx="3" cy="3.6" r="1.9" fill="currentColor" stroke="none" />
+                  <circle cx="3" cy="12.4" r="1.9" fill="currentColor" stroke="none" />
+                  <circle cx="13" cy="8" r="1.9" fill="currentColor" stroke="none" />
+                </svg>
+                Ver el proceso
+              </button>
+              <button type="button" className={movilEstilos.accion} onClick={alternarAnalisis}>
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M3 13.5V8.5M8 13.5V2.5M13 13.5V6" strokeWidth="2.6" />
+                </svg>
+                Analizar por grupos
+              </button>
+              {fase === 'resultados' && (
+                <button type="button" className={movilEstilos.accion} onClick={sim.volver}>
+                  Nueva pregunta
+                </button>
+              )}
+            </div>
+          </section>
+        )}
+      </div>
+    );
+
   return (
-    <div className={estilos.app} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || analisis || undefined} data-encuesta={conEncuesta || undefined}>
+    <div className={estilos.app} data-movil={movil || undefined} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || analisis || undefined} data-encuesta={conEncuesta || undefined}>
       <canvas
         ref={lienzo}
         className={estilos.lienzo}
@@ -409,12 +569,12 @@ export function AppEnjambre() {
         role="img"
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
-      {(fase === 'preparar' || fase === 'resultados') && (
-        <a className={estilos.irAlPanel} href={fase === 'resultados' && conEncuesta ? '#resultados-movil' : '#mando-movil'}>
-          {fase === 'preparar' ? 'Preparar consulta' : 'Ver resultados'}
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10m-4-4 4 4 4-4" /></svg>
-        </a>
-      )}
+      {movil ? (
+        <DisposicionMovil fase={fase} caso={caso} menu={menuMovil} asomo={asomoMovil} etiqueta={fase === 'preparar' ? 'Preparar consulta' : 'Resultados'} alCambiarBordes={alCambiarBordes} alCambiarTope={alCambiarTope} oculta={oculta || proceso || analisis}>
+          {cuerpoMovil}
+        </DisposicionMovil>
+      ) : (
+      <>
       {/* Dos columnas: en cada una, cada bloque va debajo del anterior y nada se pisa. */}
       <div ref={izquierda} className={estilos.izquierda}>
       <header className={estilos.arriba}>
@@ -442,11 +602,11 @@ export function AppEnjambre() {
         </div>
       )}
       {conEncuesta && caso && (
-        <div className={estilos.encuesta} id="resultados-movil">
+        <div className={estilos.encuesta}>
           <ResultadoEncuesta casos={casos} viendo={viendo} preguntas={sim.encuesta} agentes={muestra.agentes} version={version} />
         </div>
       )}
-      <div className={estilos.mando} id="mando-movil">
+      <div className={estilos.mando}>
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
           <div className={estilos.panelMando}>
@@ -474,10 +634,7 @@ export function AppEnjambre() {
               <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} mono={mono} saludo={saludo} /></span></span>
             </button>
             <div className={estilos.contenidoMando}>
-              <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={(boton) => {
-                botonEncuesta.current = boton;
-                abrirEncuesta();
-              }} />
+              {barraMando}
             </div>
           </div>
         )}
@@ -571,6 +728,8 @@ export function AppEnjambre() {
         </div>
       </div>
       </div>
+      </>
+      )}
       {procesoMontado && conexion && caso && (
         <VistaProceso
           sim={sim}
@@ -589,7 +748,7 @@ export function AppEnjambre() {
         </button>
       )}
       {puntos && !procesoMontado && !analisis && fase !== 'cargando' && conexion && (
-        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} elegibles={muestra.elegido} ubicar={ubicar} alHablar={alHablar} alMoverVista={alMoverVista} activo={fase === 'corriendo' && !listo && !oculta} deseando={fase === 'preparar' && !oculta} />
+        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} elegibles={muestra.elegido} ubicar={ubicar} alHablar={alHablar} alMoverVista={alMoverVista} activo={fase === 'corriendo' && !listo && !oculta && !hojaCompleta} deseando={fase === 'preparar' && !oculta && !hojaCompleta} franja={movil} />
       )}
       <div className={estilos.zoom} role="group" aria-label="Acercamiento del mapa">
         <div className={estilos.parZoom}>

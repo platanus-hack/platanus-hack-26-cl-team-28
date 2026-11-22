@@ -19,6 +19,11 @@ interface Props {
   activo: boolean;
   /** Todavía no se pregunta nada: de vez en cuando alguien dice qué política le gustaría ver. */
   deseando: boolean;
+  /**
+   * En el teléfono no hay lugar para un globo junto a cada punto: una frase a la vez, a todo el
+   * ancho y sobre la hoja de abajo. El punto de quien habla se sigue resaltando en el mapa.
+   */
+  franja?: boolean;
 }
 
 type Lado = 'izquierda' | 'derecha';
@@ -58,14 +63,17 @@ const LEJOS = 30;
 /** Alto con que se calcula si dos globos se tapan: el real depende del largo de la frase. */
 const ALTO = 180;
 const HOLGURA = 12;
-/** Bajo este ancho la capa no se muestra (ver la hoja de estilos). */
-const ANGOSTA = '(max-width: 899px)';
 /** A la derecha hablan quienes están a favor y a la izquierda quienes están en contra, como vuelan después. */
 const PREFIERE: Record<Lado, string> = { derecha: 'favor', izquierda: 'contra' };
 /** Dónde se prueba poner un deseo, en orden. */
 const LADOS_DESEO: readonly Lado[] = ['derecha', 'izquierda'];
-/** Con la pestaña oculta o la capa escondida no se muestran frases que nadie va a leer. */
-const enPausa = (): boolean => document.hidden || window.matchMedia(ANGOSTA).matches;
+/** Con la pestaña oculta no se muestran frases que nadie va a leer. */
+const enPausa = (): boolean => document.hidden;
+
+/** En la franja basta con que quien habla se vea en el mapa: su frase no va junto a su punto. */
+function seVe(lugar: [number, number] | null): boolean {
+  return !!lugar && lugar[0] >= 0 && lugar[0] <= window.innerWidth && lugar[1] >= MARGEN && lugar[1] <= window.innerHeight - MARGEN;
+}
 
 const anchoGlobo = (): number => Math.round(Math.max(260, Math.min(380, window.innerWidth * 0.2)));
 
@@ -112,7 +120,7 @@ export function quienEs(agente: AgenteRemoto): string {
  * política que a alguien de la muestra le gustaría ver. Esos no los dijo el modelo: salen de las
  * frases prehechas de `deseos.ts`.
  */
-export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMoverVista, activo, deseando }: Props) {
+export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMoverVista, activo, deseando, franja = false }: Props) {
   const [globos, setGlobos] = useState<Globos>({});
   const [, setVista] = useState(0);
   const vistas = useRef(new Set<number>());
@@ -221,6 +229,7 @@ export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMov
       const ancho = anchoGlobo();
       const cabe = (voz: Voz) => {
         const lugar = ubicar(voz.agente);
+        if (franja) return seVe(lugar);
         const caja = lugar && cajaDe(lado, lugar, ancho);
         return !!caja && libre(caja, ancho, lado);
       };
@@ -231,15 +240,16 @@ export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMov
         candidatas.find((v) => posturaDe(v.acuerdo) === 'indecisa' && cabe(v));
       if (!voz) return;
       vistas.current.add(voz.agente);
-      poner(lado, { agente: voz.agente, lado, tono: posturaDe(voz.acuerdo), frase: voz.frase }, DURA);
-    }, CADA);
+      // En la franja cabe una sola: la nueva reemplaza a la anterior, alternando posturas.
+      poner(franja ? 'derecha' : lado, { agente: voz.agente, lado, tono: posturaDe(voz.acuerdo), frase: voz.frase }, DURA);
+    }, franja ? DURA * 0.75 : CADA);
     return () => {
       // Las frases se desvanecen antes de que el país se abra, en vez de cortarse de golpe.
       window.clearInterval(tic);
       soltar('izquierda');
       soltar('derecha');
     };
-  }, [activo, caso, voces, ubicar, poner, libre, soltar]);
+  }, [activo, caso, voces, ubicar, poner, libre, soltar, franja]);
 
   // Los deseos: uno cada tanto, mientras nadie ha preguntado nada todavía.
   useEffect(() => {
@@ -263,8 +273,8 @@ export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMov
         if (!lugar) return false;
         // A la derecha el mapa está despejado; a la izquierda está la propuesta que se escribe.
         for (const lado of LADOS_DESEO) {
-          const caja = cajaDe(lado, lugar, ancho);
-          if (!caja || !libre(caja, ancho, 'deseo')) continue;
+          const caja = franja ? null : cajaDe(lado, lugar, ancho);
+          if (franja ? !seVe(lugar) : !caja || !libre(caja, ancho, 'deseo')) continue;
           const pie = deseo.firma ? [deseo.firma, comuna].filter(Boolean).join(' · ') : undefined;
           poner('deseo', { agente, lado, tono: 'deseo', frase: deseo.frase, pie }, DURA_DESEO);
           pendiente.current = null;
@@ -282,7 +292,7 @@ export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMov
       window.clearTimeout(espera);
       soltar('deseo');
     };
-  }, [deseando, elegibles, agentes, ubicar, poner, libre, soltar, siguienteDeseo]);
+  }, [deseando, elegibles, agentes, ubicar, poner, libre, soltar, siguienteDeseo, franja]);
 
   // Al irse (se abre el proceso o el análisis) no quedan relojes ni nadie resaltado.
   useEffect(
@@ -292,6 +302,26 @@ export function Voces({ voces, caso, agentes, elegibles, ubicar, alHablar, alMov
     },
     [callar],
   );
+
+  if (franja) {
+    // Con la hoja subida entera la franja quedaría sobre la barra de arriba: se va sin despedirse.
+    if (!activo && !deseando) return null;
+    return (
+      <div className={estilos.franja} aria-hidden="true">
+        {SITIOS.map((sitio) => {
+          const g = globos[sitio];
+          if (!g) return null;
+          const agente = agentes[g.agente];
+          return (
+            <figure key={g.clave} className={estilos.globo} data-postura={g.tono} data-saliendo={g.saliendo || undefined}>
+              <blockquote>{g.frase}</blockquote>
+              <figcaption>{g.pie ?? (agente ? quienEs(agente) : '')}</figcaption>
+            </figure>
+          );
+        })}
+      </div>
+    );
+  }
 
   const ancho = anchoGlobo();
   return (

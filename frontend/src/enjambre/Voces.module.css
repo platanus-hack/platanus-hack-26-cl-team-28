@@ -113,10 +113,32 @@
   }
 }
 
-@media (max-width: 899px) {
-  .capa {
-    display: none;
-  }
+/*
+ * En el teléfono: una frase a la vez, a todo el ancho, apoyada sobre la hoja de abajo (`--alto-hoja`
+ * lo publica HojaInferior). Sin punta: no está junto a quien habla, que se resalta en el mapa.
+ */
+.franja {
+  position: fixed;
+  right: 0;
+  bottom: calc(var(--alto-hoja, 120px) + var(--e3));
+  left: 0;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  padding-inline: max(var(--e4), env(safe-area-inset-left)) max(var(--e4), env(safe-area-inset-right));
+  pointer-events: none;
+}
+
+.franja .globo {
+  position: relative;
+  grid-area: 1 / 1;
+  width: 100%;
+  max-width: 30rem;
+  transform-origin: 50% 100%;
+}
+
+.franja .globo::before {
+  display: none;
 }
 
 /* Cada globo se despide con su animación: cuando vence, o todos a la vez cuando la encuesta termina. */

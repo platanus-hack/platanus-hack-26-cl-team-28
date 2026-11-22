@@ -7,6 +7,7 @@ import { posturaDe, type CasoVivo } from '../vivo/useEnVivo';
 import { FiguraWati } from './FiguraWati';
 import { rasgosDe } from './wati';
 import estilos from './FichaAgente.module.css';
+import { useMovil } from './useAngosto';
 import { quienEs } from './Voces';
 
 interface Props {
@@ -46,6 +47,7 @@ const DATOS: { clave: string; etiqueta: string; icono: string }[] = [
  */
 export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }: Props) {
   const caja = useRef<HTMLElement>(null);
+  const movil = useMovil();
   const cierre = useRef<number | undefined>(undefined);
   const [abierta, setAbierta] = useState(true);
   const cerrar = () => {
@@ -90,7 +92,8 @@ export function FichaAgente({ agente, casos, viendo, x, y, preguntas, alCerrar }
       tabIndex={-1}
       className={estilos.ficha}
       data-postura={postura}
-      style={{ left: izquierda, top: arriba, width: ANCHO, maxHeight: window.innerHeight - arriba - 16 }}
+      // En el teléfono no va junto al punto: es una tarjeta abajo, a todo el ancho (ver la hoja de estilos).
+      style={movil ? undefined : { left: izquierda, top: arriba, width: ANCHO, maxHeight: window.innerHeight - arriba - 16 }}
       aria-label={`Agente: ${quienEs(agente)}`}
     >
       <header className={estilos.franja}>

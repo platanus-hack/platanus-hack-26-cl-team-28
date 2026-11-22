@@ -66,3 +66,40 @@
     color: var(--tinta);
   }
 }
+
+/*
+ * Teléfono: el proceso necesita ancho para leerse de izquierda a derecha. Se dibuja con el ancho de
+ * una pantalla chica de escritorio y se desliza de lado; las variantes quedan fijas arriba, junto a
+ * «Volver al mapa».
+ */
+@media (max-width: 899px) {
+  .vista {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+  }
+
+  .lienzo {
+    top: calc(max(var(--e3), env(safe-area-inset-top)) + 56px);
+    right: auto;
+    width: max(100%, 960px);
+    height: calc(100% - max(var(--e3), env(safe-area-inset-top)) - 56px - env(safe-area-inset-bottom));
+  }
+
+  .cabeza {
+    position: fixed;
+    top: max(var(--e3), env(safe-area-inset-top));
+    right: var(--e3);
+    left: auto;
+    justify-content: flex-end;
+  }
+
+  .variantes button {
+    width: 44px;
+    height: 44px;
+  }
+
+  .titulo {
+    display: none;
+  }
+}

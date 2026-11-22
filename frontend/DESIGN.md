@@ -116,8 +116,31 @@ puestos) y cuenta en agentes, sin ponderar, igual que el resto de la pantalla.
 
 Cálculo en `src/vivo/analisis.ts` (con pruebas); piezas en `src/enjambre/VistaAnalisis.tsx` y `src/enjambre/analisis/`.
 
-**Pantallas angostas y bajas.** En angostas todo va en una columna; en bajas (hasta 800 px de alto) las cifras bajan
-para no chocar con la tarjeta de la encuesta.
+**Pantallas bajas.** En las de hasta 800 px de alto, las cifras bajan para no chocar con la tarjeta de la encuesta.
+
+**Teléfono (menos de 900 px de ancho).** Nada va encima del mapa.
+- *Arriba*, una barra con la variante y la propuesta en dos líneas (al tocarla se lee entera) y un menú `⋯` con
+  el tema, el historial, las opciones de la muestra y, mientras corre, detener. El panel MCP no aparece: es
+  trabajo de escritorio.
+- *Abajo*, una hoja que se arrastra entre tres topes: asomo, mitad y completa. También se maneja sin arrastrar:
+  el asa es un botón (clic, flechas, Inicio y Fin).
+  - En el asomo van siempre el resultado (en contra a la izquierda, a favor a la derecha, como en el mapa) y
+    las variantes.
+  - Al subirla aparecen, en este orden: la diferencia con la A, la encuesta, la encuesta real, quiénes están en
+    cada lado, el resultado por región, las voces, la muestra, y el proceso, el análisis y una pregunta nueva.
+  - Al preparar empieza a media altura, con la pregunta a la vista.
+- *El país* se dibuja en la franja libre entre la barra y la hoja (`EscenaEnjambre.fijarBordes`). Sin ancho
+  para una segunda columna, las filas de burbujas se apilan de norte a sur, cada una pegada al borde del país
+  a su altura (`apilar` y `disponerResultado` en `disposicion.ts`, con pruebas de 320 a 412 px).
+  - Si los nombres no caben se abrevian (`Valpo.`), y en último caso queda solo la cifra. La lista por región
+    de la hoja dice cuál es cuál.
+  - Se acerca con dos dedos; «Ver todo» vuelve a la vista completa.
+- *Las voces* salen una a la vez sobre la hoja, y el punto de quien habla se resalta en el mapa. En la hoja
+  están todas, en lista.
+- *El proceso* se desliza de lado; *el análisis* va en una columna.
+- *La ficha de una persona* es una tarjeta abajo, a todo el ancho.
+
+Piezas en `src/enjambre/movil/`. El escritorio no cambia: `AppEnjambre` elige una disposición u otra con `useMovil`.
 
 **Sistema.** Fondo oscuro y plano, sin brillos ni degradados; tema claro para salas con mucha luz
 (`src/enjambre/tema.css`). Rótulos de región que crecen con la pantalla (hasta 16 px) para leerse en un proyector.
@@ -128,8 +151,11 @@ para no chocar con la tarjeta de la encuesta.
 
 **Medido.** 60 cuadros por segundo con 10.000 puntos durante toda una corrida en 1920 por 1080 (p99 de 17 ms).
 
-**Pendiente.** En móvil el mapa queda chico y sin rótulos; la ficha solo se abre tocando un punto (no hay camino
-por teclado).
+**Pendiente.**
+- La ficha de una persona solo se abre tocando un punto o, en el teléfono, una voz de la lista; desde el mapa no hay
+  camino por teclado.
+- En el teléfono, el proceso todavía se dibuja con proporciones de escritorio.
+- Falta probar en un teléfono de verdad: el teclado, las áreas seguras del iPhone y el pellizco en Safari.
 
 # Diseño 1: Chile a pantalla completa
 

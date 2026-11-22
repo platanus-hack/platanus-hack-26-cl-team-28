@@ -1,0 +1,147 @@
+/* Solo ordena: la barra y la hoja se ubican solas (position absolute y fixed). */
+.movil {
+  display: contents;
+}
+
+.movil > * {
+  transition: opacity var(--medio), visibility 0s;
+}
+
+.movil[data-oculta] > * {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--medio), visibility 0s var(--medio);
+}
+
+/* El asomo con un resultado: las cifras, las variantes y, si el agente reescribe, su aviso. */
+.resumen {
+  display: grid;
+  gap: var(--e3);
+}
+
+/* El formulario de la pregunta ya va sobre el papel de la hoja: sin su propio relleno. */
+.mando > form {
+  padding: 0;
+}
+
+/* Las secciones del cuerpo de la hoja, una debajo de otra con una línea entre ellas. */
+.secciones {
+  display: grid;
+  gap: var(--e5);
+}
+
+.seccion {
+  --ancho-encuesta: 100%;
+  display: grid;
+  gap: var(--e3);
+  min-width: 0;
+}
+
+.seccion + .seccion {
+  padding-top: var(--e5);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.seccion > h2 {
+  margin: 0;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+/* Las vistas y la pregunta nueva: botones a todo el ancho, fáciles de tocar. */
+.acciones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--e2);
+}
+
+.acciones > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e2);
+  min-height: 48px;
+  padding: 0 var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 650 var(--texto-s) / 1.15 var(--fuente-ui);
+  cursor: pointer;
+}
+
+.accion svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.accion:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.accion:active {
+  background: var(--relleno-suave);
+}
+
+/* Cuánto cambió esta variante contra la A, en grande, y en gente. */
+.cambio {
+  margin: 0;
+  font: 500 1.35rem / 1.15 var(--fuente-voz);
+  color: var(--favor-texto);
+  text-wrap: balance;
+}
+
+.cambio[data-baja] {
+  color: var(--contra-texto);
+}
+
+.nota {
+  margin: 0;
+  font-size: var(--texto-m);
+  line-height: 1.35;
+}
+
+/* Al preparar, con la hoja abajo: qué se está armando, en una línea. El botón para preguntar está en la hoja. */
+.preparar {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.preparar h2 {
+  margin: 0;
+  font: 500 1.25rem / 1.15 var(--fuente-voz);
+}
+
+.preparar p {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  font: 500 var(--texto-s) / 1.3 var(--fuente-ui);
+  color: var(--tinta-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preparar q {
+  quotes: '«' '»';
+}
+
+.cargando {
+  margin: 0;
+  padding-block: var(--e2);
+  font-size: var(--texto-m);
+  color: var(--tinta-suave);
+}

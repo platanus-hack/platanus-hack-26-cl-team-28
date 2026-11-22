@@ -1,0 +1,118 @@
+.menu {
+  position: relative;
+  flex: none;
+}
+
+.boton {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--tinta-suave) 22%, var(--linea-suave));
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+.boton[aria-expanded='true'] {
+  background: var(--relleno-suave);
+}
+
+.boton:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.boton svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.lista {
+  position: absolute;
+  top: calc(100% + var(--e2));
+  right: 0;
+  z-index: 5;
+  display: grid;
+  min-width: 15rem;
+  padding: var(--e1);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  box-shadow: 0 12px 32px rgb(8 11 16 / 0.26);
+  transform-origin: top right;
+}
+
+.lista button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  min-height: 48px;
+  padding: 0 var(--e3);
+  border: 0;
+  border-radius: calc(var(--radio) - 4px);
+  background: transparent;
+  color: var(--tinta);
+  font: 600 var(--texto-m) / 1.2 var(--fuente-ui);
+  text-align: left;
+  cursor: pointer;
+}
+
+.lista button:disabled {
+  color: var(--tinta-suave);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lista button:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: -2px;
+}
+
+.lista button:active:not(:disabled) {
+  background: var(--relleno-suave);
+}
+
+/* Interruptor del tema: se corre a la derecha con el tema claro. */
+.interruptor {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 24px;
+  border: 1px solid var(--linea-suave);
+  border-radius: 12px;
+  background: var(--relleno-suave);
+}
+
+.interruptor::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--tinta-suave);
+  transition: translate var(--rapido) var(--curva-salida);
+  content: '';
+}
+
+[aria-checked='true'] > .interruptor::after {
+  translate: 16px 0;
+  background: var(--tinta);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lista button:hover:not(:disabled) {
+    background: var(--relleno-suave);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interruptor::after {
+    transition: none;
+  }
+}

@@ -1,0 +1,42 @@
+.barra {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e3);
+  padding: max(var(--e3), env(safe-area-inset-top)) max(var(--e4), env(safe-area-inset-right)) var(--e3) max(var(--e4), env(safe-area-inset-left));
+  background: linear-gradient(var(--mar) 78%, transparent);
+}
+
+.titular {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font: 500 clamp(1.7rem, 7vw, 2.2rem) / 1.15 var(--fuente-voz);
+  letter-spacing: -0.02em;
+}
+
+.pregunta {
+  --lineas-titulo: 2;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font: 500 1.02rem / 1.25 var(--fuente-voz);
+}
+
+.pregunta > span {
+  display: block;
+  margin-bottom: var(--e1);
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+/* Toda la propuesta es un botón: el objetivo táctil es generoso aunque el texto sea corto. */
+.pregunta button {
+  min-height: 44px;
+}

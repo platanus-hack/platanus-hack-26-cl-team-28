@@ -9,6 +9,7 @@ import { ListaSeparan } from './analisis/ListaSeparan';
 import { PreguntasJuntas } from './analisis/PreguntasJuntas';
 import { TablaGrupos, type Cruce } from './analisis/TablaGrupos';
 import { VocesGrupos } from './analisis/VocesGrupos';
+import { useConsulta } from './useAngosto';
 import estilos from './VistaAnalisis.module.css';
 
 interface Props {
@@ -48,6 +49,8 @@ function hallazgo(resumen: ResumenDimension, lado: string): ReactNode {
  * al centro, la elegida, grupo por grupo, con la opción de cruzarla con otra.
  */
 export function VistaAnalisis({ sim, conexion }: Props) {
+  /** En pantallas táctiles no hay cursor que pase por encima: se toca. */
+  const conDedo = useConsulta('(pointer: coarse)');
   const { casos, viendo, muestra, version, encuesta } = sim;
   const caso = casos[viendo];
   const base = viendo > 0 && casos[0].listo ? casos[0] : null;
@@ -166,7 +169,7 @@ export function VistaAnalisis({ sim, conexion }: Props) {
               ) : (
                 <p>
                   {actual.total.total < respondieron ? `${formatear(actual.total.total)} de ${formatear(respondieron)} agentes tienen este dato` : `${formatear(actual.total.total)} agentes`}
-                  {sim.filtrada ? ', según los filtros' : ''}. Pasa el cursor por una fila para ver su detalle.
+                  {sim.filtrada ? ', según los filtros' : ''}. {conDedo ? 'Toca' : 'Pasa el cursor por'} una fila para ver su detalle.
                 </p>
               )}
             </footer>

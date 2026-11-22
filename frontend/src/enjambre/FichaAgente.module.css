@@ -289,3 +289,16 @@
   color: var(--tinta-suave);
   text-align: right;
 }
+
+/* Teléfono: una tarjeta abajo, a todo el ancho y sobre la hoja; se lee entera desplazándola por dentro. */
+@media (max-width: 899px) {
+  .ficha {
+    position: fixed;
+    right: max(var(--e3), env(safe-area-inset-right));
+    bottom: max(var(--e3), env(safe-area-inset-bottom));
+    left: max(var(--e3), env(safe-area-inset-left));
+    z-index: 5;
+    max-height: min(72dvh, 36rem);
+    box-shadow: 0 -8px 32px rgb(0 0 0 / 0.28);
+  }
+}

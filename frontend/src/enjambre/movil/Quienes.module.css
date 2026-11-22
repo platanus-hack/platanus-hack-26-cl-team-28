@@ -1,0 +1,45 @@
+.quienes {
+  display: grid;
+  gap: var(--e4);
+}
+
+.postura {
+  display: grid;
+  gap: var(--e2);
+  padding-left: var(--e3);
+  border-left: 3px solid var(--color);
+}
+
+.postura[data-postura='favor'] {
+  --color: var(--favor);
+}
+
+.postura[data-postura='contra'] {
+  --color: var(--contra);
+}
+
+.postura[data-postura='indecisa'] {
+  --color: var(--indecisa);
+}
+
+.cabeza {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e2);
+}
+
+.cabeza canvas {
+  display: block;
+  flex: none;
+}
+
+.cabeza h3 {
+  margin: 0 0 6px;
+  font: 500 1.2rem / 1 var(--fuente-voz);
+}
+
+.vacio {
+  margin: 0;
+  font-size: var(--texto-s);
+  color: var(--tinta-suave);
+}

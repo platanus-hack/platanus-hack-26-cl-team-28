@@ -123,3 +123,47 @@
 
 .acciones { display: flex; align-items: center; gap: var(--e2); width: max-content; flex-wrap: nowrap; }
 .acciones > button { padding-inline: var(--e4); border: 1px solid var(--linea-suave); color: var(--tinta); font-size: var(--texto-s); }
+
+/*
+ * En el asomo de la hoja del teléfono: una papeleta baja por variante, en una fila que se desliza de
+ * lado si son muchas (el agente puede sumar hasta tres versiones). La diferencia contra la A se lee
+ * en la hoja.
+ */
+.barra[data-compacta] .pestanas {
+  width: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+}
+
+.barra[data-compacta] .pestanas::-webkit-scrollbar {
+  display: none;
+}
+
+.barra[data-compacta] .pestanas button {
+  flex: 1 0 64px;
+  min-height: 48px;
+  flex-direction: row;
+  gap: 6px;
+  padding: 6px 8px 10px;
+  scroll-snap-align: start;
+}
+
+.barra[data-compacta] .letra {
+  font-size: 1.1rem;
+}
+
+.barra[data-compacta] .dato strong {
+  font-size: 1.05rem;
+}
+
+.barra[data-compacta] .pestanas em,
+.barra[data-compacta] .pestanas small {
+  display: none;
+}
+
+.barra[data-compacta] .reparto {
+  height: 4px;
+}

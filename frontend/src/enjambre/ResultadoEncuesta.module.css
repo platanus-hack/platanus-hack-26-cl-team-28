@@ -7,7 +7,8 @@
   display: grid;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: var(--e2);
-  width: min(100%, 20rem);
+  /* En la hoja del teléfono ocupa todo el ancho (la hoja fija `--ancho-encuesta`). */
+  width: var(--ancho-encuesta, min(100%, 20rem));
   min-height: 0;
   padding: var(--e3) var(--e4);
   border: 1px solid var(--linea-suave);
@@ -259,5 +260,12 @@
 @media (prefers-reduced-motion: reduce) {
   .reparto i, .despliegue, .encuesta li button svg {
     transition: none;
+  }
+}
+
+/* Con el dedo, cada pregunta se toca con holgura. */
+@media (pointer: coarse) {
+  .encuesta li button {
+    min-height: 44px;
   }
 }
