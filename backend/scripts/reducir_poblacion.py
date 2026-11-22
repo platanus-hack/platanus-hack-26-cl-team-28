@@ -21,7 +21,7 @@ deja elegir el nivel; para usar uno basta quedarse con las filas donde su column
 Cómo se agrupa
 --------------
 Lo que más pesa en una opinión es la política (voto, aprobación de los gobiernos, posición,
-confianza en el gobierno); la demografía pesa poco (contexto/delphos/influencia.md). Por eso:
+confianza en el gobierno); la demografía pesa poco (contexto/metodo/influencia.md). Por eso:
 
 1. Tipos políticos. Todas las opiniones de una persona vienen de un mismo entrevistado de la
    Encuesta CEP, y hay 1.466. `tipos_politicos()` los agrupa en TIPOS tipos según los datos de
@@ -54,7 +54,7 @@ RAZON = 10
 NIVELES = [(10, "representa"), (100, "representa_100"), (1000, "representa_1000"), (10000, "representa_10000")]
 
 # Los datos con que se arman los tipos políticos y cuánto explica cada uno de las opiniones de la
-# CEP (eta² medio, en contexto/delphos/influencia.md): es su peso al medir el parecido.
+# CEP (eta² medio, en contexto/metodo/influencia.md): es su peso al medir el parecido.
 POLITICA = [
     ("voto_segunda_vuelta_2025", 9.4),
     ("aprueba_gobierno", 8.6),
@@ -467,7 +467,7 @@ def main():
             "",
             "## Cómo se agrupa",
             "",
-            "Lo que más pesa en una opinión es la política; la demografía pesa poco (`contexto/delphos/influencia.md`). La reducción agrupa primero por eso:",
+            "Lo que más pesa en una opinión es la política; la demografía pesa poco (`contexto/metodo/influencia.md`). La reducción agrupa primero por eso:",
             "",
             f"1. **Tipos políticos.** Todas las opiniones de una persona vienen de un mismo entrevistado de la Encuesta CEP, y hay {miles(entrevistados)}. "
             f"Se agrupan en {TIPOS} tipos según su voto, su evaluación de los dos gobiernos, su posición política, su confianza en el gobierno, "

@@ -1,4 +1,6 @@
-# Evaluación de Luna y contexto de las encuestas
+# Exploración: evaluación de Luna y contexto de las encuestas
+
+> **Exploración previa.** Este documento registra una de las más de 40 configuraciones que el equipo probó antes de fijar el método del sitio: GPT-6 Luna con postura explícita, medida con otra métrica (error en tres categorías). El motor del sitio usa Claude Haiku con un analista Claude Opus que ancla el total nacional, y su validación en 82 preguntas reservadas (error medio 8,2 puntos, 88 % de mayorías acertadas) está en [VALIDACION.md](../VALIDACION.md).
 
 **Configuración de referencia:** GPT-6 Luna con **Base histórica + hogar + justicia y postura explícita**. Es la variante con menor error entre las opciones que conservaron la escala de apoyo 1–7 en el panel comparativo de diez preguntas Cadem. Estimó **5,8%** sin postura frente a **6,0%** observado. La variante histórica de pregunta directa obtuvo el menor error absoluto de ese panel, **7,25 pp frente a 7,68 pp**, con **0,6%** sin postura. La elección depende de si se prioriza solo el error agregado o también conservar la escala y reproducir la indecisión.
 

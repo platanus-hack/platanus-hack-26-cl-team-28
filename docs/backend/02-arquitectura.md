@@ -48,7 +48,7 @@ flowchart LR
         front[Frontend]
         motor[Motor de simulación]
     end
-    modelo[("Modelo de lenguaje<br/>Claude Haiku y Sonnet")]
+    modelo[("Modelo de lenguaje<br/>Claude Haiku, Opus y Sonnet")]
     fuentes[("Censo 2024, Casen 2024<br/>y Encuesta CEP 96")]
     repo[("Repositorio y<br/>despliegue continuo")]
 

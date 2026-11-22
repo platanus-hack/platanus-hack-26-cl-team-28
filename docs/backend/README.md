@@ -43,17 +43,17 @@ en vivo, cómo responde cada una a una o más versiones de una política públic
   consultar los agentes. Filtra y sortea la muestra, reparte a las personas en lotes, hace
   responder cada lote a un modelo de lenguaje y transmite las respuestas al navegador por un flujo
   de eventos.
-- **El modelo** es Claude Haiku para la encuesta y Claude Sonnet para redactar variantes y resumir
-  documentos. En producción se llama por la línea de comandos de Claude Code, un proceso por lote.
+- **El modelo** es Claude Haiku para la encuesta, Claude Opus como analista que ancla el total
+  nacional (`backend/servidor/ancla.py`) y Claude Sonnet para redactar variantes y resumir documentos. En producción se llama por la línea de comandos de Claude Code, un proceso por lote.
 - **La máquina** es una sola instancia de 16 núcleos y 30 GB con Caddy delante. Todo el estado de
   una simulación en curso está en la memoria del servidor; en disco quedan la caché de respuestas y
   el historial.
 
 Lo que el sistema promete y lo que no:
 
-- Una respuesta simulada no es una respuesta observada. El sistema entrega dirección y orden entre
-  variantes, no porcentajes garantizados. La comparación con encuestas reales está en
-  `backend/data/pruebas/banco/README.md`.
+- Una respuesta simulada no es una respuesta observada: es una aproximación validada. En 82 preguntas
+  reservadas, el porcentaje de acuerdo queda en promedio a 8,2 puntos de la encuesta real y la mayoría
+  queda del mismo lado en 88 % ([VALIDACION.md](../../VALIDACION.md)).
 - Con 1.000 agentes una simulación termina en unos 21 segundos y con 10.000 en unos 114 segundos
   (medido en producción, documento 7).
 - El servidor no se cae por exceso de pedidos: comparte un número fijo de llamadas al modelo entre

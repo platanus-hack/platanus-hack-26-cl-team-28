@@ -1,14 +1,16 @@
-# Delphos: documento de contexto y framework
+# What If Chile: documento de contexto y framework
 
 Proyecto para Platanus Hack 2026, track Simulaciones. Versión del 21-11-2026.
 
-Este documento reúne el framework de Delphos: qué problema resuelve, cómo se caracterizan los agentes, qué se les pregunta, cómo se diseñan las variantes de una ley, cómo se valida y calibra el modelo, y quiénes son los usuarios. Cada afirmación empírica lleva su fuente, numerada entre corchetes, con el listado completo al final. Lo que es una decisión de diseño del equipo, y no un hallazgo de la literatura, está marcado como **Decisión de diseño**.
+Es el documento de diseño con que partió el proyecto: reúne la revisión de la literatura y las decisiones iniciales. El método que usa hoy el sitio, ya medido contra encuestas reales, está en [VALIDACION.md](../../../VALIDACION.md) y [FUNCIONAMIENTO.md](../../../FUNCIONAMIENTO.md); donde este documento difiera (por ejemplo, los perfiles no llevan valores de Schwartz porque ninguna fuente chilena los mide), manda lo de esos dos.
+
+Este documento reúne el framework de What If Chile: qué problema resuelve, cómo se caracterizan los agentes, qué se les pregunta, cómo se diseñan las variantes de una ley, cómo se valida y calibra el modelo, y quiénes son los usuarios. Cada afirmación empírica lleva su fuente, numerada entre corchetes, con el listado completo al final. Lo que es una decisión de diseño del equipo, y no un hallazgo de la literatura, está marcado como **Decisión de diseño**.
 
 ---
 
-## 1. Qué es Delphos
+## 1. Qué es What If Chile
 
-Delphos simula cómo reacciona la población chilena a distintas versiones (A a E) de un proyecto de ley en tramitación, región por región y perfil por perfil, para identificar qué versión maximiza la satisfacción o minimiza la disconformidad antes de que se vote.
+What If Chile simula cómo reacciona la población chilena a distintas versiones (A a E) de un proyecto de ley en tramitación, región por región y perfil por perfil, para identificar qué versión maximiza la satisfacción o minimiza la disconformidad antes de que se vote.
 
 Funciona en cuatro pasos:
 
@@ -30,7 +32,7 @@ Funciona en cuatro pasos:
 - **"Silicon samples" (Argyle et al.).** Es el trabajo fundacional: propuso usar LLM condicionados con perfiles demográficos como muestras sintéticas de humanos, a partir de encuestas de EE.UU. [6].
 - **AgentSociety (Tsinghua).** Simulador a gran escala: más de 10 mil agentes y 5 millones de interacciones. Uno de sus casos fue el efecto de políticas de renta básica universal. El código es abierto [7].
 - **Agentes construidos desde encuestas reales.** Un trabajo de 2026 sobre movilidad propone construir los agentes desde poblaciones empíricas derivadas de encuestas, en vez de personas inventadas a mano, para estudiar cómo se forman las preferencias frente a una política [8].
-- **Protocolo argentino de stress test pre-legislativo (Lerer, 2026).** Es lo más parecido a Delphos. Fija la obligación central de una norma ficticia y varía tres rasgos de implementación (complejidad regulatoria, consistencia de la fiscalización y salvaguardas procesales), lo que da ocho brazos experimentales. Registra cada etapa del texto legal como una "ola" inmutable. Su línea base no usa LLM de frontera, y el propio autor la declara no apta para decisiones legales hasta validarla con un piloto humano [9].
+- **Protocolo argentino de stress test pre-legislativo (Lerer, 2026).** Es lo más parecido a What If Chile. Fija la obligación central de una norma ficticia y varía tres rasgos de implementación (complejidad regulatoria, consistencia de la fiscalización y salvaguardas procesales), lo que da ocho brazos experimentales. Registra cada etapa del texto legal como una "ola" inmutable. Su línea base no usa LLM de frontera, y el propio autor la declara no apta para decisiones legales hasta validarla con un piloto humano [9].
 - **CivicSim (Berkeley, 2026).** Prototipo que condiciona la postura de cada agente a su perfil demográfico y a datos históricos de encuestas de su grupo [10].
 - **Productos comerciales.** Simile (simulación de personas reales con consentimiento, para productos y precios) [11], Artificial Societies (audiencias sintéticas de clientes, ciudadanos e inversionistas) [12] y MiroFish (impacto de regulaciones con agentes por grupo de interés, sin comparación de variantes lado a lado) [13].
 
@@ -38,7 +40,7 @@ Funciona en cuatro pasos:
 - **Estudio de la UDP (González-Bustamante, Verelst y Cisternas, 2025).** Compara respuestas sintéticas generadas con LLM contra la encuesta CEP. Se aproximan a la opinión pública chilena, pero la coincidencia varía bastante según la pregunta. Les fue mejor en las preguntas de confianza (F1 y accuracy sobre 0,90), y la coincidencia fue mayor en el grupo de 45 a 59 años. Los autores advierten que los encuestados sintéticos pueden reproducir estereotipos y sesgos [14].
 - No encontramos ninguna herramienta que tome proyectos chilenos en tramitación, genere variantes y compare su aceptación por región.
 
-### 2.3 Qué diferencia a Delphos
+### 2.3 Qué diferencia a What If Chile
 1. Compara variantes de una misma ley, no una política fija.
 2. Usa proyectos chilenos reales en tramitación.
 3. Desagrega por región, con calibración en datos chilenos (CASEN, Censo, CEP).
@@ -52,7 +54,7 @@ Funciona en cuatro pasos:
 
 El hallazgo central: los rasgos "objetivos" de una persona, como la edad o tener hijos, pesan menos de lo que se cree. Lo que más predice el apoyo son sus actitudes de fondo y lo que piensa de la ley en sí.
 
-| Rango | Factor | Evidencia | Uso en Delphos |
+| Rango | Factor | Evidencia | Uso en What If Chile |
 |---|---|---|---|
 | 1 | Justicia y efectividad percibidas de la ley | En un metaanálisis de 15 variables, 89 bases de datos, 51 artículos y 33 países (119.465 participantes), fueron los determinantes más importantes de la aceptación de leyes e impuestos climáticos [15] | No es un rasgo del agente: es su reacción a cada variante. Se mide en la encuesta |
 | 2 | Ideología e identificación partidaria | Las medidas de interés propio tuvieron muy poco efecto en las preferencias de política; las actitudes simbólicas (ideología, identificación partidaria) tuvieron efectos grandes [16]. Se mantiene en 30 años de datos [17] | Rasgo central del agente |
@@ -219,10 +221,10 @@ El techo histórico son los retiros de las AFP, muy populares pero dañinos para
 
 ## 7. Usuarios
 
-| Segmento | Por qué le sirve Delphos | Evidencia |
+| Segmento | Por qué le sirve What If Chile | Evidencia |
 |---|---|---|
 | **Principal: el Ejecutivo que diseña la ley** (Segpres y el ministerio a cargo) | Redacta las indicaciones y negocia los votos. Ya está obligado a anticipar el impacto en la sociedad, pero el IIR no mide la aceptación | IIR obligatorio desde 2019 [2], revisado por la Segpres antes del ingreso al Congreso [48] |
-| **Institucional: CNEP y la futura Agencia para la Calidad de las Políticas Públicas** (Boletín 16.799-05) | Delphos sirve como componente previo (¿la aceptarán y cumplirán?) y como punto de comparación una vez implementada la ley (¿pasó lo predicho?) | La CNEP reconoce el vacío [1][3]; el proyecto de la Agencia se discute desde 2024 [49] e incluye evaluar políticas por su eficacia y coordinar la evaluación previa [50] |
+| **Institucional: CNEP y la futura Agencia para la Calidad de las Políticas Públicas** (Boletín 16.799-05) | What If Chile sirve como componente previo (¿la aceptarán y cumplirán?) y como punto de comparación una vez implementada la ley (¿pasó lo predicho?) | La CNEP reconoce el vacío [1][3]; el proyecto de la Agencia se discute desde 2024 [49] e incluye evaluar políticas por su eficacia y coordinar la evaluación previa [50] |
 | **Técnico: asesorías del Congreso** (comisiones, Biblioteca del Congreso) | Muestra representativa y síntesis de objeciones, en vez de opiniones autoseleccionadas que nadie procesa | [4][5] |
 | **Público: la ciudadanía** | "¿Cómo me afecta esta ley?" según su perfil y región. Versión gratuita y abierta | En septiembre, 76% sabía que el Senado había aprobado Sala Cuna Universal [51] |
 | **Otros** | Centros de estudio, ONG, gremios, gobiernos regionales y encuestadoras | Por validar |

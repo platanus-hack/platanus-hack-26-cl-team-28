@@ -1,6 +1,6 @@
-"""El método de encuesta es el de `scripts/probar_modelo.py` (Alonso): mismas instrucciones,
-mismas preguntas y mismo perfil. Aquí solo se importa, para que lo que él cambie allá sea lo
-que usa el servidor, sin copias que se desalineen.
+"""El método de encuesta es el de `scripts/probar_modelo.py`: mismas instrucciones, mismas
+preguntas y mismo perfil. Aquí solo se importa, para que lo que se cambie allá sea lo que usa el
+servidor, sin copias que se desalineen.
 
 Lo que el servidor fija del banco de pruebas:
 - Redacción 1 de las instrucciones y las preguntas en su orden.
@@ -9,7 +9,7 @@ Lo que el servidor fija del banco de pruebas:
   núcleo más los datos de los temas que toca la política. `PERFIL` en el entorno elige el
   nivel: `tematico` (por defecto), `nucleo` o `completo` (sin filtro, como antes).
 - Sin pregunta de control cuando responde Claude: ahí la primera respuesta sí depende del
-  perfil. El modelo local la lleva, como en el banco (`CFG_LOCAL`).
+  perfil. El modelo local la lleva, como en el banco (`cfg_local`).
 
 La encuesta es fija: las cinco preguntas del banco (apoyo, justicia, confianza, efectividad e
 influencia), cada una con un entero de 1 a 7 y su propia escala (`ESCALAS`: qué significan el 1
@@ -67,14 +67,14 @@ CFG = {"orden": list(range(len(CLAVES))), "control": False, "etiqueta": None, "r
 NIVEL: str = os.environ.get("PERFIL", "").strip().lower() or "tematico"
 if NIVEL not in filtro.NIVELES:
     raise SystemExit(f"PERFIL={NIVEL!r} no existe; los niveles son {', '.join(filtro.NIVELES)}")
-#: Lo que distingue a este perfil del completo en la caché de respuestas (vacío si va completo:
-#: las respuestas guardadas antes del filtro se dieron con el perfil completo y siguen sirviendo).
 #: Las etiquetas políticas del perfil. No se le entregan al modelo: con ellas contesta por bando y separa a
 #: izquierda y derecha el doble que la CEP (51 puntos contra 22). Sin ellas, y conservando lo que la persona
 #: opina de fondo (rol del Estado, inmigración, seguridad, confianza), la distancia queda como la real y los
 #: grupos siguen igual de bien ordenados. `IDENTIDAD_POLITICA=1` en el entorno las devuelve.
 IDENTIDAD_POLITICA = frozenset({"posicion_politica", "partido", "sin_partido", "voto_2025", "aprueba_gobierno", "aprueba_gobierno_anterior"})
 CON_IDENTIDAD: bool = os.environ.get("IDENTIDAD_POLITICA", "").strip().lower() in ("1", "si", "sí", "true")
+#: Lo que distingue a este perfil del completo en la caché de respuestas (vacío si va completo:
+#: las respuestas guardadas antes del filtro se dieron con el perfil completo y siguen sirviendo).
 VERSION_PERFIL: str = ("" if NIVEL == "completo" else f"{NIVEL}:{filtro.VERSION}") + ("" if CON_IDENTIDAD else ":sin-identidad")
 
 # Perfiles ya escritos con un filtro, por persona: en una corrida cada persona se repite en cada variante.

@@ -8,7 +8,7 @@ Uso:
 El perfil completo (scripts/personas_muestra.py) trae cerca de cien datos por persona y unos
 1.100 tokens. La mayoría casi no mueve una respuesta sobre una política: en la Encuesta CEP,
 la demografía sola explica 4 % de las opiniones y los datos del núcleo, 16 % de un máximo de
-19 % (ver contexto/delphos/influencia.md, que escribe scripts/analizar_influencia.py). Este
+19 % (ver contexto/metodo/influencia.md, que escribe scripts/analizar_influencia.py). Este
 archivo define el recorte y es el único lugar donde se cambia.
 
 Hay tres niveles:

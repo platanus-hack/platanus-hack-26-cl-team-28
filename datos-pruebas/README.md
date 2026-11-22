@@ -1,4 +1,4 @@
-# Datos de prueba de Enjambre
+# Datos de prueba de What If Chile
 
 Banco de referencias externas para evaluar respuestas de agentes sobre políticas y temas públicos en Chile. La edición inicial contiene **140 casos en 14 áreas**, **54 cortes de segmento**, **5 resultados observados** y **20 recursos de ampliación**. Las fuentes citadas en los casos cubren 2014–2026.
 
@@ -9,7 +9,7 @@ Banco de referencias externas para evaluar respuestas de agentes sobre política
 | `segmentacion.jsonl` | Resultados publicados por región, zona, edad, sexo o grupo socioeconómico. Se enlazan con `caso_id`. |
 | `resultados-observados.jsonl` | Indicadores de estudios y registros administrativos tras aplicar medidas. Incluye diseño, ventana, población y unidad. |
 | `fuentes-ampliacion.jsonl` | Catálogo de archivos de encuestas, bases públicas, buscadores de proyectos, evaluaciones y papers metodológicos. |
-| [`benchmark-politicas-chile.json`](benchmark-politicas-chile.json) | Resultados agregados de GPT-6 Luna en 111 preguntas, con referencias publicadas, porcentajes simulados, datos muestrales y métricas. |
+| [`benchmark-politicas-chile.json`](benchmark-politicas-chile.json) | Exploración previa: resultados agregados de GPT-6 Luna en 111 preguntas, con referencias publicadas, porcentajes simulados, datos muestrales y métricas. |
 
 ## Cómo leer un caso
 

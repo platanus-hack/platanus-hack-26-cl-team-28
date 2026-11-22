@@ -1,5 +1,5 @@
 {
- "_nota": "Cifras reales para validar la simulación (sección 6.3 de contexto/delphos/framework.md). De acuerdo = respuestas 5 a 7; en desacuerdo = 1 a 3. Las claves de «cerradas» son el nombre del texto de validacion/ y las de «alternativas», el de la pregunta.",
+ "_nota": "Cifras reales para validar la simulación (sección 6.3 de contexto/metodo/framework.md). De acuerdo = respuestas 5 a 7; en desacuerdo = 1 a 3. Las claves de «cerradas» son el nombre del texto de validacion/ y las de «alternativas», el de la pregunta.",
  "cerradas": {
   "iniciativa": {
    "pregunta": "p1",

@@ -31,7 +31,7 @@ Fuera de alcance:
 - La construcción de la población (descarga del censo, imputación desde Casen y CEP, reducción a
   agentes). Está documentada en `backend/CLAUDE.md` y `backend/contexto/`.
 - El método de encuesta y su validación (`backend/scripts/probar_modelo.py`,
-  `backend/contexto/delphos/framework.md`). El servidor lo importa sin copiarlo.
+  `backend/contexto/metodo/framework.md`). El servidor lo importa sin copiarlo.
 - El frontend, documentado en `frontend/DESIGN.md` y `frontend/README.md`.
 - Otros clientes del motor que el equipo pueda agregar, cada uno con su propia documentación.
 

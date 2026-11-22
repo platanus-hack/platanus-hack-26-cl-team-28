@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Mide qué datos del perfil pesan en una opinión política y escribe contexto/delphos/influencia.md.
+"""Mide qué datos del perfil pesan en una opinión política y escribe contexto/metodo/influencia.md.
 
 Uso:
-    uv run python -I scripts/analizar_influencia.py data/cep96 data/pruebas/sala_cuna contexto/delphos
+    uv run python -I scripts/analizar_influencia.py data/cep96 data/pruebas/sala_cuna contexto/metodo
 
 Es el respaldo del filtro de scripts/filtro_perfil.py: córrelo cuando cambie la CEP, el perfil o
 el filtro, y revisa que el núcleo siga explicando casi lo mismo que el perfil completo.

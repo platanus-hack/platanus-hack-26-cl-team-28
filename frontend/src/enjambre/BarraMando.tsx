@@ -7,7 +7,7 @@ import { CASOS_VALIDACION } from '../vivo/validacion';
 import { Adjunto } from './Adjunto';
 import estilos from './BarraMando.module.css';
 
-/** Subir un documento (botón y arrastrar sobre el formulario). Oculto por ahora; el motor sigue aceptándolos. */
+/** Subir un documento (botón y arrastrar sobre el formulario). Desactivado en la interfaz publicada; el motor lo admite. */
 const CON_DOCUMENTOS = false;
 
 interface Props {

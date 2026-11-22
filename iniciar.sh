@@ -2,7 +2,7 @@
 # Levanta el motor de simulación (backend) y el front, y los detiene juntos con Ctrl+C.
 #
 #     ./iniciar.sh             # motor en vivo si hay Claude Code o ANTHROPIC_API_KEY
-#     MOTOR=grabado ./iniciar.sh   # sin red: repite una corrida real guardada
+#     LLAMA_URL=http://127.0.0.1:8080 ./iniciar.sh   # sin red: con un modelo local
 set -euo pipefail
 raiz="$(cd "$(dirname "$0")" && pwd)"
 

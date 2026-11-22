@@ -4,8 +4,9 @@ What If Chile simula cómo respondería la población adulta de Chile a una prop
 
 ## En 30 segundos
 
-- **Lo probamos contra la realidad:** 164 preguntas de 27 encuestas publicadas, de 10 entidades, con unas **30 mil entrevistas** detrás, más **1.466 entrevistas individuales** de la Encuesta CEP para comparar persona a persona y grupo a grupo.
-- **Quedamos a la distancia a la que quedan las encuestas entre sí.** Cuando dos encuestadoras serias preguntan lo mismo el mismo año, difieren en promedio **5 puntos** y hasta **12**. Nuestro simulador queda a **6,5 puntos** de la encuesta en la pregunta típica, y **8 de cada 10 preguntas** quedan dentro de esos 12 puntos.
+- **Lo probamos contra la realidad:** 164 preguntas con resultado publicado (124 del banco de encuestas y 40 del benchmark de políticas), de 27 encuestas y 10 instituciones, con **29.854 entrevistas** detrás, más **1.466 entrevistas individuales** de la Encuesta CEP para comparar grupo a grupo.
+- **82 de esas preguntas quedaron reservadas solo para medir:** no se usaron para elegir el método. En ellas el error medio es de **8,2 puntos** (mediana 6,5) y **7 de cada 10** quedan a ±10 puntos.
+- **Reducimos el error a la mitad** frente a los mismos agentes sin calibrar (16,2 puntos) y quedamos cerca de lo que difieren las encuestas reales entre sí (5,2 puntos en promedio).
 - **Acertamos qué piensa la mayoría en casi 9 de cada 10 preguntas** (88 %).
 - **La población es Chile entero:** 15,5 millones de personas reales del Censo 2024, con datos de Casen y opiniones de la CEP, validada contra las tres fuentes. Una muestra de 1.000 agentes reproduce la composición del país a menos de 3,5 puntos.
 
@@ -31,7 +32,7 @@ En promedio, dos de estas mediciones difieren en **5,2 puntos**, con un máximo 
 | A 12 puntos o menos (lo que separa a las encuestadoras en adopción) | 80 % |
 | Mediana | 6,5 puntos |
 
-Además, el resultado es estable: el error de muestreo de una simulación con 1.000 agentes es de 1,4 puntos, y repetir el pronóstico nacional lo mueve unos 2 puntos.
+Además, el resultado es estable. Son tres medidas distintas: agrupar la población a 1 agente por cada 1.000 personas mueve sus distribuciones menos de medio punto (tabla de más abajo); el error de muestreo de una simulación con 1.000 agentes es de 1,4 puntos; y repetir el pronóstico nacional lo mueve unos 2 puntos.
 
 ## Un ejemplo que se entiende solo
 
@@ -103,9 +104,21 @@ Cada simulación sortea sus agentes estratificando por región, comuna y zona, c
 
 ## Cómo responde
 
-1. **Cada agente responde la encuesta como su persona:** apoyo, justicia, confianza en el Estado, efectividad e influencia, de 1 a 7. Los agentes son Claude Haiku, en lotes de 20 y cientos en paralelo: 1.000 agentes en unos 40 segundos.
+1. **Cada agente responde la encuesta como su persona:** apoyo, justicia, confianza en el Estado, efectividad e influencia, de 1 a 7. Los agentes son Claude Haiku, por lotes y cientos en paralelo: 1.000 agentes en menos de un minuto (medición en `docs/backend/07-capacidad-y-escalado.md`).
 2. **El agente responde desde sus opiniones de fondo, no desde su etiqueta política,** que es como responde la mayoría de la gente. Así la distancia entre personas de izquierda y de derecha queda en 21 puntos, como los 25 de la CEP.
 3. **Un modelo analista (Claude Opus) estima el nivel nacional** con una sola llamada por propuesta. Los agentes reparten ese total sin cambiar su orden: quién apoya, en qué región, de qué edad o grupo, lo deciden los agentes.
+
+### Qué aporta cada pieza
+
+Cada pieza resuelve una parte distinta y se midió por separado en las 42 preguntas reservadas del banco:
+
+| Versión | Error medio nacional | Mayoría del mismo lado | Distancia izquierda-derecha (CEP: 25) | Error por segmento CEP |
+|---|---|---|---|---|
+| Sitio anterior (agentes con etiqueta política, sin ancla) | 15,0 | 71 % | 51 puntos | 7,2 |
+| Agentes nuevos, sin ancla | 16,8 | 74 % | 15 puntos | 4,2 |
+| Agentes nuevos con ancla nacional (motor actual) | 9,6 | 88 % | 21 puntos | 4,7 |
+
+El ancla corrige el nivel nacional. Los agentes deciden cómo se reparte entre regiones, edades y grupos, y por qué: sin etiquetas políticas, la polarización simulada bajó de 51 a 21 puntos, cerca de los 25 reales. Fuente: `backend/data/pruebas/realidad_1000/experimentos/validacion_final.txt`.
 
 ## Resultados
 
@@ -124,11 +137,23 @@ Medidos en 82 preguntas reservadas, que no se usaron para elegir el método:
 
 **Por grupos de la población**, con los microdatos de la CEP: los segmentos se mueven en la misma dirección que en la realidad, y cada segmento queda en promedio a 4,7 puntos de su diferencia real con el total.
 
-**Como referencia internacional**, el Pew Research Center reportó en septiembre de 2026 un error de 11,4 puntos con su mejor modelo de gemelos digitales de panelistas reales de Estados Unidos.
+### Comparado con otras formas de estimar
+
+Error medio en el % de acuerdo, en puntos (menos es mejor):
+
+| Método | Error | Fuente |
+|---|---|---|
+| Agentes de IA sin calibrar (el motor anterior del sitio) | 16,2 | Las mismas 82 preguntas, columna `err_antes` de `ficha_validacion.csv` |
+| Responder siempre 60 % | 15,1 | Las mismas 82 preguntas |
+| Pew Research Center, gemelos digitales (EE.UU.) | 11,4 | Su propio banco de preguntas; es una referencia, no una comparación en las mismas preguntas |
+| **What If Chile** | **8,2** | Las 82 preguntas reservadas |
+| Encuestas reales entre sí | 5,2 | Temas medidos por más de una encuestadora (tabla de arriba) |
+
+What If Chile tiene 49 % menos error que los mismos agentes sin calibrar.
 
 ## Preguntas donde el simulador coincide con la encuesta
 
-Todas son preguntas reservadas para validación, simuladas con el motor actual y 200 agentes.
+Todas son preguntas reservadas para validación, simuladas con el motor actual y 200 agentes sorteados del nivel de 1 agente por cada 1.000 personas. Las 82 preguntas, con su resultado real y simulado, están en `backend/data/pruebas/realidad_1000/ficha_validacion.csv`.
 
 ### A 5 puntos o menos (31 preguntas)
 
@@ -204,7 +229,7 @@ Todas son preguntas reservadas para validación, simuladas con el motor actual y
 - **Estimar la distribución de la población funciona mejor que pedir una sola respuesta por rol** (Meister et al. 2025; Gong, Sanders y Schneier 2026). El ancla nacional sigue esa idea.
 - **Una simulación se puede calibrar contra datos humanos** hasta dejar el sesgo bajo 5,5 % con unas 100 respuestas reales (Krsteski et al. 2025). Por eso el método se mide y se elige contra un banco de 164 preguntas reales.
 - **En Chile, las respuestas sintéticas ya se compararon con la CEP** (González-Bustamante, Verelst y Cisternas 2025).
-- **La justicia y la efectividad percibidas son los determinantes más importantes de la aceptación de leyes e impuestos climáticos**, según un metaanálisis de 51 artículos y 119 mil participantes en 33 países: por eso la encuesta del simulador las pregunta junto al apoyo (`backend/contexto/delphos/framework.md`).
+- **La justicia y la efectividad percibidas son los determinantes más importantes de la aceptación de leyes e impuestos climáticos**, según un metaanálisis de 51 artículos y 119 mil participantes en 33 países: por eso la encuesta del simulador las pregunta junto al apoyo (`backend/contexto/metodo/framework.md`).
 
 Enlaces: [Pew](https://www.pewresearch.org/data-labs/2026/09/30/methodology-silicon-samples/) · [Meister](https://arxiv.org/abs/2411.05403) · [Gong](https://arxiv.org/html/2603.20229v1) · [Hwang](https://arxiv.org/abs/2305.14929) · [Park](https://arxiv.org/abs/2411.10109) · [Krsteski](https://arxiv.org/html/2510.11408v2) · [González-Bustamante](https://arxiv.org/abs/2509.09871)
 
@@ -218,6 +243,6 @@ uv run python scripts/contraste_experimentos.py correr integrado --casos rai   #
 uv run python -I scripts/validar_poblacion.py data/chile data/censo2024 data/casen2024 data/cep96 contexto/chile   # la población contra censo, Casen y CEP
 ```
 
-Más detalle: el informe técnico y las respuestas de cada agente en `backend/data/pruebas/realidad_1000/`; la población en `backend/contexto/chile/validacion.md` y `agentes.md`; qué datos pesan en una opinión en `backend/contexto/delphos/influencia.md`.
+Más detalle: el informe técnico y las respuestas de cada agente en `backend/data/pruebas/realidad_1000/`; la población en `backend/contexto/chile/validacion.md` y `agentes.md`; qué datos pesan en una opinión en `backend/contexto/metodo/influencia.md`.
 
 Fuentes de datos: INE, Censo de Población y Vivienda 2024. Ministerio de Desarrollo Social y Familia, Encuesta Casen 2024. Centro de Estudios Públicos, Encuesta CEP N° 96, abril-mayo 2026.

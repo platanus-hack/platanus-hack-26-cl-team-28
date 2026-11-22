@@ -1,4 +1,7 @@
-"""Compara la instrucción sobre la nota 4 de Luna sobre el perfil histórico."""
+"""Compara la instrucción sobre la nota 4 de Luna sobre el perfil histórico.
+
+Exploración previa con GPT-6 Luna, una de las configuraciones probadas antes de fijar el
+método del sitio (Claude Haiku con ancla de Claude Opus; ver VALIDACION.md)."""
 import argparse
 import random
 from concurrent.futures import ThreadPoolExecutor

@@ -1,4 +1,6 @@
-# GPT Luna con postura explícita para simulación de políticas públicas
+# Exploración: GPT Luna con postura explícita
+
+> **Exploración previa.** Este documento registra una de las más de 40 configuraciones que el equipo probó antes de fijar el método del sitio: GPT-6 Luna con postura explícita, medida con otra métrica (error en tres categorías). El motor del sitio usa Claude Haiku con un analista Claude Opus que ancla el total nacional, y su validación en 82 preguntas reservadas (error medio 8,2 puntos, 88 % de mayorías acertadas) está en [VALIDACION.md](../../VALIDACION.md).
 
 ## Qué se probó y qué queda disponible
 

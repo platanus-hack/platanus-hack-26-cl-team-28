@@ -153,7 +153,7 @@ Severidad según el efecto sobre los activos de 6.1.
 | Detención por abandono | Simulación de 2.000 agentes sin nadie mirando, con el tiempo reducido | Se detuvo tras 80 de 200 llamadas |
 | Inundación de flujos | 45 flujos sobre una misma simulación | 30 aceptados, 15 rechazados |
 | Política de contenido | Recorrido completo del sitio en un navegador a través de la misma versión del servidor web | Sin errores de política ni de consola |
-| Exposición | Desde afuera: sin clave responde 401; por la dirección numérica redirige; el puerto del motor está cerrado | Verificado el 21 de noviembre |
+| Exposición | Desde afuera: por la dirección numérica redirige y el puerto del motor está cerrado; mientras el sitio tuvo clave, sin ella respondía 401 | Verificado el 21 de noviembre |
 | Servicio endurecido | Simulaciones reales de 1.000 y 10.000 agentes en producción | Completas; ver [documento 7](07-capacidad-y-escalado.md) |
 | Revisión independiente | Un revisor sin contexto previo leyó el cambio y escribió un programa de reproducción | 12 hallazgos; corregidos los que afectaban disponibilidad y despliegue |
 

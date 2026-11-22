@@ -88,7 +88,7 @@ qué datos se le entregan, y `PERFIL` en el entorno elige el nivel:
 | `completo` | Todo, como antes del filtro. | unos 1.100 |
 
 En Sala Cuna el filtro detecta `trabajo` y `familia-derechos` y entrega 42 datos, unos 515 tokens. El respaldo
-de qué entra en cada nivel está en `contexto/delphos/influencia.md`. Los temas detectados viajan en cada caso
+de qué entra en cada nivel está en `contexto/metodo/influencia.md`. Los temas detectados viajan en cada caso
 de los eventos `inicio` y `caso` (`temas`), y el nivel en `motor.perfil` de `/api/estado`. Con el archivo fijo
 de 2.000 personas no hay filtro: esos perfiles vienen ya escritos y van completos.
 
@@ -147,18 +147,19 @@ El método se eligió contrastándolo con encuestas publicadas (ver [VALIDACION.
 |---|---|---|
 | La pregunta de apoyo es «¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?» | `APOYO` en `metodo.py` y `frontend/src/vivo/encuesta.ts` | Sirve igual para medidas y para afirmaciones, como las preguntas de las encuestas |
 | El modelo lee las opiniones de fondo de la persona y no sus etiquetas políticas (posición, partido, voto, aprobación de los gobiernos) | `IDENTIDAD_POLITICA` en `metodo.py`; `IDENTIDAD_POLITICA=1` las devuelve | Responde por lo que piensa del tema: la distancia entre izquierda y derecha queda en 21 puntos, como los 25 de la CEP |
-| Ancla: un modelo analista estima el nivel nacional con una llamada por propuesta y los agentes lo reparten sin cambiar su orden | `ancla.py`, `Motor.pronosticar` y `Corrida._repartir`; `ANCLA=opus` por defecto, `haiku` o `sonnet` sirven, `ANCLA=no` la apaga | El total nacional queda en promedio a 8 puntos de la encuesta |
+| Ancla: un modelo analista estima el nivel nacional con una llamada por propuesta y los agentes lo reparten sin cambiar su orden | `ancla.py`, `Motor.pronosticar` y `Corrida._repartir`; `ANCLA=opus` por defecto, `haiku` o `sonnet` sirven, `ANCLA=no` la apaga | El total nacional queda en promedio a 8,2 puntos de la encuesta |
 
-Los agentes son Claude Haiku: cientos en paralelo, 1.000 en unos 40 segundos. El ancla es una llamada más por
+Los agentes son Claude Haiku: cientos en paralelo, 1.000 en menos de un minuto (`docs/backend/07-capacidad-y-escalado.md`). El ancla es una llamada más por
 propuesta (3 a 7 s con Opus, menos de 2 centavos de dólar) que corre a la par de los primeros lotes; las primeras
 respuestas la esperan hasta 12 s y, si no llega, el caso se cuenta con las notas tal como salen. La caché guarda
 las notas como las dio el modelo y el reparto se rehace al entregar; el pronóstico queda en `data/cache/anclas.jsonl`.
 El evento `caso_listo` trae `ancla` (los dos porcentajes estimados) y `motor.ancla` en `/api/estado` dice con qué
 modelo. Con el modelo local no hay ancla y la pregunta de apoyo es la del banco.
 
-Validación (`scripts/contraste_ficha.py`): 164 preguntas de 27 encuestas reales (unas 30 mil entrevistas, 2014 a
-2026). En las 82 reservadas para validar, el % de acuerdo queda en promedio a 8,2 puntos de la encuesta (IC 95 %:
-6,9 a 9,7), a ±12 en 8 de cada 10 y del mismo lado de la mayoría en 88 %.
+Validación (`scripts/contraste_ficha.py`): 164 preguntas de 27 encuestas reales de 10 instituciones (29.854
+entrevistas, 2014 a 2026). En las 82 reservadas para validar, el % de acuerdo queda en promedio a 8,2 puntos de
+la encuesta (IC 95 %: 6,9 a 9,7; mediana 6,5), 7 de cada 10 a ±10 puntos y del mismo lado de la mayoría en 88 %.
+El motor anterior, sin calibrar, quedaba a 16,2.
 
 ## Frases, iteraciones y documentos
 
@@ -173,7 +174,7 @@ Validación (`scripts/contraste_ficha.py`): 164 preguntas de 27 encuestas reales
 
 ## Validación
 
-Ver [VALIDACION.md](../../VALIDACION.md): 164 preguntas de encuestas reales, 30 mil entrevistas detrás, error medio
+Ver [VALIDACION.md](../../VALIDACION.md): 164 preguntas de encuestas reales, 29.854 entrevistas detrás, error medio
 de 8,2 puntos en las preguntas reservadas. La interfaz muestra la comparación con la encuesta cuando la propuesta
 es una de las de referencia (`frontend/src/vivo/validacion.ts`). `datos-pruebas/`, en la raíz, tiene el banco de
 casos, y `data/pruebas/sala_cuna/benchmarks.json` las cifras de Sala Cuna que usa `scripts/comparar_variantes.py`.

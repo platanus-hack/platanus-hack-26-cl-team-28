@@ -1,4 +1,7 @@
-"""Ejecuta un piloto controlado de Luna sobre catálogos reducidos, por lotes reanudables."""
+"""Ejecuta un piloto controlado de Luna sobre catálogos reducidos, por lotes reanudables.
+
+Exploración previa con GPT-6 Luna, una de las configuraciones probadas antes de fijar el
+método del sitio (Claude Haiku con ancla de Claude Opus; ver VALIDACION.md)."""
 
 import argparse
 import hashlib

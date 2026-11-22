@@ -15,7 +15,7 @@ Para una cifra de la población, cada fila se pondera por la columna de su nivel
 
 ## Cómo se agrupa
 
-Lo que más pesa en una opinión es la política; la demografía pesa poco (`contexto/delphos/influencia.md`). La reducción agrupa primero por eso:
+Lo que más pesa en una opinión es la política; la demografía pesa poco (`contexto/metodo/influencia.md`). La reducción agrupa primero por eso:
 
 1. **Tipos políticos.** Todas las opiniones de una persona vienen de un mismo entrevistado de la Encuesta CEP, y hay 1.466. Se agrupan en 8 tipos según su voto, su evaluación de los dos gobiernos, su posición política, su confianza en el gobierno, su opinión sobre reducir el gasto público y su partido, cada dato con el peso que tiene para predecir las demás opiniones. Cada persona hereda el tipo de su entrevistado. Los menores de 18 años no tienen opiniones y quedan sin tipo.
 2. **Grupos de 10.** En cada nivel, los integrantes se ordenan y se cortan de a 10; el nivel siguiente agrupa a los representantes del anterior. El orden cambia con el nivel (el eje político es el lugar del entrevistado entre un extremo político y el otro):

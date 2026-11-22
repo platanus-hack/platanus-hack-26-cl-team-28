@@ -1,6 +1,8 @@
-# De la población censal a los agentes de Enjambre
+# De la población censal a los agentes de What If Chile
 
-Este documento describe el código y los datos de `main` en la revisión `23c6c03`, y reconstruye el catálogo de Luna validado en el benchmark de 111 preguntas. Hay dos rutas vigentes para dos usos distintos. **La app** sirve un catálogo nacional escalonado, con representantes elegidos para equilibrar proporciones. **El benchmark** consulta a 1.000 medoides censales de un catálogo experimental y pondera sus respuestas. Elegir 1.000 agentes en la interfaz y usar el catálogo de 1.000 de Luna son operaciones distintas.
+> **Dos rutas.** La reducción anidada (secciones «App») es la que usa el sitio. La investigación de los 1.000 arquetipos (tríos, celdas y medoides) se midió en un benchmark propio, con una de las más de 40 configuraciones que el equipo probó (GPT-6 Luna). El motor del sitio usa Claude Haiku con un analista Claude Opus que ancla el total nacional, y su validación en 82 preguntas reservadas (error medio 8,2 puntos, 88 % de mayorías acertadas) está en [VALIDACION.md](../../../VALIDACION.md).
+
+Este documento describe el código y los datos de `main`, y reconstruye el catálogo de Luna validado en el benchmark de 111 preguntas. Hay dos rutas vigentes para dos usos distintos. **La app** sirve un catálogo nacional escalonado, con representantes elegidos para equilibrar proporciones. **El benchmark** consulta a 1.000 medoides censales de un catálogo experimental y pondera sus respuestas. Elegir 1.000 agentes en la interfaz y usar el catálogo de 1.000 de Luna son operaciones distintas.
 
 ```mermaid
 flowchart TD
@@ -44,7 +46,7 @@ El algoritmo trabaja sobre **1.466 donantes CEP distintos**, ponderados por cuá
 | Opinión sobre reducir el gasto público | 6,7 |
 | Partido | 6,2 |
 
-Cada categoría se convierte en una columna binaria y se multiplica por la raíz del peso. Se centra la matriz con los pesos de uso y se aplica **SVD ponderada** para proyectar las respuestas en cuatro ejes. Luego corre **k-means ponderado** con ocho grupos y doce inicializaciones. La función objetivo es minimizar la suma de las distancias euclídeas cuadradas al centro de cada grupo, multiplicadas por los usos de cada donante. Los grupos se numeran según su posición media sobre el eje principal y cada adulto hereda el tipo de su donante. El código conserva también el orden del donante en ese eje para formar bloques de perfiles parecidos. Los pesos resumen asociaciones de esa encuesta, por lo que su utilidad puede cambiar al estudiar otro tema o período. [Algoritmo](../../scripts/reducir_poblacion.py) · [Análisis de influencia](../delphos/influencia.md)
+Cada categoría se convierte en una columna binaria y se multiplica por la raíz del peso. Se centra la matriz con los pesos de uso y se aplica **SVD ponderada** para proyectar las respuestas en cuatro ejes. Luego corre **k-means ponderado** con ocho grupos y doce inicializaciones. La función objetivo es minimizar la suma de las distancias euclídeas cuadradas al centro de cada grupo, multiplicadas por los usos de cada donante. Los grupos se numeran según su posición media sobre el eje principal y cada adulto hereda el tipo de su donante. El código conserva también el orden del donante en ese eje para formar bloques de perfiles parecidos. Los pesos resumen asociaciones de esa encuesta, por lo que su utilidad puede cambiar al estudiar otro tema o período. [Algoritmo](../../scripts/reducir_poblacion.py) · [Análisis de influencia](../metodo/influencia.md)
 
 ### 2. Bloques anidados por región
 
@@ -85,7 +87,7 @@ Se comprobó leyendo los 16 Parquet versionados que cada nivel suma exactamente 
 
 Una buena distribución nacional puede coexistir con una mala aproximación para una persona, una comuna o un cruce pequeño. En el nivel 1 por 10.000, el promedio del desvío relativo de población por comuna para comunas de al menos 5.000 personas llegó a 28,0%. Los niveles finos son los que conservan mejor el detalle comunal, aunque el sorteo posterior puede dejar fuera estratos pequeños. El informe de origen describe los denominadores y el umbral mínimo de subgrupo. [Informe generado](agentes.md)
 
-## Benchmark de Luna · de los tríos a 1.000 medoides
+## Investigación · de los tríos a 1.000 arquetipos medoides
 
 ### 1. Primera compresión censal
 

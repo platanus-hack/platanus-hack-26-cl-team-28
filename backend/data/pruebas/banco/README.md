@@ -4,7 +4,7 @@ Este banco es el que permitió elegir el método del motor actual. Sus resultado
 
 Corridas del 21-11-2026 con `scripts/validar_banco.py`. Cada caso de `../../../../datos-pruebas/` es una pregunta de encuesta real con su porcentaje publicado. Aquí se le hace la misma pregunta a una muestra nacional de agentes adultos (la del sitio, sin filtros, desde los 18 años) con Claude por la CLI en lotes de 20, y se compara el porcentaje de acuerdo.
 
-De los 140 casos del banco, 120 son comparables: de acuerdo o percepción, a población general, con porcentaje de acuerdo publicado. Se parten por familia en 78 de desarrollo (para iterar) y 42 de prueba (se miraron al final, solo con los métodos ya elegidos).
+El banco tiene 140 casos; con los 4 que se agregaron aparte (plebiscitos y paneles) y las 40 preguntas del benchmark de políticas suman las 164 preguntas con resultado publicado. De los 140 casos, 120 son comparables: de acuerdo o percepción, a población general, con porcentaje de acuerdo publicado. Se parten por familia en 78 de desarrollo (para iterar) y 42 de prueba (se miraron al final, solo con los métodos ya elegidos).
 
 ## Resultado
 
@@ -35,16 +35,16 @@ El piso de ruido, lo que erraría una simulación perfecta con 100 agentes contr
 ## Qué se aprendió
 
 1. **Pedir probabilidades en vez de una nota mejora el error cerca de un tercio**, y es estable: al repetir, 91 % de los agentes queda del mismo lado.
-2. **Un modelo grande estima muy bien el nivel nacional**: Opus queda a 8,7 y 9,1 puntos, parejo entre encuestas de 2022 y de 2026, así que no viene de recordar resultados.
+2. **Un modelo grande estima muy bien el nivel nacional**: Opus queda a 8,7 y 9,1 puntos, parejo entre encuestas de 2022 y de 2026.
 3. **Las actitudes de la CEP en el perfil permiten ordenar a las personas**: con ellas el modelo distingue quién está de acuerdo aun cuando se le oculta la respuesta real (AUC 0,70).
 4. **Los agentes reproducen las diferencias entre grupos**: en 30 cortes publicados por edad, sexo y grupo socioeconómico, la diferencia de cada segmento con el total se correlaciona 0,81 con la real y va en la misma dirección en 86 % de los cortes.
-5. **Desde 200 agentes el resultado nacional es estable**: queda a menos de 1 punto del de 1.000.
+5. **Desde 200 agentes el resultado nacional es estable**: con el método de probabilidades queda a menos de 1 punto del de 1.000 (con el motor integrado, a 2,3 puntos; ver `../realidad_1000/INFORME.md`).
 
 ## Qué se recomienda
 
-**Ancla más agentes.** Un modelo grande estima el total nacional con una llamada (error de 9 puntos, sin sesgo) y los agentes de Haiku, con las actitudes de la CEP en el perfil y respondiendo con probabilidades, reparten ese total entre personas y grupos. `anclar()` suma a todos la misma constante en escala logit hasta que el promedio coincide con el ancla: el orden entre personas y las diferencias entre grupos no cambian (`segmentos probabilidad --ancla pronostico_opus` da la misma correlación de 0,81).
+**Ancla más agentes.** Un modelo grande estima el total nacional con una llamada (error de unos 9 puntos en esta etapa, sin sesgo) y los agentes de Haiku, con las actitudes de la CEP en el perfil y respondiendo con probabilidades, reparten ese total entre personas y grupos. `anclar()` suma a todos la misma constante en escala logit hasta que el promedio coincide con el ancla: el orden entre personas y las diferencias entre grupos no cambian (`segmentos probabilidad --ancla pronostico_opus` da la misma correlación de 0,81).
 
-Lo que se puede afirmar con estos datos: el total nacional queda a unos 9 puntos de una encuesta real en preguntas que el sistema no había visto, del mismo lado de la mayoría en 88 % de los casos; los grupos se mueven en la dirección correcta en 86 % de los cortes; y la postura individual es estable (91 %) y ordena a las personas mejor que el azar (AUC 0,70).
+Lo que se podía afirmar en esta etapa (el resultado final del motor integrado, 8,2 puntos en 82 preguntas reservadas, está en VALIDACION.md): el total nacional queda a unos 9 puntos de una encuesta real en preguntas que el sistema no había visto, del mismo lado de la mayoría en 88 % de los casos; los grupos se mueven en la dirección correcta en 86 % de los cortes; y la postura individual es estable (91 %) y ordena a las personas mejor que el azar (AUC 0,70).
 
 ## Lo que dice la literatura
 

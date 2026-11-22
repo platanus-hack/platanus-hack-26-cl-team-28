@@ -264,7 +264,7 @@ def casos_de_rai():
 # Propuestas que alguien del público podría escribir para probar el sitio, sin encuesta real: lo que se
 # espera de cada una es de sentido común («alto»: casi todos a favor; «bajo»: casi todos en contra;
 # «dividido»: sin mayoría clara). Sirven para ver si el motor responde algo razonable fuera del banco.
-LOCOS = [
+PROPUESTAS_PUBLICO = [
     ("loco-millon", "Entregar un bono de un millón de pesos a cada persona adulta del país, por una sola vez.", "alto"),
     ("loco-sueldo-politicos", "Rebajar a la mitad el sueldo de diputados y senadores.", "alto"),
     ("loco-transporte-gratis", "Hacer gratuito el transporte público en todo Chile.", "alto"),
@@ -291,7 +291,7 @@ LOCOS = [
 def elegir_casos(cuales):
     if cuales == "locos":
         return {k: {"id": k, "enunciado": t, "familia": k, "area": "sentido-comun", "fuente_id": "", "parte": "locos",
-                    "real_acuerdo": float("nan"), "real_desacuerdo": float("nan"), "esperado": e} for k, t, e in LOCOS}
+                    "real_acuerdo": float("nan"), "real_desacuerdo": float("nan"), "esperado": e} for k, t, e in PROPUESTAS_PUBLICO}
     if cuales == "rai":
         return casos_de_rai()
     casos = cargar_casos()

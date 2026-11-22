@@ -4,8 +4,10 @@ Corridas del 21 y 22 de noviembre de 2026. El resumen para presentar está en [V
 
 ## Qué se hizo
 
-1. **Contraste a escala completa.** Cada una de las 124 preguntas del banco con resultado real se pasó por el motor del sitio con 1.000 agentes adultos, a un agente por cada 1.000 personas: 124.000 respuestas, 6.200 llamadas, 50 minutos.
-2. **Mejora del método.** Se probaron 21 variantes con los mismos 200 agentes sobre 40 preguntas de desarrollo, y lo elegido se integró al motor.
+Las 164 preguntas con resultado publicado son 124 del banco de encuestas y 40 del benchmark de políticas.
+
+1. **Contraste a escala completa.** Cada una de las 124 preguntas del banco se pasó por el motor del sitio con 1.000 agentes adultos, a un agente por cada 1.000 personas: 124.000 respuestas, 6.200 llamadas, 50 minutos.
+2. **Mejora del método.** La última ronda comparó 21 variantes con los mismos 200 agentes sobre 40 preguntas de desarrollo (en total el equipo probó más de 40 configuraciones), y lo elegido se integró al motor.
 3. **Validación.** El motor integrado se midió en 82 preguntas reservadas, que no se usaron para elegir nada: 42 del banco y 40 del benchmark de políticas.
 
 ## La muestra reproduce la composición del país
@@ -27,7 +29,7 @@ Con 1.000 agentes a 1 por cada 1.000, la muestra queda a menos de 3,5 puntos de 
 | Votó Kast en segunda vuelta | 41,3 | 39,9 |
 | Votó Jara en segunda vuelta | 31,2 | 28,1 |
 
-Desde 200 agentes el resultado nacional es estable: queda a 2,3 puntos del de 1.000, y el ruido propio de una simulación de 1.000 agentes es de 1,4 puntos.
+Desde 200 agentes el resultado nacional es estable: queda a 2,3 puntos del de 1.000, y el error de muestreo de una simulación de 1.000 agentes es de 1,4 puntos. Son medidas del sorteo de agentes; lo que mueve agrupar la población (menos de medio punto a 1 por cada 1.000) está en `backend/contexto/chile/agentes.md`.
 
 ## El método elegido
 
@@ -37,7 +39,7 @@ Desde 200 agentes el resultado nacional es estable: queda a 2,3 puntos del de 1.
 | Perfil con las opiniones de fondo de la CEP, sin las etiquetas políticas | La distancia entre izquierda y derecha queda en 21 puntos, como los 25 de la CEP, y cada segmento queda a 4,7 puntos de su diferencia real con el total |
 | Ancla nacional: un modelo analista (Opus) estima el total y los agentes lo reparten sin cambiar su orden | El total queda en promedio a 8 puntos de la encuesta |
 
-Alternativas evaluadas para llegar a esa combinación: instrucciones sobre cómo responde la gente, la postura explícita del benchmark con Luna, distintas formas de pedir la indecisión, perfiles con más o menos datos, el pronóstico con Fable o promediando repeticiones, referencias reales en el prompt y una pregunta de expectativa a cada agente («¿cuántos de cada 100 chilenos crees que están de acuerdo?»). La combinación de arriba fue la que mejor se sostuvo en las preguntas reservadas.
+Alternativas evaluadas para llegar a esa combinación: instrucciones sobre cómo responde la gente, la postura explícita, distintas formas de pedir la indecisión, perfiles con más o menos datos, el pronóstico con otros modelos o promediando repeticiones, referencias reales en el prompt y una pregunta de expectativa a cada agente («¿cuántos de cada 100 chilenos crees que están de acuerdo?»). La combinación de arriba fue la que mejor se sostuvo en las preguntas reservadas.
 
 ## Resultados en las 82 preguntas reservadas
 
@@ -49,6 +51,8 @@ Alternativas evaluadas para llegar a esa combinación: instrucciones sobre cómo
 | Preguntas a ±10 puntos | 57 % | 85 % | 71 % |
 | Preguntas a ±5 puntos | 31 % | 45 % | 38 % |
 | Mayoría del mismo lado | 88 % | 87,5 % | 88 % |
+
+En las mismas 82 preguntas, el motor anterior del sitio (agentes sin calibrar) tenía un error medio de 16,2 (IC 95 %: 13,9 a 18,6) y responder siempre 60 % da 15,1: el método actual reduce el error en 49 %. Lo reproduce `scripts/contraste_ficha.py`.
 
 En el porcentaje en desacuerdo (76 preguntas que lo publican) el error medio es 6,5 y la mediana 5,5. Las personas sin postura son 5 a 6 %, como en las encuestas (6,6 %).
 
@@ -62,7 +66,7 @@ En el contraste a escala completa, con cortes publicados por otras encuestas (Bi
 
 ## Propuestas del público
 
-Veinte propuestas que podría escribir cualquiera, sin encuesta (`LOCOS` en `scripts/contraste_experimentos.py`), dan la respuesta de sentido común: subir el IVA a 30 % queda en 6 % a favor, prohibir el pan en 4 %, duplicar el sueldo de los parlamentarios en 4 % y rebajarlo a la mitad en 88 %; bajar el precio de los medicamentos en 86 %, garantizar el agua potable en 88 % y la semana de cuatro días en 74 %.
+Veinte propuestas que podría escribir cualquiera, sin encuesta (`scripts/contraste_experimentos.py`), dan la respuesta de sentido común: subir el IVA a 30 % queda en 6 % a favor, prohibir el pan en 4 %, duplicar el sueldo de los parlamentarios en 4 % y rebajarlo a la mitad en 88 %; bajar el precio de los medicamentos en 86 %, garantizar el agua potable en 88 % y la semana de cuatro días en 74 %.
 
 ## Archivos
 
