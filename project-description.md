@@ -2,6 +2,8 @@
 
 ¿Cómo reaccionarían distintos grupos de Chile a una nueva política pública? **What If Chile** simula su respuesta para que puedas comparar versiones de una propuesta, explorar quiénes la apoyarían y detectar dónde aparecen las principales objeciones.
 
+**Pruébalo en [whatif.japs.ing](https://whatif.japs.ing/)**
+
 Describe una medida, elige a qué población quieres consultar y compara el apoyo, el rechazo y la indecisión entre alternativas. Puedes explorar los resultados por territorio y por características como edad, educación o situación laboral. Por ejemplo, puedes comparar la aceptación de una nueva cárcel en la región, en la comuna o en el barrio de las personas consultadas.
 
 Construimos la población de referencia a partir de **15,5 millones de registros de personas de 14 años o más del Censo 2024**. Enriquecimos los perfiles con condiciones socioeconómicas de Casen y opiniones de la Encuesta CEP, asignadas desde personas con características comparables. Agrupamos perfiles similares y seleccionamos una muestra para cada simulación.
