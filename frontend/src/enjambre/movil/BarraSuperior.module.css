@@ -3,7 +3,9 @@
   top: 0;
   right: 0;
   left: 0;
-  z-index: 3;
+  /* Sobre la hoja (4) y la franja de frases (3): el menú y los cajones que abre se montan aquí
+     dentro, y su z-index no sale de la barra. La hoja completa se detiene antes de la barra. */
+  z-index: 5;
   display: flex;
   align-items: flex-start;
   gap: var(--e3);
