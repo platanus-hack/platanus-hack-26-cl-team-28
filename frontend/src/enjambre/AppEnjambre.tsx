@@ -427,6 +427,33 @@ export function AppEnjambre() {
     }} />
   );
 
+  /** El wati que se asoma sobre el panel para preparar la consulta (sobre la hoja, en el teléfono). */
+  const watiSaludando = (
+    <button ref={botonWati} type="button" className={estilos.asomo} data-visible={watiVisible || undefined} disabled={!watiVisible} aria-hidden={!watiVisible} aria-label={mono ? 'Saludar al mono con banana' : 'Saludar al wati'} onClick={() => {
+      const figura = watiSaludo.current;
+      // Muchos toques seguidos lo disfrazan de mono; otros tantos lo devuelven a wati.
+      const ahora = performance.now();
+      const racha = toques.current;
+      racha.cuantos = ahora - racha.ultimo < TOQUES_SEGUIDOS_MS ? racha.cuantos + 1 : 1;
+      racha.ultimo = ahora;
+      if (racha.cuantos >= TOQUES_PARA_MONO) {
+        racha.cuantos = 0;
+        setMono((es) => !es);
+        if (figura) {
+          animarWati(figura, [
+            { transform: 'scale(1.25, 0.8)', offset: 0.2 },
+            { transform: 'scale(0.85, 1.2) translateY(-8px)', offset: 0.5 },
+            { transform: 'scale(1, 1)' },
+          ], 450);
+        }
+        return;
+      }
+      if (figura) rebotarWati(figura);
+    }}>
+      <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} mono={mono} saludo={saludo} /></span></span>
+    </button>
+  );
+
   // ─── Teléfono: el menú de la barra, lo que asoma de la hoja y lo que hay debajo, según la fase ───
   const menuMovil = (
     <MenuMas
@@ -570,7 +597,7 @@ export function AppEnjambre() {
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
       {movil ? (
-        <DisposicionMovil fase={fase} caso={caso} menu={menuMovil} asomo={asomoMovil} etiqueta={fase === 'preparar' ? 'Preparar consulta' : 'Resultados'} alCambiarBordes={alCambiarBordes} alCambiarTope={alCambiarTope} oculta={oculta || proceso || analisis}>
+        <DisposicionMovil fase={fase} caso={caso} menu={menuMovil} asomo={asomoMovil} encima={fase === 'preparar' ? watiSaludando : undefined} etiqueta={fase === 'preparar' ? 'Preparar consulta' : 'Resultados'} alCambiarBordes={alCambiarBordes} alCambiarTope={alCambiarTope} oculta={oculta || proceso || analisis}>
           {cuerpoMovil}
         </DisposicionMovil>
       ) : (
@@ -610,29 +637,7 @@ export function AppEnjambre() {
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
           <div className={estilos.panelMando}>
-            <button ref={botonWati} type="button" className={estilos.asomo} data-visible={watiVisible || undefined} disabled={!watiVisible} aria-hidden={!watiVisible} aria-label={mono ? 'Saludar al mono con banana' : 'Saludar al wati'} onClick={() => {
-              const figura = watiSaludo.current;
-              // Muchos toques seguidos lo disfrazan de mono; otros tantos lo devuelven a wati.
-              const ahora = performance.now();
-              const racha = toques.current;
-              racha.cuantos = ahora - racha.ultimo < TOQUES_SEGUIDOS_MS ? racha.cuantos + 1 : 1;
-              racha.ultimo = ahora;
-              if (racha.cuantos >= TOQUES_PARA_MONO) {
-                racha.cuantos = 0;
-                setMono((es) => !es);
-                if (figura) {
-                  animarWati(figura, [
-                    { transform: 'scale(1.25, 0.8)', offset: 0.2 },
-                    { transform: 'scale(0.85, 1.2) translateY(-8px)', offset: 0.5 },
-                    { transform: 'scale(1, 1)' },
-                  ], 450);
-                }
-                return;
-              }
-              if (figura) rebotarWati(figura);
-            }}>
-              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} mono={mono} saludo={saludo} /></span></span>
-            </button>
+            {watiSaludando}
             <div className={estilos.contenidoMando}>
               {barraMando}
             </div>

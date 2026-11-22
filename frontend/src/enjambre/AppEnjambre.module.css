@@ -108,6 +108,8 @@
 .asomo[data-visible] > span { transform: translateY(0); }
 .asomo canvas { display: block; width: 100% !important; height: auto !important; }
 .figuraSaludo { display: block; transform-origin: bottom center; }
+/* En el teléfono se asoma por el borde de la hoja (movil/HojaInferior): un poco más chico y sin ubicarse solo. */
+.app[data-movil] .asomo { position: relative; top: auto; left: auto; display: block; width: 72px; height: 88px; }
 @media (prefers-reduced-motion: reduce) {
   .asomo > span { transition: none; }
 }

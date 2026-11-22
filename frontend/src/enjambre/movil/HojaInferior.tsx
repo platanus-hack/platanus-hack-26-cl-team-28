@@ -9,6 +9,8 @@ interface Props {
   asomo: ReactNode;
   /** El resto, que aparece al subir la hoja. */
   children: ReactNode;
+  /** Lo que se asoma por el borde de arriba y sube con ella. Con la hoja completa se esconde: ahí está la barra. */
+  encima?: ReactNode;
   /** Nombre de la región para lectores de pantalla. */
   etiqueta: string;
   /** Cuánto tapa la barra de arriba: la hoja completa llega hasta ahí. */
@@ -49,7 +51,7 @@ function useTeclado(): number {
  * tres topes. Sin arrastrar también se maneja: el asa es un botón (clic, flechas, Inicio y Fin).
  * No es modal: el mapa de arriba sigue a mano.
  */
-export function HojaInferior({ tope, alCambiar, asomo, children, etiqueta, arriba, alAsentar }: Props) {
+export function HojaInferior({ tope, alCambiar, asomo, encima, children, etiqueta, arriba, alAsentar }: Props) {
   const idCuerpo = useId();
   const hoja = useRef<HTMLElement>(null);
   const cabeza = useRef<HTMLDivElement>(null);
@@ -85,7 +87,7 @@ export function HojaInferior({ tope, alCambiar, asomo, children, etiqueta, arrib
   // El tope manda salvo mientras se arrastra: ahí la altura la lleva el dedo.
   useLayoutEffect(() => {
     if (!gesto.current?.arrastra) poner(a[tope]);
-    // Lo que queda arriba de la hoja en reposo (la franja de voces se apoya ahí). No se toca al arrastrar.
+    // Lo que queda arriba de la hoja en reposo. No se toca al arrastrar.
     document.documentElement.style.setProperty('--alto-hoja', `${a[tope]}px`);
   }, [tope, a.asomo, a.mitad, a.completa, poner]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => void document.documentElement.style.removeProperty('--alto-hoja'), []);
@@ -180,6 +182,7 @@ export function HojaInferior({ tope, alCambiar, asomo, children, etiqueta, arrib
       data-tope={tope}
       style={{ '--alto-completa': `${a.completa}px`, '--teclado': `${teclado}px` } as CSSProperties}
     >
+      {encima && <div className={estilos.encima}>{encima}</div>}
       <div
         ref={cabeza}
         className={estilos.cabeza}

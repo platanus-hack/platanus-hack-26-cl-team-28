@@ -114,13 +114,15 @@
 }
 
 /*
- * En el teléfono: una frase a la vez, a todo el ancho, apoyada sobre la hoja de abajo (`--alto-hoja`
- * lo publica HojaInferior). Sin punta: no está junto a quien habla, que se resalta en el mapa.
+ * En el teléfono: una frase a la vez, a todo el ancho, colgada bajo la barra de arriba (`--alto-barra`
+ * lo publica DisposicionMovil). Abajo quedan la hoja y el wati que se asoma por su borde, que así
+ * nunca se pisan con ella, suba o baje la hoja. Sin punta: no está junto a quien habla, que se
+ * resalta en el mapa. Compacta, para tapar poco del país.
  */
 .franja {
   position: fixed;
+  top: calc(var(--alto-barra, 72px) + var(--e1));
   right: 0;
-  bottom: calc(var(--alto-hoja, 120px) + var(--e3));
   left: 0;
   z-index: 3;
   display: grid;
@@ -134,7 +136,23 @@
   grid-area: 1 / 1;
   width: 100%;
   max-width: 30rem;
-  transform-origin: 50% 100%;
+  padding: var(--e2) var(--e3);
+  transform-origin: 50% 0;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.22);
+}
+
+.franja .globo blockquote {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 1rem;
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.franja .globo figcaption {
+  margin-top: var(--e1);
+  font-size: var(--texto-xs);
 }
 
 .franja .globo::before {

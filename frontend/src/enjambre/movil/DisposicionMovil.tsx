@@ -15,6 +15,8 @@ interface Props {
   asomo: ReactNode;
   /** El resto de la hoja. */
   children: ReactNode;
+  /** Lo que se asoma por el borde de arriba de la hoja (el wati, al preparar). */
+  encima?: ReactNode;
   etiqueta: string;
   /** Cuánto tapan la barra y la hoja, para que el mapa ubique sus burbujas en lo que queda libre. */
   alCambiarBordes(bordes: Bordes): void;
@@ -27,7 +29,7 @@ interface Props {
 const topeInicial = (fase: EnVivo['fase']): Tope => (fase === 'preparar' ? 'mitad' : 'asomo');
 
 /** El teléfono: barra arriba, el país al medio y la hoja abajo. Ningún texto queda encima del mapa. */
-export function DisposicionMovil({ fase, caso, menu, asomo, children, etiqueta, alCambiarBordes, alCambiarTope, oculta = false }: Props) {
+export function DisposicionMovil({ fase, caso, menu, asomo, encima, children, etiqueta, alCambiarBordes, alCambiarTope, oculta = false }: Props) {
   const barra = useRef<HTMLElement>(null);
   const [tope, setTope] = useState<Tope>(() => topeInicial(fase));
   const [arriba, setArriba] = useState(0);
@@ -53,6 +55,14 @@ export function DisposicionMovil({ fase, caso, menu, asomo, children, etiqueta, 
     [preparando],
   );
 
+  // La franja de frases se cuelga bajo la barra, lejos de la hoja y del wati que se asoma por su borde.
+  useLayoutEffect(() => {
+    if (!arriba) return;
+    const raiz = document.documentElement.style;
+    raiz.setProperty('--alto-barra', `${arriba}px`);
+    return () => void raiz.removeProperty('--alto-barra');
+  }, [arriba]);
+
   useLayoutEffect(() => {
     if (!arriba || !abajo) return;
     alCambiarBordes({ arriba, abajo, izquierda: 0, derecha: 0 });
@@ -61,7 +71,7 @@ export function DisposicionMovil({ fase, caso, menu, asomo, children, etiqueta, 
   return (
     <div className={estilos.movil} data-oculta={oculta || undefined} inert={oculta || undefined}>
       <BarraSuperior ref={barra} caso={caso} menu={menu} />
-      <HojaInferior tope={tope} alCambiar={setTope} asomo={asomo} etiqueta={etiqueta} arriba={arriba} alAsentar={alAsentar}>
+      <HojaInferior tope={tope} alCambiar={setTope} asomo={asomo} encima={encima} etiqueta={etiqueta} arriba={arriba} alAsentar={alAsentar}>
         {children}
       </HojaInferior>
     </div>

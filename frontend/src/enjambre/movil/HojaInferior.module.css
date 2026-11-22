@@ -26,6 +26,21 @@
   transition: none;
 }
 
+/* Lo que se asoma por el borde de arriba (el wati, al preparar): sube y baja con la hoja. Con la hoja
+   completa se esconde, porque arriba está la barra. */
+.encima {
+  position: absolute;
+  bottom: 100%;
+  left: max(var(--e5), env(safe-area-inset-left));
+  transition: opacity var(--medio), visibility 0s;
+}
+
+.hoja[data-tope='completa'] .encima {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--medio), visibility 0s var(--medio);
+}
+
 /* El asa y el resumen: desde aquí se arrastra. Lo que se desliza de lado lo marca con `touch-action: pan-x`. */
 .cabeza {
   flex: none;
