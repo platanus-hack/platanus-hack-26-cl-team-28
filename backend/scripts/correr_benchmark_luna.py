@@ -26,7 +26,7 @@ línea, en orden estricto. Incluye a todas las personas y conserva el orden aun 
 parecidos. No incluyas explicaciones."""
 
 
-def armar_lotes(catalogo, n, tamano):
+def armar_lotes(catalogo, n, tamano, *, pregunta=TEXTO_TAG):
     rng = random.Random(20261121)
     anteriores = set()
     primera = True
@@ -41,13 +41,13 @@ def armar_lotes(catalogo, n, tamano):
         for inicio in range(0, len(nuevos), tamano):
             ids = nuevos[inicio:inicio + tamano]
             fichas = [f"{i+1}. {muestra['perfil'][id_]}" for i, id_ in enumerate(ids)]
-            prompt = (INSTRUCCIONES + "\n\n" + TEXTO_TAG + "\n\n"
+            prompt = (INSTRUCCIONES + "\n\n" + pregunta + "\n\n"
                       + f"El listado tiene {len(fichas)} personas.\n" + "\n".join(fichas))
             yield ids, prompt
         anteriores, primera = actuales, False
 
 
-def leer_respuesta(salida, n):
+def leer_json_respuesta(salida):
     mensajes, uso = [], {}
     for linea in salida.splitlines():
         try:
@@ -61,31 +61,42 @@ def leer_respuesta(salida, n):
     if not mensajes:
         raise ValueError("Luna no devolvió un mensaje final.")
     limpio = re.sub(r"^ *```(?:json)?\s*|\s*``` *$", "", mensajes[-1].strip())
-    r = json.loads(limpio)["r"]
+    return json.loads(limpio), uso
+
+
+def leer_respuesta(salida, n):
+    datos, uso = leer_json_respuesta(salida)
+    r = datos["r"]
     if not isinstance(r, list) or len(r) != n or any(type(x) is not int or x not in (1, 2, 3) for x in r):
         raise ValueError(f"Se esperaban {n} decisiones codificadas.")
     return r, uso
 
 
-def inferir(ids, prompt, carpeta, trabajo, max_intentos):
+def inferir(ids, prompt, carpeta, trabajo, max_intentos, *, interpretar=leer_respuesta, esquema_salida=None):
     llave = hashlib.sha256(json.dumps([MODELO, ids, prompt], ensure_ascii=False).encode()).hexdigest()
     archivo = carpeta / f"{llave}.json"
     if archivo.exists():
         return json.loads(archivo.read_text()), True
     inicio = perf_counter()
     intentos = []
+    comando = ["codex", "exec"]
+    if esquema_salida is not None:
+        comando.extend(["--output-schema", str(esquema_salida)])
+    comando.extend([
+        "--ephemeral", "--skip-git-repo-check", "-s", "read-only", "-m", MODELO,
+        "-c", 'model_reasoning_effort="low"', "--json", "-",
+    ])
     for _ in range(max_intentos):
         try:
             r = subprocess.run(
-                ["codex", "exec", "--ephemeral", "--skip-git-repo-check", "-s", "read-only",
-                 "-m", MODELO, "-c", 'model_reasoning_effort="low"', "--json", "-"],
+                comando,
                 input=prompt, capture_output=True, text=True, cwd=trabajo, timeout=150,
             )
             if r.returncode:
                 codigos = [json.loads(l).get("message") for l in r.stdout.splitlines()
                            if l.startswith('{"type":"error"')]
                 raise ValueError(str(codigos[-1] if codigos else r.stderr.strip())[:500])
-            respuestas, uso = leer_respuesta(r.stdout, len(ids))
+            respuestas, uso = interpretar(r.stdout, len(ids))
         except (ValueError, KeyError, subprocess.TimeoutExpired) as error:
             intentos.append(str(error))
             if any(x in str(error).lower() for x in ("usage limit", "rate limit", "quota", "401", "429")):
@@ -100,7 +111,7 @@ def inferir(ids, prompt, carpeta, trabajo, max_intentos):
     raise RuntimeError(" | ".join(intentos))
 
 
-def agregado(muestra, respuestas, clave):
+def agregado(muestra, respuestas, clave, *, referencia=PUBLICADO):
     pesos = muestra[clave]
     if pesos is None:
         return None
@@ -114,14 +125,16 @@ def agregado(muestra, respuestas, clave):
     if not masa or n != len(muestra["ids"]):
         return {"validas": n, "cobertura_peso_pct": 100*masa/sum(pesos)}
     pct = [100*x/masa for x in z]
-    delta = [x-y for x, y in zip(pct, PUBLICADO)]
+    if referencia is None:
+        return {"validas": n, "pct": pct, "cobertura_peso_pct": 100.0}
+    delta = [x-y for x, y in zip(pct, referencia)]
     return {"validas": n, "pct": pct, "error_pp": delta, "mae_pp": (abs(delta[0])+abs(delta[1]))/2,
             "rmse_pp": math.sqrt((delta[0]**2+delta[1]**2)/2), "cobertura_peso_pct": 100.0}
 
 
-def correr(plan, k, n, carpeta, lote, concurrencia, intentos):
+def correr(plan, k, n, carpeta, lote, concurrencia, intentos, *, pregunta=TEXTO_TAG, referencia=PUBLICADO):
     catalogo = plan["catalogos"][str(k)]
-    tareas = list(armar_lotes(catalogo, n, lote))
+    tareas = list(armar_lotes(catalogo, n, lote, pregunta=pregunta))
     carpeta.mkdir(parents=True, exist_ok=True)
     respuestas, registros, errores = {}, [], []
     nuevo = 0
@@ -149,14 +162,14 @@ def correr(plan, k, n, carpeta, lote, concurrencia, intentos):
     muestras = {}
     for m in sorted(int(k) for k in catalogo["muestras"] if int(k) <= n):
         muestra = catalogo["muestras"][str(m)]
-        muestras[m] = {"diseno": agregado(muestra, respuestas, "peso"),
-                       "ipf": agregado(muestra, respuestas, "peso_ipf"),
+        muestras[m] = {"diseno": agregado(muestra, respuestas, "peso", referencia=referencia),
+                       "ipf": agregado(muestra, respuestas, "peso_ipf", referencia=referencia),
                        "estado_ipf": muestra["ipf"],
                        "composicion": muestra["composicion"], "composicion_ipf": muestra["composicion_ipf"]}
     return {"base": plan["base"], "tamano_catalogo": catalogo["fichas"], "k": n, "lote": lote,
             "concurrencia": concurrencia, "lotes_nuevos": nuevo, "lotes_validos": len(registros),
-            "segundos": perf_counter()-inicio, "modelo": MODELO, "referencia": PUBLICADO,
-            "caso": plan["caso"], "pregunta": TEXTO_TAG, "resultados": muestras, "errores": errores}
+            "segundos": perf_counter()-inicio, "modelo": MODELO, "referencia": referencia,
+            "caso": plan["caso"], "pregunta": pregunta, "resultados": muestras, "errores": errores}
 
 
 def main():

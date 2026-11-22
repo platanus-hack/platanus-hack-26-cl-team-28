@@ -1,0 +1,72 @@
+[
+  {
+    "id": "c661-registro-incivilidades",
+    "nombre": "Registro de Vándalos e Incivilidades",
+    "pregunta": "El presidente Kast anunció un Registro de Vándalos e Incivilidades para sancionar a quienes cometan esos actos, con posibles restricciones para acceder a beneficios del Estado. ¿Está de acuerdo o en desacuerdo con la medida?",
+    "fuente": "Cadem 661",
+    "url": "https://media-front.elmostrador.cl/2026/06/Revise-la-ultima-encuesta-Cadem.pdf",
+    "familia": "registro-incivilidades-2026",
+    "referencia_pct": [67, 28, 5],
+    "tercera": "No responde"
+  },
+  {
+    "id": "cseg26-toque",
+    "nombre": "Toque de queda en la reforma de seguridad",
+    "pregunta": "En el contexto de la reforma de seguridad, ¿está de acuerdo o en desacuerdo con que exista toque de queda?",
+    "fuente": "Cadem Seguridad, octubre de 2026",
+    "url": "https://cadem.cl/estudios/temor-a-ser-victima-de-un-delito-se-mantiene-alto-en-70-3pts-y-78-6pts-considera-que-el-principal-problema-de-la-delincuencia-es-el-crimen-organizado/",
+    "familia": "reforma-seguridad-2026",
+    "referencia_pct": [47, 46, 7],
+    "tercera": "Saldo hasta 100%; el comunicado no lo desglosa"
+  },
+  {
+    "id": "c511-paridad",
+    "nombre": "Acceso igualitario a cargos electivos",
+    "pregunta": "En el marco de las enmiendas a la propuesta de nueva Constitución de 2023, ¿está de acuerdo o en desacuerdo con que la ley asegure el acceso igualitario de mujeres y hombres a los cargos electivos?",
+    "fuente": "Cadem 511",
+    "url": "https://cadem.cl/wp-content/uploads/2023/10/Track-PP-511-Octubre-S4-VF.pdf",
+    "familia": "enmiendas-constitucionales-2023",
+    "referencia_pct": [77, 23, 0],
+    "tercera": "Saldo hasta 100% sobre porcentajes redondeados"
+  },
+  {
+    "id": "c663-apuestas-bloqueo",
+    "nombre": "Bloquear apuestas online ilegales",
+    "pregunta": "¿Está de acuerdo o en desacuerdo con bloquear los sitios web de apuestas online ilegales?",
+    "fuente": "Cadem 663",
+    "url": "https://cadem.cl/wp-content/uploads/2026/06/Track-PP-663-Junio-S2-M2-VF.pdf",
+    "familia": "apuestas-online-2026",
+    "referencia_pct": [82, 11, 7],
+    "tercera": "No responde"
+  },
+  {
+    "id": "c663-apuestas-eventos",
+    "nombre": "Permitir auspicio de eventos deportivos por sitios de apuestas",
+    "pregunta": "¿Está de acuerdo o en desacuerdo con permitir que las plataformas de apuestas online auspicien eventos deportivos?",
+    "fuente": "Cadem 663",
+    "url": "https://cadem.cl/wp-content/uploads/2026/06/Track-PP-663-Junio-S2-M2-VF.pdf",
+    "familia": "apuestas-online-2026",
+    "referencia_pct": [27, 65, 8],
+    "tercera": "No responde"
+  },
+  {
+    "id": "uc25-celulares-colegios",
+    "nombre": "Prohibir celulares con redes sociales en colegios",
+    "pregunta": "¿Qué tan de acuerdo está con prohibir a los estudiantes el uso de celulares con acceso a redes sociales en escuelas y colegios?",
+    "fuente": "Bicentenario UC 2025",
+    "url": "https://encuestabicentenario.uc.cl/content/uploads/2025/11/Bicentenario-2025_Resultados.pdf#page=79",
+    "familia": "proteccion-digital-menores",
+    "referencia_pct": [78, null, null],
+    "universo": "Población urbana de 18 años o más"
+  },
+  {
+    "id": "uc25-verificacion",
+    "nombre": "Prohibir redes sociales a menores de 15 con verificación de edad",
+    "pregunta": "¿Qué tan de acuerdo está con prohibir el acceso a redes sociales a menores de 15 años y multar a las compañías que carezcan de un sistema robusto de verificación de edad?",
+    "fuente": "Bicentenario UC 2025",
+    "url": "https://encuestabicentenario.uc.cl/content/uploads/2025/11/Bicentenario-2025_Resultados.pdf#page=79",
+    "familia": "proteccion-digital-menores",
+    "referencia_pct": [73, null, null],
+    "universo": "Población urbana de 18 años o más"
+  }
+]
