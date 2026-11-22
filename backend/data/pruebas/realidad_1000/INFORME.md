@@ -439,3 +439,14 @@ uv run python scripts/contraste_final.py
 ```
 
 Las respuestas de cada variante están en `experimentos/`.
+
+### Batería de sentido común (22-11-2026)
+
+Veinte propuestas que podría escribir el público, sin encuesta real (`LOCOS` en `scripts/contraste_experimentos.py`, `--casos locos`). Lo esperado de cada una es criterio del equipo, no un dato. Con los mismos 200 agentes, método anterior contra motor nuevo con ancla de Opus:
+
+- Dirección correcta en las 17 con respuesta obvia, antes y ahora. Dentro del rango esperado (alto: 65 % o más a favor; bajo: 35 % o menos; dividido: 30 a 70 %): 15 antes, 16 ahora.
+- Mejoran las medidas que casi todos apoyarían (medicamentos de 74 a 86 %, agua potable de 73 a 88 %, semana de cuatro días de 57 a 74 %) y las que casi todos rechazarían (eliminar los feriados de 38 a 6 %, jubilación a los 80 de 20 a 2 %, cambiar la bandera de 35 a 6 %).
+- La distancia entre izquierda y derecha baja de 41 a 11 puntos: el transporte gratis tenía 91 % de apoyo en la izquierda y 18 % en la derecha; ahora 61 y 42.
+- Quedan tibias: el bono de un millón (60 %) y el transporte gratis (54 %). Bajar el voto a 16 años cae de 42 a 21 %, sin encuesta con que saber cuál está más cerca.
+
+Sirve como prueba de humo después de cambiar el método: `correr integrado --casos locos` y comparar con lo de arriba.

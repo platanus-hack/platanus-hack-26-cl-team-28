@@ -194,7 +194,37 @@ def casos_de_rai():
             for k, c in datos.items() if k not in propios and c["origen_caso"] != "banco_del_repositorio"}
 
 
+# Propuestas que alguien del público podría escribir para probar el sitio, sin encuesta real: lo que se
+# espera de cada una es de sentido común («alto»: casi todos a favor; «bajo»: casi todos en contra;
+# «dividido»: sin mayoría clara). Sirven para ver si el motor responde algo razonable fuera del banco.
+LOCOS = [
+    ("loco-millon", "Entregar un bono de un millón de pesos a cada persona adulta del país, por una sola vez.", "alto"),
+    ("loco-sueldo-politicos", "Rebajar a la mitad el sueldo de diputados y senadores.", "alto"),
+    ("loco-transporte-gratis", "Hacer gratuito el transporte público en todo Chile.", "alto"),
+    ("loco-medicamentos", "Bajar el precio de los medicamentos fijando un precio máximo por ley.", "alto"),
+    ("loco-internet", "Dar internet gratis a todos los hogares del país.", "alto"),
+    ("loco-agua", "Garantizar que nadie se quede sin agua potable por no poder pagar la cuenta.", "alto"),
+    ("loco-iva-30", "Subir el IVA de 19 % a 30 %.", "bajo"),
+    ("loco-pan", "Prohibir la venta de pan en todo el país.", "bajo"),
+    ("loco-feriados", "Eliminar todos los feriados del año.", "bajo"),
+    ("loco-sueldo-parlamentarios", "Duplicar el sueldo de diputados y senadores.", "bajo"),
+    ("loco-robo", "Dejar de sancionar los robos de menos de 500 mil pesos.", "bajo"),
+    ("loco-jubilacion-80", "Subir la edad de jubilación a 80 años.", "bajo"),
+    ("loco-futbol", "Prohibir el fútbol profesional en Chile.", "bajo"),
+    ("loco-mascotas", "Cobrar un impuesto anual de 100 mil pesos por cada mascota.", "bajo"),
+    ("loco-4-dias", "Pasar a una semana laboral de cuatro días manteniendo el sueldo.", "alto"),
+    ("loco-servicio-militar", "Hacer obligatorio el servicio militar para hombres y mujeres de 18 años.", "dividido"),
+    ("loco-capital", "Trasladar la capital de Chile desde Santiago a Concepción.", "dividido"),
+    ("loco-voto-16", "Bajar la edad para votar a los 16 años.", "dividido"),
+    ("loco-bandera", "Cambiar la bandera de Chile por un diseño nuevo.", "bajo"),
+    ("loco-marte", "Destinar el 5 % del presupuesto nacional a una misión chilena tripulada a Marte.", "bajo"),
+]
+
+
 def elegir_casos(cuales):
+    if cuales == "locos":
+        return {k: {"id": k, "enunciado": t, "familia": k, "area": "sentido-comun", "fuente_id": "", "parte": "locos",
+                    "real_acuerdo": float("nan"), "real_desacuerdo": float("nan"), "esperado": e} for k, t, e in LOCOS}
     if cuales == "rai":
         return casos_de_rai()
     casos = cargar_casos()
@@ -464,7 +494,7 @@ def main():
     i.add_argument("--ancla")
     i.add_argument("--detalle", nargs="*")
     for s in (c, i):
-        s.add_argument("--casos", choices=["dev", "prueba", "todos", "rai"], default="dev")
+        s.add_argument("--casos", choices=["dev", "prueba", "todos", "rai", "locos"], default="dev")
     args = ap.parse_args()
     {"correr": correr, "informe": informe}[args.orden](args)
 
