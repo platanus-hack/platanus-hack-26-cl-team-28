@@ -7,6 +7,9 @@ import { CASOS_VALIDACION } from '../vivo/validacion';
 import { Adjunto } from './Adjunto';
 import estilos from './BarraMando.module.css';
 
+/** Subir un documento (botón y arrastrar sobre el formulario). Oculto por ahora; el motor sigue aceptándolos. */
+const CON_DOCUMENTOS = false;
+
 interface Props {
   sim: EnVivo;
   /** Variante que se está editando. */
@@ -48,6 +51,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
   const soltar = (e: DragEvent) => {
     e.preventDefault();
     setSobre(false);
+    if (!CON_DOCUMENTOS) return;
     const archivo = e.dataTransfer.files[0];
     if (archivo) void sim.adjuntarArchivo(actual.id, archivo);
   };
@@ -57,8 +61,9 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
       className={estilos.barra}
       data-sobre={sobre || undefined}
       onDragOver={(e) => {
+        // Siempre se evita lo del navegador: sin esto, soltar un archivo abre el archivo y deja el sitio.
         e.preventDefault();
-        setSobre(true);
+        if (CON_DOCUMENTOS) setSobre(true);
       }}
       onDragLeave={() => setSobre(false)}
       onDrop={soltar}
@@ -107,13 +112,15 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           <path d="M12 11v5m0-8h.01" />
         </svg>
       </button>
-      <Adjunto
-        documento={actual.documento}
-        leido={actual.leido}
-        leyendo={actual.leyendo}
-        error={actual.errorDocumento}
-        alElegir={(archivo) => void sim.adjuntarArchivo(actual.id, archivo)}
-      />
+      {CON_DOCUMENTOS && (
+        <Adjunto
+          documento={actual.documento}
+          leido={actual.leido}
+          leyendo={actual.leyendo}
+          error={actual.errorDocumento}
+          alElegir={(archivo) => void sim.adjuntarArchivo(actual.id, archivo)}
+        />
+      )}
       </div>
       <label className={estilos.campo}>
         <span className="solo-lectores">Propuesta, variante {letraDe(elegida)}</span>
