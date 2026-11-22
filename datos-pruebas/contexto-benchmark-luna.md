@@ -16,6 +16,8 @@ La ampliación ejecutó una sola configuración y mide su desempeño en más pre
 
 La corrida del 21 de noviembre de 2026 usó GPT-6 Luna con el perfil Base histórica + hogar + justicia, postura explícita y los mismos 1.000 arquetipos ponderados en las 111 preguntas. Luna recibió el texto de cada caso, los perfiles y el cuestionario fijo del simulador. La pregunta de apoyo del simulador menciona implementar la medida en la región del perfil. Algunos textos incluían fecha o antecedentes breves. Los porcentajes publicados se incorporaron al puntuar.
 
+La construcción del catálogo y sus pruebas de cobertura y composición se describen en el [detalle de reducción y representatividad](../backend/contexto/chile/reduccion-y-representatividad.md).
+
 La revisión compara el texto ejecutado con el informe original. La opinión observada puede responder a las noticias, el debate o las condiciones de vida del momento. Una encuesta de 2017–2018, por ejemplo, recoge preferencias de esa época. Si la simulación usa otro período o presenta la medida aislada, puede estar estimando una respuesta a un escenario diferente. El tamaño y el sentido de ese efecto requieren volver a correr el caso cambiando solo el contexto. Los registros individuales de esta corrida contienen notas y postura.
 
 ## Casos revisados

@@ -20,6 +20,8 @@ Las columnas son las de la muestra: están descritas en `contexto/muestra/README
 
 `data/agentes/` es la versión reducida que usa el motor del sitio: 1 de cada 10 personas, agrupadas por tipo político, comuna, sexo y edad, con la columna `representa` y las de los niveles más reducidos (1 por cada 100, 1.000 y 10.000). Esa sí está en el repositorio; ver `agentes.md`.
 
+El [detalle de los algoritmos de reducción y su representatividad](reduccion-y-representatividad.md) explica cómo se construyó la tabla de la app y cómo se obtuvieron los 1.000 medoides del benchmark de Luna.
+
 ## Qué es dato y qué es imputado
 
 - **Del censo (observado):** edad, sexo, comuna, parentesco, educación, actividad, vivienda y todo lo demás que pregunta el cuestionario. Es el registro real y anonimizado de esa persona.
