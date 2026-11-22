@@ -1,0 +1,10 @@
+# Sitio dedicado en el host del MCP. WHATIF_MCP_HOST debe coincidir con el dominio.
+{$WHATIF_MCP_HOST} {
+	handle /mcp {
+		request_body {
+			max_size 768KiB
+		}
+		reverse_proxy 127.0.0.1:8788
+	}
+	respond 404
+}

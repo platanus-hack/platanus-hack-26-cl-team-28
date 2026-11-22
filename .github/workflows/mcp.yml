@@ -1,0 +1,114 @@
+name: What If Chile MCP
+
+on:
+  pull_request:
+    paths:
+      - 'mcp/**'
+      - 'backend/servidor/**'
+      - 'backend/scripts/**'
+      - 'backend/contexto/**'
+      - 'backend/data/agentes/**'
+      - 'backend/data/pruebas/poblacion/al_azar_2000.jsonl'
+      - '.github/workflows/mcp.yml'
+  push:
+    branches: ['mcp/**']
+    paths:
+      - 'mcp/**'
+      - '.github/workflows/mcp.yml'
+  workflow_dispatch:
+    inputs:
+      desplegar:
+        description: Activar la imagen en el host dedicado del MCP
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          version: '0.13.7'
+          enable-cache: false
+      - name: Probar MCP e historial
+        env:
+          PYTHONPATH: backend:mcp
+        run: uv run --project mcp --locked python -m unittest discover -s mcp/tests -q
+      - name: Construir y arrancar el servicio aislado
+        run: |
+          docker build -f mcp/Dockerfile -t whatif-mcp:ci .
+          docker run -d --name whatif-mcp-ci --network host whatif-mcp:ci
+          trap 'docker rm -f whatif-mcp-ci >/dev/null' EXIT
+          python mcp/despliegue/comprobar.py http://127.0.0.1:8788
+
+  publicar:
+    if: github.event_name == 'workflow_dispatch'
+    needs: verificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    concurrency:
+      group: publicar-whatif-mcp
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      imagen: ${{ steps.imagen.outputs.digest }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - id: imagen
+        name: Publicar imagen por SHA en GHCR
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          imagen="ghcr.io/${GITHUB_REPOSITORY,,}-mcp:$GITHUB_SHA"
+          docker build -f mcp/Dockerfile --label "org.opencontainers.image.source=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" -t "$imagen" .
+          docker run -d --name whatif-mcp-publicar --network host "$imagen"
+          trap 'docker rm -f whatif-mcp-publicar >/dev/null' EXIT
+          python mcp/despliegue/comprobar.py http://127.0.0.1:8788
+          docker push "$imagen"
+          digest=$(docker image inspect --format '{{index .RepoDigests 0}}' "$imagen")
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$digest" >> "$GITHUB_STEP_SUMMARY"
+
+  desplegar:
+    if: github.event_name == 'workflow_dispatch' && inputs.desplegar
+    needs: publicar
+    environment: mcp-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    concurrency:
+      group: desplegar-whatif-mcp
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Activar solo el contenedor MCP
+        env:
+          IMAGEN: ${{ needs.publicar.outputs.imagen }}
+          DESTINO: ${{ secrets.WHATIF_MCP_SSH_TARGET }}
+          LLAVE: ${{ secrets.WHATIF_MCP_SSH_KEY }}
+          HOSTS: ${{ secrets.WHATIF_MCP_KNOWN_HOSTS }}
+        run: |
+          [[ "$DESTINO" =~ ^[a-zA-Z0-9_-]+@[a-zA-Z0-9.-]+$ ]]
+          [[ "$IMAGEN" =~ ^ghcr\.io/[a-z0-9._/-]+@sha256:[a-f0-9]{64}$ ]]
+          credenciales=$(mktemp -d)
+          trap 'unlink "$credenciales/llave"; unlink "$credenciales/hosts"; rmdir "$credenciales"' EXIT
+          umask 077
+          printf '%s\n' "$LLAVE" > "$credenciales/llave"
+          printf '%s\n' "$HOSTS" > "$credenciales/hosts"
+          ssh -i "$credenciales/llave" -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$credenciales/hosts" -o ConnectTimeout=10 \
+            "$DESTINO" bash -s -- "$IMAGEN" < mcp/despliegue/activar.sh

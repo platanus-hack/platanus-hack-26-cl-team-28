@@ -1,0 +1,20 @@
+name: whatif-mcp
+services:
+  mcp:
+    image: ${WHATIF_MCP_IMAGE:?Configura la imagen del MCP}
+    network_mode: host
+    env_file:
+      - servicio.env
+    volumes:
+      - historial:/var/lib/whatif-mcp
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    cpus: 2
+volumes:
+  historial:
