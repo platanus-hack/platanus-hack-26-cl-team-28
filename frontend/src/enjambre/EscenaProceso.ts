@@ -456,8 +456,9 @@ export class EscenaProceso {
     const { ctx, dpr, colores, geo } = this;
     const e = suave(this.t);
     // Lo que no es gente aparece después de que los cuadrados despegan.
-    // La capa de caminos se pinta antes de que haga falta: el costo cae al empezar a abrir, no a mitad del vuelo.
-    if (this.capaVieja && (this.pasoCapa > 0 || this.capaPintada < 0 || ahora - this.capaPintada >= PAUSA_CAPA)) this.pintarCaminos(d, ahora);
+    // Los primeros cuadros muestran el vuelo inmediatamente. La capa costosa se prepara
+    // después del despegue, antes de que aparezcan los caminos, una postura por cuadro.
+    if (this.t >= 0.25 && this.capaVieja && (this.pasoCapa > 0 || this.capaPintada < 0 || ahora - this.capaPintada >= PAUSA_CAPA)) this.pintarCaminos(d, ahora);
     const visible = Math.max(0, Math.min(1, (this.t - 0.3) / 0.5));
     const trazo = Math.max(0, Math.min(1, (this.t - 0.42) / 0.58));
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

@@ -105,10 +105,7 @@
   font-size: var(--texto-s);
   font-weight: 600;
   white-space: nowrap;
-  transition:
-    background var(--rapido),
-    color var(--rapido),
-    border-color var(--rapido);
+  
 }
 
 .preguntas button b {
@@ -222,7 +219,7 @@
   gap: var(--e2);
 }
 
-.controles label {
+.cruce {
   display: flex;
   align-items: center;
   gap: var(--e2);
@@ -230,8 +227,7 @@
   color: var(--tinta-suave);
 }
 
-.controles select,
-.controles button {
+.controles > button {
   height: 36px;
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
@@ -258,7 +254,7 @@
   color: var(--tinta);
 }
 
-.controles button {
+.controles > button {
   padding: 0 var(--e3);
   color: var(--tinta-suave);
   white-space: nowrap;

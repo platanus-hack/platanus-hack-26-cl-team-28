@@ -21,73 +21,44 @@
 }
 
 .hoja {
-  width: min(38rem, calc(100% - 2rem));
-  max-height: calc(100dvh - 2rem);
-  margin: auto;
-  padding: 0;
-  overflow: hidden;
+  position: fixed;
+  z-index: 7;
+  box-sizing: border-box;
+  padding: 12px;
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
   background: var(--papel);
   color: var(--tinta);
-}
-
-.hoja[open] {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
-}
-
-.hoja::backdrop {
-  background: rgb(8 11 16 / 0.68);
-}
-
-.cabecera {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--e3);
-  padding: var(--e3) var(--e5);
-  border-bottom: 1px solid var(--linea-suave);
-}
-
-.cabecera h2 {
-  font: 650 var(--texto-m) / 1.25 var(--fuente-ui);
-}
-
-.cerrar {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: var(--e7);
-  height: var(--e7);
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--tinta-suave);
-}
-
-.cerrar svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
+  box-shadow: 0 12px 32px rgb(8 11 16 / 0.26);
 }
 
 .texto {
-  min-height: 0;
-  padding: var(--e5);
+  max-height: calc(var(--alto-lectura, 26rem) - 26px);
+  margin: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  font: 500 clamp(1.05rem, 0.95rem + 0.35vw, 1.3rem) / 1.5 var(--fuente-voz);
   overflow-wrap: anywhere;
   white-space: pre-line;
 }
+.texto:focus-visible { outline-offset: -3px; }
 
-.texto:focus-visible {
-  outline-offset: -3px;
+.cerrar {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translate(40%, 40%);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--linea-suave);
+  border-radius: 50%;
+  background: var(--papel);
+  color: var(--tinta-suave);
+  cursor: pointer;
 }
+.cerrar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; }
 
 @media (hover: hover) and (pointer: fine) {
   .propuesta:hover .titulo {

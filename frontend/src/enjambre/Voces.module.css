@@ -43,8 +43,27 @@
   --color: var(--indecisa);
 }
 
+/* Un deseo no es una postura: va en el color de quien todavía no opina, para no leerse como respuesta. */
+.globo[data-postura='deseo'] {
+  --color: var(--punto-neutro);
+}
+
 .globo[data-lado='izquierda'] {
   transform-origin: 100% 34px;
+}
+
+/* En la mitad de abajo de la pantalla el globo crece hacia arriba y la punta queda cerca de su base. */
+.globo[data-ancla='abajo'] {
+  transform-origin: 0 calc(100% - 34px);
+}
+
+.globo[data-ancla='abajo'][data-lado='izquierda'] {
+  transform-origin: 100% calc(100% - 34px);
+}
+
+.globo[data-ancla='abajo']::before {
+  top: auto;
+  bottom: 26px;
 }
 
 .globo[data-lado='izquierda']::before {
@@ -76,9 +95,21 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .globo {
-    animation: none;
+/* Al irse hace el camino de vuelta: un pequeño impulso y se encoge hacia quien lo dijo. */
+@keyframes salir {
+  from {
+    animation-timing-function: ease-out;
+  }
+
+  25% {
+    opacity: 1;
+    scale: 1.05;
+    animation-timing-function: ease-in-out;
+  }
+
+  to {
+    opacity: 0;
+    scale: 0.6;
   }
 }
 
@@ -88,10 +119,19 @@
   }
 }
 
-.capa[data-saliendo] .globo {
-  opacity: 0;
-  scale: 0.9;
-  transition:
-    opacity 400ms ease-out,
-    scale 400ms ease-out;
+/* Cada globo se despide con su animación: cuando vence, o todos a la vez cuando la encuesta termina. */
+.globo[data-saliendo] {
+  animation: salir 600ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .globo,
+  .globo[data-saliendo] {
+    animation: none;
+  }
+
+  .globo[data-saliendo] {
+    opacity: 0;
+    transition: opacity 300ms ease-out;
+  }
 }

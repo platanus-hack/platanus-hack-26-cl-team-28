@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { alto, correlacion, cruzar, DIMENSIONES, MINIMO_GRUPO, ordenarDimensiones, resumirDimension, tramoDe, type PersonaAnalisis } from './analisis';
+import { alto, correlacion, cruzar, DIMENSIONES, MINIMO_GRUPO, ordenarDimensiones, rasgosDelVoto, resumirDimension, tramoDe, type PersonaAnalisis } from './analisis';
 import { CLAVES } from './sociedad';
 
 const dimension = (clave: string) => DIMENSIONES.find((d) => d.clave === clave)!;
@@ -105,5 +105,41 @@ describe('análisis por características', () => {
     // Una pregunta que todos responden igual no tiene con qué correlacionar.
     expect(correlacion(juntas, agentes, 0, 3)).toBeNull();
     expect(correlacion(juntas, agentes.slice(0, 5), 0, 1)).toBeNull();
+  });
+
+  describe('rasgos del voto', () => {
+    // 120 personas: quienes votaron Kast (la mitad) están en contra; el resto se reparte a medias.
+    // El género se reparte igual en cada voto, sin relación con la nota.
+    const personas = Array.from({ length: 120 }, (_, i) => persona(30 + (i % 3) * 20, { voto: i < 60 ? 1 : 0, genero: i % 2, region: i < 10 ? 2 : 5 }));
+    const acuerdo = personas.map((_, i) => (i < 60 ? 2 : i % 4 < 2 ? 6 : 2));
+    const agentes = personas.map((_, i) => i);
+
+    it('elige el grupo donde ese lado pesa más que en el total', () => {
+      const contra = rasgosDelVoto(personas, acuerdo, agentes, 'contra');
+      expect(contra[0]).toMatchObject({ clave: 'voto', grupo: 'Kast', parte: 100, base: 75, agentes: 60 });
+      const favor = rasgosDelVoto(personas, acuerdo, agentes, 'favor');
+      expect(favor[0]).toMatchObject({ clave: 'voto', grupo: 'Jara', parte: 50, base: 25 });
+    });
+
+    it('no muestra diferencias de azar ni grupos chicos, y no repite característica', () => {
+      const contra = rasgosDelVoto(personas, acuerdo, agentes, 'contra');
+      const claves = contra.map((r) => r.clave);
+      expect(new Set(claves).size).toBe(claves.length);
+      expect(claves).not.toContain('genero');
+      // La región 2 tiene 10 personas, todas en contra: menos de MINIMO_GRUPO.
+      expect(claves).not.toContain('region');
+      expect(contra.length).toBeLessThanOrEqual(3);
+    });
+
+    it('también distingue a quienes no se deciden', () => {
+      // Entre quienes votaron Jara, la mitad deja un 4: ahí se concentran los indecisos.
+      const dudan = personas.map((_, i) => (i < 60 ? 2 : i % 4 < 2 ? 4 : 6));
+      expect(rasgosDelVoto(personas, dudan, agentes, 'indecisa')[0]).toMatchObject({ clave: 'voto', grupo: 'Jara', parte: 50, base: 25 });
+    });
+
+    it('sin respuestas o sin nadie de ese lado no hay rasgos', () => {
+      expect(rasgosDelVoto(personas, new Int8Array(120), agentes, 'contra')).toEqual([]);
+      expect(rasgosDelVoto(personas, personas.map(() => 2), agentes, 'favor')).toEqual([]);
+    });
   });
 });

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
 import { POSTURAS } from '../dominio/tipos';
 import { porcentajesDe, type CasoVivo } from '../vivo/useEnVivo';
@@ -10,6 +11,7 @@ interface Props {
   corriendo: boolean;
   alElegir(indice: number): void;
   alVolver(): void;
+  acciones?: ReactNode;
 }
 
 export function diferencia(caso: CasoVivo, base: CasoVivo): number {
@@ -17,7 +19,7 @@ export function diferencia(caso: CasoVivo, base: CasoVivo): number {
 }
 
 /** La postura más frecuente de cada variante y su diferencia de apoyo respecto de la A. */
-export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver }: Props) {
+export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver, acciones }: Props) {
   return (
     <nav className={estilos.barra} aria-label="Variantes">
       <div role="tablist" aria-label="Variante en pantalla" className={estilos.pestanas}>
@@ -59,11 +61,10 @@ export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver }:
           );
         })}
       </div>
-      {!corriendo && (
-        <Boton variante="secundario" onClick={alVolver}>
-          Nueva pregunta
-        </Boton>
-      )}
+      <div className={estilos.acciones}>
+        {!corriendo && <Boton variante="secundario" onClick={alVolver}>Nueva pregunta</Boton>}
+        {acciones}
+      </div>
     </nav>
   );
 }

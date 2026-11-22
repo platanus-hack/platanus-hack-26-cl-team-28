@@ -18,7 +18,7 @@
   height: 44px;
   border: 0;
   background: transparent;
-  transition: background var(--rapido);
+  
 }
 
 .controles button + button {

@@ -110,7 +110,7 @@ export interface Rasgos {
   representa?: number;
 }
 
-export const filtrosDePartida = (tamano: number): FiltrosVivo => ({ tamano, reduccion: 10, edadMin: EDAD_MINIMA, edadMax: EDAD_TOPE, elegidos: {} });
+export const filtrosDePartida = (tamano: number): FiltrosVivo => ({ tamano, reduccion: 10_000, edadMin: EDAD_MINIMA, edadMax: EDAD_TOPE, elegidos: {} });
 
 /**
  * Toca una opción. En los parámetros de dos opciones la otra la reemplaza; en los demás se

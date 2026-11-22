@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react';
+import { Desplegable } from '../componentes/comunes/Desplegable';
 import { formatear } from '../dominio/textos';
 import { alto, cruzar, mediaDe, MINIMO_GRUPO, ordenarDimensiones, resumirDimension, type ClaveDimension, type ResumenDimension } from '../vivo/analisis';
 import { midePostura, preguntaDe, resumirEncuesta } from '../vivo/encuesta';
@@ -138,17 +139,10 @@ export function VistaAnalisis({ sim, conexion }: Props) {
               </h2>
               <p className={estilos.hallazgo}>{hallazgo(actual, escala ? `«${lados.alto}»` : lados.alto)}</p>
               <div className={estilos.controles}>
-                <label>
+                <div className={estilos.cruce}>
                   <span>Cruzar con</span>
-                  <select value={segunda?.clave ?? ''} onChange={(e) => setCruzada((e.target.value || null) as ClaveDimension | null)}>
-                    <option value="">Nada</option>
-                    {cruzables.map((d) => (
-                      <option key={d.clave} value={d.clave}>
-                        {d.breve}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                  <Desplegable compacto etiqueta="Cruzar con" valor={segunda?.clave ?? ''} alCambiar={(v) => setCruzada((v || null) as ClaveDimension | null)} opciones={[{ valor: '', texto: 'Nada' }, ...cruzables.map((d) => ({ valor: d.clave, texto: d.breve }))]} />
+                </div>
                 <button type="button" aria-pressed={porResultado} onClick={() => setPorResultado(!porResultado)}>
                   Ordenar por resultado
                 </button>

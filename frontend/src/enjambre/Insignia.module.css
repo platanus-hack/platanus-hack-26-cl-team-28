@@ -72,3 +72,39 @@
     text-align: left;
   }
 }
+
+.ficha .equivale {
+  font-size: var(--texto-s);
+  font-variant-numeric: tabular-nums;
+}
+
+.ficha [data-indecisas] { display: grid; justify-items: end; gap: var(--e1); margin-top: var(--e3); }
+.ficha [data-indecisas] dt { font-size: var(--texto-xxs); color: var(--tinta); text-transform: none; letter-spacing: normal; }
+.ficha .cifraIndecisas { display: flex; align-items: flex-end; gap: var(--e1); }
+.ficha .cifraIndecisas .botonWati { margin-bottom: 3px; }
+.ficha .cifraIndecisas b { display: flex; align-items: baseline; margin: 0; font-size: 2.75rem; line-height: 1; }
+.signoPorcentaje { font-size: 0.55em; margin-left: 0.08em; }
+.ficha [data-indecisas] canvas { display: block; flex: none; }
+
+.botonWati {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.figura {
+  display: block;
+  transform-origin: bottom center;
+}
+
+.ficha .cantidadIndecisas { font-size: var(--texto-s); font-variant-numeric: tabular-nums; }
+
+.ficha .muestra {
+  padding: var(--e3) var(--e4);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+}

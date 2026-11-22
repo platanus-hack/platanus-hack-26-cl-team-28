@@ -32,7 +32,7 @@ export type FaseVivo = 'cargando' | 'preparar' | 'corriendo' | 'resultados';
 
 /** Tamaños de muestra, en agentes. */
 export const TAMANOS_AGENTES = [250, 500, 1000, 2000, 5000, 10000] as const;
-const TAMANO_INICIAL = 1000;
+const TAMANO_INICIAL = 2000;
 const FILTROS_DE_PARTIDA: FiltrosVivo = filtrosDePartida(TAMANO_INICIAL);
 /**
  * Milisegundos que se espera tras el último cambio de filtros antes de pedir la muestra al motor:
@@ -91,6 +91,17 @@ export interface Conexion {
 export const posturaDe = (acuerdo: number): Postura => (acuerdo >= 5 ? 'favor' : acuerdo <= 3 ? 'contra' : 'indecisa');
 
 /**
+ * Guarda una voz. El tope es por variante: si la suya ya tiene demasiadas se suelta su más
+ * antigua, así las frases de una variante no desplazan a las de otra que aún no se mostró.
+ */
+export function guardarVoz(lista: Voz[], voz: Voz, tope = VOCES_GUARDADAS): void {
+  lista.push(voz);
+  let cuantas = 0;
+  for (const otra of lista) if (otra.caso === voz.caso) cuantas += 1;
+  if (cuantas > tope) lista.splice(lista.findIndex((otra) => otra.caso === voz.caso), 1);
+}
+
+/**
  * Mensaje para la persona: los errores que el motor redacta para humanos pasan tal cual;
  * los técnicos (códigos HTTP, excepciones) se cambian por uno claro.
  */
@@ -146,7 +157,7 @@ function todos(conexion: Conexion): MuestraVivo {
   };
 }
 
-const INICIALES = [{ texto: CASOS_VALIDACION[0].texto, referencia: CASOS_VALIDACION[0].referencia }];
+const INICIALES = [{ texto: '' }];
 
 /** Estado de la herramienta conectada al motor: muestra, variantes y la corrida que llega en vivo. */
 export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
@@ -172,6 +183,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const cancelar = useRef<(() => void) | null>(null);
   /** Cuenta los pedidos de reabrir una simulación: uno que llega tarde no pisa lo que vino después. */
   const turnoReabrir = useRef(0);
+  /** La corrida en pantalla, con el identificador del motor (el mismo del historial); nulo sin motor o al preparar. */
+  const [corridaId, setCorridaId] = useState<string | null>(null);
   const pintar = useRef(0);
 
   // Conexión con el motor; sin motor queda la demostración en el navegador, rotulada como tal.
@@ -259,6 +272,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     return { agentes, elegido, disponibles: corrida.total, total: agentes.length };
   }, [enCorrida, conexion, corrida, muestra, filtros]);
   const filtrada = enCorrida && corrida !== null && vista.total < corrida.total;
+  // El motor sortea en proporción a las personas que representa cada agente: así cada agente de la
+  // muestra pesa lo mismo, y vale las personas representadas repartidas entre todos. Sin motor no se sabe.
+  const referencia = enCorrida ? corrida : muestra;
+  const personasPorAgente = !conexion?.demo && referencia?.representadas && referencia.total ? referencia.representadas / referencia.total : null;
 
   // El retrato que dibuja cada filtro. Al preparar lo calcula el motor sobre toda la población;
   // con una corrida en pantalla (o sin motor) se cuenta aquí, entre los agentes que hay.
@@ -339,9 +356,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
             caso.notas[agente] = notas;
             caso.respondidas += 1;
             if (evento.cache) caso.desdeCache += 1;
-            if (frase) voces.current.push({ agente, caso: evento.caso, acuerdo, frase });
+            if (frase) guardarVoz(voces.current, { agente, caso: evento.caso, acuerdo, frase });
           }
-          if (voces.current.length > VOCES_GUARDADAS) voces.current.splice(0, voces.current.length - VOCES_GUARDADAS);
           setMetricas(evento.metricas);
           break;
         }
@@ -350,7 +366,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           if (!caso) return;
           for (const [agente, frase] of evento.r) {
             caso.frase[agente] = frase;
-            voces.current.push({ agente, caso: evento.caso, acuerdo: caso.acuerdo[agente], frase });
+            guardarVoz(voces.current, { agente, caso: evento.caso, acuerdo: caso.acuerdo[agente], frase });
           }
           setMetricas(evento.metricas);
           break;
@@ -462,6 +478,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setViendo(0);
     setCorrida(muestra);
     setEncuesta(PREGUNTAS);
+    setCorridaId(null);
     setFase('corriendo');
     const pedido = {
       casos: pedidos,
@@ -472,7 +489,9 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       filtros,
     };
     try {
-      cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento);
+      const turno = turnoReabrir.current;
+      // Si mientras se lanzaba se abrió otra del historial, el identificador ya no es el de la pantalla.
+      cancelar.current = conexion.demo ? correrDemostracion(pedido, alEvento) : await correrRemoto(pedido, alEvento, (id) => turno === turnoReabrir.current && setCorridaId(id));
     } catch (error) {
       setAviso(humano(error, 'El motor de simulación no respondió. Intenta de nuevo en unos segundos.'));
       setFase('preparar');
@@ -541,6 +560,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       setBuscando(false);
       setViendo(0);
       setTerminada(true);
+      setCorridaId(id);
       setFase('resultados');
       return null;
     },
@@ -613,6 +633,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     muestra: vista,
     /** Agentes de la corrida en pantalla (sin filtrar). */
     totalCorrida: corrida?.total ?? 0,
+    /** A cuántas personas de la población equivale cada agente que se mira; nulo sin motor. */
+    personasPorAgente,
     filtrada,
     /** El motor está armando la muestra para los filtros nuevos. */
     buscando,
@@ -621,9 +643,12 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     /** Vuelve a mostrar una simulación guardada en el historial. */
     reabrir,
     detener,
+    /** Identificador de la corrida en pantalla, para ponerlo en la dirección de la página. */
+    corridaId,
     volver: () => {
       cancelar.current?.();
       vaciarCola();
+      setCorridaId(null);
       setFase('preparar');
     },
   };

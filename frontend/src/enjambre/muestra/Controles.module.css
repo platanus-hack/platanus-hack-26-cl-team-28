@@ -22,9 +22,7 @@
   width: 9px;
   height: 9px;
   border: 1.5px solid var(--tinta-suave);
-  transition:
-    background var(--rapido),
-    border-color var(--rapido);
+  
 }
 
 .filas button[aria-pressed='true'] i,
@@ -88,9 +86,7 @@ button[aria-pressed='true'] .parte {
   width: max(var(--parte), 2px);
   height: 100%;
   background: var(--tinta-suave);
-  transition:
-    width 240ms var(--curva-salida),
-    background var(--rapido);
+  transition: width 240ms var(--curva-salida);
 }
 
 .filas[data-eligiendo] .barra b {
@@ -159,9 +155,7 @@ button[aria-pressed='true'] .parte {
   min-width: 3px;
   background: var(--tinta-suave);
   cursor: pointer;
-  transition:
-    flex-basis 240ms var(--curva-salida),
-    background var(--rapido);
+  transition: flex-basis 240ms var(--curva-salida);
 }
 
 .reparto b:first-child {
@@ -201,9 +195,7 @@ button[aria-pressed='true'] .parte {
   width: 100%;
   height: max(var(--alto), 2px);
   background: var(--tinta-suave);
-  transition:
-    height 240ms var(--curva-salida),
-    background var(--rapido);
+  transition: height 240ms var(--curva-salida);
 }
 
 .columnas[data-eligiendo] .columna b {
@@ -242,7 +234,7 @@ button[aria-pressed='true'] .parte {
   flex: 1;
   height: max(var(--alto), 1px);
   background: var(--tinta-suave);
-  transition: background var(--rapido);
+  
 }
 
 .edad[data-eligiendo] .histograma i {

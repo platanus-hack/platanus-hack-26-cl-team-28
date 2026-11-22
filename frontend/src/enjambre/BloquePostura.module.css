@@ -1,5 +1,7 @@
 .bloque {
   display: grid;
+  /* Una columna del ancho del bloque, aunque la fila de la cifra con sus watis sea más ancha. */
+  grid-template-columns: minmax(0, 1fr);
   justify-items: start;
   pointer-events: none;
 }
@@ -9,8 +11,53 @@
   text-align: right;
 }
 
-.cifra {
+/* La cifra y, a su lado (hacia el centro de la pantalla), los watis parados sobre su base. */
+.fila {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--e3);
   margin-top: var(--e2);
+}
+
+/* El primer wati, el de la característica más marcada, va junto a la cifra. */
+.watis {
+  display: flex;
+  flex: none;
+  align-items: flex-end;
+  gap: var(--e1);
+}
+
+.bloque[data-postura='favor'] .fila,
+.bloque[data-postura='favor'] .watis {
+  flex-direction: row-reverse;
+}
+
+/* Si los watis se salen de la columna, que se salgan hacia el mapa y no fuera de la pantalla. */
+.bloque[data-postura='favor'] .fila {
+  justify-self: unsafe end;
+}
+
+.botonWati {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.figura {
+  display: block;
+  transform-origin: bottom center;
+}
+
+.figura canvas {
+  display: block;
+}
+
+.cifra {
+  flex: none;
   font: 500 clamp(3.5rem, min(2rem + 9vw, 17vh), 11rem) / 0.8 var(--fuente-voz);
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.04em;
@@ -32,7 +79,7 @@
 }
 
 .nombre {
-  margin-top: var(--e3);
+  margin: 0;
   font: 500 clamp(1.3rem, 1rem + 1vw, 2rem) / 1 var(--fuente-voz);
 }
 
@@ -43,13 +90,16 @@
   font-variant-numeric: tabular-nums;
 }
 
-.bloque[data-compacto] .cifra {
+.bloque[data-compacto] .fila {
   margin-top: 0;
+}
+
+.bloque[data-compacto] .cifra {
   font-size: clamp(3rem, 1rem + 11vw, 5rem);
 }
 
 .bloque[data-compacto] .nombre {
-  margin-top: var(--e1);
+  margin-top: 0;
   font-size: 1.15rem;
 }
 
@@ -87,3 +137,7 @@
 .encabezado[data-baja] {
   color: var(--contra-texto);
 }
+
+/* Si al lado tapan el mapa, las figuras bajan bajo la cifra. */
+.bloque[data-apilado] .fila { flex-direction: column; align-items: flex-start; }
+.bloque[data-apilado][data-postura='favor'] .fila { flex-direction: column; align-items: flex-end; }

@@ -32,7 +32,10 @@
   --color: var(--indecisa);
 }
 
+/* Mantiene la franja y el wati por delante del contenido desplazable. */
 .franja {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
   gap: var(--e3);

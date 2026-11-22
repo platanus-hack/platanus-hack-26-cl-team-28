@@ -205,10 +205,13 @@ export async function correrRemoto(
   /** `filtros`: los de la interfaz. El motor los guarda con la corrida y los devuelve al reabrirla. */
   pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; filtros?: FiltrosVivo },
   alEvento: (evento: Evento) => void,
+  /** Avisa el identificador de la corrida apenas el motor lo da: es el mismo con que queda en el historial. */
+  alIniciar?: (id: string) => void,
 ): Promise<() => void> {
   const { id } = await leer<{ id: string }>(
     await fetch(`${BASE}/corridas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(pedido) }),
   );
+  alIniciar?.(id);
   const fuente = new EventSource(`${BASE}/corridas/${id}/eventos`);
   const tipos = ['inicio', 'respuestas', 'voces', 'caso_listo', 'redactando', 'caso', 'aviso', 'fin', 'falla'] as const;
   for (const tipo of tipos) {

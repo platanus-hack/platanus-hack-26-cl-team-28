@@ -95,6 +95,7 @@
   background: transparent;
   overflow: hidden;
   cursor: pointer;
+  touch-action: manipulation;
 }
 .asomo:focus-visible { outline: 2px solid var(--foco); outline-offset: 2px; }
 .asomo > span {
@@ -230,6 +231,11 @@
   margin-block: auto;
 }
 
+/* El bloque a favor ocupa todo el ancho de su columna: así sabe cuánto lugar tienen sus watis al lado de la cifra. */
+.favor {
+  align-self: stretch;
+}
+
 .avance {
   margin-top: var(--e5);
 }
@@ -252,6 +258,7 @@
   gap: var(--e2);
 }
 
+.accionesVista > button,
 .accionesVista > div > button[aria-expanded] {
   padding-inline: var(--e4);
   border-width: 1px;
@@ -261,11 +268,18 @@
   font-weight: 600;
 }
 
-.accionesVista > div > button[aria-expanded]:hover,
+.accionesVista > button:hover,
+.accionesVista > div > button[aria-expanded]:hover:not(:disabled),
 .accionesVista > div > button[aria-expanded='true'] {
   background: var(--relleno-suave);
   color: var(--tinta);
   box-shadow: none;
+}
+
+.accionesVista > div > button[aria-expanded]:disabled {
+  opacity: 0.55;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .cambiarTema {
@@ -282,7 +296,7 @@
   border-radius: var(--radio);
   background: var(--papel);
   color: var(--tinta-suave);
-  transition: background var(--rapido);
+  
 }
 
 .cambiarTema::before {
@@ -295,7 +309,7 @@
   border-radius: var(--radio);
   background: var(--tinta);
   transform: translateX(0);
-  transition: transform var(--medio) var(--curva-salida), background var(--rapido);
+  transition: transform var(--medio) var(--curva-salida);
   content: '';
 }
 
@@ -310,7 +324,7 @@
   stroke: currentColor;
   stroke-width: 1.5;
   stroke-linecap: round;
-  transition: color var(--rapido);
+  
 }
 
 .cambiarTema[aria-checked='false'] svg:first-of-type,
@@ -335,16 +349,10 @@
 .encuesta {
   display: flex;
   flex: 0 100 auto;
-  min-height: min(14rem, 34vh);
+  min-height: 0;
   pointer-events: auto;
 }
 
-/* En una ventana muy baja no caben el título y las seis preguntas: la lista cede y se desplaza. */
-@media (max-height: 640px) {
-  .encuesta {
-    min-height: 9.5rem;
-  }
-}
 
 /*
  * Con la encuesta a la vista y poco alto, el título se recorta a menos líneas con puntos
@@ -496,11 +504,11 @@
   text-align: right;
 }
 
-/* Si aun así falta alto, se recorta la nota de arriba antes que sacar de pantalla el botón del pie. */
+/* Los controles de la nota conservan su altura y su anillo de foco. */
 .nota {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 @media (max-height: 800px) {
@@ -664,18 +672,18 @@
 }
 
 /* Botón del proceso: el mismo control que el acercamiento, con un grafo. Encendido, se invierte. */
-.zoom .verProceso svg {
+.accionesMapa .verProceso svg {
   width: 16px;
   height: 16px;
   stroke-width: 1.4;
 }
 
-.zoom .verProceso circle {
+.accionesMapa .verProceso circle {
   fill: currentColor;
   stroke: none;
 }
 
-.zoom .verProceso[aria-pressed='true'] {
+.accionesMapa .verProceso[aria-pressed='true'] {
   border-color: var(--tinta);
   background: var(--tinta);
   color: var(--papel);
@@ -774,3 +782,68 @@
 @media (max-width: 899px) and (prefers-reduced-motion: reduce) {
   .app { scroll-behavior: auto; }
 }
+
+/* Vistas principales, identificadas con texto y al alcance junto al lado derecho. */
+.accionesMapa {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--e2);
+}
+.accionesMapa:empty { display: none; }
+.accionesMapa button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 650 var(--texto-s) / 1.2 var(--fuente-ui);
+  text-align: left;
+  cursor: pointer;
+}
+.accionesMapa svg { flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.accionesMapa button:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .accionesMapa button:not([aria-pressed="true"]):hover {
+    border-color: var(--tinta-suave);
+    background: var(--relleno-suave);
+  }
+}
+.app[data-oculta] .accionesMapa { opacity: 0; pointer-events: none; }
+@media (max-width: 899px) { .accionesMapa { display: none; } }
+
+@media (min-width: 900px) {
+  .app[data-proceso] .izquierda { opacity: 1; visibility: visible; }
+  .app[data-proceso] .izquierda > :not(.mando),
+  .app[data-proceso] .mando > :not(:has(.accionesMapa)),
+  .app[data-proceso] .mando nav > [role="tablist"],
+  .app[data-proceso] .mando nav > div > button { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+.volverMapa {
+  position: absolute;
+  z-index: 6;
+  left: max(var(--gutter), env(safe-area-inset-left));
+  bottom: max(var(--e5), env(safe-area-inset-bottom));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 44px;
+  padding: 0 var(--e4);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  cursor: pointer;
+}
+.volverMapa:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .volverMapa:hover { background: var(--relleno-suave); border-color: var(--tinta-suave); } }
+

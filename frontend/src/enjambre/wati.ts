@@ -24,6 +24,8 @@ const BORDE = '#3a1f1b';
 const OJO = '#2b1511';
 const BOCA = '#4a1c18';
 const LENGUA = '#e0706a';
+const PELAJE_MONO = '#a76a45';
+const CARA_MONO = '#f4cc9d';
 
 // ---------- Color ----------
 
@@ -288,80 +290,87 @@ export interface OpcionesWati {
   /** 0 a CARAS - 1. */
   cuadro: number;
   animo?: Animo;
-  /** Disfrazado de gato: orejas, cola, nariz y bigotes en vez del adorno. */
-  gato?: boolean;
+  /** Disfraz de mono con una banana. */
+  mono?: boolean;
   /** Ángulo del brazo derecho, usado solo por el wati del mando. */
   saludo?: number;
 }
 
-/** Orejas y cola de gato; van detrás del cuerpo, que tapa donde se unen. */
-function orejasYCola(ctx: CanvasRenderingContext2D, arriba: number, cuerpo: string): void {
-  const interior = mezclarColor(cuerpo, LENGUA, 0.55);
+/** Orejas redondas y cola curva, detrás del cuerpo. */
+function orejasYColaDeMono(ctx: CanvasRenderingContext2D, arriba: number): void {
   ctx.lineCap = 'round';
-  // Cola: un trazo grueso café con el color del cuerpo encima, que sube en curva por el costado.
   const cola = new Path2D();
-  cola.moveTo(CX + 11, 37.5);
-  cola.bezierCurveTo(CX + 20.5, 38, CX + 21, 28, CX + 16.5, 24.5);
+  cola.moveTo(CX + 10, 37.5);
+  cola.bezierCurveTo(CX + 17, 40, CX + 20, 34.5, CX + 16.3, 30.2);
+  cola.bezierCurveTo(CX + 12.4, 25.8, CX + 15.4, 22.5, CX + 17.7, 25.1);
   ctx.strokeStyle = BORDE;
-  ctx.lineWidth = 4.6;
+  ctx.lineWidth = 4;
   ctx.stroke(cola);
-  ctx.strokeStyle = cuerpo;
-  ctx.lineWidth = 2.5;
+  ctx.strokeStyle = PELAJE_MONO;
+  ctx.lineWidth = 2.2;
   ctx.stroke(cola);
-  ctx.lineWidth = LW;
-  ctx.strokeStyle = BORDE;
   for (const lado of [-1, 1]) {
+    const x = CX + lado * 12.8;
     const oreja = new Path2D();
-    oreja.moveTo(CX + lado * 3.6, arriba + 1.5);
-    oreja.lineTo(CX + lado * 10.8, arriba - 8.2);
-    oreja.lineTo(CX + lado * 13, arriba + 5.5);
-    oreja.closePath();
-    ctx.fillStyle = cuerpo;
-    ctx.fill(oreja);
-    ctx.stroke(oreja);
-    const dentro = new Path2D();
-    dentro.moveTo(CX + lado * 6.2, arriba + 1.6);
-    dentro.lineTo(CX + lado * 10.4, arriba - 4.6);
-    dentro.lineTo(CX + lado * 11.6, arriba + 3);
-    dentro.closePath();
-    ctx.fillStyle = interior;
-    ctx.fill(dentro);
+    oreja.arc(x, arriba + 5.5, 4.8, 0, Math.PI * 2);
+    rellenar(ctx, oreja, PELAJE_MONO);
+    ctx.fillStyle = '#e3a57d';
+    ctx.beginPath();
+    ctx.arc(x, arriba + 5.5, 2.7, 0, Math.PI * 2);
+    ctx.fill();
   }
 }
 
-/** Nariz y bigotes sobre la cara de reposo. */
-function narizYBigotes(ctx: CanvasRenderingContext2D, y: number): void {
-  ctx.fillStyle = LENGUA;
+function caraDeMono(ctx: CanvasRenderingContext2D, y: number): void {
+  ctx.fillStyle = CARA_MONO;
   ctx.beginPath();
-  ctx.moveTo(CX - 1.1, y + 0.2);
-  ctx.lineTo(CX + 1.1, y + 0.2);
-  ctx.lineTo(CX, y + 1.2);
+  ctx.moveTo(CX, y - 3.4);
+  ctx.bezierCurveTo(CX - 7, y - 10, CX - 14, y - 3.5, CX - 10.2, y + 2.3);
+  ctx.bezierCurveTo(CX - 13.2, y + 7.2, CX - 6, y + 10, CX, y + 10);
+  ctx.bezierCurveTo(CX + 6, y + 10, CX + 13.2, y + 7.2, CX + 10.2, y + 2.3);
+  ctx.bezierCurveTo(CX + 14, y - 3.5, CX + 7, y - 10, CX, y - 3.4);
   ctx.closePath();
   ctx.fill();
-  ctx.strokeStyle = OJO;
-  ctx.lineWidth = 0.7;
-  ctx.lineCap = 'round';
-  for (const lado of [-1, 1]) {
-    for (const dy of [-0.7, 1.1]) {
-      ctx.beginPath();
-      ctx.moveTo(CX + lado * 9.2, y + 1.9 + dy * 0.4);
-      ctx.lineTo(CX + lado * 13.6, y + 1.2 + dy * 1.6);
-      ctx.stroke();
-    }
-  }
+}
+
+/** La banana y la mano que la sujeta van delante del cuerpo. */
+function bananaDeMono(ctx: CanvasRenderingContext2D): void {
+  const banana = new Path2D();
+  banana.moveTo(8.4, 32.8);
+  banana.bezierCurveTo(13.5, 35.9, 20.5, 34.8, 23.8, 29.9);
+  banana.lineTo(24.3, 28.3);
+  banana.lineTo(26.2, 28.9);
+  banana.lineTo(26, 30.7);
+  banana.bezierCurveTo(24.8, 38.6, 15.3, 42, 8.9, 36.2);
+  banana.quadraticCurveTo(6.8, 34.4, 8.4, 32.8);
+  banana.closePath();
+  rellenar(ctx, banana, '#ffd553');
+
+  ctx.strokeStyle = '#fff0a3';
+  ctx.lineWidth = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(13, 36.1);
+  ctx.quadraticCurveTo(19.7, 38, 23.7, 32.9);
+  ctx.stroke();
+
+  const mano = new Path2D();
+  mano.ellipse(9.4, 34.2, 2.7, 2.1, 0.35, 0, Math.PI * 2);
+  rellenar(ctx, mano, PELAJE_MONO);
 }
 
 /** Dibuja un wati en el origen del contexto, en unidades de celda. */
-export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, cuadro, animo = 'alegre', gato = false, saludo = 0 }: OpcionesWati): void {
+export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, cuadro, animo = 'alegre', mono = false, saludo = 0 }: OpcionesWati): void {
   const medio = 14;
   const arriba = 15;
   const abajo = 40;
   const centro = 27.5;
+  const pelaje = mono ? PELAJE_MONO : cuerpo;
   ctx.save();
   ctx.lineJoin = 'round';
+  if (mono) orejasYColaDeMono(ctx, arriba);
   ctx.lineWidth = LW;
   ctx.strokeStyle = BORDE;
-  const pie = mezclarColor(cuerpo, BORDE, 0.1);
+  const pie = mezclarColor(pelaje, BORDE, 0.1);
   for (const lado of [-1, 1]) {
     ctx.beginPath();
     ctx.ellipse(CX + lado * 6, abajo + 1.3, 3.2, 2.7, 0, 0, Math.PI * 2);
@@ -378,22 +387,20 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
     }
     ctx.beginPath();
     ctx.ellipse(CX + lado * (medio + 0.4), centro + 1.6, 2.3, 4.7, -lado * 0.45, 0, Math.PI * 2);
-    ctx.fillStyle = cuerpo;
+    ctx.fillStyle = pelaje;
     ctx.fill();
     ctx.stroke();
     ctx.restore();
   }
-  ctx.save();
-  if (gato) {
-    orejasYCola(ctx, arriba, cuerpo);
-  } else {
+  if (!mono) {
+    ctx.save();
     if (variante >= CABEZAS) {
       ctx.translate(2 * CX, 0);
       ctx.scale(-1, 1);
     }
     adorno(ctx, variante % CABEZAS, arriba, cuerpo);
+    ctx.restore();
   }
-  ctx.restore();
   const p = new Path2D();
   p.moveTo(CX, arriba);
   p.bezierCurveTo(CX + medio * 0.78, arriba, CX + medio, arriba + 6, CX + medio, centro - 1);
@@ -401,12 +408,12 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
   p.bezierCurveTo(CX - medio * 0.72, abajo, CX - medio, abajo - 4, CX - medio, centro - 1);
   p.bezierCurveTo(CX - medio, arriba + 6, CX - medio * 0.78, arriba, CX, arriba);
   p.closePath();
-  ctx.fillStyle = cuerpo;
+  ctx.fillStyle = pelaje;
   ctx.fill(p);
   // Sombra en la base: da volumen sin brillos.
   ctx.save();
   ctx.clip(p);
-  ctx.fillStyle = mezclarColor(cuerpo, BORDE, 0.22);
+  ctx.fillStyle = mezclarColor(pelaje, BORDE, 0.22);
   ctx.globalAlpha = 0.6;
   ctx.beginPath();
   ctx.ellipse(CX + 1.5, abajo + 1.5, medio * 1.15, 6.2, 0, 0, Math.PI * 2);
@@ -415,8 +422,9 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
   ctx.strokeStyle = BORDE;
   ctx.lineWidth = LW;
   ctx.stroke(p);
+  if (mono) caraDeMono(ctx, arriba + 9);
   cara(ctx, medio, arriba + 9, cuadro, animo);
-  if (gato && cuadro === 0) narizYBigotes(ctx, arriba + 9);
+  if (mono) bananaDeMono(ctx);
   ctx.restore();
 }
 

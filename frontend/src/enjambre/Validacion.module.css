@@ -1,117 +1,200 @@
-/*
- * Comparación con la encuesta real, sin tarjeta: una regla de 0 a 100 con dos marcas. La de
- * arriba es la encuesta; la de abajo, los agentes. Si casi se tocan, acertó.
- */
-.regla {
+.contenedor { margin-top: var(--e3); }
+
+.boton {
   display: grid;
-  gap: var(--e2);
-  width: min(100%, 21rem);
-  text-align: left;
-  animation: entrar 500ms var(--curva-salida) both;
+  align-items: center;
+  width: 7.25rem;
+  min-height: var(--e7);
+  padding-inline: var(--e3);
+  border: 1px solid var(--linea-suave);
+  background: var(--papel);
+  transition: translate var(--rapido);
 }
 
-.titulo {
-  font: 650 var(--texto-xs) / 1.25 var(--fuente-ui);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--tinta-suave);
+.boton:has(+ .tarjeta:popover-open) {
+  background: var(--relleno-suave);
+  border-color: var(--tinta-suave);
 }
 
-.pista {
-  position: relative;
-  display: grid;
-  gap: 5px;
-  padding-block: 2px;
+.boton:active {
+  translate: 0 1px;
 }
 
-/* La regla: una línea con marcas cada 10 y las dos posiciones resaltadas. */
+/* La encuesta se marca arriba y los agentes abajo, incluso cuando coinciden. */
 .linea {
   position: relative;
-  height: 12px;
-  background:
-    repeating-linear-gradient(to right, var(--tinta-suave) 0 1px, transparent 1px 10%) 0 50% / 100% 6px no-repeat,
-    linear-gradient(var(--tinta-suave), var(--tinta-suave)) 0 50% / 100% 1px no-repeat;
-  border-right: 1px solid var(--tinta-suave);
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--tinta-suave);
 }
 
 .linea::before,
 .linea::after {
   content: '';
   position: absolute;
-  width: 3px;
+  width: 2px;
+  height: 7px;
+  border-radius: 1px;
   translate: -50% 0;
 }
 
 .linea::before {
-  bottom: 50%;
+  bottom: 0;
   left: var(--encuesta);
-  height: 13px;
   background: var(--tinta);
 }
 
 .linea::after {
-  top: 50%;
+  top: 0;
   left: var(--agentes);
-  height: 13px;
-  background: var(--favor);
+  background: var(--favor-texto);
 }
 
-/* Cada marca lleva su cifra, centrada sobre su posición sin salirse de la regla. */
-.marca {
-  justify-self: start;
-  margin-left: clamp(0%, var(--donde) - 2.6rem, 100% - 7.4rem);
-  font-size: var(--texto-s);
-  line-height: 1;
-  color: var(--tinta-suave);
-  white-space: nowrap;
-}
-
-.marca[data-encuesta] {
-  --donde: var(--encuesta);
-}
-
-.marca[data-agentes] {
-  --donde: var(--agentes);
-}
-
-.marca b {
-  margin-right: 0.2em;
-  font: 600 1.7rem/1 var(--fuente-voz);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+.tarjeta {
+  width: min(21rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: var(--e4);
+  border: 1px solid var(--linea-suave);
+  border-radius: calc(var(--radio) + 4px);
+  background: var(--papel);
   color: var(--tinta);
+  text-align: left;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--tinta-figura) 25%, transparent);
 }
 
-.marca[data-agentes] b {
+.tarjeta:popover-open {
+  display: grid;
+  gap: var(--e4);
+  transition: opacity var(--rapido), translate var(--rapido) var(--curva-salida);
+}
+
+@starting-style {
+  .tarjeta:popover-open {
+    opacity: 0;
+    translate: 0 4px;
+  }
+}
+
+@supports (position-area: block-end span-all) {
+  .tarjeta {
+    inset: auto;
+    position-area: block-end span-all;
+    position-try-fallbacks: flip-block;
+    margin: var(--e2) 0;
+    justify-self: center;
+  }
+
+  @media (min-width: 900px) {
+    .tarjeta {
+      position-area: block-end span-inline-start;
+      justify-self: end;
+    }
+  }
+}
+
+.cabeza {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--e3);
+}
+
+.cabeza h2 {
+  align-self: center;
+  font: 650 var(--texto-l) / 1.15 var(--fuente-voz);
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+
+.cerrar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--tinta-suave);
+  
+}
+
+@media (hover: hover) {
+  .boton:hover {
+    border-color: var(--tinta-suave);
+    background: var(--relleno-suave);
+  }
+
+  .cerrar:hover {
+    background: var(--relleno-suave);
+    color: var(--tinta);
+  }
+}
+
+.cifras {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--e3);
+  margin: 0;
+}
+
+.cifras div:last-child {
+  text-align: right;
+}
+
+.cifras dt {
+  margin-bottom: var(--e1);
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+}
+
+.cifras dd {
+  margin: 0;
+  font: 630 2rem / 1 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.cifras [data-agentes] dd {
   color: var(--favor-texto);
 }
 
+.tarjeta .linea {
+  height: 12px;
+  margin-block: var(--e1);
+  background:
+    repeating-linear-gradient(to right, var(--tinta-suave) 0 1px, transparent 1px 10%) 0 50% / 100% 6px no-repeat,
+    linear-gradient(var(--tinta-suave), var(--tinta-suave)) 0 50% / 100% 1px no-repeat;
+  border-right: 1px solid var(--tinta-suave);
+}
+
+.tarjeta .linea::before,
+.tarjeta .linea::after {
+  height: 11px;
+  width: 3px;
+}
+
+.tarjeta .linea::before {
+  bottom: 50%;
+}
+
+.tarjeta .linea::after {
+  top: 50%;
+}
+
 .pie {
+  display: grid;
+  gap: var(--e1);
+  padding-top: var(--e3);
+  border-top: 1px solid var(--linea-suave);
   font-size: var(--texto-s);
-  line-height: 1.3;
-  color: var(--tinta);
+  line-height: 1.35;
 }
 
 .pie a {
+  width: fit-content;
   color: var(--tinta-suave);
   text-underline-offset: 3px;
-}
-
-@keyframes entrar {
-  from {
-    opacity: 0;
-    translate: 0 8px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .regla {
-    animation: none;
-  }
-}
-
-@media (max-width: 899px) {
-  .regla {
-    width: 100%;
-  }
+  overflow-wrap: anywhere;
 }

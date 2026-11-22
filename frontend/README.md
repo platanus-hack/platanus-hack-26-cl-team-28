@@ -11,6 +11,12 @@ En desarrollo, Vite reenvía `/api` al motor en `http://127.0.0.1:8787` (ver `ba
 otro servidor, compila con `VITE_API=https://.../api`. Si el motor no responde, la interfaz entra en modo
 demostración (acuerdos sorteados en el navegador, sin frases) y lo dice en la esquina superior derecha.
 
+El botón MCP, junto a Historial y Opciones, abre las instrucciones para conectar Claude Code u otro cliente MCP
+(`src/enjambre/ConexionMcp.tsx`). La dirección sale de `VITE_MCP_URL`, completa y con su ruta
+(`VITE_MCP_URL=https://.../mcp`). Defínela al compilar solo cuando el servicio público esté desplegado y la
+conexión comprobada: sin ella, o si no es HTTPS, el panel dice «Conexión pública próximamente» y no ofrece el
+comando ni la dirección.
+
 ## Cómo se conecta
 
 `src/vivo/` es todo lo que habla con el motor:

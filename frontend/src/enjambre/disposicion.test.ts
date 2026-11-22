@@ -22,6 +22,12 @@ describe('ubicarBurbujas', () => {
     const izquierda = ubicarBurbujas(pedidos, -1, 500, 0, 800);
     for (const b of izquierda) expect(b.x + b.r).toBeLessThanOrEqual(500.01);
   });
+  it('reserva espacio para que etiquetas y grupos no se superpongan', () => {
+    const ubicadas = ubicarBurbujas([{ y: 100, r: 20, anchoTexto: 100, altoTexto: 16 }, { y: 100, r: 15, anchoTexto: 90, altoTexto: 16 }], 1, 100, 0, 400);
+    const [a, b] = ubicadas;
+    const separadas = a.x + a.r + 100 <= b.x - b.r || b.x + b.r + 90 <= a.x - a.r || Math.abs(a.y - b.y) >= a.r + b.r;
+    expect(separadas).toBe(true);
+  });
   it('una burbuja sola queda pegada al borde y a su altura', () => {
     expect(puestas[3]).toMatchObject({ x: 520, y: 400 });
   });

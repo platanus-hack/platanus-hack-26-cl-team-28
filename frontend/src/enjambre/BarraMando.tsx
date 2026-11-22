@@ -121,7 +121,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           key={actual.id}
           rows={2}
           value={actual.texto}
-          placeholder={actual.documento ? 'Contexto o pregunta sobre el documento (opcional)' : 'Escribe la propuesta o suelta aquí un documento'}
+          placeholder={actual.documento ? 'Contexto o pregunta sobre el documento (opcional)' : 'El gobierno planea implementar un programa que...'}
           onChange={(e) => sim.cambiarTexto(actual.id, e.target.value)}
           onKeyDown={(e) => {
             if (e.key !== 'Enter' || !e.ctrlKey || e.nativeEvent.isComposing) return;

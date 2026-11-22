@@ -267,3 +267,64 @@ export function vocesDe(
     })
     .slice(0, cuantas);
 }
+
+/** Un grupo donde una postura pesa más que en el total: lo que muestran los watis de cada lado. */
+export interface RasgoVoto {
+  clave: ClaveDimension;
+  /** La característica, en su rótulo breve (Edad, Voto en 2025...). */
+  dimension: string;
+  /** El grupo dentro de ella (18 a 29 años, Kast...). */
+  grupo: string;
+  /** Porcentaje entero del grupo que quedó de este lado. */
+  parte: number;
+  /** El mismo porcentaje en todos los que respondieron y tienen el dato. */
+  base: number;
+  /** Cuántos agentes del grupo respondieron. */
+  agentes: number;
+}
+
+/** Cuántas desviaciones sobre el total debe quedar un grupo para decir que lo representa. */
+const DESVIACIONES_RASGO = 2;
+/** Ni se nombra una diferencia de menos de tres puntos: con muchos agentes sería clara pero no dice nada. */
+const DIFERENCIA_MINIMA = 0.03;
+
+/**
+ * Las características que más distinguen a un lado del voto (o a quienes no se deciden, con nota 4): en cada una, el grupo con respuestas
+ * suficientes donde ese lado pesa más por sobre el total, si la diferencia no es puro azar. Una por
+ * característica, de la diferencia más grande a la más chica. Se cuenta con el acuerdo de cada
+ * agente (la nota que decide su postura), igual que las cifras grandes de la pantalla.
+ */
+export function rasgosDelVoto(personas: readonly PersonaAnalisis[], acuerdo: ArrayLike<number>, agentes: readonly number[], lado: 'favor' | 'contra' | 'indecisa', cuantos = 3): RasgoVoto[] {
+  const delLado = (nota: number) => (lado === 'favor' ? nota >= 5 : lado === 'contra' ? nota <= 3 : nota === 4);
+  const candidatos: { rasgo: RasgoVoto; diferencia: number; z: number }[] = [];
+  for (const dimension of DIMENSIONES) {
+    const total = dimension.grupos.map(() => 0);
+    const suyos = dimension.grupos.map(() => 0);
+    for (const i of agentes) {
+      const nota = acuerdo[i];
+      const grupo = nota && personas[i] ? dimension.grupoDe(personas[i]) : -1;
+      if (grupo < 0 || grupo >= total.length) continue;
+      total[grupo] += 1;
+      if (delLado(nota)) suyos[grupo] += 1;
+    }
+    const n = total.reduce((a, b) => a + b, 0);
+    const base = n ? suyos.reduce((a, b) => a + b, 0) / n : 0;
+    if (base <= 0 || base >= 1) continue;
+    let mejor: { rasgo: RasgoVoto; diferencia: number; z: number } | null = null;
+    for (let j = 0; j < total.length; j++) {
+      // Un grupo que es casi todo el total no puede distinguirse de él.
+      if (total[j] < MINIMO_GRUPO || total[j] === n) continue;
+      const parte = suyos[j] / total[j];
+      const diferencia = parte - base;
+      const z = diferencia / Math.sqrt((base * (1 - base)) / total[j]);
+      if (diferencia < DIFERENCIA_MINIMA || z < DESVIACIONES_RASGO || (mejor && diferencia <= mejor.diferencia)) continue;
+      const rasgo = { clave: dimension.clave, dimension: dimension.breve, grupo: dimension.grupos[j], parte: Math.round(parte * 100), base: Math.round(base * 100), agentes: total[j] };
+      mejor = { rasgo, diferencia, z };
+    }
+    if (mejor) candidatos.push(mejor);
+  }
+  return candidatos
+    .sort((a, b) => b.diferencia - a.diferencia || b.z - a.z)
+    .slice(0, cuantos)
+    .map((c) => c.rasgo);
+}

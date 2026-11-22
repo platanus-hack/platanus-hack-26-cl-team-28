@@ -4,6 +4,7 @@ import { FILTROS_INICIALES, SIN_FILTRO } from '../../dominio/muestra';
 import { formatear } from '../../dominio/textos';
 import type { Filtros } from '../../dominio/tipos';
 import { Boton } from '../comunes/Boton';
+import { Desplegable } from '../comunes/Desplegable';
 import estilos from './FiltrosMuestra.module.css';
 import { RangoEdad } from './RangoEdad';
 
@@ -67,16 +68,9 @@ export function FiltrosMuestra({ sim, tamanos = TAMANOS, sinPolitica = false, ro
 
 function Selector({ lista, valor, alCambiar }: { lista: (typeof LISTAS)[number]; valor: number; alCambiar(valor: number): void }) {
   return (
-    <label className={estilos.campo}>
+    <div className={estilos.campo}>
       <span>{lista.rotulo}</span>
-      <select value={valor} onChange={(e) => alCambiar(+e.target.value)}>
-        <option value={SIN_FILTRO}>{lista.todas}</option>
-        {lista.opciones.map((opcion, i) => (
-          <option key={opcion} value={i}>
-            {opcion}
-          </option>
-        ))}
-      </select>
-    </label>
+      <Desplegable etiqueta={lista.rotulo} valor={String(valor)} alCambiar={(v) => alCambiar(Number(v))} opciones={[{ valor: String(SIN_FILTRO), texto: lista.todas }, ...lista.opciones.map((texto, i) => ({ valor: String(i), texto }))]} />
+    </div>
   );
 }

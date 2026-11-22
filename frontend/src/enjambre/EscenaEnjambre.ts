@@ -2,7 +2,7 @@ import { mezclar } from '../dominio/azar';
 import { REGIONES } from '../dominio/catalogos';
 import type { Persona } from '../dominio/tipos';
 import { cargarComunas, comunasCargadas, REGIONES_GEO } from '../mapa/geografia';
-import { puntoEnBurbuja, radioDe, type Burbuja } from './disposicion';
+import { puntoEnBurbuja, radioDe, ubicarBurbujas, type Burbuja } from './disposicion';
 import { CARAS, celdaWati, CELDA_ALTO, CELDA_ANCHO, crearAtlasWati, crearSpriteWati, PIES_RELATIVO, poseDe, QUIETO, rasgosDe, TONOS, VARIANTES, type Animo, type AtlasWati } from './wati';
 
 /** Estado de cada punto. El número es también su color. */
@@ -47,8 +47,6 @@ const ANCHO_CON_CIFRAS = 900;
 
 /** Disposición del resultado por filas (píxeles). */
 const MARGEN_FILAS = 18;
-const ENTRE_FILAS = 4;
-const ENTRE_FILAS_MAXIMO = 16;
 const SEPARA_ROTULO = 9;
 
 /** Cuánto se puede acercar el mapa: lo bastante para separar las comunas de Santiago y ver a cada wati. */
@@ -154,6 +152,9 @@ export class EscenaEnjambre {
   private comunaBorde = '';
   private fuente = '';
   private silueta = new Path2D();
+  /** Bordes izquierdo y derecho del país dibujado, en píxeles: las burbujas quedan siempre por fuera. */
+  private paisIzq = 0;
+  private paisDer = 0;
   /** Límites de las comunas, tenues bajo los de las regiones. Vacío hasta que cargan los polígonos. */
   private comunas = new Path2D();
   private ancho = 0;
@@ -659,11 +660,15 @@ export class EscenaEnjambre {
     this.hojaGrande = null;
     this.claveMapa = '';
     this.silueta = new Path2D();
+    this.paisIzq = Infinity;
+    this.paisDer = -Infinity;
     for (const region of REGIONES_GEO) {
       for (const anillo of region) {
         if (anillo[0][0] < LON_MINIMA) continue;
         anillo.forEach(([lon, lat], i) => {
           const [x, y] = this.proyectar(lon, lat);
+          this.paisIzq = Math.min(this.paisIzq, x);
+          this.paisDer = Math.max(this.paisDer, x);
           if (i === 0) this.silueta.moveTo(x, y);
           else this.silueta.lineTo(x, y);
         });
@@ -724,9 +729,12 @@ export class EscenaEnjambre {
     this.etiquetas = [];
     if (hayResultado) {
       const regiones = REGIONES.map((_, region) => region).filter((region) => total[region] > 0);
-      const bordeDer = this.ancho / 2 + 3.4 * ESTRECHEZ * this.u + 10;
-      const bordeIzq = this.ancho / 2 - 4.5 * ESTRECHEZ * this.u - 10;
-      const lateral = this.lateral();
+      // Las burbujas parten donde termina el país (su punto más ancho, de Antofagasta a Magallanes) y
+      // un poco más allá: ninguna fila lo tapa. Solo en pantallas donde los nombres no caben se acercan.
+      const holgura = Math.max(12, this.paso * 3);
+      let bordeDer = (Number.isFinite(this.paisDer) ? this.paisDer : this.ancho / 2 + 3.4 * ESTRECHEZ * this.u) + holgura;
+      let bordeIzq = (Number.isFinite(this.paisIzq) ? this.paisIzq : this.ancho / 2 - 4.5 * ESTRECHEZ * this.u) - holgura;
+      let lateral = this.lateral();
       const textos = regiones.map((region) => ({
         region,
         favor: this.textoDe(region, grupos[PUNTO.favor][region], total[region]),
@@ -734,51 +742,53 @@ export class EscenaEnjambre {
       }));
       this.ctx.font = `650 ${this.letra}px ${this.fuente}`;
       const anchoTexto = (t: string) => this.ctx.measureText(t).width;
-      const altoFila = this.letra * 1.55;
-      const disponible = this.alto - 2 * MARGEN_FILAS;
+      // En espacios estrechos las columnas laterales pueden ocupar todo el ancho útil.
+      // Reservar primero los nombres evita que una burbuja los empuje fuera del lienzo.
+      const anchoRotulo = Math.max(...textos.flatMap((t) => [anchoTexto(t.favor), anchoTexto(t.contra)]), 0);
+      const semiancho = this.ancho / 2;
+      lateral = Math.min(lateral, Math.max(4, semiancho - anchoRotulo - SEPARA_ROTULO - 8));
+      const limiteBorde = Math.max(0, semiancho - lateral - anchoRotulo - SEPARA_ROTULO - 8);
+      bordeDer = Math.min(bordeDer, semiancho + limiteBorde);
+      bordeIzq = Math.max(bordeIzq, semiancho - limiteBorde);
       let paso = this.paso;
-      let radios: { favor: number; contra: number }[] = [];
-      for (let intento = 0; intento < 24; intento++) {
-        radios = regiones.map((region) => ({
-          favor: grupos[PUNTO.favor][region].length ? radioDe(grupos[PUNTO.favor][region].length, paso) : 0,
-          contra: grupos[PUNTO.contra][region].length ? radioDe(grupos[PUNTO.contra][region].length, paso) : 0,
+      const pisoPaso = Math.max(1.6, this.paso * 0.45);
+      const lados = [[PUNTO.favor, 1, bordeDer], [PUNTO.contra, -1, bordeIzq]] as const;
+      let armado: { estado: typeof PUNTO.favor | typeof PUNTO.contra; lado: 1 | -1; puestas: Burbuja[] }[] = [];
+      for (let intento = 0; intento < 60; intento++) {
+        armado = lados.map(([estado, lado, borde]) => {
+          const pedidos = regiones.map((region, k) => ({
+            y: this.proyectar(0, REGIONES[region].capitalLat)[1],
+            r: radioDe(grupos[estado][region].length, paso),
+            anchoTexto: SEPARA_ROTULO + anchoTexto(lado === 1 ? textos[k].favor : textos[k].contra),
+            altoTexto: this.letra * 1.3,
+          }));
+          return { estado, lado, puestas: ubicarBurbujas(pedidos, lado, borde, MARGEN_FILAS, this.alto - MARGEN_FILAS) };
+        });
+        const cabe = armado.every(({ lado, puestas }) => puestas.every((b, k) => {
+          const ancho = anchoTexto(lado === 1 ? textos[k].favor : textos[k].contra);
+          return lado === 1 ? b.x + b.r + SEPARA_ROTULO + ancho <= this.ancho - lateral : b.x - b.r - SEPARA_ROTULO - ancho >= lateral;
         }));
-        const altura = radios.reduce((suma, r) => suma + Math.max(2 * r.favor, 2 * r.contra, altoFila) + ENTRE_FILAS, 0);
-        const cabeAncho = radios.every(
-          (r, k) =>
-            bordeDer + 2 * r.favor + SEPARA_ROTULO + anchoTexto(textos[k].favor) <= this.ancho - lateral &&
-            bordeIzq - 2 * r.contra - SEPARA_ROTULO - anchoTexto(textos[k].contra) >= lateral,
-        );
-        if (altura <= disponible && cabeAncho) break;
+        // Achicar ayuda solo hasta cierto punto: lo que choca en el centro del país son los nombres,
+        // que no se achican. Más abajo de este piso los puntos dejan de verse y nada se gana.
+        if (cabe || intento === 59 || paso * 0.92 < pisoPaso) break;
         paso *= 0.92;
       }
       this.pasoActual = paso;
-      const altos = radios.map((r) => Math.max(2 * r.favor, 2 * r.contra, altoFila));
-      const ocupado = altos.reduce((a, b) => a + b, 0);
-      // El espacio que sobra se reparte entre las filas (hasta un tope) y el conjunto se centra.
-      const entre = Math.max(ENTRE_FILAS, Math.min(ENTRE_FILAS_MAXIMO, (disponible - ocupado) / Math.max(1, regiones.length - 1)));
-      let y = Math.max(MARGEN_FILAS, (this.alto - ocupado - entre * (regiones.length - 1)) / 2);
-      regiones.forEach((region, k) => {
-        const centro = y + altos[k] / 2;
-        const lados = [
-          [PUNTO.favor, 1, radios[k].favor, textos[k].favor],
-          [PUNTO.contra, -1, radios[k].contra, textos[k].contra],
-        ] as const;
-        for (const [estado, lado, r, texto] of lados) {
-          const borde = lado === 1 ? bordeDer : bordeIzq;
+      for (const { estado, lado, puestas } of armado) {
+        regiones.forEach((region, k) => {
+          const burbuja = puestas[k];
+          const texto = lado === 1 ? textos[k].favor : textos[k].contra;
+          this.etiquetas.push({ x: burbuja.x + lado * (burbuja.r + SEPARA_ROTULO), y: burbuja.y, lado, region, texto });
           const lista = grupos[estado][region];
-          this.etiquetas.push({ x: borde + lado * (2 * r + SEPARA_ROTULO), y: centro, lado, region, texto });
-          if (!lista.length) continue;
-          const burbuja = { x: borde + lado * r, y: centro, r };
+          if (!lista.length) return;
           this.burbujas.push(burbuja);
           lista.forEach((i, orden) => {
             const [dx, dy] = puntoEnBurbuja(orden, paso);
             this.volar(i, burbuja.x + dx, burbuja.y + dy, modo, ahora);
             pendiente[i] = 1;
           });
-        }
-        y += altos[k] + entre;
-      });
+        });
+      }
     }
     // Para comprobar desde fuera que cada región quedó rotulada a ambos lados.
     this.lienzo.dataset.regiones = String(this.etiquetas.filter((e) => e.lado === 1).length);

@@ -212,7 +212,7 @@
   border-radius: var(--radio);
   background: var(--relleno-suave);
   color: var(--tinta-suave);
-  transition: background var(--rapido), color var(--rapido);
+  
 }
 
 .usar:hover,

@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useId, type CSSProperties } from 'react';
 import { porcentajesDe, type CasoVivo } from '../vivo/useEnVivo';
 import estilos from './Validacion.module.css';
 
@@ -11,6 +11,8 @@ interface Props {
  * ve por la distancia entre las dos marcas, antes de leer ningún número.
  */
 export function Validacion({ casos }: Props) {
+  const tarjeta = useId();
+  const titulo = `${tarjeta}-titulo`;
   const base = casos[0];
   const ref = base?.referencia;
   if (!ref || !base.listo) return null;
@@ -18,26 +20,35 @@ export function Validacion({ casos }: Props) {
   const distancia = Math.abs(simulado - ref.favor);
   const marcas = { '--encuesta': `${ref.favor}%`, '--agentes': `${simulado}%` } as CSSProperties;
   return (
-    <section className={estilos.regla} aria-label="Comparación con una encuesta real">
-      <p className={estilos.titulo}>
-        Encuesta real y agentes{casos.length > 1 ? `, variante ${base.letra}` : ''}
-      </p>
-      <div className={estilos.pista} style={marcas}>
-        <p className={estilos.marca} data-encuesta>
-          <b>{ref.favor} %</b> Cadem
-        </p>
+    <div className={estilos.contenedor} style={marcas}>
+      <button type="button" className={estilos.boton} popoverTarget={tarjeta} aria-label="Comparar con la encuesta real">
         <span className={estilos.linea} aria-hidden="true" />
-        <p className={estilos.marca} data-agentes>
-          <b>{simulado} %</b> agentes
-        </p>
-      </div>
-      <p className={estilos.pie}>
-        {distancia === 0 ? 'Mismo resultado' : `${distancia} ${distancia === 1 ? 'punto' : 'puntos'} de diferencia`}
-        {' · '}
-        <a href={ref.url} target="_blank" rel="noreferrer">
-          {ref.fuente}, {ref.fecha}
-        </a>
-      </p>
-    </section>
+      </button>
+      <section id={tarjeta} popover="auto" className={estilos.tarjeta} aria-labelledby={titulo}>
+        <header className={estilos.cabeza}>
+          <h2 id={titulo}>Encuesta real y agentes{casos.length > 1 ? `, variante ${base.letra}` : ''}</h2>
+          <button type="button" className={estilos.cerrar} popoverTarget={tarjeta} popoverTargetAction="hide" aria-label="Cerrar comparación">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+              <path d="m4 4 8 8m0-8-8 8" />
+            </svg>
+          </button>
+        </header>
+        <dl className={estilos.cifras}>
+          <div>
+            <dt>Cadem</dt>
+            <dd>{ref.favor} %</dd>
+          </div>
+          <div data-agentes>
+            <dt>Agentes</dt>
+            <dd>{simulado} %</dd>
+          </div>
+        </dl>
+        <span className={estilos.linea} aria-hidden="true" />
+        <footer className={estilos.pie}>
+          <p>{distancia === 0 ? 'Mismo resultado' : `${distancia} ${distancia === 1 ? 'punto' : 'puntos'} de diferencia`}</p>
+          <a href={ref.url} target="_blank" rel="noreferrer">{ref.fuente}, {ref.fecha}</a>
+        </footer>
+      </section>
+    </div>
   );
 }

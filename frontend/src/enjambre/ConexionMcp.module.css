@@ -1,0 +1,204 @@
+/* El panel de conexión MCP: la misma hoja de las ventanas de información del mando. */
+.panel {
+  --fondo-control: color-mix(in srgb, var(--relleno-suave) 50%, var(--papel));
+  --borde-control: color-mix(in srgb, var(--tinta) 15%, var(--fondo-control));
+  --fondo-control-activo: color-mix(in srgb, var(--tinta) 13%, var(--fondo-control));
+  --fuente-codigo: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  width: min(36rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: clamp(var(--e4), 4vw, var(--e6));
+  overflow-y: auto;
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: var(--texto-m);
+}
+
+.panel::backdrop { background: rgb(8 11 16 / 0.68); }
+
+.panel p {
+  color: var(--tinta-suave);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+.panel code {
+  font: 500 0.92em/1.5 var(--fuente-codigo);
+  color: var(--tinta);
+}
+
+.cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--e3);
+  margin-bottom: var(--e3);
+}
+
+.cabecera h2 {
+  align-self: center;
+  font: 650 clamp(1.45rem, 4vw, 1.9rem)/1.08 var(--fuente-voz);
+  letter-spacing: -0.025em;
+}
+
+.cerrar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--e7);
+  height: var(--e7);
+  padding: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--tinta);
+  
+}
+
+.cerrar svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+.bajada { max-width: 55ch; }
+
+.pasos,
+.pronto {
+  margin-top: var(--e5);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--relleno-suave);
+}
+
+.pasos { padding: 0 var(--e4); }
+
+.pasos li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--e3);
+  padding-block: var(--e4);
+}
+
+.pasos li + li { border-top: 1px solid var(--linea-suave); }
+
+.pasos li > span {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  aspect-ratio: 1;
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta-suave);
+  font-size: var(--texto-xs);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+/* El texto del paso queda a la altura de su número. */
+.pasos li > p:not(.falla) {
+  padding-top: 0.12rem;
+  color: var(--tinta);
+}
+
+.pronto { padding: var(--e4); }
+
+.pronto strong {
+  display: block;
+  margin-bottom: var(--e1);
+  font-weight: 700;
+}
+
+.seccion {
+  display: grid;
+  gap: var(--e2);
+  margin-top: var(--e5);
+  padding-top: var(--e5);
+  border-top: 1px solid var(--linea-suave);
+}
+
+.seccion h3 {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.seccion p { font-size: var(--texto-s); }
+
+/* Un texto para llevarse y, al lado, su botón. */
+.copiable {
+  display: flex;
+  align-items: stretch;
+  gap: var(--e2);
+}
+
+/* El comando usa todo el ancho del paso: así se corta antes de la dirección y no a media palabra. */
+.pasos .copiable,
+.pasos .falla {
+  grid-column: 1 / -1;
+}
+
+.texto {
+  flex: 1;
+  min-width: 0;
+  padding: var(--e2) var(--e3);
+  border: 1px solid var(--borde-control);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.copiar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  gap: 6px;
+  min-width: 6.4rem;
+  min-height: var(--e7);
+  padding: 0 var(--e3);
+  border: 1px solid var(--borde-control);
+  background: var(--papel);
+  color: var(--tinta);
+  font-size: var(--texto-s);
+  font-weight: 600;
+  
+}
+
+.copiar svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--tinta-suave);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.copiar[data-hecho] svg { stroke: var(--favor-texto); }
+
+.panel .falla {
+  color: var(--contra-texto);
+  font-size: var(--texto-s);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cerrar:hover,
+  .copiar:hover {
+    background: var(--fondo-control-activo);
+  }
+}
+
+/* En pantallas angostas el botón pasa bajo su texto, a todo el ancho. */
+@media (max-width: 30rem) {
+  .copiable { flex-direction: column; }
+}

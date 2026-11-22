@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { Boton } from '../componentes/comunes/Boton';
-import { formatear } from '../dominio/textos';
+import { formatear, personasAprox } from '../dominio/textos';
 import { REGIONES_GEO } from '../mapa/geografia';
+import { rasgosDelVoto } from '../vivo/analisis';
 import { porcentajesDe, posturaDe, useEnVivo, type CasoVivo } from '../vivo/useEnVivo';
 import estilos from './AppEnjambre.module.css';
+import { animarWati, rebotarWati } from './animarWati';
 import { BarraMando } from './BarraMando';
 import { BarraResultado } from './BarraResultado';
 import { BloqueAvance } from './BloqueAvance';
 import { BloquePostura } from './BloquePostura';
 import { CajonEncuesta } from './CajonEncuesta';
+import { ConexionMcp } from './ConexionMcp';
 import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { FiguraWati } from './FiguraWati';
@@ -22,23 +25,16 @@ import { useAngosto } from './useAngosto';
 import { usePanelLateral } from './usePanelLateral';
 import { Validacion } from './Validacion';
 import { VistaAnalisis } from './VistaAnalisis';
+import { caminoDe, leerRuta, type Ruta, type Vista } from './ruta';
 import { VistaProceso } from './VistaProceso';
 import { Voces } from './Voces';
 
-/** Puntos que se quieren dibujar; cada agente real se dibuja con varios alrededor de su comuna. */
-/** Cuántos toques seguidos al wati del mando lo vuelven gato, y cuánto puede pasar entre uno y otro. */
-const TOQUES_PARA_GATO = 7;
+/** Cuántos toques seguidos al wati del mando lo vuelven mono, y cuánto puede pasar entre uno y otro. */
+const TOQUES_PARA_MONO = 7;
 const TOQUES_SEGUIDOS_MS = 700;
 const ESPERA_WATI_MS = 3000;
 
-/** Al interrumpir un gesto, el siguiente continúa desde la postura que se ve en ese instante. */
-function animarWati(figura: HTMLElement, transformaciones: Keyframe[], duracion: number) {
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const transformacionActual = getComputedStyle(figura).transform;
-  figura.getAnimations().forEach((animacion) => animacion.cancel());
-  figura.animate([{ transform: transformacionActual }, ...transformaciones], { duration: duracion, easing: 'ease-in-out' });
-}
-
+/** Puntos que se quieren dibujar; cada agente real se dibuja con varios alrededor de su comuna. */
 const PUNTOS = matchMedia('(min-width: 1100px)').matches ? 10000 : 5000;
 
 const ESTADO_POSTURA = { favor: PUNTO.favor, contra: PUNTO.contra, indecisa: PUNTO.indecisa } as const;
@@ -65,9 +61,11 @@ export function AppEnjambre() {
   const { conexion, fase, casos, viendo, muestra, version } = sim;
   const lienzo = useRef<HTMLCanvasElement>(null);
   const escena = useRef<EscenaEnjambre | null>(null);
+  /** Quienes necesitan enterarse de que el mapa se movió o se acercó (los globos, para seguir a su punto). */
+  const oyentesVista = useRef(new Set<() => void>());
   const [editando, setEditando] = useState(0);
   const watiSaludo = useRef<HTMLSpanElement>(null);
-  const [gato, setGato] = useState(false);
+  const [mono, setMono] = useState(false);
   const [watiVisible, setWatiVisible] = useState(false);
   const [saludo, setSaludo] = useState(0);
   const botonWati = useRef<HTMLButtonElement>(null);
@@ -148,6 +146,7 @@ export function AppEnjambre() {
       setZoom(nivel);
       setFicha(null);
       revisarTapados();
+      oyentesVista.current.forEach((oyente) => oyente());
     };
     nueva.montar();
     escena.current = nueva;
@@ -217,11 +216,33 @@ export function AppEnjambre() {
   }, [fase]);
 
   const puntosDe = useCallback((agente: number) => Array.from({ length: porAgente }, (_, k) => agente * porAgente + k), [porAgente]);
+  const tapaMapa = useCallback((rect: DOMRect) => {
+    const caja = lienzo.current?.getBoundingClientRect();
+    if (!caja || !escena.current) return false;
+    return escena.current.tapan([{ x: rect.left - caja.left, y: rect.top - caja.top, ancho: rect.width, alto: rect.height }], 12)[0];
+  }, []);
   const ubicar = useCallback((agente: number): [number, number] | null => (escena.current ? escena.current.posicion(agente * porAgente) : null), [porAgente]);
-  const alHablar = useCallback((agentes: number[]) => escena.current?.resaltar(agentes.flatMap(puntosDe)), [puntosDe]);
+
+  /** Quiénes hablan en los globos. Se resaltan mientras no haya una ficha abierta: esa manda. */
+  const hablan = useRef<number[]>([]);
+  const conFicha = useRef(false);
+  const alHablar = useCallback(
+    (agentes: number[]) => {
+      hablan.current = agentes;
+      if (!conFicha.current) escena.current?.resaltar(agentes.flatMap(puntosDe));
+    },
+    [puntosDe],
+  );
+  const alMoverVista = useCallback((oyente: () => void) => {
+    oyentesVista.current.add(oyente);
+    return () => {
+      oyentesVista.current.delete(oyente);
+    };
+  }, []);
   useEffect(() => {
+    conFicha.current = !!ficha;
     if (ficha) escena.current?.resaltar(puntosDe(ficha.agente));
-    else if (fase !== 'corriendo') escena.current?.resaltar([]);
+    else escena.current?.resaltar(hablan.current.flatMap(puntosDe));
   }, [ficha, fase, puntosDe]);
 
   const tocar = (e: MouseEvent) => {
@@ -237,7 +258,7 @@ export function AppEnjambre() {
   // Teclas para presentar: H oculta la interfaz, las flechas cambian de variante.
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest('dialog[open], textarea, input, select')) return;
+      if (e.defaultPrevented || (e.target as HTMLElement).closest('dialog[open], textarea, input, select')) return;
       if (e.key === 'h' || e.key === 'H') {
         setOculta((valor) => !valor);
         // El foco no se queda en algo invisible: pasa al botón que devuelve la interfaz.
@@ -273,6 +294,70 @@ export function AppEnjambre() {
     setProcesoMontado(false);
     setAnalisis(false);
   }, [hayProceso]);
+
+  // La dirección de la página sigue a lo que se mira (ver ruta.ts): así funcionan atrás y adelante
+  // del navegador, y recargar o abrir un enlace vuelve a la misma simulación y vista.
+  const vista: Vista = proceso ? 'proceso' : analisis ? 'analisis' : 'mapa';
+  const deseado = caminoDe({ id: fase === 'preparar' || fase === 'cargando' ? null : sim.corridaId, vista });
+  const ponerVista = (destino: Vista) => {
+    setFicha(null);
+    if (destino === 'proceso') setProcesoMontado(true);
+    setProceso(destino === 'proceso');
+    setAnalisis(destino === 'analisis');
+  };
+  /** La dirección a la que se está llegando por el navegador: mientras la pantalla no llegue, no se escribe otra encima. */
+  const yendoA = useRef<string | null>(leerRuta(location.pathname).id ? location.pathname : null);
+  const alCargar = useRef(yendoA.current !== null);
+  const ultimo = useRef({ fase, corridaId: sim.corridaId, deseado });
+  ultimo.current = { fase, corridaId: sim.corridaId, deseado };
+  const llegar = async (ruta: Ruta) => {
+    const camino = caminoDe(ruta);
+    const ahora = ultimo.current;
+    if (camino === ahora.deseado) {
+      yendoA.current = null;
+      return;
+    }
+    yendoA.current = camino;
+    if (!ruta.id) {
+      if (ahora.fase !== 'preparar') sim.volver();
+      ponerVista('mapa');
+      return;
+    }
+    if (ruta.id !== ahora.corridaId || ahora.fase === 'preparar') {
+      const problema = await sim.reabrir(ruta.id);
+      if (problema) {
+        // Ya no está guardada (o el motor no responde): la dirección vuelve a lo que hay en pantalla.
+        yendoA.current = null;
+        history.replaceState(null, '', ultimo.current.deseado);
+        return;
+      }
+    }
+    ponerVista(ruta.vista);
+  };
+  useEffect(() => {
+    if (fase === 'cargando') return;
+    if (yendoA.current !== null) {
+      if (deseado === yendoA.current) yendoA.current = null;
+      return;
+    }
+    if (deseado !== location.pathname) history.pushState(null, '', deseado);
+  }, [fase, deseado]);
+  useEffect(() => {
+    const alNavegar = () => void llegar(leerRuta(location.pathname));
+    addEventListener('popstate', alNavegar);
+    return () => removeEventListener('popstate', alNavegar);
+  });
+  // Al entrar por una dirección con simulación, se abre apenas el motor responde; sin motor no hay historial.
+  useEffect(() => {
+    if (!alCargar.current || fase !== 'preparar' || !conexion) return;
+    alCargar.current = false;
+    if (conexion.demo) {
+      yendoA.current = null;
+      history.replaceState(null, '', '/');
+      return;
+    }
+    void llegar(leerRuta(location.pathname));
+  });
   // Con el mapa tapado por completo no se dibuja: el proceso lo cubre al terminar de abrirse (sus
   // cuadrados salen del mapa, que debe verse mientras vuelan) y el análisis, de inmediato.
   useEffect(() => {
@@ -288,6 +373,21 @@ export function AppEnjambre() {
   }, []);
 
   const pct = caso && listo ? porcentajesDe(caso) : null;
+  const agentesAnalisis = conexion?.agentes;
+  // Qué distingue a cada lado del voto: un wati por característica en cada bloque.
+  /* eslint-disable react-hooks/exhaustive-deps -- `version` cambia con cada respuesta que llega. */
+  const rasgos = useMemo(
+    () =>
+      caso && listo && agentesAnalisis
+        ? {
+            favor: rasgosDelVoto(agentesAnalisis, caso.acuerdo, muestra.agentes, 'favor'),
+            contra: rasgosDelVoto(agentesAnalisis, caso.acuerdo, muestra.agentes, 'contra'),
+            indecisa: rasgosDelVoto(agentesAnalisis, caso.acuerdo, muestra.agentes, 'indecisa'),
+          }
+        : null,
+    [caso, listo, agentesAnalisis, muestra, version],
+  );
+  /* eslint-enable react-hooks/exhaustive-deps */
   const motor = conexion?.estado?.motor ?? null;
   const base = casos.length ? casos.reduce((mejor, c) => (c.listo && porcentajesDe(c).favor > porcentajesDe(mejor).favor ? c : mejor), casos[0]) : undefined;
   const mostrarRedactando = fase === 'corriendo' && sim.redactando !== null && listo && viendo === casos.length - 1;
@@ -338,7 +438,7 @@ export function AppEnjambre() {
       </header>
       {pct && caso && (
         <div className={estilos.contra}>
-          <BloquePostura postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" aspecto={3} compacto={angosto} />
+          <BloquePostura tapaMapa={tapaMapa} revisionMapa={orden} zoomMapa={zoom} postura="contra" porcentaje={pct.contra} personas={caso.conteo.contra} unidad="agentes" porAgente={sim.personasPorAgente} aspecto={3} rasgos={rasgos?.contra} compacto={angosto} />
         </div>
       )}
       {conEncuesta && caso && (
@@ -350,16 +450,16 @@ export function AppEnjambre() {
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
         {fase === 'preparar' && (
           <div className={estilos.panelMando}>
-            <button ref={botonWati} type="button" className={estilos.asomo} data-visible={watiVisible || undefined} disabled={!watiVisible} aria-hidden={!watiVisible} aria-label={gato ? 'Saludar al gato' : 'Saludar al wati'} onClick={() => {
+            <button ref={botonWati} type="button" className={estilos.asomo} data-visible={watiVisible || undefined} disabled={!watiVisible} aria-hidden={!watiVisible} aria-label={mono ? 'Saludar al mono con banana' : 'Saludar al wati'} onClick={() => {
               const figura = watiSaludo.current;
-              // Muchos toques seguidos lo disfrazan de gato; otros tantos lo devuelven a wati.
+              // Muchos toques seguidos lo disfrazan de mono; otros tantos lo devuelven a wati.
               const ahora = performance.now();
               const racha = toques.current;
               racha.cuantos = ahora - racha.ultimo < TOQUES_SEGUIDOS_MS ? racha.cuantos + 1 : 1;
               racha.ultimo = ahora;
-              if (racha.cuantos >= TOQUES_PARA_GATO) {
+              if (racha.cuantos >= TOQUES_PARA_MONO) {
                 racha.cuantos = 0;
-                setGato((es) => !es);
+                setMono((es) => !es);
                 if (figura) {
                   animarWati(figura, [
                     { transform: 'scale(1.25, 0.8)', offset: 0.2 },
@@ -369,14 +469,9 @@ export function AppEnjambre() {
                 }
                 return;
               }
-              if (!figura) return;
-              animarWati(figura, [
-                { transform: 'scale(1.24, 0.68)', offset: 0.28 },
-                { transform: 'scale(0.9, 1.12)', offset: 0.65 },
-                { transform: 'scale(1, 1)' },
-              ], 500);
+              if (figura) rebotarWati(figura);
             }}>
-              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} gato={gato} saludo={saludo} /></span></span>
+              <span><span ref={watiSaludo} className={estilos.figuraSaludo}><FiguraWati estado="neutra" rasgos={{ semilla: 7, variante: 2, tono: 1 }} alto={104} mono={mono} saludo={saludo} /></span></span>
             </button>
             <div className={estilos.contenidoMando}>
               <BarraMando sim={sim} elegida={Math.min(editando, sim.borradores.length - 1)} alElegir={setEditando} alAbrirEncuesta={(boton) => {
@@ -387,30 +482,53 @@ export function AppEnjambre() {
           </div>
         )}
         {(fase === 'corriendo' || fase === 'resultados') && casos.length > 0 && (
-          <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} />
+          <BarraResultado casos={casos} viendo={viendo} corriendo={fase === 'corriendo'} alElegir={sim.setViendo} alVolver={sim.volver} acciones={<div className={estilos.accionesMapa} role="group" aria-label="Vistas de la simulación">
+        {hayProceso && (
+          <button type="button" className={estilos.verProceso} aria-pressed={proceso} title={proceso ? 'Volver al mapa' : 'Ver el proceso'} aria-label={proceso ? 'Volver al mapa' : 'Ver el proceso de la simulación'} onClick={alternarProceso}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M4 4.2 11.6 8M4 11.8 11.6 8" />
+              <circle cx="3" cy="3.6" r="1.9" />
+              <circle cx="3" cy="12.4" r="1.9" />
+              <circle cx="13" cy="8" r="1.9" />
+            </svg>
+          </button>
+        )}
+        {hayProceso && (
+          <button type="button" className={estilos.verProceso} aria-pressed={analisis} title={analisis ? 'Volver al mapa' : 'Analizar por grupos'} aria-label={analisis ? 'Volver al mapa' : 'Analizar los resultados por características de las personas'} onClick={alternarAnalisis}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M3 13.5V8.5M8 13.5V2.5M13 13.5V6" strokeWidth="2.6" />
+            </svg>
+          </button>
+        )}
+      </div>} />
         )}
         {fase === 'cargando' && <p className={estilos.cargando}>Conectando con el motor de simulación</p>}
       </div>
       </div>
       <div ref={derecha} className={estilos.derecha}>
       <div className={estilos.nota}>
-        <Insignia conexion={conexion} agentes={muestra.total} indecisas={pct?.indecisa} />
+        <Insignia conexion={conexion} agentes={muestra.total} porAgente={sim.personasPorAgente} indecisas={pct?.indecisa} agentesIndecisos={caso?.conteo.indecisa} rasgosIndecisas={rasgos?.indecisa} />
         {/* La encuesta real preguntó por el acuerdo, que es la primera pregunta (Apoyo). */}
         {caso && !conexion?.demo && !sim.filtrada && <Validacion casos={casos} />}
         {caso && sim.filtrada && (
           <p className={estilos.filtro}>
-            Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes, según los filtros
+            Mirando a {formatear(muestra.total)} de {formatear(sim.totalCorrida)} agentes{sim.personasPorAgente ? ` (≈ ${personasAprox(muestra.total * sim.personasPorAgente)})` : ''}, según los filtros
           </p>
         )}
       </div>
       {pct && caso && (
         <div className={estilos.favor}>
           <BloquePostura
+            tapaMapa={tapaMapa}
+            revisionMapa={orden}
+            zoomMapa={zoom}
             postura="favor"
             porcentaje={pct.favor}
             personas={caso.conteo.favor}
             unidad="agentes"
+            porAgente={sim.personasPorAgente}
             aspecto={1}
+            rasgos={rasgos?.favor}
             compacto={angosto}
             encabezado={viendo > 0 && casos[0].listo ? textoDelta(porcentajesDe(caso).favor - porcentajesDe(casos[0]).favor, caso) : undefined}
             nota={viendo > 0 && casos[0].listo ? textoConversos(casos[0], caso, muestra.agentes) : undefined}
@@ -426,6 +544,7 @@ export function AppEnjambre() {
           </svg>
         </button>
         <div className={estilos.accionesVista}>
+          <ConexionMcp />
           {fase === 'corriendo' ? (
             <Boton variante="secundario" onClick={sim.detener}>
               Detener
@@ -464,27 +583,15 @@ export function AppEnjambre() {
         />
       )}
       {analisis && conexion && caso && <VistaAnalisis sim={sim} conexion={conexion} />}
-      {puntos && !procesoMontado && !analisis && (fase === 'corriendo' || fase === 'resultados') && conexion && (
-        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} ubicar={ubicar} alHablar={alHablar} activo={fase === 'corriendo' && !listo && !oculta} />
+      {(proceso || analisis) && (
+        <button type="button" className={estilos.volverMapa} onClick={() => { setProceso(false); setAnalisis(false); }}>
+          <span aria-hidden="true">←</span> Volver al mapa
+        </button>
+      )}
+      {puntos && !procesoMontado && !analisis && fase !== 'cargando' && conexion && (
+        <Voces voces={sim.voces} caso={viendo} agentes={conexion.agentes} elegibles={muestra.elegido} ubicar={ubicar} alHablar={alHablar} alMoverVista={alMoverVista} activo={fase === 'corriendo' && !listo && !oculta} deseando={fase === 'preparar' && !oculta} />
       )}
       <div className={estilos.zoom} role="group" aria-label="Acercamiento del mapa">
-        {hayProceso && (
-          <button type="button" className={estilos.verProceso} aria-pressed={proceso} title={proceso ? 'Volver al mapa' : 'Ver el proceso'} aria-label={proceso ? 'Volver al mapa' : 'Ver el proceso de la simulación'} onClick={alternarProceso}>
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M4 4.2 11.6 8M4 11.8 11.6 8" />
-              <circle cx="3" cy="3.6" r="1.9" />
-              <circle cx="3" cy="12.4" r="1.9" />
-              <circle cx="13" cy="8" r="1.9" />
-            </svg>
-          </button>
-        )}
-        {hayProceso && (
-          <button type="button" className={estilos.verProceso} aria-pressed={analisis} title={analisis ? 'Volver al mapa' : 'Analizar por grupos'} aria-label={analisis ? 'Volver al mapa' : 'Analizar los resultados por características de las personas'} onClick={alternarAnalisis}>
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3 13.5V8.5M8 13.5V2.5M13 13.5V6" strokeWidth="2.6" />
-            </svg>
-          </button>
-        )}
         <div className={estilos.parZoom}>
           {/* Siempre montado, sobre − y +: sube y se retira con una animación en vez de saltar. */}
           <div className={estilos.verTodo} data-visible={zoom > 1 || undefined} data-mapa inert={zoom <= 1}>

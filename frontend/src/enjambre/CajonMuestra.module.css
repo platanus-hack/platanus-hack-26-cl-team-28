@@ -100,7 +100,7 @@
 .cuadros i {
   aspect-ratio: 1;
   background: var(--linea-suave);
-  transition: background 240ms;
+  
 }
 
 .cuadros i[data-lleno] {
@@ -214,9 +214,7 @@
   font: 550 1rem / 1 var(--fuente-voz);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  transition:
-    color var(--rapido),
-    background var(--rapido);
+  
 }
 
 .tamanos button[aria-pressed='true'] {

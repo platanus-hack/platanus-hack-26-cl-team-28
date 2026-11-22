@@ -34,7 +34,7 @@
   border-bottom: 1px solid var(--linea-suave);
   background: transparent;
   text-align: left;
-  transition: background var(--rapido);
+  
 }
 
 .lista button:focus-visible {

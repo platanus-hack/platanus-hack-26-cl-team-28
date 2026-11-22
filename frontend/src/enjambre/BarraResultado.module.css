@@ -1,10 +1,13 @@
 .barra {
   display: grid;
   justify-items: start;
+  width: 100%;
+  min-width: 0;
+  container-type: inline-size;
   gap: var(--e3);
 }
 
-.barra > button {
+.acciones > button {
   padding-inline: var(--e4);
   border: 1px solid var(--linea-suave);
   color: var(--tinta);
@@ -14,40 +17,40 @@
 /* Una papeleta por variante, con la postura más frecuente y el reparto al pie. */
 .pestanas {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  flex-wrap: nowrap;
+  align-items: stretch;
   gap: 6px;
-  max-width: 100%;
+  width: min(100%, 20rem);
+  min-width: 0;
 }
 
 .pestanas button {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  column-gap: var(--e2);
-  row-gap: 2px;
-  min-width: 7.25rem;
-  min-height: 48px;
-  padding: 10px var(--e3) 11px;
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 104px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 2px 14px;
   overflow: hidden;
   border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
-  background: var(--relleno-suave);
+  background: var(--papel);
   color: var(--tinta-suave);
-  text-align: left;
-  transition:
-    background var(--rapido),
-    border-color var(--rapido);
+  text-align: center;
+  
 }
 
 .letra {
-  font: 650 1.4rem / 1 var(--fuente-voz);
+  font: 650 clamp(1rem, 5cqw, 1.4rem) / 1 var(--fuente-voz);
   color: var(--tinta);
 }
 
 .dato {
-  font-size: var(--texto-xs);
+  font-size: var(--texto-xxs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -55,7 +58,7 @@
 
 .dato strong {
   color: var(--tinta);
-  font: 700 1.5rem / 1 var(--fuente-voz);
+  font: 700 clamp(0.95rem, 5.4cqw, 1.5rem) / 1 var(--fuente-voz);
   font-variant-numeric: tabular-nums;
 }
 
@@ -64,8 +67,6 @@
 .dato [data-postura='contra'] { color: var(--contra-texto); }
 
 .pestanas em {
-  grid-column: 2;
-  justify-self: end;
   font: 650 var(--texto-xs) / 1 var(--fuente-ui);
   font-variant-numeric: tabular-nums;
 }
@@ -79,9 +80,8 @@
 }
 
 .pestanas small {
-  grid-column: 1 / -1;
   font-size: var(--texto-xxs);
-  white-space: nowrap;
+  line-height: 1.1;
 }
 
 .reparto {
@@ -102,8 +102,8 @@
 .reparto [data-postura='contra'] { background: var(--contra); }
 
 .pestanas button[aria-selected='true'] {
-  border-color: color-mix(in srgb, var(--tinta-suave) 35%, var(--linea-suave));
-  background: color-mix(in srgb, var(--tinta) 10%, var(--relleno-suave));
+  border-color: var(--tinta-suave);
+  background: var(--papel);
 }
 
 .pestanas button:disabled {
@@ -120,3 +120,6 @@
     background: var(--linea-suave);
   }
 }
+
+.acciones { display: flex; align-items: center; gap: var(--e2); width: max-content; flex-wrap: nowrap; }
+.acciones > button { padding-inline: var(--e4); border: 1px solid var(--linea-suave); color: var(--tinta); font-size: var(--texto-s); }
