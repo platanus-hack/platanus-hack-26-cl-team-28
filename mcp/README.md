@@ -4,14 +4,14 @@ El MCP prepara simulaciones de What If Chile para que Claude Code u otro cliente
 
 ## Conexión rápida en local
 
-Desde la raíz del repositorio, con Python 3.14 y uv:
+Usa Python 3.14 y uv desde la raíz del repositorio.
 
 ```sh
 uv sync --project mcp --locked
 uv run --directory mcp --locked --no-sync -m whatif_mcp
 ```
 
-En otra terminal:
+Agrega el MCP a Claude Code desde otra terminal.
 
 ```sh
 claude mcp add --transport http whatif-chile http://127.0.0.1:8788/mcp

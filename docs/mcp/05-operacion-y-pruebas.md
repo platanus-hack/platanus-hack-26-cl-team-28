@@ -4,7 +4,7 @@
 
 ## 5.1 Arranque local
 
-Desde la raíz del repositorio, con Python 3.14 y uv:
+Usa Python 3.14 y uv desde la raíz del repositorio.
 
 ```sh
 uv sync --project mcp --locked

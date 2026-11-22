@@ -14,7 +14,7 @@ El endpoint `/mcp` usa MCP Streamable HTTP. Inicializa la sesión del protocolo,
 | `consultar` | `id`, `acceso` | Progreso o resultado agregado con metadatos del historial |
 | `cancelar` | `id`, `acceso` | `cancelando` o estado actual si la corrida terminó |
 
-Argumentos de ejemplo de `simular`:
+Esta llamada a `simular` solicita diez agentes para una variante.
 
 ```json
 {
