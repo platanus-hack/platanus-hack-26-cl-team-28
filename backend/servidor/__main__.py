@@ -80,6 +80,9 @@ CUPO_DOCUMENTOS = Cupo(limites.entero("DOCUMENTOS_A_LA_VEZ", 3))
 CUPO_MUESTRAS = Cupo(limites.entero("MUESTRAS_EN_ESPERA", 12))
 # Una corrida terminada se puede seguir leyendo este rato (quien reconecta); después se olvida.
 SEGUNDOS_TERMINADA = 180
+# Con el sitio abierto al público el historial es de todos: lo que escribe cualquiera lo ven los demás.
+# Con HISTORIAL_OCULTO=1 se sigue guardando, pero no se muestra.
+HISTORIAL_OCULTO = os.environ.get("HISTORIAL_OCULTO", "").lower() in ("1", "si", "sí", "true")
 #: Flujos de eventos abiertos por dirección.
 FLUJOS: dict[str, int] = {}
 
@@ -268,11 +271,13 @@ class Manejador(BaseHTTPRequestHandler):
         ruta = urlparse(self.path).path
         if ruta == "/api/estado":
             poblacion = POBLACION.describir()
-            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "preguntas": metodo.PREGUNTAS,
+            return self._json(200, {"motor": MOTOR.describir(), "agentes": poblacion["agentes"], "poblacion": poblacion, "lote": LOTE, "concurrencia": CONCURRENCIA, "maximo_muestra": MAXIMO_MUESTRA, "preguntas": metodo.PREGUNTAS,
                                     "nombres": metodo.NOMBRES, "escalas": metodo.ESCALAS})
         if ruta == "/api/historial":
-            return self._json(200, {"corridas": HISTORIAL.ultimas()})
+            return self._json(200, {"corridas": [] if HISTORIAL_OCULTO else HISTORIAL.ultimas()})
         if ruta.startswith("/api/historial/"):
+            if HISTORIAL_OCULTO:
+                return self._json(404, {"error": "Esa simulación ya no está guardada"})
             return self._vista(ruta.removeprefix("/api/historial/"))
         if ruta == "/api/agentes":
             return self._json(200, [a.publico() for a in sacar_muestra(None, TAMANO_POR_DEFECTO).agentes])

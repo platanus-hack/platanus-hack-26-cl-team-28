@@ -142,7 +142,8 @@ export function CajonMuestra({ abierto, sim, abiertas, alAbrir, alCerrar }: Prop
             <fieldset className={estilos.grupo}>
               <legend>{enCorrida ? 'Cuántas preguntar la próxima vez' : 'Cuántas preguntar'}</legend>
               <div className={`${estilos.tamanos} ${estilos.tamanosMuestra}`}>
-                {TAMANOS_AGENTES.map((tamano) => (
+                {/* El motor puede tener un tope más bajo (con el sitio abierto al público): no se ofrece lo que no va a dar. */}
+                {TAMANOS_AGENTES.filter((tamano) => tamano <= (sim.conexion?.estado?.maximo_muestra ?? Infinity)).map((tamano) => (
                   <button key={tamano} type="button" aria-pressed={filtros.tamano === tamano} onClick={() => cambiar({ tamano })}>
                     {formatear(tamano)}
                   </button>

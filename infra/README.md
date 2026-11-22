@@ -54,6 +54,7 @@ máquina (unos 90 agentes por segundo entre todos). En `/etc/ph26/entorno`, y de
     MAXIMO_MUESTRA=2000          # agentes por corrida (10.000 si no se pone)
     RESPUESTAS_POR_CORRIDA=8000  # agentes × (variantes + iteraciones)
     RESPUESTAS_EN_COLA=60000     # con 90 por segundo, unos 11 minutos de trabajo pendiente como máximo
+    HISTORIAL_OCULTO=1           # el historial es común: sin esto, lo que escribe cualquiera lo ven todos
 
 Con eso, quince personas con el máximo a la vez son 30.000 respuestas: unos cinco a seis minutos
 para que terminen todas, avanzando a la par. Los demás topes están en `backend/servidor/README.md`.

@@ -30,6 +30,8 @@ export interface EstadoMotor {
   poblacion?: PoblacionInfo;
   lote: number;
   concurrencia: number;
+  /** Lo más que el motor deja preguntar en una simulación; si falta, no hay tope informado. */
+  maximo_muestra?: number;
   /** La encuesta, fija, en el orden de las notas. */
   preguntas?: string[];
   /** El nombre corto de cada pregunta y lo que significan el 1 y el 7 en ella. */
