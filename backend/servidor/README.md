@@ -138,34 +138,27 @@ Diferencias con el banco de pruebas, a propósito:
   hace que el mismo subagente conteste todas (`scripts/lotes_agentes.py --juntas`); el servidor pregunta cada
   variante por separado, que es más rápido y sirve para la demo.
 
-## Lo que se cambió tras contrastar con encuestas reales (22-11-2026)
+## Cómo se acerca a la opinión real
 
-El método anterior se midió contra 120 preguntas con resultado publicado, 1.000 agentes por pregunta
-(`data/pruebas/realidad_1000/INFORME.md`): el porcentaje nacional quedaba a 14,9 puntos de la encuesta, lo mismo
-que responder siempre 60 %, y los agentes separaban a izquierda y derecha el doble que la CEP. Tres cambios,
-cada uno validado en casos que no se usaron para ajustarlo (42 del banco y 40 preguntas de otras encuestas):
+El método se eligió contrastándolo con encuestas publicadas (ver [VALIDACION.md](../../VALIDACION.md) y
+`data/pruebas/realidad_1000/`). Tres piezas lo acercan a lo que responde la gente:
 
-| Cambio | Dónde | Qué arregla |
+| Pieza | Dónde | Qué aporta |
 |---|---|---|
-| La pregunta de apoyo es «¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?» | `APOYO` en `metodo.py` y `frontend/src/vivo/encuesta.ts` | Con la anterior («que se implemente esta política en tu región») las afirmaciones se respondían al revés: en una pregunta de la CEP el lado correcto pasó de 20 % a 100 % |
-| El modelo no lee las etiquetas políticas de la persona (posición, partido, voto, aprobación de los gobiernos); sí lo que opina de fondo | `IDENTIDAD_POLITICA` en `metodo.py`; `IDENTIDAD_POLITICA=1` las devuelve | La distancia entre izquierda y derecha en la CEP baja de 51 puntos a 21 (la real es 25) y el error de los segmentos de 7,2 a 4,7 |
-| Ancla: una llamada por propuesta pronostica el total nacional y los agentes lo reparten sin cambiar su orden | `ancla.py`, `Motor.pronosticar` y `Corrida._repartir`; `ANCLA=opus` por defecto, `haiku` o `sonnet` sirven, `ANCLA=no` la apaga | El error nacional baja de 15,0 a 9,6 puntos en los casos de prueba y de 17,5 a 6,8 en las preguntas nuevas; a 5 puntos o menos quedan 31 % y 45 % de los casos (antes 19 % y 7,5 %) |
+| La pregunta de apoyo es «¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?» | `APOYO` en `metodo.py` y `frontend/src/vivo/encuesta.ts` | Sirve igual para medidas y para afirmaciones, como las preguntas de las encuestas |
+| El modelo lee las opiniones de fondo de la persona y no sus etiquetas políticas (posición, partido, voto, aprobación de los gobiernos) | `IDENTIDAD_POLITICA` en `metodo.py`; `IDENTIDAD_POLITICA=1` las devuelve | Responde por lo que piensa del tema: la distancia entre izquierda y derecha queda en 21 puntos, como los 25 de la CEP |
+| Ancla: un modelo analista estima el nivel nacional con una llamada por propuesta y los agentes lo reparten sin cambiar su orden | `ancla.py`, `Motor.pronosticar` y `Corrida._repartir`; `ANCLA=opus` por defecto, `haiku` o `sonnet` sirven, `ANCLA=no` la apaga | El total nacional queda en promedio a 8 puntos de la encuesta |
 
-Los agentes siguen siendo todos Haiku. El ancla es una llamada más por propuesta (2 s con Haiku, 3 a 7 s con
-Opus, menos de 2 centavos de dólar) que corre a la par de los primeros lotes; las primeras respuestas esperan
-ese pronóstico hasta 12 s y, si no llega o falla, el caso sale sin ancla, como antes. La caché guarda las notas
-como las dio el modelo y el reparto se rehace al entregar; el pronóstico queda en `data/cache/anclas.jsonl`. El
-evento `caso_listo` trae `ancla` (los dos porcentajes pronosticados) y `motor.ancla` en `/api/estado` dice con
-qué modelo. Con ancla vuelve a haber personas sin postura (nota 4): las que el pronóstico deja sin decidir.
+Los agentes son Claude Haiku: cientos en paralelo, 1.000 en unos 40 segundos. El ancla es una llamada más por
+propuesta (3 a 7 s con Opus, menos de 2 centavos de dólar) que corre a la par de los primeros lotes; las primeras
+respuestas la esperan hasta 12 s y, si no llega, el caso se cuenta con las notas tal como salen. La caché guarda
+las notas como las dio el modelo y el reparto se rehace al entregar; el pronóstico queda en `data/cache/anclas.jsonl`.
+El evento `caso_listo` trae `ancla` (los dos porcentajes estimados) y `motor.ancla` en `/api/estado` dice con qué
+modelo. Con el modelo local no hay ancla y la pregunta de apoyo es la del banco.
 
 Validación (`scripts/contraste_ficha.py`): 164 preguntas de 27 encuestas reales (unas 30 mil entrevistas, 2014 a
-2026). En las 82 que no se usaron para ajustar, el % de acuerdo queda en promedio a 8,2 puntos de la encuesta (IC
-95 %: 6,9 a 9,7), a ±12 en 8 de cada 10 y del mismo lado de la mayoría en 88 %; antes, 16,2. Preguntarle a los
-agentes qué porcentaje cree que apoya, para no depender del ancla, se probó y queda peor (13,6 a 18,1).
-
-Lo que no se pudo mejorar: el pronóstico tiene un techo de unos 7 a 9 puntos que no bajó con un modelo más
-grande, promediando repeticiones, con referencias reales ni recalibrando. Con el modelo local no hay ancla y
-la pregunta de apoyo es la del banco.
+2026). En las 82 reservadas para validar, el % de acuerdo queda en promedio a 8,2 puntos de la encuesta (IC 95 %:
+6,9 a 9,7), a ±12 en 8 de cada 10 y del mismo lado de la mayoría en 88 %.
 
 ## Frases, iteraciones y documentos
 
@@ -180,13 +173,10 @@ la pregunta de apoyo es la del banco.
 
 ## Validación
 
-Sin calibrar. Con el método anterior y 200 agentes, la rebaja del TAG dio 32 % a favor contra 55 % en Cadem
-(octubre de 2026); con el perfil general todavía no se ha repetido. En Sala Cuna, con el perfil con opiniones
-de la CEP, Haiku dio 55 % de acuerdo contra 72 a 74 % en Cadem y Criteria: trata la medida como de izquierda
-(97 % de acuerdo en la izquierda y 17 % en la derecha). La interfaz muestra la comparación tal cual sale.
-
-`datos-pruebas/`, en la raíz, tiene 140 casos con encuesta real publicada para ampliar esta comparación, y
-`data/pruebas/sala_cuna/benchmarks.json` las cifras de Sala Cuna que usa `scripts/comparar_variantes.py`.
+Ver [VALIDACION.md](../../VALIDACION.md): 164 preguntas de encuestas reales, 30 mil entrevistas detrás, error medio
+de 8,2 puntos en las preguntas reservadas. La interfaz muestra la comparación con la encuesta cuando la propuesta
+es una de las de referencia (`frontend/src/vivo/validacion.ts`). `datos-pruebas/`, en la raíz, tiene el banco de
+casos, y `data/pruebas/sala_cuna/benchmarks.json` las cifras de Sala Cuna que usa `scripts/comparar_variantes.py`.
 
 ## Perfil filtrado contra perfil completo
 

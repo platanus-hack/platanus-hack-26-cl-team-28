@@ -197,7 +197,7 @@ segundos se envía un comentario para mantener viva la conexión. Al reconectar,
 | `inicio` | Al empezar | `motor`, `agentes`, `casos` (cada uno con `id`, `letra`, `texto`, `titulo`, `documento`, `iteracion` y `temas`), `iteraciones`, `preguntas` |
 | `respuestas` | Llega un lote, o una tanda de la caché | `caso` (índice), `cache` (si venía guardada), `r`: lista de `[agente, acuerdo, frase, notas]`, y `metricas` |
 | `voces` | Llegan frases | `caso`, `r`: lista de `[agente, frase]`, `metricas` |
-| `caso_listo` | Una variante terminó | `caso`, `apoyo` (de 0 a 1), `respondidas`, `metricas` |
+| `caso_listo` | Una variante terminó | `caso`, `apoyo` (de 0 a 1), `respondidas`, `ancla` (el % de acuerdo y en desacuerdo estimado para el país, o `null`), `metricas` |
 | `redactando` | Empieza una iteración | `numero`, `metricas` |
 | `caso` | El modelo redactó una variante nueva | `caso` y los mismos campos de un caso de `inicio`; `iteracion` trae `de`, `numero` y `cambio` |
 | `aviso` | Un lote no pudo responder tras 3 intentos, o falló una vez con la simulación ya detenida | `mensaje` |

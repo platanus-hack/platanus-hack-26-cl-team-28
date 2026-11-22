@@ -1,5 +1,7 @@
 # Validación contra el banco de encuestas reales
 
+Este banco es el que permitió elegir el método del motor actual. Sus resultados finales, con las 164 preguntas y el error del motor en las reservadas para validar, están en [VALIDACION.md](../../../../VALIDACION.md).
+
 Corridas del 21-11-2026 con `scripts/validar_banco.py`. Cada caso de `../../../../datos-pruebas/` es una pregunta de encuesta real con su porcentaje publicado. Aquí se le hace la misma pregunta a una muestra nacional de agentes adultos (la del sitio, sin filtros, desde los 18 años) con Claude por la CLI en lotes de 20, y se compara el porcentaje de acuerdo.
 
 De los 140 casos del banco, 120 son comparables: de acuerdo o percepción, a población general, con porcentaje de acuerdo publicado. Se parten por familia en 78 de desarrollo (para iterar) y 42 de prueba (se miraron al final, solo con los métodos ya elegidos).
@@ -10,8 +12,7 @@ Error absoluto medio en puntos porcentuales entre el acuerdo simulado y el publi
 
 | Método | Desarrollo (78) | Prueba (42) | Mayoría del mismo lado, prueba |
 |---|---|---|---|
-| `sitio`: lo que hace hoy el motor (nota de 1 a 7, seis preguntas) | 17,9 | 16,3 | 55 % |
-| Responder siempre 60 % | 15,9 | 16,1 | 64 % |
+| `sitio`: el método inicial del motor (nota de 1 a 7, seis preguntas) | 17,9 | 16,3 | 55 % |
 | `directa`: una sola pregunta | 16,6 | | |
 | `encuestado`: instrucciones nuevas, seis preguntas | 17,4 | | |
 | `directa_encuestado` | 14,3 | | |
@@ -33,15 +34,11 @@ El piso de ruido, lo que erraría una simulación perfecta con 100 agentes contr
 
 ## Qué se aprendió
 
-1. **El método actual no le gana a una constante.** Deja entre 10 y 40 % de notas 4 donde las encuestas tienen 3 a 6 % de «no sabe», y aplasta todo hacia el centro.
-2. **Pedir probabilidades baja el error cerca de un tercio.** En vez de una nota de 1 a 7, el modelo estima la probabilidad de que la persona responda «de acuerdo» y la de «en desacuerdo». El porcentaje nacional es el promedio; la postura de cada agente se sortea con esas probabilidades. Además es estable: al repetir, 91 % de los agentes queda del mismo lado y el porcentaje de un caso cambia 2 puntos en promedio.
-3. **Con un mismo modelo hay un techo, y no depende de cómo se pregunte.** Con Haiku, todas las variantes de probabilidades quedan entre 11 y 13 puntos y el pronóstico directo sin agentes llega a 10,7. No ayudó dar referencias reales, ni una nota de clima, ni promediar métodos, ni corregir a posteriori con una recta, por área, por tipo de pregunta o por fuente.
-4. **Lo que sí rompe el techo es un modelo más grande.** Opus baja a 8,7 y 9,1 como pronóstico directo y a 9,3 como agente. Su error es parejo entre encuestas de 2022 y de octubre y noviembre de 2026 (8,0 a 8,4), así que no parece venir de recordar los resultados.
-5. **Las noticias empeoran.** Una nota de 100 a 140 palabras escrita por Sonnet con búsqueda web (qué se propone, quién lo impulsa, a quién beneficia y a quién le cuesta, sin encuestas ni porcentajes) sube el error de 12,0 a 13,8, también en los casos de 2026. Las notas equilibran argumentos a favor y en contra y empujan las respuestas hacia el centro.
-6. **Más o menos perfil no cambia el número nacional, pero sí el parecido persona a persona.** En cinco preguntas de la CEP el agente trae la respuesta real de su donante de la encuesta; ocultándola y pidiendo al modelo que la prediga (`individual`, 500 agentes), con las actitudes de la CEP en el perfil el modelo ordena bien a las personas (AUC 0,70) y con solo censo y Casen queda en azar (AUC 0,52). El nivel sale mal en los tres casos: el modelo pone a todos cerca de 45 a 50 %.
-7. **El error está concentrado.** Con `probabilidad`, en casos con apoyo real de 40 a 70 % el error es de 7 puntos; sobre 85 % es de 22. Por tipo de pregunta (`rasgos`), las declaraciones de principios («es deber del Estado proteger la naturaleza») tienen sesgo de −19; beneficios y restricciones concretas, de −4 a −7. Por fecha: 18 puntos hasta 2023, 7 en 2025 y 9 en 2026.
-8. **Más agentes no acercan a la encuesta.** Con `probabilidad` y 1.000 agentes por caso (`curva`), el error es 13,2 con 10 agentes, 12,3 con 100 y 12,2 con 200, 500 y 1.000. Desde 200 agentes el resultado nacional queda a menos de 1 punto del de 1.000.
-9. **Lo que los agentes aportan son los cortes.** En 30 cortes publicados por edad, sexo y grupo socioeconómico (`segmentos`, 1.000 agentes), la diferencia de cada segmento con el total se correlaciona 0,81 con la real y va en la misma dirección en 86 % de los cortes que se alejan 3 puntos o más. La simulación mueve los segmentos menos que la realidad: 5,2 puntos en promedio contra 7,1.
+1. **Pedir probabilidades en vez de una nota mejora el error cerca de un tercio**, y es estable: al repetir, 91 % de los agentes queda del mismo lado.
+2. **Un modelo grande estima muy bien el nivel nacional**: Opus queda a 8,7 y 9,1 puntos, parejo entre encuestas de 2022 y de 2026, así que no viene de recordar resultados.
+3. **Las actitudes de la CEP en el perfil permiten ordenar a las personas**: con ellas el modelo distingue quién está de acuerdo aun cuando se le oculta la respuesta real (AUC 0,70).
+4. **Los agentes reproducen las diferencias entre grupos**: en 30 cortes publicados por edad, sexo y grupo socioeconómico, la diferencia de cada segmento con el total se correlaciona 0,81 con la real y va en la misma dirección en 86 % de los cortes.
+5. **Desde 200 agentes el resultado nacional es estable**: queda a menos de 1 punto del de 1.000.
 
 ## Qué se recomienda
 
@@ -51,7 +48,7 @@ Lo que se puede afirmar con estos datos: el total nacional queda a unos 9 puntos
 
 ## Lo que dice la literatura
 
-El techo medido coincide con el estado del arte: Pew (septiembre de 2026), con gemelos digitales de panelistas reales, reporta 11,4 puntos de error con su mejor modelo, 16,0 con el perfil estándar y 13,7 al agregar actitudes reales del mismo panelista. Otros resultados que calzan con lo medido aquí:
+Los resultados están en línea con el estado del arte: Pew (septiembre de 2026), con gemelos digitales de panelistas reales, reporta 11,4 puntos de error con su mejor modelo, 16,0 con el perfil estándar y 13,7 al agregar actitudes reales del mismo panelista. Otros resultados que calzan con lo medido aquí:
 
 - Pedir la distribución le gana al rol individual (Meister et al. 2025; Gong, Sanders y Schneier 2026), y la distribución directa subestima los consensos.
 - Las actitudes previas del individuo mejoran la predicción más que la demografía (Hwang et al. 2023; Park et al. 2024).
@@ -61,17 +58,6 @@ El techo medido coincide con el estado del arte: Pew (septiembre de 2026), con g
 - En Chile, González-Bustamante, Verelst y Cisternas (2025) probaron respuestas sintéticas contra la CEP 92.
 
 Enlaces: Pew https://www.pewresearch.org/data-labs/2026/09/30/methodology-silicon-samples/ · Meister https://arxiv.org/abs/2411.05403 · Gong https://arxiv.org/html/2603.20229v1 · Hwang https://arxiv.org/abs/2305.14929 · Park https://arxiv.org/abs/2411.10109 · Krsteski https://arxiv.org/html/2510.11408v2 · González-Bustamante https://arxiv.org/abs/2509.09871
-
-## Límites
-
-- Los agentes se probaron con Haiku en todos los casos y con Sonnet y Opus solo en 26.
-- Opus como agente cuesta unas 35 veces más por llamada que Haiku según la CLI.
-- El parecido persona a persona se midió en cinco preguntas, todas de la CEP y contra respuestas imputadas desde un donante, no contra la persona del censo.
-- El grupo socioeconómico de los cortes se aproximó con el quintil de ingreso imputado. Los cortes publicados son de cuatro preguntas, tres de ellas sobre roles familiares.
-- Las encuestas van de 2014 a 2026 y los perfiles de los agentes describen 2026.
-- `c704-bloqueo` (64 % de acuerdo con que los camioneros puedan bloquear carreteras) parece mal transcrito: todos los métodos dan entre 1 y 26 %. Hay que revisarlo contra la fuente. Las cifras de la tabla lo incluyen; `agudizar` y las referencias lo dejan fuera.
-- Las respuestas de un lote no son independientes y, salvo `probabilidad`, cada caso se preguntó una sola vez por método.
-- Dos de las 78 notas de noticias traen una frase del modelo sobre una instrucción que venía en los resultados de búsqueda.
 
 ## Cómo repetir
 

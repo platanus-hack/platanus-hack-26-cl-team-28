@@ -150,6 +150,7 @@ flowchart TB
 | `corridas.py` | Una simulación de principio a fin: lotes, frases, iteraciones, eventos, caché | No habla HTTP ni arma perfiles |
 | `motor.py` | Un motor por proveedor con la misma interfaz: responder, comentar, redactar | No decide a quién preguntar ni cuándo |
 | `metodo.py` | Importa del banco de pruebas las instrucciones, la encuesta y el redactor de perfiles | No copia el método: lo usa |
+| `ancla.py` | Pide una vez el total nacional de cada propuesta a un modelo analista y lo reparte entre los agentes sin cambiar su orden (ver [VALIDACION.md](../../VALIDACION.md)) | No decide quién apoya: eso lo deciden los agentes |
 | `poblacion.py` | Filtrar, sortear con cuotas y armar agentes; guarda muestras ya pedidas | No conoce la encuesta |
 | `sociedad.py` | Cada parámetro de filtro definido una sola vez: opciones, SQL y lectura desde un perfil | |
 | `agentes.py` | La persona simulada y lo que de ella viaja a la interfaz | |

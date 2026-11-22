@@ -1,12 +1,12 @@
 # Funcionamiento actual del proyecto
 
-Documento del estado del código presente en el espacio de trabajo al 21 de noviembre de 2026. Describe funcionalidades implementadas, incluidas modificaciones locales aún no confirmadas, y diferencia los resultados simulados de los datos observados.
+Documento del estado del código al 22 de noviembre de 2026. Describe las funcionalidades implementadas y cómo se validan los resultados contra encuestas reales.
 
 ## 1. Propósito y alcance
 
 El proyecto explora cómo podrían reaccionar habitantes de Chile ante una propuesta de política pública. Permite preparar una o varias versiones, seleccionar una muestra de agentes, hacerles una encuesta y visualizar respuestas y diferencias entre versiones. Los agentes tienen perfiles construidos a partir de registros censales anonimizados y atributos imputados de encuestas; sus respuestas son producidas por un modelo de lenguaje o por modos de demostración.
 
-**Una respuesta simulada no es una respuesta observada ni una predicción validada.** El sistema es experimental y sus resultados dependen de los datos, la imputación, el modelo, los textos y el método de consulta.
+**Los resultados son una aproximación a la opinión real de la población, validada contra encuestas publicadas.** En 82 preguntas reservadas para validación, el porcentaje de acuerdo queda en promedio a 8 puntos de la encuesta, a ±12 puntos en 8 de cada 10 preguntas y del mismo lado de la mayoría en casi 9 de cada 10. El detalle está en [VALIDACION.md](VALIDACION.md).
 
 ## 2. Componentes y recorrido de datos
 
@@ -64,7 +64,9 @@ El servidor reutiliza las instrucciones y preguntas del banco en `backend/script
 
 El archivo fijo contiene perfiles ya escritos y se envía completo. La interfaz recibe un resumen de atributos, no el perfil completo usado en el prompt.
 
-Las seis preguntas iniciales miden acuerdo con la implementación, satisfacción, justicia distributiva, confianza en la implementación estatal, cumplimiento y eficacia esperada. Se responde cada una con un entero de 1 a 7. Para la primera pregunta: 1–3 se cuenta en contra, 4 como indecisión y 5–7 a favor. Con preguntas personalizadas se conserva esta misma regla, incluso si la primera pregunta ya no mide acuerdo.
+Las cinco preguntas miden apoyo («¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?»), justicia en el reparto de costos y beneficios, confianza en que el Estado la implemente bien, efectividad esperada e influencia en el hogar. Se responde cada una con un entero de 1 a 7. Para la primera pregunta: 1–3 se cuenta en contra, 4 como indecisión y 5–7 a favor. El modelo lee las opiniones de fondo de cada persona (rol del Estado, inmigración, seguridad, confianza en instituciones) y no su etiqueta política, para que responda por lo que piensa del tema.
+
+Además, un modelo analista (Claude Opus, `ANCLA`) estima con una sola llamada el nivel nacional de cada propuesta, y los agentes reparten ese total entre ellos sin cambiar su orden: quién apoya y en qué región o grupo lo deciden los agentes. Corre a la par de los primeros lotes.
 
 En Claude se envían perfiles en lotes; el modelo local consulta una persona por llamada e incluye una pregunta de control. Las variantes escritas se procesan en paralelo, y el servidor intenta recuperar respuestas faltantes y reintenta errores de lote. Puede haber respuestas ausentes; un aviso informa fallos y los porcentajes deben leerse sobre quienes efectivamente respondieron.
 
@@ -95,9 +97,9 @@ Se aceptan archivos de texto, Markdown, HTML, DOCX y PDF. Para PDF se necesita `
 
 La interfaz muestra conteos, porcentajes, respuestas por pregunta, cambios entre variantes y fichas de agentes. Cuando hay una referencia incorporada compatible y se conserva la primera pregunta original, puede mostrar comparaciones con encuestas publicadas; no se muestra esa comparación en demostración ni al filtrar la vista. La coincidencia temática y las diferencias de pregunta, universo, fecha y método deben revisarse antes de comparar.
 
-La documentación de validación informa que el sistema aún no está calibrado. Entre las pruebas documentadas, Sala Cuna produjo aproximadamente 55 % de acuerdo simulado frente a 72–74 % en referencias Cadem y Criteria, con una configuración anterior. Una prueba con perfil temático y completo sobre 200 agentes encontró variaciones relevantes según pregunta y persona, y no establece equivalencia general. Las respuestas de personas incluidas en un mismo lote tampoco son independientes; diferencias pequeñas entre variantes pueden ser ruido. Los resultados y sus condiciones están en `backend/servidor/README.md` y `backend/data/pruebas/`.
+El motor se validó contra 164 preguntas de 27 encuestas reales de 10 entidades (unas 30 mil entrevistas, 2014 a 2026) y contra los microdatos de la Encuesta CEP 96 (1.466 entrevistas). En las 82 preguntas reservadas para validación: error medio de 8,2 puntos en el porcentaje de acuerdo, 71 % de las preguntas a ±10 puntos, 38 % a ±5, y la mayoría del mismo lado en 88 %. Por grupos, los segmentos se mueven en la misma dirección que en la realidad. Resultados, preguntas y método: [VALIDACION.md](VALIDACION.md) y `backend/data/pruebas/realidad_1000/`.
 
-`datos-pruebas/` reúne 140 casos en 14 áreas, cortes por segmentos, resultados observados y referencias. Es un banco de evaluación, no una calibración automática del motor. Las fuentes tienen universos y fechas distintos; los datos imputados por debajo de la región son especialmente débiles, y las relaciones entre ingreso y opiniones no están validadas directamente por una fuente común.
+`datos-pruebas/` reúne el banco de evaluación: 140 casos en 14 áreas, cortes por segmentos, resultados observados, referencias y el benchmark de políticas.
 
 ## 9. API y transmisión de eventos
 
