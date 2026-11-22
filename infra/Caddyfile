@@ -1,0 +1,51 @@
+# Caddy de What If Chile. Lo instala infra/desplegar.sh en /etc/caddy/Caddyfile (lo valida antes de
+# cargarlo y, si no es válido, deja el anterior). El dominio sale de DOMINIO; sin ella, el de siempre.
+{
+	servers {
+		timeouts {
+			# Quien abre una conexión y manda la petición a goteo no la retiene para siempre.
+			read_header 15s
+			idle 3m
+		}
+		max_header_size 16KB
+	}
+}
+
+(sitio) {
+	# /etc/ph26/acceso.caddy pide usuario y clave; si no existe, el sitio queda abierto.
+	import /etc/ph26/*.caddy
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		# Nadie puede meter el sitio en un marco de otra página, ni cargar en él código de otro origen.
+		X-Frame-Options DENY
+		Content-Security-Policy "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		Referrer-Policy no-referrer
+		-Server
+	}
+	# Lo más grande que se sube es un documento de 25 MB; el motor vuelve a comprobarlo.
+	request_body {
+		max_size 26MB
+	}
+	handle /api/* {
+		reverse_proxy 127.0.0.1:8787 {
+			flush_interval -1
+		}
+	}
+	handle {
+		root * /var/www/ph26
+		encode gzip
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+{$DOMINIO:whatif.japs.ing} {
+	import sitio
+}
+
+# Por la IP o por otro nombre, sin certificado: se manda al dominio, para que la clave de acceso
+# nunca viaje sin cifrar.
+http:// {
+	redir https://{$DOMINIO:whatif.japs.ing}{uri} permanent
+}

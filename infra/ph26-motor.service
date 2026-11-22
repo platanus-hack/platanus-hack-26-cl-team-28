@@ -1,0 +1,39 @@
+# Servicio del motor de What If Chile. Lo instala infra/desplegar.sh en /etc/systemd/system.
+[Unit]
+Description=What If Chile: motor de simulacion
+After=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/ph26/backend
+# LLAMADAS: procesos de la CLI a la vez, sumando todas las corridas (unos 200 MB cada uno). Con 120
+# caben con holgura en la memoria de la máquina y siguen sobrando para los 90 agentes por segundo
+# que dan la CPU y la suscripción.
+Environment=HOME=/home/ubuntu MOTOR=claude LOTE=10 CONCURRENCIA=150 LLAMADAS=120
+# Aquí van CLAUDE_TOKENS y, si se quiere, otros topes (ver servidor/limites.py), que pisan los de arriba.
+EnvironmentFile=/etc/ph26/entorno
+ExecStart=/home/ubuntu/.local/bin/uv run python -m servidor
+Restart=always
+RestartSec=2
+LimitNOFILE=65536
+TasksMax=infinity
+
+# Si aun con los topes la memoria se acaba, el corte queda dentro de este servicio (Caddy y el
+# acceso por SSH siguen vivos) y cae sobre un proceso de la CLI, no sobre el servidor: la
+# simulación reintenta ese lote y sigue.
+MemoryMax=27G
+OOMPolicy=continue
+
+# El motor lee documentos subidos por cualquiera: no puede volverse administrador ni escribir
+# fuera de la carpeta de su usuario.
+NoNewPrivileges=yes
+ProtectSystem=full
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+
+[Install]
+WantedBy=multi-user.target

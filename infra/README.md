@@ -44,6 +44,26 @@ Dos archivos en `/etc/ph26` de la máquina, que se crean a mano una vez:
 
   Después, `sudo systemctl reload caddy`.
 
+## Abrir el sitio al público
+
+Quitar la clave: borrar `/etc/ph26/acceso.caddy` y `sudo systemctl reload caddy`. Antes, conviene
+bajar lo que puede pedir cada persona, porque todas comparten la misma suscripción y la misma
+máquina (unos 90 agentes por segundo entre todos). En `/etc/ph26/entorno`, y después
+`sudo systemctl restart ph26-motor`:
+
+    MAXIMO_MUESTRA=2000          # agentes por corrida (10.000 si no se pone)
+    RESPUESTAS_POR_CORRIDA=8000  # agentes × (variantes + iteraciones)
+    RESPUESTAS_EN_COLA=60000     # con 90 por segundo, unos 11 minutos de trabajo pendiente como máximo
+
+Con eso, quince personas con el máximo a la vez son 30.000 respuestas: unos cinco a seis minutos
+para que terminen todas, avanzando a la par. Los demás topes están en `backend/servidor/README.md`.
+
+La configuración de Caddy (`infra/Caddyfile`) y el servicio del motor (`infra/ph26-motor.service`)
+están en el repositorio: `desplegar.sh` los instala cuando cambian. Caddy se valida antes de cargar y
+el motor se comprueba después de reiniciar; si algo falla, vuelve lo anterior y el despliegue queda
+en rojo. Un cambio en `desplegar.sh` vale recién en el despliegue siguiente (el que corre es
+la copia anterior): después de tocarlo, despliega a mano una vez con `FORZAR=1`.
+
 ## Dominio
 
 `whatif.japs.ing` es un registro A en Cloudflare hacia la IP de `terraform output ip`, en modo solo DNS

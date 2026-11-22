@@ -232,6 +232,10 @@ class ClaudeCodigo(Motor):
         ]
         if getattr(PRIORIDAD, "baja", False) and shutil.which("nice"):
             orden = ["nice", "-n", "10", *orden]
+        # Si la memoria se acaba, que el sistema corte uno de estos procesos y no al servidor, que
+        # tiene en memoria todas las corridas: perder un lote se reintenta, perder el servidor no.
+        if shutil.which("choom"):
+            orden = ["choom", "-n", "600", "--", *orden]
         # El prompt va por la entrada estándar: una ley completa no cabe como argumento de un proceso.
         salida = subprocess.run(
             orden, cwd=self._carpeta, input=prompt, capture_output=True,

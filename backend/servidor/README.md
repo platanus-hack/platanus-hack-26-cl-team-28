@@ -203,6 +203,41 @@ cada lote lo contesta un subagente distinto y sus niveles no son comparables (en
 - **Opiniones sobre inmigración.** Agregarlas al perfil corto pesa más que en el completo: quienes quieren
   restringirla quedan 0,56 bajo el resto, contra 0,43 con el completo y 0,35 con el temático.
 
+## Topes: que el sitio aguante abierto al público
+
+Cada lote es un proceso de la CLI de unos 200 MB. Sin tope, quince personas con el máximo de agentes
+piden miles de procesos a la vez y la máquina se queda sin memoria. `limites.py` y `__main__.py`
+ponen los topes; todos se cambian con variables de entorno (en `/etc/ph26/entorno` en la máquina).
+
+| Variable | Por defecto | Qué limita |
+|---|---|---|
+| `LLAMADAS` | `CONCURRENCIA` | Llamadas al modelo a la vez, sumando todas las corridas |
+| `MAXIMO_MUESTRA` | 10.000 | Agentes por corrida |
+| `RESPUESTAS_POR_CORRIDA` | 80.000 | Agentes × (variantes + iteraciones) de una corrida |
+| `RESPUESTAS_EN_COLA` | 200.000 | Respuestas pendientes entre todas las corridas; sobre eso no se aceptan nuevas |
+| `CORRIDAS_A_LA_VEZ` | 40 | Corridas en curso |
+| `CORRIDAS_POR_DIRECCION` | 12 | Corridas en curso desde una misma dirección |
+| `CORRIDAS_POR_MINUTO`, `DOCUMENTOS_POR_MINUTO`, `MUESTRAS_POR_MINUTO`, `PEDIDOS_POR_MINUTO` | 60, 30, 600 y 3.000 | Pedidos por minuto desde una misma dirección |
+| `DOCUMENTOS_A_LA_VEZ` | 3 | Documentos que se leen y resumen a la vez |
+| `CONEXIONES` | 800 | Conexiones abiertas |
+| `FLUJOS_POR_DIRECCION`, `FLUJOS_POR_CORRIDA` | 60 y 30 | Ventanas mirando corridas desde una dirección, y sobre una misma corrida |
+| `CORRIDAS_RECORDADAS` | 60 | Corridas terminadas que se guardan en memoria para quien reconecta |
+| `ABANDONO` | 90 | Segundos sin nadie mirando una corrida antes de detenerla |
+
+Las corridas no tienen cada una su grupo de hilos: comparten uno (`Reparto`) que las atiende por
+turnos, una tarea de cada una. Una corrida sola usa todas las llamadas; con varias, avanzan a la
+par, y una de 100 agentes no espera detrás de una de 10.000. Quien queda fuera de un tope recibe un
+429 con un mensaje para volver a intentar, que la interfaz muestra tal cual.
+
+Los topes por dirección son holgados a propósito: una sala entera puede salir a internet por la
+misma. Lo que protege a la máquina son los globales.
+
+Además: el tamaño de cada pedido tiene tope (768 KB en JSON, 25 MB un documento); una propuesta
+escrita no pasa de 8.000 caracteres; los documentos se leen con tope aunque el archivo se infle al
+abrirlo; el tamaño del lote y la letra de cada variante los decide el servidor; los errores salen
+con un mensaje genérico y el detalle queda en el registro; no hay permiso entre orígenes (el sitio
+y el motor se sirven desde el mismo dominio). `tests/test_limites.py` prueba el reparto y los topes.
+
 ## Caché
 
 `data/cache/respuestas.jsonl` guarda las cinco notas (y la frase, si la tiene) por política, agente, modelo y versión de las instrucciones

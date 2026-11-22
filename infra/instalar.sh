@@ -20,52 +20,12 @@ mkdir -p /etc/ph26 /var/www/ph26
 # Aquí van CLAUDE_TOKENS (sesiones de `claude setup-token`) y, si se quiere, otros ajustes del motor.
 touch /etc/ph26/entorno && chmod 600 /etc/ph26/entorno
 
-cat > /etc/systemd/system/ph26-motor.service <<'UNIDAD'
-[Unit]
-Description=What If Chile: motor de simulacion
-After=network-online.target
-
-[Service]
-User=ubuntu
-WorkingDirectory=/home/ubuntu/ph26/backend
-Environment=HOME=/home/ubuntu MOTOR=claude LOTE=10 CONCURRENCIA=150
-EnvironmentFile=/etc/ph26/entorno
-ExecStart=/home/ubuntu/.local/bin/uv run python -m servidor
-Restart=always
-RestartSec=2
-LimitNOFILE=65536
-TasksMax=infinity
-
-[Install]
-WantedBy=multi-user.target
-UNIDAD
-
-cat > /etc/caddy/Caddyfile <<'CADDY'
-(sitio) {
-	# /etc/ph26/acceso.caddy pide usuario y clave; si no existe, el sitio queda abierto.
-	import /etc/ph26/*.caddy
-	handle /api/* {
-		reverse_proxy 127.0.0.1:8787 {
-			flush_interval -1
-		}
-	}
-	handle {
-		root * /var/www/ph26
-		encode gzip
-		try_files {path} /index.html
-		file_server
-	}
-}
-
-${dominio} {
-	import sitio
-}
-
-# Por la IP, sin certificado: sirve para probar antes de que exista el dominio.
-http:// {
-	import sitio
-}
-CADDY
+# El servicio del motor y la configuración de Caddy están en el repositorio (infra/); el despliegue
+# los vuelve a instalar cuando cambian.
+cp /home/ubuntu/ph26/infra/ph26-motor.service /etc/systemd/system/ph26-motor.service
+cp /home/ubuntu/ph26/infra/Caddyfile /etc/caddy/Caddyfile
+mkdir -p /etc/systemd/system/caddy.service.d
+printf '[Service]\nEnvironment=DOMINIO=%s\n' "${dominio}" > /etc/systemd/system/caddy.service.d/dominio.conf
 
 systemctl daemon-reload
 systemctl enable ph26-motor

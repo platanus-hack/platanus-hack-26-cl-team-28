@@ -8,17 +8,24 @@ objeciones de quienes estuvieron en contra, y se pregunta otra vez.
 
 import hashlib
 import json
+import random
 import threading
 import time
 import uuid
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future
 from dataclasses import dataclass, field
 from pathlib import Path
 
 from .agentes import Agente
 from . import metodo
 from .metodo import temas_de
+from .limites import ABANDONO, LLAMADAS, Cola, Reparto
 from .motor import PRIORIDAD, Consumo, Motor, Respuesta
+
+#: Las llamadas al modelo de todas las corridas pasan por aquí: un tope común y turnos parejos.
+REPARTO = Reparto(LLAMADAS)
+#: Filas de la caché que se guardan en memoria; sobre esto lo nuevo no se recuerda (se responde igual).
+CACHE_MAXIMA = 3_000_000
 
 CARPETA_CACHE = Path(__file__).resolve().parent.parent / "data" / "cache"
 
@@ -68,6 +75,8 @@ REPRODUCCION = 6.0
 
 # Sobre este largo, el documento se resume antes de dárselo a los agentes.
 LARGO_RESUMIR = 3500
+# Lo que se le entrega del documento a quien lo resume: unas 100 páginas. Más que eso es tiempo y gasto sin mejor resumen.
+LARGO_DOCUMENTO = 240_000
 
 
 def postura(acuerdo: int) -> str:
@@ -104,6 +113,7 @@ class Cache:
         self._archivo = carpeta / "respuestas.jsonl"
         self._datos: dict[tuple[str, str, str], tuple[list[int], str]] = {}
         self._cerrojo = threading.Lock()
+        self._avisado = False
         if self._archivo.exists():
             with open(self._archivo, encoding="utf-8") as f:
                 for linea in f:
@@ -122,11 +132,22 @@ class Cache:
         return self._datos.get((huella, modelo, agente.id))
 
     def guardar(self, huella: str, modelo: str, agentes: dict[int, Agente], respuestas: list[Respuesta]) -> None:
-        with self._cerrojo, open(self._archivo, "a", encoding="utf-8") as f:
+        with self._cerrojo:
+            lineas = []
             for r in respuestas:
                 clave = (huella, modelo, agentes[r.agente].id)
+                if clave not in self._datos and len(self._datos) >= CACHE_MAXIMA:
+                    continue
                 self._datos[clave] = (r.respuestas, r.frase)
-                f.write(json.dumps({"p": huella, "m": modelo, "a": clave[2], "r": r.respuestas, "f": r.frase}, ensure_ascii=False) + "\n")
+                lineas.append(json.dumps({"p": huella, "m": modelo, "a": clave[2], "r": r.respuestas, "f": r.frase}, ensure_ascii=False) + "\n")
+            # La caché es un ahorro, no un requisito: si el disco falla, la corrida sigue.
+            try:
+                with open(self._archivo, "a", encoding="utf-8") as f:
+                    f.writelines(lineas)
+            except OSError as error:
+                if not self._avisado:
+                    self._avisado = True
+                    print(f"No se pudo escribir la caché de respuestas: {error}", flush=True)
 
 
 class Corrida:
@@ -152,9 +173,13 @@ class Corrida:
         self.terminada = False
         self.cancelada = False
         self._condicion = threading.Condition()
-        self._grupo: ThreadPoolExecutor | None = None
+        #: Quiénes están mirando la corrida (flujos de eventos abiertos) y cuándo se fue el último.
+        self.oyentes = 0
+        self.sin_oyentes_desde = time.time()
+        self._grupo: Cola | None = None
         self._voces: list = []
         self._voces_pedidas: dict[int, int] = {}
+        self._cerrando = False
         self._cerrojo = threading.Lock()
 
     # Eventos ------------------------------------------------------------------------------
@@ -180,7 +205,21 @@ class Corrida:
 
     # Trabajo ------------------------------------------------------------------------------
 
+    def escuchar(self, entra: bool) -> None:
+        """Alguien abrió o cerró el flujo de eventos de la corrida."""
+        with self._condicion:
+            self.oyentes += 1 if entra else -1
+            if self.oyentes <= 0:
+                self.sin_oyentes_desde = time.time()
+
+    def _revisar_abandono(self) -> None:
+        """Una corrida que nadie mira hace rato se detiene: quien cerró la pestaña deja de gastar."""
+        if not self.cancelada and self.oyentes <= 0 and time.time() - self.sin_oyentes_desde > ABANDONO:
+            self.cancelada = True
+            print(f"Corrida {self.id} detenida: nadie la mira hace más de {ABANDONO} s", flush=True)
+
     def _lote(self, numero: int, caso: Caso, huella: str, agentes: list[Agente], urgente: bool = False) -> None:
+        self._revisar_abandono()
         if self.cancelada:
             return
         PRIORIDAD.baja = not urgente
@@ -202,8 +241,13 @@ class Corrida:
                     self.consumo.sumar(resultado.consumo)
                 break
             except Exception as error:  # se reintenta; la corrida sigue con el resto
-                if intento == 2:
-                    self.publicar("aviso", {"mensaje": f"Un lote de {len(agentes)} agentes falló: {error}"[:300]})
+                if intento == 2 or self.cancelada:
+                    # El detalle queda en el registro del servidor; a la pantalla va solo lo que le sirve a quien mira.
+                    print(f"Corrida {self.id}: un lote de {len(agentes)} agentes falló: {error}"[:500], flush=True)
+                    self.publicar("aviso", {"mensaje": f"Un grupo de {len(agentes)} agentes no alcanzó a responder; la simulación sigue con el resto."})
+                    break
+                # Si el modelo está limitando, insistir de inmediato lo empeora: se espera un poco, cada vez más.
+                time.sleep(1.5 * (intento + 1) + random.random())
         self._entregar(numero, caso, huella, respuestas, desde_cache=False)
 
     def _entregar(self, numero: int, caso: Caso, huella: str, respuestas: list[Respuesta], desde_cache: bool) -> None:
@@ -228,7 +272,7 @@ class Corrida:
         favor = [r for r in respuestas if r.acuerdo >= 5][:1]
         resto = [r for r in respuestas if r.acuerdo <= 4][:VOCES_POR_LOTE - len(favor)]
         elegidas = favor + resto
-        if not elegidas or self._grupo is None:
+        if not elegidas or self._grupo is None or self.cancelada or self._cerrando:
             return
         with self._cerrojo:
             pedidas = self._voces_pedidas.get(numero, 0)
@@ -259,7 +303,7 @@ class Corrida:
         for tarea in pendientes:
             tarea.result()
 
-    def _preguntar(self, grupo: ThreadPoolExecutor, numero: int) -> list:
+    def _preguntar(self, grupo: Cola, numero: int) -> list:
         caso = self.casos[numero]
         huella = Cache.huella(caso.politica())
         pendientes = []
@@ -273,7 +317,7 @@ class Corrida:
         tareas = []
         # Lo que ya estaba en caché llega de a poco, para que el mapa igual se vea encender.
         if guardadas:
-            tareas.append(grupo.submit(self._reproducir, numero, caso, huella, guardadas))
+            tareas.append(self._aparte(self._reproducir, numero, caso, huella, guardadas))
         # Una avanzada de lotes chicos responde antes: el mapa empieza a encenderse y llegan las primeras frases.
         avanzada = pendientes[:AVANZADA] if len(pendientes) > AVANZADA * 2 else []
         desde = 0
@@ -281,11 +325,25 @@ class Corrida:
             tramo = avanzada[desde:desde + personas]
             desde += personas
             for k in range(0, len(tramo), tamano):
-                tareas.append(grupo.submit(self._lote, numero, caso, huella, tramo[k:k + tamano], True))
+                tareas.append(grupo.submit(self._lote, numero, caso, huella, tramo[k:k + tamano], True, adelante=True))
         resto = pendientes[len(avanzada):]
         for k in range(0, len(resto), self.lote):
             tareas.append(grupo.submit(self._lote, numero, caso, huella, resto[k:k + self.lote]))
         return tareas
+
+    @staticmethod
+    def _aparte(funcion, *args) -> Future:
+        """Corre algo en un hilo propio, fuera del reparto: lo que espera sin llamar al modelo."""
+        futuro: Future = Future()
+
+        def correr():
+            try:
+                futuro.set_result(funcion(*args))
+            except BaseException as error:
+                futuro.set_exception(error)
+
+        threading.Thread(target=correr, daemon=True).start()
+        return futuro
 
     def _reproducir(self, numero, caso, huella, respuestas):
         """Un solo hilo entrega lo guardado en tandas, sin ocupar a los que llaman al modelo."""
@@ -302,7 +360,7 @@ class Corrida:
 
     def _iterar(self, numero: int) -> Caso:
         """Redacta una versión nueva a partir de la variante con más apoyo y sus objeciones."""
-        base = max(self.casos, key=lambda c: c.apoyo())
+        base = max((c for c in self.casos if c.respuestas), key=lambda c: c.apoyo())
         objeciones = [r for r in base.respuestas.values() if r.acuerdo <= 4 and r.frase]
         objeciones.sort(key=lambda r: r.acuerdo)
         muestra = objeciones[:: max(1, len(objeciones) // 45)][:45]
@@ -348,33 +406,41 @@ class Corrida:
                 "iteraciones": self.iteraciones,
                 "preguntas": self.preguntas,
             })
-            with ThreadPoolExecutor(max_workers=self.concurrencia) as grupo:
-                self._grupo = grupo
-                # Las variantes escritas van todas juntas; la A primero en la cola.
-                por_caso = [self._preguntar(grupo, k) for k in range(len(self.casos))]
-                for k, tareas in enumerate(por_caso):
-                    for tarea in tareas:
-                        tarea.result()
-                    self._cerrar_caso(k)
-                for n in range(1, self.iteraciones + 1):
-                    if self.cancelada or len(self.casos) >= len(self.letras):
-                        break
-                    self.publicar("redactando", {"numero": n, "metricas": self.metricas()})
-                    # El agente que reescribe lee las frases: se espera a que lleguen.
-                    self._esperar_voces()
-                    nuevo = self._iterar(n)
-                    self.casos.append(nuevo)
-                    k = len(self.casos) - 1
-                    self.publicar("caso", {"caso": k, **self._caso_publico(nuevo), "metricas": self.metricas()})
-                    for tarea in self._preguntar(grupo, k):
-                        tarea.result()
-                    self._cerrar_caso(k)
+            # Las llamadas van al reparto común: esta corrida se turna con las demás que estén en curso.
+            grupo = Cola(REPARTO, self.id)
+            self._grupo = grupo
+            # Las variantes escritas van todas juntas; la A primero en la cola.
+            por_caso = [self._preguntar(grupo, k) for k in range(len(self.casos))]
+            for k, tareas in enumerate(por_caso):
+                for tarea in tareas:
+                    tarea.result()
+                self._cerrar_caso(k)
+            for n in range(1, self.iteraciones + 1):
+                # Sin respuestas (el modelo no contestó nada) no hay sobre qué reescribir.
+                if self.cancelada or len(self.casos) >= len(self.letras) or not any(c.respuestas for c in self.casos):
+                    break
+                self.publicar("redactando", {"numero": n, "metricas": self.metricas()})
+                # El agente que reescribe lee las frases: se espera a que lleguen.
                 self._esperar_voces()
+                nuevo = self._iterar(n)
+                self.casos.append(nuevo)
+                k = len(self.casos) - 1
+                self.publicar("caso", {"caso": k, **self._caso_publico(nuevo), "metricas": self.metricas()})
+                for tarea in self._preguntar(grupo, k):
+                    tarea.result()
+                self._cerrar_caso(k)
+            self._esperar_voces()
             self.publicar("fin", {"metricas": self.metricas(), "apoyos": [round(c.apoyo(), 4) for c in self.casos]})
         except Exception as error:
-            self.publicar("falla", {"mensaje": str(error)[:400]})
+            print(f"Corrida {self.id} falló: {type(error).__name__}: {error}"[:800], flush=True)
+            self.publicar("falla", {"mensaje": "La simulación se interrumpió por un problema del servidor. Vuelve a preguntar."})
         finally:
+            # Lo que quede andando de esta corrida (frases, lotes de una corrida que falló) no encola más trabajo.
+            if not self.terminada:
+                self._cerrando = True
+            REPARTO.descartar(self.id)
             with self._condicion:
+                self.fin = time.time()
                 self.terminada = True
                 self._condicion.notify_all()
 
@@ -396,7 +462,7 @@ def resumir_documento(motor: Motor, nombre: str, texto: str) -> tuple[dict, Cons
     if len(texto) <= LARGO_RESUMIR:
         return {"nombre": nombre, "titulo": nombre, "texto": texto[:LARGO_RESUMIR * 3]}, Consumo()
     prompt = (
-        f"# Documento: {nombre}\n\n{texto[:400_000]}\n\n"
+        f"# Documento: {nombre}\n\n{texto[:LARGO_DOCUMENTO]}\n\n"
         "Devuelve `titulo` (nombre corto de la propuesta, máximo 8 palabras) y `resumen` (máximo 220 "
         "palabras, texto corrido sin markdown ni viñetas: qué propone, a quién afecta, quién paga, qué gana cada parte y desde cuándo)."
     )
