@@ -6,14 +6,6 @@
   min-height: 0;
   overflow: hidden;
   padding-top: var(--e3);
-  animation: aparecer 420ms var(--curva-salida) backwards;
-}
-
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    translate: 0 6px;
-  }
 }
 
 /* Cada grupo habla por su wati: el mismo de su fila en la tabla, más grande y con el ánimo de quien habla. */

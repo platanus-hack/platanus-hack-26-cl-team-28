@@ -10,7 +10,7 @@
   width: min(100%, 27rem);
   min-height: 0;
   padding: var(--e3) var(--e4);
-  border-top: 4px solid var(--tinta);
+  border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
   background: var(--papel);
 }
@@ -158,6 +158,8 @@
   display: flex;
   gap: 1px;
   height: 10px;
+  overflow: hidden;
+  border-radius: var(--radio);
   background: var(--relleno-suave);
 }
 
@@ -223,6 +225,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 2px var(--e3);
+  padding-top: var(--e2);
+  border-top: 1px solid var(--linea-suave);
   font-size: var(--texto-xs);
   color: var(--tinta-suave);
   white-space: nowrap;

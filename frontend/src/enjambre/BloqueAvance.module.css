@@ -6,6 +6,26 @@
   pointer-events: none;
 }
 
+.espera {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--e2) var(--e3);
+  width: 100%;
+  padding: var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  font: 650 var(--texto-m) / 1.25 var(--fuente-ui);
+}
+
+.espera p + p {
+  margin-top: var(--e1);
+  color: var(--tinta-suave);
+  font-size: var(--texto-s);
+  font-weight: 400;
+}
+
 .etiqueta {
   margin-bottom: var(--e3);
   font: 650 var(--texto-s) / 1 var(--fuente-ui);
@@ -48,6 +68,8 @@
 /* Sin respuestas todavía: un tramo recorre la barra de lado a lado. */
 .barra[data-esperando] {
   position: relative;
+  grid-column: 1 / -1;
+  margin-top: 0;
 }
 
 .barra[data-esperando]::after {
@@ -90,6 +112,18 @@
 @media (max-width: 899px) {
   .cifra {
     font-size: 3rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .espera {
+    gap: var(--e2);
+    padding: var(--e2);
+    font-size: var(--texto-s);
+  }
+
+  .espera p + p {
+    font-size: var(--texto-xs);
   }
 }
 

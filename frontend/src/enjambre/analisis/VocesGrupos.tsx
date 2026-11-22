@@ -39,7 +39,7 @@ export function VocesGrupos({ resumen, pregunta, agentes, notas, frases, mirados
       {lados.map(({ grupo, lado, voces }) => (
         <div key={lado} data-lado={lado}>
           <span className={estilos.figura}>
-            <FiguraWati estado={neutra ? 'neutra' : lado === 'alto' ? 'favor' : 'contra'} rasgos={rasgosDe(`${dimension.clave}#${grupo}`)} alto={68} />
+            <FiguraWati estado={neutra ? 'neutra' : lado === 'alto' ? 'favor' : 'contra'} rasgos={rasgosDe(`${dimension.clave}#${grupo}`)} alto={68} animada={false} />
           </span>
           <h3>
             {dimension.grupos[grupo]}

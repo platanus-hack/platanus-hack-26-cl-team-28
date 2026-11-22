@@ -30,15 +30,14 @@
   flex: 1;
   min-width: 0;
   padding-inline: var(--e2);
-  border: 1px solid var(--borde-control);
-  background: color-mix(in srgb, var(--tinta) 20%, var(--fondo-control));
-  color: var(--tinta);
+  border: 1px solid transparent;
   white-space: normal;
   line-height: 1.15;
   text-wrap: balance;
 }
 
 .acciones > button[type='submit']:disabled {
+  border-color: var(--borde-control);
   background: var(--fondo-control);
   color: var(--tinta-suave);
 }
@@ -182,7 +181,7 @@
   background: var(--fondo-control);
   color: var(--tinta);
   font: 400 1.05rem/1.45 var(--fuente-ui);
-  resize: vertical;
+  resize: none;
   field-sizing: content;
   transition: border-color var(--rapido);
 }
@@ -442,10 +441,6 @@
   .pestanas .agregar:hover,
   .pestanas .quitarVariante:hover {
     background: var(--fondo-control-activo);
-  }
-
-  .acciones > button[type='submit']:hover:not(:disabled) {
-    background: color-mix(in srgb, var(--tinta) 25%, var(--fondo-control));
   }
 }
 

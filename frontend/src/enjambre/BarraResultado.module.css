@@ -1,16 +1,21 @@
 .barra {
   display: grid;
   justify-items: start;
-  gap: var(--e1);
+  gap: var(--e3);
 }
 
-/*
- * Una papeleta por variante: la letra, su apoyo y, al pie, una barra que se llena con ese
- * apoyo. Se comparan de un vistazo por el largo de la barra.
- */
+.barra > button {
+  padding-inline: var(--e4);
+  border: 1px solid var(--linea-suave);
+  color: var(--tinta);
+  font-size: var(--texto-s);
+}
+
+/* Una papeleta por variante, con la postura más frecuente y el reparto al pie. */
 .pestanas {
   display: flex;
   flex-wrap: wrap;
+  align-items: flex-start;
   gap: 6px;
   max-width: 100%;
 }
@@ -18,39 +23,49 @@
 .pestanas button {
   position: relative;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
   column-gap: var(--e2);
   row-gap: 2px;
-  min-width: 6.2rem;
-  min-height: 58px;
-  padding: var(--e2) var(--e3) 13px;
+  min-width: 7.25rem;
+  min-height: 48px;
+  padding: 10px var(--e3) 11px;
   overflow: hidden;
-  border: 0;
+  border: 1px solid var(--linea-suave);
   border-radius: var(--radio);
   background: var(--relleno-suave);
   color: var(--tinta-suave);
   text-align: left;
   transition:
     background var(--rapido),
-    color var(--rapido);
+    border-color var(--rapido);
 }
 
-.pestanas b {
-  grid-row: span 2;
-  align-self: center;
-  font: 650 1.7rem/1 var(--fuente-voz);
+.letra {
+  font: 650 1.4rem / 1 var(--fuente-voz);
   color: var(--tinta);
 }
 
-.pestanas span {
-  font-size: var(--texto-s);
+.dato {
+  font-size: var(--texto-xs);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
+.dato strong {
+  color: var(--tinta);
+  font: 700 1.5rem / 1 var(--fuente-voz);
+  font-variant-numeric: tabular-nums;
+}
+
+.dato [data-postura='favor'] { color: var(--favor-texto); }
+.dato [data-postura='indecisa'] { color: var(--indecisa-texto); }
+.dato [data-postura='contra'] { color: var(--contra-texto); }
+
 .pestanas em {
+  grid-column: 2;
+  justify-self: end;
   font: 650 var(--texto-xs) / 1 var(--fuente-ui);
   font-variant-numeric: tabular-nums;
 }
@@ -69,36 +84,26 @@
   white-space: nowrap;
 }
 
-/* La barra del pie: cuánto apoyo tiene la variante. */
-.pestanas i {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 5px;
-  background: var(--favor);
-  transition: width 700ms var(--curva-salida);
-}
-
-.pestanas button::after {
-  content: '';
+.reparto {
   position: absolute;
   inset: auto 0 0;
+  display: flex;
   height: 5px;
   background: var(--linea-suave);
 }
 
-.pestanas i {
-  z-index: 1;
+.reparto i {
+  flex: none;
+  transition: width 700ms var(--curva-salida);
 }
+
+.reparto [data-postura='favor'] { background: var(--favor); }
+.reparto [data-postura='indecisa'] { background: var(--indecisa); }
+.reparto [data-postura='contra'] { background: var(--contra); }
 
 .pestanas button[aria-selected='true'] {
-  background: var(--tinta);
-  color: var(--mar);
-}
-
-.pestanas button[aria-selected='true'] b,
-.pestanas button[aria-selected='true'] em {
-  color: inherit;
+  border-color: color-mix(in srgb, var(--tinta-suave) 35%, var(--linea-suave));
+  background: color-mix(in srgb, var(--tinta) 10%, var(--relleno-suave));
 }
 
 .pestanas button:disabled {
@@ -106,6 +111,11 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .barra > button:hover {
+    background: var(--relleno-suave);
+    box-shadow: none;
+  }
+
   .pestanas button[aria-selected='false']:not(:disabled):hover {
     background: var(--linea-suave);
   }

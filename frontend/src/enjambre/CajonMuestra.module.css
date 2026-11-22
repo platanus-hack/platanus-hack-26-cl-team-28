@@ -63,6 +63,11 @@
   line-height: 0.9;
 }
 
+.nivel {
+  font: 500 var(--texto-xs) / 1.4 var(--fuente-ui);
+  color: var(--tinta-suave);
+}
+
 .cerrar {
   position: absolute;
   top: var(--e3);
@@ -212,13 +217,6 @@
   transition:
     color var(--rapido),
     background var(--rapido);
-}
-
-/* Cuántos agentes quedan en el nivel de clusterización elegido. */
-.nivel {
-  margin: var(--e2) 0 0;
-  font: 500 var(--texto-xs) / 1.4 var(--fuente-ui);
-  color: var(--tinta-suave);
 }
 
 .tamanos button[aria-pressed='true'] {

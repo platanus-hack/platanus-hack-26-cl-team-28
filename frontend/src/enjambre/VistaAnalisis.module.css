@@ -72,8 +72,7 @@
 }
 
 /*
- * El título en una línea, con su enlace para leerlo completo al lado: el mismo componente de la
- * pantalla del mapa, que abre la hoja con el texto que leyeron los agentes.
+ * El título en una línea abre el mismo diálogo de lectura que el mapa.
  */
 .titulo {
   --lineas-titulo: 1;
@@ -82,24 +81,6 @@
   margin: 0;
   font: 500 clamp(1.1rem, 0.9rem + 0.7vw, 1.6rem) / 1.2 var(--fuente-voz);
   letter-spacing: -0.01em;
-}
-
-.titulo > div {
-  display: flex;
-  align-items: center;
-  gap: var(--e4);
-  min-width: 0;
-}
-
-.titulo q {
-  flex: 0 1 auto;
-  min-width: 0;
-}
-
-.titulo button {
-  flex: none;
-  margin: 0;
-  white-space: nowrap;
 }
 
 /* Las preguntas de la encuesta: cada una con su cifra, y la elegida con su texto completo al lado. */

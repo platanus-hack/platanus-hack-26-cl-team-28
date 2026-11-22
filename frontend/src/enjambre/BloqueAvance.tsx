@@ -2,7 +2,9 @@ import { formatear } from '../dominio/textos';
 import type { Metricas, MotorInfo } from '../vivo/api';
 import type { CasoVivo } from '../vivo/useEnVivo';
 import estilos from './BloqueAvance.module.css';
+import { FiguraWati } from './FiguraWati';
 import { useConteo } from './useConteo';
+import { rasgosDe } from './wati';
 
 interface Props {
   caso: CasoVivo;
@@ -10,6 +12,8 @@ interface Props {
   metricas: Metricas;
   motor: MotorInfo | null;
 }
+
+const RASGOS_ESPERA = rasgosDe('contactando-entrevistados');
 
 export function nombreModelo(modelo: string): string {
   return modelo.replace(/^claude-/, 'Claude ').replace(/-/g, ' ').replace(/\b(haiku|sonnet|opus)\b/, (m) => m[0].toUpperCase() + m.slice(1));
@@ -23,19 +27,25 @@ export function dinero(usd: number): string {
 export function BloqueAvance({ caso, total, metricas, motor }: Props) {
   const contado = useConteo(caso.respondidas);
   const esperando = caso.respondidas === 0;
+  const mostrado = Math.max(1, Math.round(contado));
   return (
     <section className={estilos.bloque} aria-live="off">
-      <p className={estilos.cifra}>{formatear(Math.round(contado))}</p>
-      <p className={estilos.nombre}>
-        de {formatear(total)} agentes {esperando ? 'leyendo la propuesta' : 'ya respondieron'}
-      </p>
       {esperando ? (
-        // Los primeros segundos no hay respuestas todavía: la barra se mueve para que se vea que está trabajando.
-        <div className={estilos.barra} data-esperando role="progressbar" aria-label="La IA está leyendo los primeros perfiles" />
+        <div className={estilos.espera} role="status">
+          <FiguraWati estado="neutra" rasgos={RASGOS_ESPERA} alto={48} />
+          <div>
+            <p>Contactando a los entrevistados…</p>
+            <p>Preparando la consulta para {formatear(total)} agentes.</p>
+          </div>
+          <div className={estilos.barra} data-esperando aria-hidden="true" />
+        </div>
       ) : (
-        <progress className={estilos.barra} max={total} value={contado} aria-label="Avance de la simulación" />
+        <>
+          <p className={estilos.cifra}>{formatear(mostrado)}</p>
+          <p className={estilos.nombre}>de {formatear(total)} agentes ya respondieron</p>
+          <progress className={estilos.barra} max={total} value={mostrado} aria-label="Avance de la simulación" />
+        </>
       )}
-      {esperando && motor && !motor.grabado && <p className={estilos.detalle}>La IA está leyendo los primeros perfiles</p>}
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
         <p className={estilos.detalle}>Esta pregunta ya se hizo hoy: se muestran las respuestas que dieron los agentes en esa corrida</p>
       )}

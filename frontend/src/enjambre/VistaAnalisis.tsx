@@ -178,7 +178,7 @@ export function VistaAnalisis({ sim, conexion }: Props) {
             </footer>
             {filas <= FILAS_CON_VOCES && (
               <div className={estilos.hueco}>
-              <VocesGrupos key={`${actual.dimension.clave}-${pregunta}`} resumen={actual} pregunta={pregunta} agentes={personas} notas={caso.notas} frases={caso.frase} mirados={muestra.agentes} cuantas={filas <= 4 ? 2 : 1} neutra={neutra} nombres={lados} />
+                <VocesGrupos resumen={actual} pregunta={pregunta} agentes={personas} notas={caso.notas} frases={caso.frase} mirados={muestra.agentes} cuantas={filas <= 4 ? 2 : 1} neutra={neutra} nombres={lados} />
               </div>
             )}
           </main>

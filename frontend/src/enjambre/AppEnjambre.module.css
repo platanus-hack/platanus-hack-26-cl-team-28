@@ -125,7 +125,7 @@
   letter-spacing: -0.01em;
 }
 
-.pregunta span {
+.pregunta > span {
   display: block;
   margin-bottom: var(--e2);
   font: 650 var(--texto-s) / 1 var(--fuente-ui);
@@ -698,7 +698,7 @@
   .app {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: 100dvh auto auto auto;
+    grid-template-rows: 100dvh max-content max-content max-content;
     gap: 0;
     padding: 0;
     align-content: start;
@@ -724,7 +724,7 @@
 
   .titular { margin: 0; font-size: clamp(2rem, 9vw, 3rem); }
   .pregunta { margin: 0; font-size: 1rem; }
-  .pregunta span { margin-bottom: var(--e1); }
+  .pregunta > span { margin-bottom: var(--e1); }
   .avance { margin-top: var(--e2); }
 
   /* Los controles van uno sobre otro en la franja que el titular deja libre a la derecha. */

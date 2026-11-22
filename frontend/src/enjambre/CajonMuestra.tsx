@@ -107,6 +107,13 @@ export function CajonMuestra({ abierto, sim, abiertas, alAbrir, alCerrar }: Prop
             <path d="M2 2l8 8M10 2l-8 8" />
           </svg>
         </button>
+        {niveles.length > 1 && enNivel !== undefined && (
+          <p className={estilos.nivel}>
+            {enNivel < filtros.tamano
+              ? `Solo ${formatear(enNivel)} agentes cumplen los filtros en este nivel: responden todos.`
+              : `${formatear(enNivel)} agentes cumplen los filtros en este nivel.`}
+          </p>
+        )}
         <div className={estilos.cuadros} aria-hidden="true">
           {Array.from({ length: CUADROS }, (_, k) => (
             <i key={k} data-lleno={k < llenos || undefined} />
@@ -155,13 +162,6 @@ export function CajonMuestra({ abierto, sim, abiertas, alAbrir, alCerrar }: Prop
                     </button>
                   ))}
                 </div>
-                {enNivel !== undefined && (
-                  <p className={estilos.nivel}>
-                    {enNivel < filtros.tamano
-                      ? `Solo ${formatear(enNivel)} agentes cumplen los filtros en este nivel: responden todos.`
-                      : `${formatear(enNivel)} agentes cumplen los filtros en este nivel.`}
-                  </p>
-                )}
               </fieldset>
             )}
           </div>

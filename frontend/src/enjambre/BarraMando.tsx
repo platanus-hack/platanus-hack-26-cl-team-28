@@ -123,6 +123,11 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           value={actual.texto}
           placeholder={actual.documento ? 'Contexto o pregunta sobre el documento (opcional)' : 'Escribe la propuesta o suelta aquí un documento'}
           onChange={(e) => sim.cambiarTexto(actual.id, e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter' || !e.ctrlKey || e.nativeEvent.isComposing) return;
+            e.preventDefault();
+            if (!e.repeat && sim.puedePreguntar) e.currentTarget.form?.requestSubmit();
+          }}
         />
       </label>
       <PopupDialogo
@@ -255,7 +260,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.8" /></svg>
           Ver
         </button>
-        <Boton type="submit" variante="primario" disabled={!sim.puedePreguntar}>
+        <Boton type="submit" variante="primario" aria-keyshortcuts="Control+Enter" disabled={!sim.puedePreguntar}>
           {leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}
         </Boton>
       </div>

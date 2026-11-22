@@ -237,7 +237,7 @@ export function AppEnjambre() {
   // Teclas para presentar: H oculta la interfaz, las flechas cambian de variante.
   useEffect(() => {
     const tecla = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest('textarea, input, select')) return;
+      if ((e.target as HTMLElement).closest('dialog[open], textarea, input, select')) return;
       if (e.key === 'h' || e.key === 'H') {
         setOculta((valor) => !valor);
         // El foco no se queda en algo invisible: pasa al botón que devuelve la interfaz.

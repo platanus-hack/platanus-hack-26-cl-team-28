@@ -18,13 +18,14 @@ interface Props {
   rasgos: { semilla: number; variante: number; tono: number };
   /** Alto en píxeles de pantalla. */
   alto?: number;
+  animada?: boolean;
   /** Disfrazado de gato (un guiño al tocarlo muchas veces). */
   gato?: boolean;
   saludo?: number;
 }
 
-/** Un wati fuera del mapa (ficha, cifras), respirando. Decorativo: el texto vecino dice lo mismo. */
-export function FiguraWati({ estado, rasgos, alto = 54, gato = false, saludo = 0 }: Props) {
+/** Un wati decorativo fuera del mapa. */
+export function FiguraWati({ estado, rasgos, alto = 54, animada = true, gato = false, saludo = 0 }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
   const ancho = Math.round((alto * CELDA_ANCHO) / CELDA_ALTO);
   const { semilla, variante, tono } = rasgos;
@@ -53,7 +54,7 @@ export function FiguraWati({ estado, rasgos, alto = 54, gato = false, saludo = 0
         ? Math.sin(Math.PI * transcurrido / 1600) * (1.5 + 0.35 * Math.sin(transcurrido / 100)) : 0;
       dibujarWati(ctx, { cuerpo, variante, cuadro: pose.cuadro, animo: estado === 'contra' ? 'triste' : estado === 'indecisa' ? 'seria' : 'alegre', gato, saludo: gesto });
     };
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!animada || matchMedia('(prefers-reduced-motion: reduce)').matches) {
       pintar(-1);
       return;
     }
@@ -68,7 +69,7 @@ export function FiguraWati({ estado, rasgos, alto = 54, gato = false, saludo = 0
     };
     cuadro = requestAnimationFrame(ciclo);
     return () => cancelAnimationFrame(cuadro);
-  }, [estado, semilla, variante, tono, alto, ancho, gato, saludo]);
+  }, [estado, semilla, variante, tono, alto, ancho, animada, gato, saludo]);
 
   return <canvas ref={ref} aria-hidden="true" style={{ width: ancho, height: alto, flex: 'none' }} />;
 }
