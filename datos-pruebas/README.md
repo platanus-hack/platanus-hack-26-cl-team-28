@@ -9,6 +9,7 @@ Banco de referencias externas para evaluar respuestas de agentes sobre política
 | `segmentacion.jsonl` | Resultados publicados por región, zona, edad, sexo o grupo socioeconómico. Se enlazan con `caso_id`. |
 | `resultados-observados.jsonl` | Indicadores de estudios y registros administrativos tras aplicar medidas. Incluye diseño, ventana, población y unidad. |
 | `fuentes-ampliacion.jsonl` | Catálogo de archivos de encuestas, bases públicas, buscadores de proyectos, evaluaciones y papers metodológicos. |
+| [`benchmark-politicas-chile.json`](benchmark-politicas-chile.json) | Resultados agregados de GPT-6 Luna en 111 preguntas, con referencias publicadas, porcentajes simulados, datos muestrales y métricas. |
 
 ## Cómo leer un caso
 
@@ -19,6 +20,10 @@ Banco de referencias externas para evaluar respuestas de agentes sobre política
 - `respuestas` contiene **porcentajes publicados**, de 0 a 100, por categoría. Algunos comunicados solo publican parte de la distribución. `resto_informado_por_fuente` indica qué alternativas completan el total cuando la fuente lo especifica sin desglosarlas. Un resto de «No responde» se conserva como tal. Las cifras publicadas pueden diferir de 100 por redondeo.
 - `segmento` modifica el universo de un caso. En los cortes de `segmentacion.jsonl`, la fuente es la del caso padre. `n_total` corresponde al estudio completo y puede diferir del denominador de un ítem o corte. Un `null` indica que el tamaño no se ha transcrito.
 - `uso` conserva la exposición conocida del equipo. `calibracion_previa` marca TAG, diésel y condena en casa. `relacionado_con_calibracion` marca sus baterías y variantes cercanas. `candidato` admite selección posterior para desarrollo o evaluación. Las referencias son públicas y la exposición del modelo durante entrenamiento se desconoce.
+
+Para interpretar las diferencias entre Luna y las encuestas, consulta la [auditoría de contexto del benchmark de 111 preguntas](contexto-benchmark-luna.md). Registra qué marco de la encuesta y qué antecedentes contemporáneos recibió el modelo en los casos revisados.
+
+En el JSON del benchmark, `casos` contiene los resultados por pregunta y `metricas` contiene los resúmenes globales y por fuente. Las claves `archivos` y `sha256_archivos` identifican los archivos comprimidos de votos simulados y perfiles de la exportación local.
 
 ## Consultas sin enviar referencias al modelo
 
