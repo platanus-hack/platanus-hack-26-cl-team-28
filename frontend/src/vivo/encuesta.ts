@@ -18,9 +18,10 @@ export interface PreguntaEncuesta {
  * en el mapa. Influencia no mide apoyo: dice cuánto le toca la política, y va en tono neutro.
  *
  * Son las del motor (backend/scripts/probar_modelo.py, `ENCUESTA`); si cambian allá, cambian aquí.
+ * La primera la redacta el servidor (`APOYO` en backend/servidor/metodo.py): vale para medidas y para afirmaciones.
  */
 export const ENCUESTA: readonly PreguntaEncuesta[] = [
-  { nombre: 'Apoyo', texto: '¿Estarías de acuerdo con que se implemente esta política en tu región?', minimo: 'totalmente en desacuerdo', maximo: 'totalmente de acuerdo', postura: true },
+  { nombre: 'Apoyo', texto: '¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?', minimo: 'totalmente en desacuerdo', maximo: 'totalmente de acuerdo', postura: true },
   { nombre: 'Justicia', texto: '¿Te parece justa la forma en que esta política reparte costos y beneficios?', minimo: 'muy injusto', maximo: 'muy justo', postura: true },
   { nombre: 'Confianza', texto: '¿Confías en que el Estado chileno sea capaz de implementar bien esta política?', minimo: 'muy desconfiado', maximo: 'muy confiado', postura: true },
   { nombre: 'Efectividad', texto: '¿Qué tan efectiva crees que es esta política en lograr lo que propone?', minimo: 'muy inefectivo', maximo: 'muy efectivo', postura: true },

@@ -45,7 +45,14 @@ def _cargar(nombre: str):
 banco = _cargar("probar_modelo")
 filtro = _cargar("filtro_perfil")
 
-PREGUNTAS: list[str] = banco.PREGUNTAS
+#: La primera pregunta del banco («¿Estarías de acuerdo con que se implemente esta política en tu región?»)
+#: supone que el texto es una medida. Cuando es una afirmación («la intervención estatal genera demasiada
+#: burocracia») los agentes contestaban al revés: quien estaba de acuerdo con la afirmación respondía que no
+#: quería que «se implemente». Medido con la CEP 96, el lado correcto pasó de 20 % a 100 % con esta redacción
+#: (data/pruebas/realidad_1000/INFORME.md). Las demás preguntas son las del banco.
+APOYO_BANCO: str = banco.PREGUNTAS[0]
+APOYO: str = "¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?"
+PREGUNTAS: list[str] = [APOYO, *banco.PREGUNTAS[1:]]
 CLAVES: list[str] = banco.CLAVES
 #: Qué significan el 1 y el 7 en cada pregunta, en su orden.
 ESCALAS: list[tuple[str, str]] = banco.ESCALAS
@@ -62,7 +69,13 @@ if NIVEL not in filtro.NIVELES:
     raise SystemExit(f"PERFIL={NIVEL!r} no existe; los niveles son {', '.join(filtro.NIVELES)}")
 #: Lo que distingue a este perfil del completo en la caché de respuestas (vacío si va completo:
 #: las respuestas guardadas antes del filtro se dieron con el perfil completo y siguen sirviendo).
-VERSION_PERFIL: str = "" if NIVEL == "completo" else f"{NIVEL}:{filtro.VERSION}"
+#: Las etiquetas políticas del perfil. No se le entregan al modelo: con ellas contesta por bando y separa a
+#: izquierda y derecha el doble que la CEP (51 puntos contra 22). Sin ellas, y conservando lo que la persona
+#: opina de fondo (rol del Estado, inmigración, seguridad, confianza), la distancia queda como la real y los
+#: grupos siguen igual de bien ordenados. `IDENTIDAD_POLITICA=1` en el entorno las devuelve.
+IDENTIDAD_POLITICA = frozenset({"posicion_politica", "partido", "sin_partido", "voto_2025", "aprueba_gobierno", "aprueba_gobierno_anterior"})
+CON_IDENTIDAD: bool = os.environ.get("IDENTIDAD_POLITICA", "").strip().lower() in ("1", "si", "sí", "true")
+VERSION_PERFIL: str = ("" if NIVEL == "completo" else f"{NIVEL}:{filtro.VERSION}") + ("" if CON_IDENTIDAD else ":sin-identidad")
 
 # Perfiles ya escritos con un filtro, por persona: en una corrida cada persona se repite en cada variante.
 PERFILES_GUARDADOS = 60_000
@@ -78,7 +91,11 @@ def cfg_local(url: str, temperatura: float) -> dict:
 @functools.lru_cache(maxsize=256)
 def datos_de(politica: str) -> frozenset | None:
     """Los datos del perfil que se entregan para esta política; None es el perfil completo."""
-    return filtro.datos_para(politica, NIVEL)
+    datos = filtro.datos_para(politica, NIVEL)
+    if CON_IDENTIDAD:
+        return datos
+    # El perfil completo es None (sin filtro): para quitarle algo hay que nombrar todo lo demás.
+    return frozenset((datos if datos is not None else frozenset(filtro.DATOS)) - IDENTIDAD_POLITICA)
 
 
 def temas_de(politica: str) -> list[str]:
@@ -121,9 +138,18 @@ def persona_de(agente, datos: frozenset | None = None) -> dict:
     return {"id": agente.id, "perfil": perfil_de(agente, datos)}
 
 
+def sistema_del_banco(politica: str) -> str:
+    """El mensaje de sistema con las cinco preguntas del banco tal cual, sin la redacción de apoyo del
+    servidor. Es con el que se corrieron los benchmarks guardados (scripts/benchmark_indecision_luna.py)."""
+    return banco.mensajes(politica, {}, CFG)[0]["content"]
+
+
 def sistema_con_politica(politica: str) -> str:
     """Mensaje de sistema tal como lo arma el banco: instrucciones, tema y preguntas con su escala."""
-    return banco.mensajes(politica, {}, CFG)[0]["content"]
+    sistema = sistema_del_banco(politica)
+    # La pregunta de apoyo va al final del mensaje, después del tema: se cambia ahí y no en el texto de la propuesta.
+    cabeza, marca, cola = sistema.rpartition("# Preguntas")
+    return cabeza + marca + cola.replace(APOYO_BANCO, APOYO, 1)
 
 
 #: Todo lo que el banco le dice al modelo además del tema: si cambia, la caché no se reutiliza.

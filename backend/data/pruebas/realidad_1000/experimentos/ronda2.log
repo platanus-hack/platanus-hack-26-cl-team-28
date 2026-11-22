@@ -1,0 +1,25 @@
+postura: 40 casos x 200 agentes; faltan 400 llamadas
+  7997/8000 respuestas en 216 s
+postura_sin_identidad: 40 casos x 200 agentes; faltan 400 llamadas
+  7996/8000 respuestas en 194 s
+general_sin_identidad: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 169 s
+postura_general_sin_identidad: 40 casos x 200 agentes; faltan 400 llamadas
+  7969/8000 respuestas en 173 s
+postura_general_sin_identidad_directa: 40 casos x 200 agentes; faltan 400 llamadas
+  7974/8000 respuestas en 171 s
+postura_demografia: 40 casos x 200 agentes; faltan 400 llamadas
+  7999/8000 respuestas en 127 s
+postura_general: 40 casos x 200 agentes; faltan 400 llamadas
+  fallo c505-edad lote 7: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 0: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 1: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 3: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 4: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 6: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 7: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 8: La CLI de Claude no respondió: api_error
+  fallo c704-bencina lote 9: La CLI de Claude no respondió: api_error
+  fallo c704-buses lote 6: La CLI de Claude no respondió: api_error
+  fallo c704-buses lote 7: La CLI de Claude no respondió: api_error
+  7766/8000 respuestas en 312 s

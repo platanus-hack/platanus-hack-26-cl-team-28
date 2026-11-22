@@ -42,7 +42,7 @@ Los valores de los ejemplos son ilustrativos; la forma es la real.
   "lote": 10,
   "concurrencia": 150,
   "maximo_muestra": 10000,
-  "preguntas": ["¿Estarías de acuerdo con que se implemente esta política en tu región?", "..."],
+  "preguntas": ["¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?", "..."],
   "nombres": ["Apoyo", "Justicia", "Confianza", "Efectividad", "Influencia"],
   "escalas": [["totalmente en desacuerdo", "totalmente de acuerdo"], ["muy injusto", "muy justo"]]
 }

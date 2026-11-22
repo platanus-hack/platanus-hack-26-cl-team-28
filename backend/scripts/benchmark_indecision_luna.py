@@ -49,7 +49,8 @@ def esquema_postura():
 
 
 def sistemas(politica, postura_explicita=False):
-    completo = metodo.sistema_con_politica(politica)
+    # Las preguntas del banco tal cual: el benchmark guardado se corrió con ellas.
+    completo = metodo.sistema_del_banco(politica)
     if postura_explicita:
         formato = metodo.banco.FORMATO.format(n=5, claves="r1,r2,r3,r4,r5")
         if formato not in completo:

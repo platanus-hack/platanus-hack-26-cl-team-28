@@ -1,0 +1,103 @@
+
+=== prueba (42 casos del banco) ===
+                          casos   EAM  sesgo  lado   a≤5  a≤10    r  sesgo≥75  indecisos  EAM_desac  |brecha|  cep_brecha_real  cep_brecha_sim  cep_corr_seg  cep_err_seg  cep_err_seg_dem  burocracia_acierta
+sitio anterior             42.0  15.0   -4.8  71.4  19.0  40.5  0.6     -19.5        0.1       18.5      57.2             25.2            50.8           0.7          7.2              4.8                20.0
+motor nuevo sin ancla      42.0  16.8   -6.6  73.8  19.0  40.5  0.6     -21.6        0.1       19.2      21.2             25.2            15.4           0.8          4.2              4.1               100.0
+motor nuevo, ancla haiku   42.0  11.0    0.7  81.0  26.2  54.8  0.8      -7.7       10.1        8.2      15.8             25.2            20.0           0.8          4.4              4.1                99.3
+motor nuevo, ancla opus    42.0   9.6    0.6  88.1  31.0  57.1  0.8      -8.2        6.1        7.4      17.3             25.2            20.9           0.7          4.7              5.0               100.0
+Con ancla de Opus: mejoran 27, empeoran 10, igual 5. De los 8 que antes estaban a 5 puntos o menos: 6 siguen ahí, 7 a 10 o menos, 1 peor que 10.
+                            real  antes   sim  error_antes  error                                                               enunciado
+caso                                                                                                                                     
+uc26-fertilidad-carrera       44   63.0  74.0         19.0   30.0  ificulta que una mujer ascienda en el trabajo o desarrolle su carrera.
+cep96-recorte                 34   40.0  64.0          6.0   30.0  blico como estrategia del Gobierno para mejorar las finanzas públicas.
+ipsos25-discriminacion        57   50.0  79.0          6.0   22.0  ación de personas LGBT, incluido el acceso a restaurantes y comercios.
+c663-cae-embargo              54   94.0  72.0         40.0   18.0   embargo bancario a deudores que ganen más de $3,5 millones mensuales.
+c638-ministerios              74   39.0  56.0         35.0   18.0                    Reducir en 3% el gasto de cada ministerio por igual.
+c543-menores                  55   34.0  38.0         21.0   18.0  ir a menores cambiar su identidad de género con autorización parental.
+c629-regularizacion-empleo    61   52.0  44.0         10.0   17.0  izar a inmigrantes en situación irregular que acrediten empleo formal.
+c543-matrimonio               77   45.0  62.0         32.0   15.0            Reconocer el derecho a casarse a las parejas del mismo sexo.
+c629-derechos                 47   47.0  61.0          0.0   14.0  su situación regularizada los mismos derechos que a personas chilenas.
+c663-apuestas-impuestos       70   88.0  83.0         18.0   13.0  que las plataformas de apuestas tributen por sus operaciones en Chile.
+cep96-estado-economia         24   39.0  37.0         15.0   13.0   país estaría mejor con menos participación del Estado en la economía.
+ct22-reforma                  34   44.0  46.0         10.0   12.0  ma tributaria que el gobierno de Gabriel Boric envió en julio de 2022.
+cep96-seleccion-educacion     58   64.0  70.0          6.0   12.0  ar inmigrantes dando preferencia a personas con mayor nivel educativo.
+c543-gestacion                63   32.0  51.0         30.0   12.0  acuerdo o desacuerdo con que una tercera persona geste un hijo o hija.
+c543-adopcion                 65   45.0  54.0         20.0   11.0              Reconocer el derecho de adopción a parejas del mismo sexo.
+c543-identidad                67   38.0  56.0         28.0   10.0  tir que una persona adulta cambie su identidad de género una sola vez.
+c543-bloqueadores             29   20.0  18.0          8.0   10.0   de la pubertad en menores que buscan realizar una transición de sexo.
+cep96-burocracia              52   42.0  62.0         10.0   10.0  tervención estatal genera demasiada burocracia y demasiados problemas.
+c543-aborto                   79   54.0  70.0         26.0   10.0  to permitido por inviabilidad fetal, riesgo vital materno o violación.
+c638-corregir-jornada         29   42.0  38.0         14.0    9.0                                 Corregir la ley de jornada de 40 horas.
+c629-carcel                   74   59.0  66.0         15.0    8.0  lecer penas de cárcel por inmigración ilegal mediante una ley chilena.
+c629-deportacion              81   52.0  73.0         28.0    8.0  r a toda persona inmigrante que haya ingresado irregularmente a Chile.
+uc26-fertilidad-espacio       45   70.0  37.0         24.0    8.0   donde vive la persona es demasiado pequeña para una familia numerosa.
+uc26-fertilidad-trabajo       71   62.0  78.0          8.0    7.0                 Evaluar si tener hijos dificulta que una mujer trabaje.
+c663-apuestas-tv              25   22.0  18.0          3.0    6.0            Permitir a plataformas de apuestas anunciarse en televisión.
+c663-apuestas-bloqueo         82   98.0  76.0         16.0    6.0           Bloquear páginas de apuestas en línea que operan ilegalmente.
+c663-cae-convenio             79   68.0  73.0         10.0    6.0  acuerdo de pago del CAE a quienes ganen menos de $3,5 millones al mes.
+c663-apuestas-social          27   16.0  21.0         10.0    6.0  ermitir a plataformas de apuestas publicar anuncios en redes sociales.
+c483-jornada                  71   60.0  77.0         11.0    6.0                 Reducir de 45 a 40 horas la jornada de trabajo semanal.
+c663-apuestas-eventos         27   21.0  32.0          6.0    5.0       Permitir a plataformas de apuestas patrocinar eventos deportivos.
+c663-apuestas-futbol          26   24.0  30.0          2.0    4.0        Permitir a plataformas de apuestas patrocinar equipos de fútbol.
+c543-eutanasia                75   38.0  70.0         36.0    4.0                         Expresar acuerdo o desacuerdo con la eutanasia.
+c638-cae                      70   66.0  74.0          4.0    4.0   CAE a quienes tienen capacidad de pago y mantienen el crédito impago.
+c663-apuestas-regulacion      51   64.0  55.0         13.0    4.0  or internet y permitir su funcionamiento legal sujeto a fiscalización.
+ipsos25-matrimonio            72   46.0  68.0         26.0    4.0  onio o una forma de reconocimiento legal a las parejas del mismo sexo.
+ipsos25-adopcion              58   44.0  54.0         14.0    4.0  smo sexo los mismos derechos de adopción que a parejas heterosexuales.
+c543-marihuana                47   38.0  44.0          9.0    2.0        Legalizar el uso recreativo de cannabis para mayores de 18 años.
+c629-remesas                  57   58.0  55.0          2.0    2.0  de las remesas que pueden enviar al exterior las personas inmigrantes.
+c629-regularizacion-hijos     43   47.0  42.0          4.0    1.0  uación irregular con hijos nacidos en Chile y de nacionalidad chilena.
+c663-cae-cobro                70   68.0  69.0          2.0    1.0  ial o administrativamente a quienes ganen más de $3,5 millones al mes.
+c663-apuestas-prohibicion     56   83.0  56.0         27.0    0.0  hile prohibir las casas de apuestas o casinos que operan por internet?
+c663-apuestas-menores          5    2.0   5.0          4.0    0.0   que menores de edad apuesten en plataformas de apuestas por internet.
+
+=== rai (40 preguntas nuevas) ===
+                          casos   EAM  sesgo  lado   a≤5  a≤10    r  sesgo≥75  indecisos  EAM_desac  |brecha|
+sitio anterior             40.0  17.5   -7.9  62.5   7.5  25.0  0.1     -27.6        0.1       19.2      75.6
+motor nuevo sin ancla      40.0  16.2    1.5  67.5  27.5  50.0  0.1     -19.7        0.0       15.5      37.8
+motor nuevo, ancla haiku   40.0   9.0   -2.4  85.0  30.0  62.5  0.8     -14.0        9.0        8.4      36.1
+motor nuevo, ancla opus    40.0   6.8   -0.5  87.5  45.0  85.0  0.9      -8.7        4.7        5.7      32.9
+Luna (benchmark de Rai)    40.0  14.0    1.1  92.5  17.5  42.5  NaN       NaN        NaN        NaN       NaN
+Con ancla de Opus: mejoran 31, empeoran 5, igual 4. De los 3 que antes estaban a 5 puntos o menos: 1 siguen ahí, 2 a 10 o menos, 1 peor que 10.
+                                                   real  antes   sim  error_antes  error                                                               enunciado
+caso                                                                                                                                                            
+cadem-marzo-2024-seguridad-fronteras               78.0   51.0  52.0         27.0   26.0  esacuerdo con esta medida? Cerrar por completo las fronteras del país.
+cadem-661-identificacion                           35.0   54.0  56.0         18.0   20.0  la de identidad a personas sancionadas por vandalismo o incivilidades.
+criteria-2026-08-23-desplazamiento                 37.0   55.0  56.0         18.0   19.0   desacuerdo con esta medida? Restringir la libertad de desplazamiento.
+datavoz-gps-mayo-2026-ley-miscelanea               35.0   46.0  51.0         11.0   16.0  entó en 2026 para financiar la reconstrucción y reactivar la economía.
+udp-democracia-2024-aborto-decision                53.0   31.0  38.0         22.0   15.0  r el derecho de la mujer a decidir abortar en cualquier circunstancia.
+cadem-marzo-2024-seguridad-ministerio              71.0   74.0  82.0          2.0   12.0  rdo o en desacuerdo con esta medida? Crear un Ministerio de Seguridad.
+cadem-marzo-2023-seguridad-identidad               96.0   60.0  86.0         36.0   10.0   pasos fronterizos no habilitados a militares desplegados en el norte.
+udp-democracia-2024-eutanasia                      83.0   38.0  73.0         46.0   10.0  uerdo o en desacuerdo con esta medida? Permitir la eutanasia en Chile.
+cadem-661-pasaporte                                69.0   52.0  60.0         16.0   10.0  so al pasaporte a personas sancionadas por vandalismo o incivilidades.
+criteria-2026-08-23-reunion                        34.0   50.0  43.0         16.0    9.0  rdo o en desacuerdo con esta medida? Restringir el derecho de reunión.
+cadem-661-carcel-region                            65.0   70.0  56.0          6.0    9.0  struir una cárcel nueva en la región donde vive la persona encuestada.
+criteria-2026-08-23-estado-excepcion               55.0   58.0  63.0          4.0    8.0  pueda aplicar medidas extraordinarias de seguridad por hasta 240 días.
+cadem-661-becas                                    64.0   49.0  72.0         15.0    8.0  s estudiantiles a personas sancionadas por vandalismo o incivilidades.
+cadem-marzo-2024-seguridad-infraestructura         83.0   68.0  75.0         15.0    8.0  n infraestructura crítica urbana sin declarar un Estado de Emergencia.
+udp-democracia-2024-matrimonio                     72.0   42.0  64.0         30.0    8.0  on esta medida? Reconocer el matrimonio entre personas del mismo sexo.
+udp-democracia-2024-aborto-causales                78.0   42.0  72.0         36.0    6.0  l aborto por violación, riesgo vital de la mujer o inviabilidad fetal.
+cadem-661-gratuidad                                63.0   51.0  70.0         12.0    6.0  d universitaria a personas sancionadas por vandalismo o incivilidades.
+udp-democracia-2024-pena-muerte                    64.0   57.0  58.0          7.0    6.0  n esta medida? Estar a favor de que exista la pena de muerte en Chile.
+cadem-marzo-2023-seguridad-despliegue-norte        93.0   62.0  87.0         32.0    6.0  r militares en el norte del país para frenar la inmigración irregular.
+criteria-2026-08-23-bienes                         39.0   57.0  45.0         18.0    6.0  erdo con esta medida? Autorizar la requisición de determinados bienes.
+criteria-2026-08-23-comunicaciones                 44.0   55.0  50.0         11.0    6.0  a medida? Autorizar la interceptación o el registro de comunicaciones.
+criteria-2026-08-23-ffaa                           69.0   62.0  74.0          6.0    6.0  mitir la colaboración de las Fuerzas Armadas con Carabineros y la PDI.
+cadem-661-arriendo                                 66.0   52.0  61.0         14.0    5.0  ios de arriendo a personas sancionadas por vandalismo o incivilidades.
+cadem-marzo-2024-seguridad-seguridad-ciudadana     80.0   64.0  76.0         16.0    4.0  esta medida? Permitir apoyo militar en labores de seguridad ciudadana.
+cadem-marzo-2024-seguridad-militares-narcotrafico  89.0   70.0  84.0         20.0    4.0  uerzas Armadas colaboren en labores contra bandas de narcotraficantes.
+udp-democracia-2024-adopcion                       62.0   42.0  58.0         20.0    4.0  do con esta medida? Permitir que parejas del mismo sexo adopten hijos.
+cadem-661-pgu                                      55.0   48.0  52.0          8.0    4.0  izada Universal a personas sancionadas por vandalismo o incivilidades.
+pulso-107-tv-publica                               60.0   48.0  63.0         11.0    3.0  rdo con esta medida? Mantener un canal de televisión público en Chile.
+cadem-661-carcel-comuna                            30.0   65.0  27.0         35.0    3.0  struir una cárcel nueva en la comuna donde vive la persona encuestada.
+cadem-marzo-2023-seguridad-excepcion-sur           78.0   57.0  75.0         21.0    3.0  ta medida? Aprobar un nuevo estado de excepción para la macrozona sur.
+cadem-marzo-2024-seguridad-excepcion-rm            64.0   56.0  67.0          8.0    3.0  ta medida? Decretar un estado de excepción en la Región Metropolitana.
+cadem-661-bonos                                    72.0   48.0  70.0         24.0    2.0  cias del Estado a personas sancionadas por vandalismo o incivilidades.
+cadem-661-circulacion                              65.0   52.0  67.0         12.0    2.0   de circulación a personas sancionadas por vandalismo o incivilidades.
+cadem-661-licencia                                 70.0   51.0  72.0         19.0    2.0  cia de conducir a personas sancionadas por vandalismo o incivilidades.
+cadem-661-vivienda                                 62.0   50.0  61.0         12.0    1.0   habitacionales a personas sancionadas por vandalismo o incivilidades.
+cadem-661-carcel-ampliacion-stgo1                  61.0   66.0  62.0          6.0    1.0  Ampliar la cárcel Santiago 1 para aumentar su capacidad penitenciaria.
+pulso-107-contribuciones                           66.0   56.0  66.0         11.0    0.0   medida? Eliminar las contribuciones que pagan las viviendas en Chile.
+cadem-661-carcel-barrio                            13.0   60.0  13.0         48.0    0.0  struir una cárcel nueva en el barrio donde vive la persona encuestada.
+cadem-marzo-2023-seguridad-renovacion              69.0   60.0  69.0         10.0    0.0  es el estado de excepción en la macrozona sur, en vez de cada 15 días.
+criteria-2026-08-23-reforma-constitucional         62.0   60.0  62.0          2.0    0.0  edida? Cambiar la Constitución para reforzar las medidas de seguridad.

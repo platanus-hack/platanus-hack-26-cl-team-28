@@ -1,0 +1,10 @@
+directa: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 188 s
+sin_identidad: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 183 s
+instruccion: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 176 s
+indecision: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 158 s
+instruccion_general: 40 casos x 200 agentes; faltan 400 llamadas
+  8000/8000 respuestas en 179 s

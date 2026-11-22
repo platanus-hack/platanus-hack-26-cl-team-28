@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from .agentes import Agente
-from . import metodo
+from . import ancla, metodo
 from .metodo import temas_de
 from .limites import ABANDONO, LLAMADAS, Cola, Reparto
 from .motor import PRIORIDAD, Consumo, Motor, Respuesta
@@ -92,6 +92,30 @@ class Caso:
     iteracion: dict | None = None
     titulo: str = ""
     respuestas: dict[int, Respuesta] = field(default_factory=dict)
+    #: El total nacional pronosticado para este texto (% de acuerdo, % en desacuerdo) y quien lo reparte
+    #: entre los agentes (`ancla.py`). Sin pronóstico, las notas se cuentan como salen.
+    ancla: tuple[float, float] | None = None
+    reparto: "ancla.Reparto | None" = field(default=None, repr=False)
+    _pronostico_listo: threading.Event = field(default_factory=threading.Event, repr=False)
+    _con_reparto: bool | None = field(default=None, repr=False)
+    _decision: threading.Lock = field(default_factory=threading.Lock, repr=False)
+
+    def pronosticado(self, valor: tuple[float, float] | None) -> None:
+        """Llegó el pronóstico (o falló): desde aquí las respuestas pueden mostrarse."""
+        if valor is not None:
+            self.ancla = valor
+            self.reparto = ancla.Reparto(*valor)
+        self._pronostico_listo.set()
+
+    def reparto_vigente(self) -> "ancla.Reparto | None":
+        """El reparto con que se entregan las respuestas de este caso. Se decide una vez, con la primera
+        respuesta: si el pronóstico no llegó a tiempo, el caso entero va sin él, para que no queden unas
+        personas repartidas y otras no."""
+        with self._decision:
+            if self._con_reparto is None:
+                self._pronostico_listo.wait(ancla.ESPERA)
+                self._con_reparto = self.reparto is not None
+            return self.reparto if self._con_reparto else None
 
     def politica(self) -> str:
         partes = [self.texto.strip()] if self.texto.strip() else []
@@ -111,6 +135,8 @@ class Cache:
     def __init__(self, carpeta: Path = CARPETA_CACHE):
         carpeta.mkdir(parents=True, exist_ok=True)
         self._archivo = carpeta / "respuestas.jsonl"
+        #: Los pronósticos del total nacional ya pedidos, junto a las respuestas.
+        self.pronosticos = ancla.Pronosticos(carpeta)
         self._datos: dict[tuple[str, str, str], tuple[list[int], str]] = {}
         self._cerrojo = threading.Lock()
         self._avisado = False
@@ -138,8 +164,10 @@ class Cache:
                 clave = (huella, modelo, agentes[r.agente].id)
                 if clave not in self._datos and len(self._datos) >= CACHE_MAXIMA:
                     continue
-                self._datos[clave] = (r.respuestas, r.frase)
-                lineas.append(json.dumps({"p": huella, "m": modelo, "a": clave[2], "r": r.respuestas, "f": r.frase}, ensure_ascii=False) + "\n")
+                # Se guardan las notas como las dio el modelo: el reparto del ancla se rehace al entregar.
+                notas = r.original or r.respuestas
+                self._datos[clave] = (notas, r.frase)
+                lineas.append(json.dumps({"p": huella, "m": modelo, "a": clave[2], "r": notas, "f": r.frase}, ensure_ascii=False) + "\n")
             # La caché es un ahorro, no un requisito: si el disco falla, la corrida sigue.
             try:
                 with open(self._archivo, "a", encoding="utf-8") as f:
@@ -253,6 +281,7 @@ class Corrida:
     def _entregar(self, numero: int, caso: Caso, huella: str, respuestas: list[Respuesta], desde_cache: bool) -> None:
         if not respuestas:
             return
+        respuestas = self._repartir(caso, respuestas)
         with self._cerrojo:
             for r in respuestas:
                 caso.respuestas[r.agente] = r
@@ -266,6 +295,34 @@ class Corrida:
         })
         if not desde_cache and not self.cancelada:
             self._pedir_voces(numero, caso, huella, respuestas)
+
+    def _repartir(self, caso: Caso, respuestas: list[Respuesta]) -> list[Respuesta]:
+        """La nota de apoyo de cada persona según el total pronosticado para el caso (`ancla.py`). Las
+        otras notas no se tocan, y la original queda guardada en la respuesta."""
+        reparto = caso.reparto_vigente()
+        if reparto is None:
+            return respuestas
+        crudas = [r.original or r.respuestas for r in respuestas]
+        notas = reparto.repartir([(self.por_indice[r.agente].id, c) for r, c in zip(respuestas, crudas)])
+        return [Respuesta(r.agente, [nota, *c[1:]], r.frase, original=c) for r, c, nota in zip(respuestas, crudas, notas)]
+
+    def _pronosticar(self, caso: Caso, huella: str) -> None:
+        """Pide una vez el total nacional de la propuesta. Si falla, el caso sigue sin ancla."""
+        valor = None
+        try:
+            modelo = self.motor.modelo_ancla
+            if modelo and not self.cancelada:
+                valor = self.cache.pronosticos.buscar(huella, modelo)
+                if valor is None:
+                    valor, consumo = self.motor.pronosticar(caso.politica())
+                    with self._cerrojo:
+                        self.consumo.sumar(consumo)
+                    if valor is not None:
+                        self.cache.pronosticos.guardar(huella, modelo, valor)
+        except Exception as error:
+            print(f"Corrida {self.id}: no hubo pronóstico para el ancla: {error}"[:300], flush=True)
+        finally:
+            caso.pronosticado(valor)
 
     def _pedir_voces(self, numero: int, caso: Caso, huella: str, respuestas: list[Respuesta]) -> None:
         """Aparte de la encuesta: a unas pocas personas de cada lote se les pide una frase sobre lo que ya respondieron."""
@@ -306,6 +363,8 @@ class Corrida:
     def _preguntar(self, grupo: Cola, numero: int) -> list:
         caso = self.casos[numero]
         huella = Cache.huella(caso.politica())
+        # El pronóstico del total va en su propio hilo, a la par de los primeros lotes.
+        self._aparte(self._pronosticar, caso, huella)
         pendientes = []
         guardadas = []
         for agente in self.agentes:
@@ -356,7 +415,10 @@ class Corrida:
 
     def _cerrar_caso(self, numero: int) -> None:
         caso = self.casos[numero]
-        self.publicar("caso_listo", {"caso": numero, "apoyo": round(caso.apoyo(), 4), "respondidas": len(caso.respuestas), "metricas": self.metricas()})
+        self.publicar("caso_listo", {"caso": numero, "apoyo": round(caso.apoyo(), 4), "respondidas": len(caso.respuestas),
+                                     # El total pronosticado con que se repartieron las posturas, si lo hubo.
+                                     "ancla": [round(v, 1) for v in caso.ancla] if caso.ancla and caso.reparto_vigente() else None,
+                                     "metricas": self.metricas()})
 
     def _iterar(self, numero: int) -> Caso:
         """Redacta una versión nueva a partir de la variante con más apoyo y sus objeciones."""

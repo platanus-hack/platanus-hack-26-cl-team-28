@@ -106,7 +106,7 @@ pregunta («(1 = muy injusto, 7 = muy justo)»):
 
 | Clave | Nombre | Pregunta | 1 | 7 |
 |---|---|---|---|---|
-| p1 | Apoyo | ¿Estarías de acuerdo con que se implemente esta política en tu región? | totalmente en desacuerdo | totalmente de acuerdo |
+| p1 | Apoyo | ¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta? | totalmente en desacuerdo | totalmente de acuerdo |
 | p2 | Justicia | ¿Te parece justa la forma en que esta política reparte costos y beneficios? | muy injusto | muy justo |
 | p3 | Confianza | ¿Confías en que el Estado chileno sea capaz de implementar bien esta política? | muy desconfiado | muy confiado |
 | p4 | Efectividad | ¿Qué tan efectiva crees que es esta política en lograr lo que propone? | muy inefectivo | muy efectivo |
@@ -137,6 +137,30 @@ Diferencias con el banco de pruebas, a propósito:
   unos 0,16 puntos (en la escala de 1 a 7) de un lote a otro. Para comparar variantes con rigor, el banco
   hace que el mismo subagente conteste todas (`scripts/lotes_agentes.py --juntas`); el servidor pregunta cada
   variante por separado, que es más rápido y sirve para la demo.
+
+## Lo que se cambió tras contrastar con encuestas reales (22-11-2026)
+
+El método anterior se midió contra 120 preguntas con resultado publicado, 1.000 agentes por pregunta
+(`data/pruebas/realidad_1000/INFORME.md`): el porcentaje nacional quedaba a 14,9 puntos de la encuesta, lo mismo
+que responder siempre 60 %, y los agentes separaban a izquierda y derecha el doble que la CEP. Tres cambios,
+cada uno validado en casos que no se usaron para ajustarlo (42 del banco y 40 preguntas de otras encuestas):
+
+| Cambio | Dónde | Qué arregla |
+|---|---|---|
+| La pregunta de apoyo es «¿Estás de acuerdo o en desacuerdo con lo que plantea el tema de la encuesta?» | `APOYO` en `metodo.py` y `frontend/src/vivo/encuesta.ts` | Con la anterior («que se implemente esta política en tu región») las afirmaciones se respondían al revés: en una pregunta de la CEP el lado correcto pasó de 20 % a 100 % |
+| El modelo no lee las etiquetas políticas de la persona (posición, partido, voto, aprobación de los gobiernos); sí lo que opina de fondo | `IDENTIDAD_POLITICA` en `metodo.py`; `IDENTIDAD_POLITICA=1` las devuelve | La distancia entre izquierda y derecha en la CEP baja de 51 puntos a 21 (la real es 25) y el error de los segmentos de 7,2 a 4,7 |
+| Ancla: una llamada por propuesta pronostica el total nacional y los agentes lo reparten sin cambiar su orden | `ancla.py`, `Motor.pronosticar` y `Corrida._repartir`; `ANCLA=opus` por defecto, `haiku` o `sonnet` sirven, `ANCLA=no` la apaga | El error nacional baja de 15,0 a 9,6 puntos en los casos de prueba y de 17,5 a 6,8 en las preguntas nuevas; a 5 puntos o menos quedan 31 % y 45 % de los casos (antes 19 % y 7,5 %) |
+
+Los agentes siguen siendo todos Haiku. El ancla es una llamada más por propuesta (2 s con Haiku, 3 a 7 s con
+Opus, menos de 2 centavos de dólar) que corre a la par de los primeros lotes; las primeras respuestas esperan
+ese pronóstico hasta 12 s y, si no llega o falla, el caso sale sin ancla, como antes. La caché guarda las notas
+como las dio el modelo y el reparto se rehace al entregar; el pronóstico queda en `data/cache/anclas.jsonl`. El
+evento `caso_listo` trae `ancla` (los dos porcentajes pronosticados) y `motor.ancla` en `/api/estado` dice con
+qué modelo. Con ancla vuelve a haber personas sin postura (nota 4): las que el pronóstico deja sin decidir.
+
+Lo que no se pudo mejorar: el pronóstico tiene un techo de unos 7 a 9 puntos que no bajó con un modelo más
+grande, promediando repeticiones, con referencias reales ni recalibrando. Con el modelo local no hay ancla y
+la pregunta de apoyo es la del banco.
 
 ## Frases, iteraciones y documentos
 

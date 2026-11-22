@@ -1,0 +1,2466 @@
+[
+ {
+  "id": "c505-propiedad",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer el derecho de propiedad en sus distintas formas y sobre todo tipo de bienes.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 83,
+   "En desacuerdo": 13
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "economia-impuestos",
+  "real_acuerdo": 83,
+  "real_desacuerdo": 13,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-acciones",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Suprimir el impuesto a las ganancias obtenidas al vender acciones.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 39,
+   "En desacuerdo": 44
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "economia-impuestos",
+  "real_acuerdo": 39,
+  "real_desacuerdo": 44,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-empresas",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Disminuir el impuesto a las empresas de 27% a 23%.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 38,
+   "En desacuerdo": 56
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "economia-impuestos",
+  "real_acuerdo": 38,
+  "real_desacuerdo": 56,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-ministerios",
+  "familia": "gasto-fiscal-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reducir en 3% el gasto de cada ministerio por igual.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 74,
+   "En desacuerdo": 23
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "economia-impuestos",
+  "real_acuerdo": 74,
+  "real_desacuerdo": 23,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-burocracia",
+  "familia": "rol-economico-estado",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si la intervención estatal genera demasiada burocracia y demasiados problemas.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 22, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 52,
+   "Ni de acuerdo ni en desacuerdo": 25,
+   "Muy en desacuerdo + En desacuerdo": 20,
+   "No sabe + No contesta": 3
+  },
+  "area": "economia-impuestos",
+  "real_acuerdo": 52,
+  "real_desacuerdo": 20,
+  "real_neutro": 25,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-estado-economia",
+  "familia": "rol-economico-estado",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar la idea de que el país estaría mejor con menos participación del Estado en la economía.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 21, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 24,
+   "Ni de acuerdo ni en desacuerdo": 24,
+   "Muy en desacuerdo + En desacuerdo": 48,
+   "No sabe + No contesta": 4
+  },
+  "area": "economia-impuestos",
+  "real_acuerdo": 24,
+  "real_desacuerdo": 48,
+  "real_neutro": 24,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-recorte",
+  "familia": "gasto-fiscal-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reducir el gasto público como estrategia del Gobierno para mejorar las finanzas públicas.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 24",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 34,
+   "Ni de acuerdo ni en desacuerdo": 21,
+   "Muy en desacuerdo + En desacuerdo": 41,
+   "No sabe + No contesta": 4
+  },
+  "area": "economia-impuestos",
+  "real_acuerdo": 34,
+  "real_desacuerdo": 41,
+  "real_neutro": 21,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "ct22-reforma",
+  "familia": "reforma-tributaria-2022",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Evaluar el primer proyecto de reforma tributaria que el gobierno de Gabriel Boric envió en julio de 2022.",
+  "fuente_id": "cadem-tributaria-2022",
+  "localizador": "Comunicado, párrafo de aprobación y rechazo",
+  "respuestas": {
+   "De acuerdo": 34,
+   "En desacuerdo": 45
+  },
+  "resto_informado_por_fuente": "No sabe, no responde o sin dato, según comunicado",
+  "area": "economia-impuestos",
+  "real_acuerdo": 34,
+  "real_desacuerdo": 45,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-cae",
+  "familia": "cae-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Cobrar el CAE a quienes tienen capacidad de pago y mantienen el crédito impago.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 70,
+   "En desacuerdo": 25
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "educacion",
+  "real_acuerdo": 70,
+  "real_desacuerdo": 25,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-gratuidad",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Limitar la gratuidad universitaria a estudiantes de hasta 30 años.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 41,
+   "En desacuerdo": 54
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "educacion",
+  "real_acuerdo": 41,
+  "real_desacuerdo": 54,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-cae-cobro",
+  "familia": "cae-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Cobrar el CAE judicial o administrativamente a quienes ganen más de $3,5 millones al mes.",
+  "fuente_id": "cadem-663",
+  "localizador": "Acuerdo con cobros y convenios",
+  "respuestas": {
+   "De acuerdo": 70,
+   "En desacuerdo": 24
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "educacion",
+  "real_acuerdo": 70,
+  "real_desacuerdo": 24,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-cae-convenio",
+  "familia": "cae-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Ofrecer un acuerdo de pago del CAE a quienes ganen menos de $3,5 millones al mes.",
+  "fuente_id": "cadem-663",
+  "localizador": "Acuerdo con cobros y convenios",
+  "respuestas": {
+   "De acuerdo": 79,
+   "En desacuerdo": 16
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "educacion",
+  "real_acuerdo": 79,
+  "real_desacuerdo": 16,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-cae-embargo",
+  "familia": "cae-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Cobrar el CAE impago mediante embargo bancario a deudores que ganen más de $3,5 millones mensuales.",
+  "fuente_id": "cadem-663",
+  "localizador": "Claves del estudio",
+  "respuestas": {
+   "De acuerdo": 54,
+   "En desacuerdo": 41
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "educacion",
+  "real_acuerdo": 54,
+  "real_desacuerdo": 41,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-tomas",
+  "familia": "protesta-estudiantil",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Evaluar que los estudiantes ocupen colegios y universidades como forma de protesta.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 48, dato de abril–mayo de 2026",
+  "respuestas": {
+   "De acuerdo": 23,
+   "En desacuerdo": 76,
+   "No sabe / No contesta": 1
+  },
+  "area": "educacion",
+  "real_acuerdo": 23,
+  "real_desacuerdo": 76,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-sala-cuna",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Garantizar sala cuna sin costo a partir del fin del postnatal.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 93,
+   "En desacuerdo": 5
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "familia-derechos",
+  "real_acuerdo": 93,
+  "real_desacuerdo": 5,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c511-sala-cuna",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Incorporar sala cuna gratuita.",
+  "fuente_id": "cadem-511",
+  "localizador": "Nivel de acuerdo con enmiendas aprobadas",
+  "contexto": "Medida consultada en el marco de las enmiendas del Consejo Constitucional de 2023.",
+  "respuestas": {
+   "De acuerdo": 91,
+   "En desacuerdo": 9
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 91,
+  "real_desacuerdo": 9,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-adopcion",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer el derecho de adopción a parejas del mismo sexo.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 65,
+   "En desacuerdo": 33
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 65,
+  "real_desacuerdo": 33,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-gestacion",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Expresar acuerdo o desacuerdo con que una tercera persona geste un hijo o hija.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 63,
+   "En desacuerdo": 34
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 63,
+  "real_desacuerdo": 34,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-identidad",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que una persona adulta cambie su identidad de género una sola vez.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 67,
+   "En desacuerdo": 31
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 67,
+  "real_desacuerdo": 31,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-matrimonio",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer el derecho a casarse a las parejas del mismo sexo.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 77,
+   "En desacuerdo": 22
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 77,
+  "real_desacuerdo": 22,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-menores",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir a menores cambiar su identidad de género con autorización parental.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 55,
+   "En desacuerdo": 43
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 55,
+  "real_desacuerdo": 43,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "ipsos25-adopcion",
+  "familia": "derechos-lgbt-ipsos",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Otorgar a parejas del mismo sexo los mismos derechos de adopción que a parejas heterosexuales.",
+  "fuente_id": "ipsos-orgullo-2025",
+  "localizador": "Comunicado de resultados para Chile",
+  "respuestas": {
+   "Apoyo reportado": 58
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 58,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "ipsos25-discriminacion",
+  "familia": "derechos-lgbt-ipsos",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Respaldar leyes contra la discriminación de personas LGBT, incluido el acceso a restaurantes y comercios.",
+  "fuente_id": "ipsos-orgullo-2025",
+  "localizador": "Comunicado de resultados para Chile",
+  "respuestas": {
+   "Apoyo reportado": 57
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 57,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "ipsos25-matrimonio",
+  "familia": "derechos-lgbt-ipsos",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer el matrimonio o una forma de reconocimiento legal a las parejas del mismo sexo.",
+  "fuente_id": "ipsos-orgullo-2025",
+  "localizador": "Comunicado de resultados para Chile",
+  "respuestas": {
+   "Apoyo reportado": 72
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 72,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-familia-adopcion",
+  "familia": "derechos-familia-uc",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer que las personas homosexuales pueden adoptar niños.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 80, principales resultados de familia",
+  "respuestas": {
+   "Adhesión reportada": 53
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 53,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-familia-identidad",
+  "familia": "derechos-familia-uc",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que una persona adulta pueda cambiar su identidad de género.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 80, principales resultados de familia",
+  "respuestas": {
+   "Adhesión reportada": 60
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 60,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-familia-matrimonio",
+  "familia": "derechos-familia-uc",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer que las personas homosexuales tienen derecho a casarse.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 80, principales resultados de familia",
+  "respuestas": {
+   "Adhesión reportada": 68
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 68,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-familia-crianza-en-casa",
+  "familia": "roles-familiares-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si una madre debiera quedarse en casa con sus hijos mientras son pequeños.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 82",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 51
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 51,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-familia-jornada-completa",
+  "familia": "roles-familiares-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si la familia queda desatendida cuando la mujer trabaja a tiempo completo.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 82",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 32
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 32,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-familia-realizacion",
+  "familia": "roles-familiares-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si dedicarse exclusivamente a labores del hogar impide que una mujer se realice plenamente.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 82",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 48
+  },
+  "area": "familia-derechos",
+  "real_acuerdo": 48,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-concesiones",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que los bienes nacionales de uso público se entreguen en concesión.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 45,
+   "En desacuerdo": 45
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 45,
+  "real_desacuerdo": 45,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-diputados",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reducir de 155 a 138 el número de diputados.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con reformas políticas",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 86,
+   "En desacuerdo": 12
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 86,
+  "real_desacuerdo": 12,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-edad",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Subir de 35 a 40 años la edad mínima para ser candidato presidencial.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con reformas políticas",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 62,
+   "En desacuerdo": 37
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 62,
+  "real_desacuerdo": 37,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-eleccion-servicios",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que cada persona elija si su régimen de salud, su establecimiento educacional y la administración de sus ahorros previsionales serán estatales o privados.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 93,
+   "En desacuerdo": 6
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 93,
+  "real_desacuerdo": 6,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-mandato",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer mandatos presidenciales de cuatro años, sin reelección inmediata y con un máximo de dos mandatos.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con reformas políticas",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 75,
+   "En desacuerdo": 24
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 75,
+  "real_desacuerdo": 24,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-pueblos",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Incluir en la Constitución el reconocimiento de los pueblos indígenas.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con contenidos de nueva constitución",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 86,
+   "En desacuerdo": 13
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 86,
+  "real_desacuerdo": 13,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-umbral",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dar representación parlamentaria solo a los partidos que obtengan al menos 5% de los votos.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con reformas políticas",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 54,
+   "En desacuerdo": 41
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 54,
+  "real_desacuerdo": 41,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c511-diputados",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reducir la Cámara de Diputadas y Diputados de 155 a 138 integrantes.",
+  "fuente_id": "cadem-511",
+  "localizador": "Nivel de acuerdo con enmiendas aprobadas",
+  "contexto": "Medida consultada en el marco de las enmiendas del Consejo Constitucional de 2023.",
+  "respuestas": {
+   "De acuerdo": 84,
+   "En desacuerdo": 16
+  },
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 84,
+  "real_desacuerdo": 16,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c511-estado-social",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer un Estado social y democrático de derecho.",
+  "fuente_id": "cadem-511",
+  "localizador": "Nivel de acuerdo con enmiendas aprobadas",
+  "contexto": "Medida consultada en el marco de las enmiendas del Consejo Constitucional de 2023.",
+  "respuestas": {
+   "De acuerdo": 71,
+   "En desacuerdo": 30
+  },
+  "nota": "Los porcentajes publicados suman 101 por redondeo.",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 71,
+  "real_desacuerdo": 30,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c511-paridad",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Disponer que la ley asegure el acceso igualitario de mujeres y hombres a cargos electivos.",
+  "fuente_id": "cadem-511",
+  "localizador": "Nivel de acuerdo con enmiendas aprobadas",
+  "contexto": "Medida consultada en el marco de las enmiendas del Consejo Constitucional de 2023.",
+  "respuestas": {
+   "De acuerdo": 77,
+   "En desacuerdo": 23
+  },
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 77,
+  "real_desacuerdo": 23,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-animales",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer que el Estado y las personas deben promover la protección de los animales.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 92,
+   "En desacuerdo": 7
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 92,
+  "real_desacuerdo": 7,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-naturaleza",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer como deber del Estado la protección ambiental y la conservación de la naturaleza.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con contenidos de nueva constitución",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 92,
+   "En desacuerdo": 7
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 92,
+  "real_desacuerdo": 7,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-seia",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Acortar el tiempo que lleva obtener permisos ambientales mediante el Sistema de Evaluación de Impacto Ambiental.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 54,
+   "En desacuerdo": 35
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 54,
+  "real_desacuerdo": 35,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma14-lena-alertas",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Restringir el uso de leña cuando haya alerta, preemergencia o emergencia ambiental.",
+  "fuente_id": "mma-2014",
+  "localizador": "Comunicado, párrafo sobre restricciones a la leña",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 57
+  },
+  "area": "medio-ambiente",
+  "real_acuerdo": 57,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma14-lena-ciudades",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir de forma permanente el uso de leña en ciudades con alta contaminación.",
+  "fuente_id": "mma-2014",
+  "localizador": "Comunicado, párrafo sobre restricciones a la leña",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 51
+  },
+  "area": "medio-ambiente",
+  "real_acuerdo": 51,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma18-bolsas",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir las bolsas plásticas para reducir la contaminación.",
+  "fuente_id": "mma-2018",
+  "localizador": "Gráfico 136, p. 109",
+  "contexto": "Chile urbano, 2017–2018. Referencia histórica de la medida descrita en la encuesta.",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 95,
+   "Muy en desacuerdo + En desacuerdo": 4
+  },
+  "resto_informado_por_fuente": "No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 95,
+  "real_desacuerdo": 4,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma18-lena",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir el uso de leña para reducir la contaminación del aire.",
+  "fuente_id": "mma-2018",
+  "localizador": "Gráfico 136, p. 109",
+  "contexto": "Chile urbano, 2017–2018. Referencia histórica de la medida descrita en la encuesta.",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 81,
+   "Muy en desacuerdo + En desacuerdo": 17
+  },
+  "resto_informado_por_fuente": "No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 81,
+  "real_desacuerdo": 17,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma18-parrillas",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir parrilladas y asados durante días con contaminación elevada.",
+  "fuente_id": "mma-2018",
+  "localizador": "Gráfico 136, p. 109",
+  "contexto": "Chile urbano, 2017–2018. Referencia histórica de la medida descrita en la encuesta.",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 79,
+   "Muy en desacuerdo + En desacuerdo": 19
+  },
+  "resto_informado_por_fuente": "No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 79,
+  "real_desacuerdo": 19,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "mma18-vehiculos",
+  "familia": "restricciones-ambientales-mma",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Restringir la circulación de los vehículos que generan más contaminación.",
+  "fuente_id": "mma-2018",
+  "localizador": "Gráfico 136, p. 109",
+  "contexto": "Chile urbano, 2017–2018. Referencia histórica de la medida descrita en la encuesta.",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 89,
+   "Muy en desacuerdo + En desacuerdo": 10
+  },
+  "resto_informado_por_fuente": "No sabe / No responde",
+  "area": "medio-ambiente",
+  "real_acuerdo": 89,
+  "real_desacuerdo": 10,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-clandestino",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Disponer la expulsión de extranjeros que entren clandestinamente a Chile.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con contenidos de nueva constitución",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 88,
+   "En desacuerdo": 10
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "migracion",
+  "real_acuerdo": 88,
+  "real_desacuerdo": 10,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-carcel",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer penas de cárcel por inmigración ilegal mediante una ley chilena.",
+  "fuente_id": "cadem-629",
+  "localizador": "Acuerdo con aspectos de la inmigración",
+  "respuestas": {
+   "De acuerdo": 74,
+   "En desacuerdo": 18
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 74,
+  "real_desacuerdo": 18,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-deportacion",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Expulsar a toda persona inmigrante que haya ingresado irregularmente a Chile.",
+  "fuente_id": "cadem-629",
+  "localizador": "Acuerdo con aspectos de la inmigración",
+  "respuestas": {
+   "De acuerdo": 81,
+   "En desacuerdo": 14
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 81,
+  "real_desacuerdo": 14,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-derechos",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reconocer a inmigrantes con su situación regularizada los mismos derechos que a personas chilenas.",
+  "fuente_id": "cadem-629",
+  "localizador": "Acuerdo con aspectos de la inmigración",
+  "respuestas": {
+   "De acuerdo": 47,
+   "En desacuerdo": 46
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 47,
+  "real_desacuerdo": 46,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-regularizacion-empleo",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Regularizar a inmigrantes en situación irregular que acrediten empleo formal.",
+  "fuente_id": "cadem-629",
+  "localizador": "Regularización de inmigrantes irregulares",
+  "respuestas": {
+   "De acuerdo": 61,
+   "En desacuerdo": 33
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 61,
+  "real_desacuerdo": 33,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-regularizacion-hijos",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Regularizar a inmigrantes en situación irregular con hijos nacidos en Chile y de nacionalidad chilena.",
+  "fuente_id": "cadem-629",
+  "localizador": "Regularización de inmigrantes irregulares",
+  "respuestas": {
+   "De acuerdo": 43,
+   "En desacuerdo": 49
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 43,
+  "real_desacuerdo": 49,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c629-remesas",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Poner un límite al monto de las remesas que pueden enviar al exterior las personas inmigrantes.",
+  "fuente_id": "cadem-629",
+  "localizador": "Acuerdo con aspectos de la inmigración",
+  "respuestas": {
+   "De acuerdo": 57,
+   "En desacuerdo": 34
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "migracion",
+  "real_acuerdo": 57,
+  "real_desacuerdo": 34,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-aporte-economico",
+  "familia": "percepcion-migracion-cep",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Indicar el grado de acuerdo con que las personas inmigrantes aportan a la economía de Chile.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 37, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 36,
+   "Ni de acuerdo ni en desacuerdo": 31,
+   "Muy en desacuerdo + En desacuerdo": 32,
+   "No sabe + No contesta": 1
+  },
+  "area": "migracion",
+  "real_acuerdo": 36,
+  "real_desacuerdo": 32,
+  "real_neutro": 31,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-criminalidad",
+  "familia": "percepcion-migracion-cep",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Indicar el grado de acuerdo con la afirmación de que la inmigración eleva las tasas de criminalidad.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 33, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 67,
+   "Ni de acuerdo ni en desacuerdo": 17,
+   "Muy en desacuerdo + En desacuerdo": 15,
+   "No sabe + No contesta": 1
+  },
+  "area": "migracion",
+  "real_acuerdo": 67,
+  "real_desacuerdo": 15,
+  "real_neutro": 17,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-educacion",
+  "familia": "acceso-inmigrantes-servicios",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dar a los inmigrantes con situación regular el mismo acceso a la educación pública que a la ciudadanía chilena.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 36, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 71,
+   "Ni de acuerdo ni en desacuerdo": 13,
+   "Muy en desacuerdo + En desacuerdo": 16,
+   "No sabe + No contesta": 0
+  },
+  "area": "migracion",
+  "real_acuerdo": 71,
+  "real_desacuerdo": 16,
+  "real_neutro": 13,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-gasto",
+  "familia": "percepcion-migracion-cep",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Indicar el grado de acuerdo con la afirmación de que el Gobierno gasta demasiado en ayudar a personas inmigrantes.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 35, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 60,
+   "Ni de acuerdo ni en desacuerdo": 17,
+   "Muy en desacuerdo + En desacuerdo": 20,
+   "No sabe + No contesta": 3
+  },
+  "area": "migracion",
+  "real_acuerdo": 60,
+  "real_desacuerdo": 20,
+  "real_neutro": 17,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-seleccion-educacion",
+  "familia": "medidas-migratorias-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Seleccionar inmigrantes dando preferencia a personas con mayor nivel educativo.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 38, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 58,
+   "Ni de acuerdo ni en desacuerdo": 17,
+   "Muy en desacuerdo + En desacuerdo": 24,
+   "No sabe + No contesta": 1
+  },
+  "area": "migracion",
+  "real_acuerdo": 58,
+  "real_desacuerdo": 24,
+  "real_neutro": 17,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cep96-trabajo",
+  "familia": "percepcion-migracion-cep",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Indicar el grado de acuerdo con la afirmación de que los inmigrantes quitan empleos a quienes nacieron en Chile.",
+  "fuente_id": "cep-96",
+  "localizador": "p. 34, dato de abril–mayo de 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 40,
+   "Ni de acuerdo ni en desacuerdo": 21,
+   "Muy en desacuerdo + En desacuerdo": 38,
+   "No sabe + No contesta": 1
+  },
+  "area": "migracion",
+  "real_acuerdo": 40,
+  "real_desacuerdo": 38,
+  "real_neutro": 21,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-derechos-sociales",
+  "familia": "acceso-inmigrantes-servicios",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dar a inmigrantes con situación regular acceso a beneficios de salud, educación y vivienda en igualdad de derechos con la población chilena.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 44, comparación temporal, dato 2025",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 59
+  },
+  "area": "migracion",
+  "real_acuerdo": 59,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-identidad",
+  "familia": "percepcion-migracion-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si la llegada de inmigrantes está provocando que Chile pierda su identidad.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 43",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 57
+  },
+  "nota": "La afirmación mide una opinión. Los cortes por edad se guardan en segmentacion.jsonl.",
+  "area": "migracion",
+  "real_acuerdo": 57,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-derechos-sociales",
+  "familia": "acceso-inmigrantes-servicios",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dar a inmigrantes con situación regular acceso a beneficios de salud, educación y vivienda en igualdad de derechos con la población chilena.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 33, comparación temporal, dato 2026",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 71
+  },
+  "area": "migracion",
+  "real_acuerdo": 71,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-afp",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Trasladar al afiliado a una administradora con una comisión inferior, permitiéndole elegir otra cuando quiera.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 66,
+   "En desacuerdo": 32
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 66,
+  "real_desacuerdo": 32,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-brecha",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Asignar un 0,5% a reparto para compensar la diferencia en las pensiones de hombres y mujeres.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 62,
+   "En desacuerdo": 34
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 62,
+  "real_desacuerdo": 34,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-congreso",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Con la información con que se cuenta, evaluar que el Congreso haya aprobado la reforma de pensiones.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con aprobación de la reforma de pensiones",
+  "respuestas": {
+   "De acuerdo": 65,
+   "En desacuerdo": 30,
+   "Ni de acuerdo ni en desacuerdo": 2,
+   "No sabe / No responde": 3
+  },
+  "area": "pensiones",
+  "real_acuerdo": 65,
+  "real_desacuerdo": 30,
+  "real_neutro": 2,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-cotizacion",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Subir las cotizaciones en 7% durante nueve años, financiadas por los empleadores.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 65,
+   "En desacuerdo": 30
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 65,
+  "real_desacuerdo": 30,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-lagunas",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Crear un seguro para períodos sin cotizaciones, financiado por el seguro de cesantía.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 64,
+   "En desacuerdo": 33
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 64,
+  "real_desacuerdo": 33,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-pgu",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Elevar la Pensión Garantizada Universal a 250.000 pesos.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 83,
+   "En desacuerdo": 15
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 83,
+  "real_desacuerdo": 15,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c577-prestamo",
+  "familia": "reforma-pensiones-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Destinar el 1,5% a un préstamo que el Estado reembolsará al jubilar.",
+  "fuente_id": "cadem-577",
+  "localizador": "Acuerdo con ámbitos de la reforma",
+  "contexto": "Medidas consultadas en el marco de la reforma previsional de enero de 2025.",
+  "respuestas": {
+   "De acuerdo": 50,
+   "En desacuerdo": 44
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "pensiones",
+  "real_acuerdo": 50,
+  "real_desacuerdo": 44,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-bloqueo",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Bloquear páginas de apuestas en línea que operan ilegalmente.",
+  "fuente_id": "cadem-663",
+  "localizador": "Fiscalizar casas de apuesta online",
+  "respuestas": {
+   "De acuerdo": 82,
+   "En desacuerdo": 11
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 82,
+  "real_desacuerdo": 11,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-eventos",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir a plataformas de apuestas patrocinar eventos deportivos.",
+  "fuente_id": "cadem-663",
+  "localizador": "Posición sobre plataformas de apuestas",
+  "respuestas": {
+   "De acuerdo": 27,
+   "En desacuerdo": 65
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 27,
+  "real_desacuerdo": 65,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-futbol",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir a plataformas de apuestas patrocinar equipos de fútbol.",
+  "fuente_id": "cadem-663",
+  "localizador": "Posición sobre plataformas de apuestas",
+  "respuestas": {
+   "De acuerdo": 26,
+   "En desacuerdo": 65
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 26,
+  "real_desacuerdo": 65,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-impuestos",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Exigir que las plataformas de apuestas tributen por sus operaciones en Chile.",
+  "fuente_id": "cadem-663",
+  "localizador": "Fiscalizar casas de apuesta online",
+  "respuestas": {
+   "De acuerdo": 70,
+   "En desacuerdo": 25
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 70,
+  "real_desacuerdo": 25,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-menores",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que menores de edad apuesten en plataformas de apuestas por internet.",
+  "fuente_id": "cadem-663",
+  "localizador": "Posición sobre plataformas de apuestas",
+  "respuestas": {
+   "De acuerdo": 5,
+   "En desacuerdo": 90
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 5,
+  "real_desacuerdo": 90,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-prohibicion",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "¿Debería Chile prohibir las casas de apuestas o casinos que operan por internet?",
+  "fuente_id": "cadem-663",
+  "localizador": "Prohibir casas de apuesta online",
+  "respuestas": {
+   "Sí": 56,
+   "No": 36,
+   "No responde": 8
+  },
+  "area": "regulacion-digital",
+  "real_acuerdo": 56,
+  "real_desacuerdo": 36,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-regulacion",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Regular las casas de apuestas por internet y permitir su funcionamiento legal sujeto a fiscalización.",
+  "fuente_id": "cadem-663",
+  "localizador": "Fiscalizar casas de apuesta online",
+  "respuestas": {
+   "De acuerdo": 51,
+   "En desacuerdo": 49
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 51,
+  "real_desacuerdo": 49,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-social",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir a plataformas de apuestas publicar anuncios en redes sociales.",
+  "fuente_id": "cadem-663",
+  "localizador": "Posición sobre plataformas de apuestas",
+  "respuestas": {
+   "De acuerdo": 27,
+   "En desacuerdo": 64
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 27,
+  "real_desacuerdo": 64,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c663-apuestas-tv",
+  "familia": "apuestas-online-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir a plataformas de apuestas anunciarse en televisión.",
+  "fuente_id": "cadem-663",
+  "localizador": "Posición sobre plataformas de apuestas",
+  "respuestas": {
+   "De acuerdo": 25,
+   "En desacuerdo": 67
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "regulacion-digital",
+  "real_acuerdo": 25,
+  "real_desacuerdo": 67,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-celulares-colegios",
+  "familia": "proteccion-digital-menores",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir a estudiantes el uso de celulares con acceso a redes sociales en colegios y escuelas.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 79, opinión sobre normas de acceso a redes sociales",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 78
+  },
+  "area": "regulacion-digital",
+  "real_acuerdo": 78,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-control-parental",
+  "familia": "proteccion-digital-menores",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dejar en manos de padres y madres la responsabilidad de controlar y limitar el uso de redes sociales.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 79, opinión sobre normas de acceso a redes sociales",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 89
+  },
+  "area": "regulacion-digital",
+  "real_acuerdo": 89,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-libertad",
+  "familia": "proteccion-digital-menores",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Dar libertad de acceso a redes sociales a menores de 15 años.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 79, opinión sobre normas de acceso a redes sociales",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 13
+  },
+  "area": "regulacion-digital",
+  "real_acuerdo": 13,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc25-verificacion",
+  "familia": "proteccion-digital-menores",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Prohibir el acceso a redes sociales a menores de 15 años y multar a compañías que carezcan de verificación robusta de edad.",
+  "fuente_id": "uc-2025",
+  "localizador": "p. 79, opinión sobre normas de acceso a redes sociales",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 73
+  },
+  "area": "regulacion-digital",
+  "real_acuerdo": 73,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c511-objecion",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Incorporar la objeción de conciencia tanto individual como institucional.",
+  "fuente_id": "cadem-511",
+  "localizador": "Nivel de acuerdo con enmiendas aprobadas",
+  "contexto": "Medida consultada en el marco de las enmiendas del Consejo Constitucional de 2023.",
+  "respuestas": {
+   "De acuerdo": 40,
+   "En desacuerdo": 60
+  },
+  "area": "salud",
+  "real_acuerdo": 40,
+  "real_desacuerdo": 60,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-aborto",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Mantener el aborto permitido por inviabilidad fetal, riesgo vital materno o violación.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 79,
+   "En desacuerdo": 17
+  },
+  "area": "salud",
+  "real_acuerdo": 79,
+  "real_desacuerdo": 17,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-bloqueadores",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Usar bloqueadores de la pubertad en menores que buscan realizar una transición de sexo.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 29,
+   "En desacuerdo": 64
+  },
+  "area": "salud",
+  "real_acuerdo": 29,
+  "real_desacuerdo": 64,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-eutanasia",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Expresar acuerdo o desacuerdo con la eutanasia.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 75,
+   "En desacuerdo": 22
+  },
+  "area": "salud",
+  "real_acuerdo": 75,
+  "real_desacuerdo": 22,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c543-marihuana",
+  "familia": "temas-valoricos-2024",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Legalizar el uso recreativo de cannabis para mayores de 18 años.",
+  "fuente_id": "cadem-543",
+  "localizador": "Posición ante temas valóricos, gráfico con acuerdo y desacuerdo",
+  "respuestas": {
+   "De acuerdo": 47,
+   "En desacuerdo": 52
+  },
+  "area": "salud",
+  "real_acuerdo": 47,
+  "real_desacuerdo": 52,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c594-aborto-costos",
+  "familia": "aborto-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "¿Aprobaría el aborto en esta situación? El hogar atraviesa dificultades económicas y tendría problemas para mantener al nuevo hijo.",
+  "fuente_id": "cadem-594",
+  "localizador": "Circunstancias en las que aprobaría el aborto",
+  "respuestas": {
+   "Sí": 33,
+   "No": 66
+  },
+  "area": "salud",
+  "real_acuerdo": 33,
+  "real_desacuerdo": 66,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c594-aborto-discapacidad",
+  "familia": "aborto-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "¿Aprobaría el aborto en esta situación? Se anticipa que el bebé podría nacer con una discapacidad física.",
+  "fuente_id": "cadem-594",
+  "localizador": "Circunstancias en las que aprobaría el aborto",
+  "respuestas": {
+   "Sí": 59,
+   "No": 39
+  },
+  "area": "salud",
+  "real_acuerdo": 59,
+  "real_desacuerdo": 39,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c594-aborto-maternidad",
+  "familia": "aborto-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "¿Aprobaría el aborto en esta situación? La mujer no se siente preparada o no quiere tener hijos.",
+  "fuente_id": "cadem-594",
+  "localizador": "Circunstancias en las que aprobaría el aborto",
+  "respuestas": {
+   "Sí": 38,
+   "No": 62
+  },
+  "area": "salud",
+  "real_acuerdo": 38,
+  "real_desacuerdo": 62,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c594-objecion",
+  "familia": "aborto-2025",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que un médico se niegue a realizar un aborto legal invocando objeción de conciencia.",
+  "fuente_id": "cadem-594",
+  "localizador": "Objeción de conciencia de médico",
+  "respuestas": {
+   "De acuerdo": 47,
+   "En desacuerdo": 52,
+   "No sabe / No responde": 1
+  },
+  "area": "salud",
+  "real_acuerdo": 47,
+  "real_desacuerdo": 52,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-seguridad",
+  "familia": "enmiendas-constitucionales-2023",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Establecer como deber estatal la seguridad de la población y el resguardo de la paz social y el orden público.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con contenidos de nueva constitución",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 97,
+   "En desacuerdo": 1
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "seguridad-justicia",
+  "real_acuerdo": 97,
+  "real_desacuerdo": 1,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c698-condena",
+  "familia": "condena-enfermedad-terminal",
+  "tipo": "acuerdo",
+  "uso": "calibracion_previa",
+  "enunciado": "Permitir que las personas condenadas con enfermedad terminal terminen de cumplir su condena en casa.",
+  "fuente_id": "cadem-698",
+  "localizador": "p. 17",
+  "respuestas": {
+   "De acuerdo": 33,
+   "En desacuerdo": 59
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "seguridad-justicia",
+  "real_acuerdo": 33,
+  "real_desacuerdo": 59,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cseg26-excepcion",
+  "familia": "reforma-seguridad-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Permitir que el presidente declare preventivamente un estado de excepción de emergencia ante amenazas a la seguridad.",
+  "fuente_id": "cadem-seguridad-2026",
+  "localizador": "Comunicado, párrafo sobre medidas de la reforma de seguridad",
+  "respuestas": {
+   "De acuerdo": 54
+  },
+  "area": "seguridad-justicia",
+  "real_acuerdo": 54,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cseg26-gendarmeria",
+  "familia": "reforma-seguridad-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Ampliar las atribuciones de Gendarmería para separar a personas privadas de libertad.",
+  "fuente_id": "cadem-seguridad-2026",
+  "localizador": "Comunicado, párrafo sobre medidas de la reforma de seguridad",
+  "respuestas": {
+   "De acuerdo": 85
+  },
+  "area": "seguridad-justicia",
+  "real_acuerdo": 85,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cseg26-inhabilitacion",
+  "familia": "reforma-seguridad-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Impedir que quienes sean condenados por crimen organizado ocupen cargos de elección popular.",
+  "fuente_id": "cadem-seguridad-2026",
+  "localizador": "Comunicado, párrafo sobre medidas de la reforma de seguridad",
+  "respuestas": {
+   "De acuerdo": 91
+  },
+  "area": "seguridad-justicia",
+  "real_acuerdo": 91,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cseg26-terrorismo",
+  "familia": "reforma-seguridad-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Equiparar jurídicamente el crimen organizado con el terrorismo.",
+  "fuente_id": "cadem-seguridad-2026",
+  "localizador": "Comunicado, párrafo sobre medidas de la reforma de seguridad",
+  "respuestas": {
+   "De acuerdo": 70
+  },
+  "area": "seguridad-justicia",
+  "real_acuerdo": 70,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cseg26-toque",
+  "familia": "reforma-seguridad-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Aplicar un toque de queda en el contexto de las medidas de la reforma de seguridad.",
+  "fuente_id": "cadem-seguridad-2026",
+  "localizador": "Comunicado, párrafo sobre medidas de la reforma de seguridad",
+  "respuestas": {
+   "De acuerdo": 47,
+   "En desacuerdo": 46
+  },
+  "area": "seguridad-justicia",
+  "real_acuerdo": 47,
+  "real_desacuerdo": 46,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c483-jornada",
+  "familia": "jornada-40-horas",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Reducir de 45 a 40 horas la jornada de trabajo semanal.",
+  "fuente_id": "cadem-483",
+  "localizador": "Conocimiento y acuerdo con reducción de jornada",
+  "respuestas": {
+   "De acuerdo": 71,
+   "En desacuerdo": 23,
+   "Ni de acuerdo ni en desacuerdo": 4,
+   "No sabe / No responde": 2
+  },
+  "area": "trabajo",
+  "real_acuerdo": 71,
+  "real_desacuerdo": 23,
+  "real_neutro": 4,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-corregir-jornada",
+  "familia": "jornada-40-horas",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Corregir la ley de jornada de 40 horas.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 29,
+   "En desacuerdo": 64
+  },
+  "resto_informado_por_fuente": "No responde",
+  "nota": "La fuente no especifica el contenido de la corrección.",
+  "area": "trabajo",
+  "real_acuerdo": 29,
+  "real_desacuerdo": 64,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-empleo",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Crear un subsidio para que las empresas recuperen parte de las cotizaciones previsionales de sus trabajadores contratados.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 48,
+   "En desacuerdo": 42
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "trabajo",
+  "real_acuerdo": 48,
+  "real_desacuerdo": 42,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-fertilidad-carrera",
+  "familia": "fertilidad-y-sus-barreras-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si tener hijos dificulta que una mujer ascienda en el trabajo o desarrolle su carrera.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 84",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 44
+  },
+  "area": "trabajo",
+  "real_acuerdo": 44,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-fertilidad-trabajo",
+  "familia": "fertilidad-y-sus-barreras-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Evaluar si tener hijos dificulta que una mujer trabaje.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 84",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 71
+  },
+  "area": "trabajo",
+  "real_acuerdo": 71,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c698-extension-tag",
+  "familia": "tag-autopistas-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Buscar el mismo acuerdo de rebaja de tarifas y extensión de concesión para otras autopistas como Costanera Norte y Vespucio Norte y Sur.",
+  "fuente_id": "cadem-698",
+  "localizador": "p. 24",
+  "respuestas": {
+   "De acuerdo": 56,
+   "En desacuerdo": 34
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 56,
+  "real_desacuerdo": 34,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c698-tag",
+  "familia": "tag-autopistas-2026",
+  "tipo": "acuerdo",
+  "uso": "calibracion_previa",
+  "enunciado": "Bajar entre 10% y 25% las tarifas TAG de Autopista Central desde enero de 2027 a cambio de prolongar la concesión por 20 meses.",
+  "fuente_id": "cadem-698",
+  "localizador": "p. 23",
+  "respuestas": {
+   "De acuerdo": 55,
+   "En desacuerdo": 40
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 55,
+  "real_desacuerdo": 40,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-bencina",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Reducir en $39 el precio por litro de las bencinas.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 16, medidas comprometidas por el Gobierno",
+  "contexto": "Medida consultada individualmente, en el contexto de las negociaciones para terminar el paro de camioneros.",
+  "respuestas": {
+   "De acuerdo": 62,
+   "En desacuerdo": 31
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 62,
+  "real_desacuerdo": 31,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-bloqueo",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Con independencia de las razones del paro, evaluar si los camioneros deberían poder bloquear carreteras y afectar su funcionamiento para presionar al Gobierno por sus demandas.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 12",
+  "respuestas": {
+   "De acuerdo": 64,
+   "En desacuerdo": 33
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 64,
+  "real_desacuerdo": 33,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-buses",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Subir del 35% al 70% el reintegro del costo de los peajes que pagan los buses interurbanos.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 16, medidas comprometidas por el Gobierno",
+  "contexto": "Medida consultada individualmente, en el contexto de las negociaciones para terminar el paro de camioneros.",
+  "respuestas": {
+   "De acuerdo": 64,
+   "En desacuerdo": 26
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 64,
+  "real_desacuerdo": 26,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-congelamiento",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Congelar las alzas de bencinas y diésel hasta el 31 de marzo de 2027.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 16, medidas comprometidas por el Gobierno",
+  "contexto": "Medida consultada individualmente, en el contexto de las negociaciones para terminar el paro de camioneros.",
+  "respuestas": {
+   "De acuerdo": 66,
+   "En desacuerdo": 27
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 66,
+  "real_desacuerdo": 27,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-devolucion",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "relacionado_con_calibracion",
+  "enunciado": "Aumentar la devolución tributaria a camioneros por sus compras de diésel.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 16, medidas comprometidas por el Gobierno",
+  "contexto": "Medida consultada individualmente, en el contexto de las negociaciones para terminar el paro de camioneros.",
+  "respuestas": {
+   "De acuerdo": 53,
+   "En desacuerdo": 32
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 53,
+  "real_desacuerdo": 32,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c704-diesel",
+  "familia": "paro-camioneros-2026",
+  "tipo": "acuerdo",
+  "uso": "calibracion_previa",
+  "enunciado": "Reducir en $142 el precio por litro del diésel.",
+  "fuente_id": "cadem-704",
+  "localizador": "p. 16, medidas comprometidas por el Gobierno",
+  "contexto": "Medida consultada individualmente, en el contexto de las negociaciones para terminar el paro de camioneros.",
+  "respuestas": {
+   "De acuerdo": 66,
+   "En desacuerdo": 26
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "transporte",
+  "real_acuerdo": 66,
+  "real_desacuerdo": 26,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c505-contribuciones",
+  "familia": "contribuciones-primera-vivienda",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Eximir de contribuciones a la vivienda usada como residencia principal.",
+  "fuente_id": "cadem-505",
+  "localizador": "Niveles de acuerdo con derechos sociales",
+  "contexto": "Evaluar la incorporación de esta disposición a la propuesta de nueva Constitución de 2023.",
+  "respuestas": {
+   "De acuerdo": 74,
+   "En desacuerdo": 23
+  },
+  "resto_informado_por_fuente": "Ni de acuerdo ni en desacuerdo y No sabe / No responde",
+  "area": "vivienda",
+  "real_acuerdo": 74,
+  "real_desacuerdo": 23,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c625-contribuciones",
+  "familia": "contribuciones-primera-vivienda",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Eliminar gradualmente en cuatro años las contribuciones de la primera vivienda, según la propuesta del presidente electo José Antonio Kast.",
+  "fuente_id": "cadem-625",
+  "localizador": "Acuerdo con proyecto de eliminar las contribuciones",
+  "respuestas": {
+   "De acuerdo": 60,
+   "En desacuerdo": 26,
+   "No sabe / No responde": 14
+  },
+  "area": "vivienda",
+  "real_acuerdo": 60,
+  "real_desacuerdo": 26,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-contribuciones",
+  "familia": "contribuciones-primera-vivienda",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Eximir de contribuciones la primera vivienda de personas mayores de 65 años.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 76,
+   "En desacuerdo": 18
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "vivienda",
+  "real_acuerdo": 76,
+  "real_desacuerdo": 18,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-iva",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Eximir del IVA por 12 meses la compra de viviendas nuevas.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 75,
+   "En desacuerdo": 18
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "vivienda",
+  "real_acuerdo": 75,
+  "real_desacuerdo": 18,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "c638-reconstruccion",
+  "familia": "reconstruccion-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Agregar $400.000 millones para reconstruir tras incendios en Biobío y Ñuble.",
+  "fuente_id": "cadem-638",
+  "localizador": "Acuerdo con medidas del Plan",
+  "contexto": "Medida consultada individualmente como parte del plan planteado por el presidente Kast en marzo de 2026.",
+  "respuestas": {
+   "De acuerdo": 83,
+   "En desacuerdo": 10
+  },
+  "resto_informado_por_fuente": "No responde",
+  "area": "vivienda",
+  "real_acuerdo": 83,
+  "real_desacuerdo": 10,
+  "real_neutro": null,
+  "parte": "desarrollo",
+  "grupo": "comparable"
+ },
+ {
+  "id": "uc26-fertilidad-espacio",
+  "familia": "fertilidad-y-sus-barreras-uc",
+  "tipo": "percepcion",
+  "uso": "candidato",
+  "enunciado": "Indicar si la vivienda donde vive la persona es demasiado pequeña para una familia numerosa.",
+  "fuente_id": "uc-2026",
+  "localizador": "p. 84",
+  "respuestas": {
+   "Muy de acuerdo + De acuerdo": 45
+  },
+  "area": "vivienda",
+  "real_acuerdo": 45,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "prueba",
+  "grupo": "comparable"
+ },
+ {
+  "id": "cm26-ciudadania",
+  "familia": "proyecto-miscelaneo-2026",
+  "tipo": "acuerdo",
+  "uso": "candidato",
+  "enunciado": "Evaluar el proyecto misceláneo del Ejecutivo discutido en abril de 2026.",
+  "fuente_id": "cadem-miscelaneo-2026",
+  "localizador": "Comunicado de resultados, comparación de paneles",
+  "segmento": "Panel de ciudadanía",
+  "respuestas": {
+   "De acuerdo": 42
+  },
+  "area": "economia-impuestos",
+  "real_acuerdo": 42,
+  "real_desacuerdo": null,
+  "real_neutro": null,
+  "parte": "extra",
+  "grupo": "extra"
+ },
+ {
+  "id": "servel22-constitucion",
+  "familia": "plebiscito-2022",
+  "tipo": "voto_observado",
+  "uso": "candidato",
+  "enunciado": "Voto sobre el texto constitucional propuesto por la Convención Constitucional en 2022.",
+  "fuente_id": "servel-2022",
+  "localizador": "Ficha del plebiscito del 4 de septiembre de 2022",
+  "respuestas": {
+   "Apruebo": 38.14,
+   "Rechazo": 61.86
+  },
+  "nota": "Porcentaje sobre votos válidos del corte con 99,97% de mesas. Está documentado como comportamiento electoral.",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 38.14,
+  "real_desacuerdo": 61.86,
+  "real_neutro": null,
+  "parte": "extra",
+  "grupo": "extra"
+ },
+ {
+  "id": "servel23-constitucion",
+  "familia": "plebiscito-2023",
+  "tipo": "voto_observado",
+  "uso": "candidato",
+  "enunciado": "Voto sobre el texto constitucional propuesto por el Consejo Constitucional en 2023.",
+  "fuente_id": "servel-2023",
+  "localizador": "Sección 4.2, resultados definitivos",
+  "respuestas": {
+   "A favor": 44.21,
+   "En contra": 55.79
+  },
+  "nota": "Porcentaje sobre preferencias válidas. No usar el boletín preliminar 44,24/55,76 como si fuera definitivo.",
+  "area": "instituciones-elecciones",
+  "real_acuerdo": 44.21,
+  "real_desacuerdo": 55.79,
+  "real_neutro": null,
+  "parte": "extra",
+  "grupo": "extra"
+ },
+ {
+  "id": "c661-registro-incivilidades",
+  "familia": "registro-incivilidades-2026",
+  "tipo": "acuerdo",
+  "enunciado": "El presidente Kast anunció un Registro de Vándalos e Incivilidades para sancionar a quienes cometan esos actos, con posibles restricciones para acceder a beneficios del Estado. ¿Está de acuerdo o en desacuerdo con la medida?",
+  "fuente_id": "Cadem 661",
+  "area": "seguridad-justicia",
+  "real_acuerdo": 67,
+  "real_desacuerdo": 28,
+  "real_neutro": null,
+  "parte": "extra",
+  "grupo": "extra",
+  "respuestas": {}
+ }
+]

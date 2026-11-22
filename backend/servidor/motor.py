@@ -30,7 +30,7 @@ import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import metodo
+from . import ancla, metodo
 from .agentes import Agente
 
 ESQUEMA_LOTE = {
@@ -113,6 +113,9 @@ class Respuesta:
     respuestas: list[int]
     #: Frase pedida aparte, después de responder; vacía si no se le pidió.
     frase: str = ""
+    #: Las notas tal como las dio el modelo, si el reparto del ancla cambió la de apoyo (`ancla.py`).
+    #: Es lo que se guarda en la caché: el reparto se vuelve a hacer cada vez.
+    original: list[int] | None = None
 
     @property
     def acuerdo(self) -> int:
@@ -183,13 +186,21 @@ class Motor:
         """Frases de personas que ya respondieron. Por defecto, ninguna: no todos los motores escriben."""
         return [], Consumo()
 
+    #: El modelo que pronostica el total nacional (`ancla.py`); vacío si este motor no lo hace.
+    modelo_ancla = ""
+
+    def pronosticar(self, politica: str) -> tuple[tuple[float, float] | None, Consumo]:
+        """(% de acuerdo, % en desacuerdo) que tendría la propuesta en una encuesta nacional, o None."""
+        return None, Consumo()
+
     def describir(self) -> dict:
-        return {"nombre": self.nombre, "modelo": self.modelo, "perfil": metodo.NIVEL}
+        return {"nombre": self.nombre, "modelo": self.modelo, "perfil": metodo.NIVEL, "ancla": self.modelo_ancla}
 
     def clave(self) -> str:
         """Modelo más versión de las instrucciones, de la encuesta y del filtro del perfil: si cambia
         algo de lo que lee el modelo, la caché no se reutiliza."""
         texto = metodo.VERSION + instruccion_lote(len(metodo.PREGUNTAS)) + metodo.VERSION_PERFIL
+        # El ancla no entra: la caché guarda las notas como salieron y el reparto se hace al entregar.
         return f"{self.modelo}:{hashlib.sha256(texto.encode()).hexdigest()[:8]}"
 
 
@@ -210,6 +221,7 @@ class ClaudeCodigo(Motor):
         # (CLAUDE_TOKENS, separados por coma) las llamadas se reparten entre las cuentas, por turno.
         self._tokens = [t.strip() for t in os.environ.get("CLAUDE_TOKENS", "").split(",") if t.strip()]
         self._turno = itertools.count()
+        self.modelo_ancla = ancla.modelo()
 
     def _entorno(self) -> dict:
         # Sin telemetría ni actualizador: cada proceso gasta un tercio menos de CPU al arrancar, y con
@@ -267,6 +279,12 @@ class ClaudeCodigo(Motor):
     def redactar(self, sistema, prompt, esquema):
         return self._llamar(self._redaccion, sistema, prompt, esquema)
 
+    def pronosticar(self, politica):
+        if not self.modelo_ancla:
+            return None, Consumo()
+        datos, consumo = self._llamar(self.modelo_ancla, ancla.SISTEMA, politica.strip()[:ancla.LARGO], ancla.ESQUEMA)
+        return ancla.limpiar(datos), consumo
+
 
 class ClaudeApi(Motor):
     """Haiku 5.5 por la API de Anthropic, sin razonamiento previo para que cada lote tarde segundos."""
@@ -282,6 +300,9 @@ class ClaudeApi(Motor):
         self.modelo = modelo
         self._redaccion = modelo_redaccion
         self._cliente = anthropic.Anthropic()
+        # El nombre corto del entorno (opus, sonnet, haiku) como modelo de la API; otro valor va tal cual.
+        pedido = ancla.modelo()
+        self.modelo_ancla = {"opus": "claude-opus-5-5", "sonnet": modelo_redaccion, "haiku": modelo}.get(pedido, pedido)
 
     @staticmethod
     def disponible() -> bool:
@@ -326,6 +347,12 @@ class ClaudeApi(Motor):
 
     def redactar(self, sistema, prompt, esquema):
         return self._llamar(self._redaccion, sistema, prompt, esquema, rapido=False)
+
+    def pronosticar(self, politica):
+        if not self.modelo_ancla:
+            return None, Consumo()
+        datos, consumo = self._llamar(self.modelo_ancla, ancla.SISTEMA, politica.strip()[:ancla.LARGO], ancla.ESQUEMA, rapido=True)
+        return ancla.limpiar(datos), consumo
 
 
 class LlamaLocal(Motor):

@@ -1,0 +1,901 @@
+
+
+====================================================================================================
+0. LA CORRIDA
+====================================================================================================
+Casos con respuestas: 124 de 124. Respuestas: 124000 (100.00 % de 124 x 1000).
+Llamadas: 6200, media 19.5 s, tokens de entrada 103.9 M, de salida 26.6 M, costo informado por la CLI US$ 32.53
+Casos con menos de 990 respuestas: {}
+Distribución de la nota de p1 en todas las respuestas (%): {1: 4.5, 2: 18.3, 3: 21.7, 4: 0.1, 5: 25.9, 6: 25.3, 7: 4.2}
+
+
+====================================================================================================
+0.1 LA MUESTRA: 1.000 agentes a 1 por cada 1.000, contra la CEP 96 ponderada
+====================================================================================================
+
+sexo:
+         muestra  CEP
+sexo                 
+Mujeres     52.7 50.8
+Hombres     47.3 49.2
+
+edad:
+       muestra  CEP
+edad               
+30-44     29.9 30.2
+45-59     24.0 23.4
+18-29     23.2 20.5
+60+       22.9 26.0
+
+educacion:
+                muestra  CEP
+educacion                   
+Media              41.7 41.6
+Superior           30.8 31.0
+Básica o menos     27.1 27.4
+Sin dato            0.4  NaN
+
+zona:
+        muestra  CEP
+zona                
+Urbana     86.7 88.6
+Rural      13.3 11.4
+
+macrozona:
+           muestra  CEP
+macrozona              
+RM            40.3 41.0
+Centro        33.2 32.8
+Sur           13.9 13.1
+Norte         12.6 13.1
+
+politica:
+                 muestra  CEP
+politica                     
+Centro (5-6)        42.8 41.4
+Derecha (7-10)      21.2 21.7
+Izquierda (1-4)     21.1 20.9
+No se ubica         14.9 16.1
+
+gobierno:
+                          muestra  CEP
+gobierno                              
+Desaprueba a Kast            53.6 51.6
+Aprueba a Kast               32.9 34.5
+Ni aprueba ni desaprueba      8.0  8.8
+No sabe                       5.5  5.2
+
+voto:
+                       muestra  CEP
+voto                               
+Votó Kast                 41.3 39.9
+Votó Jara                 31.2 28.1
+No votó o no responde     17.0 20.0
+Blanco o nulo             10.5 11.9
+
+trabajo:
+                     muestra  CEP
+trabajo                          
+Trabaja                 56.6 53.3
+No trabaja ni busca     37.5 35.5
+Busca trabajo            5.5 10.6
+Sin dato                 0.4  0.6
+
+interes:
+                     muestra  CEP
+interes                          
+Interés bajo o nulo     54.6 58.0
+Interés medio           25.5 22.7
+Interés alto            19.2 18.6
+Sin dato                 0.7  0.7
+
+Religión de los agentes: {'Católica': 56.8, 'Ninguna': 23.6, 'Evangélica': 15.8, 'Otra': 3.8}
+Quintil de los agentes: {'Quintil 1': 19.0, 'Quintil 2': 22.4, 'Quintil 3': 22.2, 'Quintil 4': 19.4, 'Quintil 5': 17.0}
+
+
+====================================================================================================
+1. NIVEL NACIONAL: % de acuerdo simulado (p1 de 5 a 7) contra el publicado
+====================================================================================================
+Los 120 casos comparables                    n=120  EAM  14.9  sesgo   -5.0  RECM  18.5  r  0.54  a ≤5 pts  22 %  a ≤10 pts  40 %  mismo lado  71 %
+  sin c704-bloqueo (cifra dudosa)            n=119  EAM  14.5  sesgo   -4.6  RECM  17.8  r  0.56  a ≤5 pts  23 %  a ≤10 pts  40 %  mismo lado  71 %
+  parte desarrollo                           n=78   EAM  15.1  sesgo   -5.3  RECM  19.0  r  0.45  a ≤5 pts  22 %  a ≤10 pts  42 %  mismo lado  72 %
+  parte prueba                               n=42   EAM  14.4  sesgo   -4.5  RECM  17.6  r  0.60  a ≤5 pts  24 %  a ≤10 pts  36 %  mismo lado  69 %
+Constante 60 %                               n=120  EAM  15.9  sesgo   -0.7  RECM  19.5  r   nan  a ≤5 pts  22 %  a ≤10 pts  39 %  mismo lado  73 %
+Constante = media real                       n=120  EAM  15.9  sesgo   -0.0  RECM  19.5  r -0.00  a ≤5 pts  20 %  a ≤10 pts  38 %  mismo lado  73 %
+% en desacuerdo (casos que lo publican)      n=95   EAM  17.2  sesgo  +11.7  RECM  20.9  r  0.54  a ≤5 pts  12 %  a ≤10 pts  39 %  mismo lado  74 %
+Sin indecisos: a/(a+d)                       n=95   EAM  15.9  sesgo   -9.1  RECM  20.1  r  0.55  a ≤5 pts  25 %  a ≤10 pts  41 %  mismo lado  79 %
+Media real de acuerdo 60.7, simulada 55.7. Desviación estándar entre casos: real 19.6, simulada 17.5
+Nota 4 (indecisos) simulada: media 0.09 %, máximo 1.1 %. En las encuestas, lo que no es acuerdo ni desacuerdo: media 6.6 %
+Intervalo de 95 % remuestreando familias: EAM 11.7 a 17.7; sesgo -10.4 a +0.8
+Efecto de diseño por lote (varianza entre lotes / binomial): mediana 0.91, media 1.00
+Error estándar típico del % simulado con 1.000 agentes (con ese efecto): 1.4 pts. Margen de una encuesta de 700 casos: ±3,7 pts al 95 %
+Piso de ruido (simulación perfecta con 1.000 agentes contra encuesta de 700): EAM 1.7
+Recta real = 27.1 + 0.60 x simulado. Si se corrige con esa recta dejando fuera la familia de cada caso:
+  simulado corregido                         n=120  EAM  14.5  sesgo   -0.3  RECM  17.4  r  0.46  a ≤5 pts  22 %  a ≤10 pts  41 %  mismo lado  74 %
+
+
+====================================================================================================
+1.1 CONTRA LOS MÉTODOS YA PROBADOS (mismos casos; ojo: otra muestra y otro n)
+====================================================================================================
+sitio (pipeline anterior de 6 preguntas, 100 n=120  EAM  17.4  sesgo  -14.4  RECM  22.4  r  0.55  a ≤5 pts  21 %  a ≤10 pts  42 %  mismo lado  58 %
+   este contraste en esos mismos casos       n=120  EAM  14.9  sesgo   -5.0  RECM  18.5  r  0.54  a ≤5 pts  22 %  a ≤10 pts  40 %  mismo lado  71 %
+   correlación entre ambos simulados 0.93; diferencia media absoluta 9.7 pts; correlación de los errores 0.93
+probabilidad (probabilidades, Haiku)         n=120  EAM  11.9  sesgo   -7.3  RECM  15.3  r  0.73  a ≤5 pts  29 %  a ≤10 pts  50 %  mismo lado  77 %
+   este contraste en esos mismos casos       n=120  EAM  14.9  sesgo   -5.0  RECM  18.5  r  0.54  a ≤5 pts  22 %  a ≤10 pts  40 %  mismo lado  71 %
+   correlación entre ambos simulados 0.83; diferencia media absoluta 7.4 pts; correlación de los errores 0.84
+pronostico_haiku (pronóstico directo Haiku)  n=120  EAM  10.7  sesgo   -2.4  RECM  14.0  r  0.73  a ≤5 pts  35 %  a ≤10 pts  61 %  mismo lado  81 %
+   este contraste en esos mismos casos       n=120  EAM  14.9  sesgo   -5.0  RECM  18.5  r  0.54  a ≤5 pts  22 %  a ≤10 pts  40 %  mismo lado  71 %
+pronostico_opus (pronóstico directo Opus)    n=120  EAM   8.9  sesgo   -0.2  RECM  11.7  r  0.82  a ≤5 pts  41 %  a ≤10 pts  71 %  mismo lado  85 %
+   este contraste en esos mismos casos       n=120  EAM  14.9  sesgo   -5.0  RECM  18.5  r  0.54  a ≤5 pts  22 %  a ≤10 pts  40 %  mismo lado  71 %
+   correlación entre ambos simulados 0.71; diferencia media absoluta 11.9 pts; correlación de los errores 0.63
+
+
+====================================================================================================
+1.2 CUÁNTOS AGENTES HACEN FALTA (submuestras al azar de los 1.000)
+====================================================================================================
+Agentes con respuesta en los 120 casos: 1000
+  n=10    EAM contra encuestas 18.95 ± 2.79   distancia al resultado con todos 11.71
+  n=25    EAM contra encuestas 16.62 ± 1.58   distancia al resultado con todos  7.23
+  n=50    EAM contra encuestas 15.79 ± 1.19   distancia al resultado con todos  5.05
+  n=100   EAM contra encuestas 15.36 ± 0.78   distancia al resultado con todos  3.47
+  n=200   EAM contra encuestas 15.07 ± 0.46   distancia al resultado con todos  2.28
+  n=500   EAM contra encuestas 14.95 ± 0.23   distancia al resultado con todos  1.16
+  n=1000  EAM contra encuestas 14.86 ± 0.00   distancia al resultado con todos  0.00
+
+
+====================================================================================================
+1.3 DÓNDE SE CONCENTRA EL ERROR NACIONAL
+====================================================================================================
+
+Área:
+  economia-impuestos           n=8   EAM  14.6  sesgo   -0.6  real  47.2  sim  46.7  mismo lado  75 %
+  educacion                    n=6   EAM  11.6  sesgo   +4.1  real  56.2  sim  60.3  mismo lado 100 %
+  familia-derechos             n=16  EAM  18.5  sesgo  -14.9  real  63.1  sim  48.2  mismo lado  19 %
+  instituciones-elecciones     n=10  EAM  19.9  sesgo  -15.2  real  73.3  sim  58.1  mismo lado  80 %
+  medio-ambiente               n=9   EAM  22.2  sesgo  -20.1  real  76.7  sim  56.5  mismo lado  67 %
+  migracion                    n=16  EAM  13.0  sesgo   -8.9  real  60.6  sim  51.7  mismo lado  69 %
+  pensiones                    n=7   EAM  11.5  sesgo   +7.4  real  65.0  sim  72.4  mismo lado 100 %
+  regulacion-digital           n=13  EAM  10.3  sesgo   +4.5  real  47.8  sim  52.4  mismo lado 100 %
+  salud                        n=9   EAM  17.2  sesgo   -5.6  real  49.7  sim  44.1  mismo lado  56 %
+  seguridad-justicia           n=7   EAM  13.1  sesgo   +0.7  real  68.1  sim  68.8  mismo lado  71 %
+  trabajo                      n=5   EAM  15.8  sesgo   +6.0  real  52.6  sim  58.6  mismo lado  60 %
+  transporte                   n=8   EAM  11.9  sesgo   -3.0  real  60.8  sim  57.8  mismo lado  88 %
+  vivienda                     n=6   EAM   9.9  sesgo   +3.4  real  68.8  sim  72.3  mismo lado  83 %
+
+Apoyo real (%):
+  0-35                         n=15  EAM  10.0  sesgo   +7.7  real  26.3  sim  33.9  mismo lado  87 %
+  35-50                        n=18  EAM  11.3  sesgo   +9.5  real  43.5  sim  53.0  mismo lado  50 %
+  50-65                        n=36  EAM  11.9  sesgo   -3.7  real  58.0  sim  54.3  mismo lado  61 %
+  65-80                        n=30  EAM  16.6  sesgo  -10.6  real  72.4  sim  61.9  mismo lado  70 %
+  80-100                       n=21  EAM  24.0  sesgo  -20.9  real  87.8  sim  66.9  mismo lado  95 %
+
+Tipo de pregunta (clasificación previa):
+  beneficio                    n=30  EAM  11.7  sesgo   -0.8  real  63.7  sim  62.9  mismo lado  83 %
+  institucional                n=12  EAM  14.1  sesgo   +0.3  real  59.1  sim  59.4  mismo lado  83 %
+  percepcion                   n=11  EAM   9.8  sesgo   +4.9  real  51.0  sim  55.9  mismo lado  64 %
+  principio                    n=11  EAM  23.8  sesgo  -23.8  real  81.6  sim  57.8  mismo lado  91 %
+  restriccion                  n=33  EAM  15.2  sesgo   -4.3  real  58.5  sim  54.1  mismo lado  82 %
+  valorico                     n=23  EAM  17.1  sesgo  -10.1  real  55.3  sim  45.2  mismo lado  26 %
+
+Transversalidad esperada (1 divide, 5 transversal):
+  1.0                          n=13  EAM  15.1  sesgo   -9.0  real  49.8  sim  40.9  mismo lado  54 %
+  2.0                          n=41  EAM  14.1  sesgo   -5.1  real  56.0  sim  50.9  mismo lado  54 %
+  3.0                          n=33  EAM  13.8  sesgo   -3.3  real  59.4  sim  56.1  mismo lado  85 %
+  4.0                          n=31  EAM  17.4  sesgo   -5.6  real  73.5  sim  67.9  mismo lado  84 %
+  5.0                          n=2   EAM   6.7  sesgo   +2.3  real  48.0  sim  50.2  mismo lado 100 %
+
+Con sello de gobierno o sector:
+  False                        n=105 EAM  15.4  sesgo   -6.3  real  61.5  sim  55.3  mismo lado  69 %
+  True                         n=15  EAM  11.0  sesgo   +3.6  real  54.7  sim  58.3  mismo lado  87 %
+
+Tipo de ítem:
+  acuerdo                      n=107 EAM  15.4  sesgo   -6.3  real  62.2  sim  55.9  mismo lado  74 %
+  percepcion                   n=13  EAM  10.1  sesgo   +5.7  real  48.2  sim  53.9  mismo lado  46 %
+
+Año de la encuesta:
+  2014                         n=2   EAM   6.1  sesgo   -4.8  real  54.0  sim  49.2  mismo lado  50 %
+  2017                         n=4   EAM  33.8  sesgo  -33.8  real  86.0  sim  52.2  mismo lado  50 %
+  2022                         n=1   EAM  10.1  sesgo  +10.1  real  34.0  sim  44.1  mismo lado 100 %
+  2023                         n=20  EAM  20.7  sesgo  -15.1  real  77.7  sim  62.6  mismo lado  85 %
+  2024                         n=9   EAM  22.7  sesgo  -22.7  real  61.9  sim  39.2  mismo lado  33 %
+  2025                         n=24  EAM  12.4  sesgo   -2.2  real  59.5  sim  57.3  mismo lado  67 %
+  2026                         n=60  EAM  11.8  sesgo   +1.5  real  54.2  sim  55.8  mismo lado  75 %
+
+Método de la fuente:
+  Cara a cara                  n=26  EAM  13.3  sesgo   -1.0  real  53.0  sim  51.9  mismo lado  50 %
+  Otro                         n=7   EAM  22.5  sesgo  -19.2  real  69.4  sim  50.2  mismo lado  57 %
+  Panel web                    n=40  EAM  11.8  sesgo   +1.7  real  56.3  sim  58.0  mismo lado  82 %
+  Telefónica                   n=47  EAM  17.2  sesgo  -10.8  real  67.4  sim  56.5  mismo lado  74 %
+
+Fuente:
+  cadem-483                    n=1   EAM  14.2  sesgo  -14.2  real  71.0  sim  56.8  mismo lado 100 %
+  cadem-505                    n=14  EAM  20.5  sesgo  -16.2  real  80.0  sim  63.7  mismo lado  86 %
+  cadem-511                    n=5   EAM  22.6  sesgo  -12.1  real  72.6  sim  60.5  mismo lado  80 %
+  cadem-543                    n=9   EAM  22.7  sesgo  -22.7  real  61.9  sim  39.2  mismo lado  33 %
+  cadem-577                    n=7   EAM  11.5  sesgo   +7.4  real  65.0  sim  72.4  mismo lado 100 %
+  cadem-594                    n=4   EAM  12.0  sesgo   +1.0  real  44.2  sim  45.2  mismo lado  50 %
+  cadem-625                    n=1   EAM   4.3  sesgo   -4.3  real  60.0  sim  55.7  mismo lado 100 %
+  cadem-629                    n=6   EAM   9.7  sesgo   -8.9  real  60.5  sim  51.6  mismo lado  83 %
+  cadem-638                    n=11  EAM  12.1  sesgo   +2.8  real  57.0  sim  59.8  mismo lado  82 %
+  cadem-663                    n=12  EAM  10.8  sesgo   +6.5  real  47.7  sim  54.1  mismo lado 100 %
+  cadem-698                    n=3   EAM   9.9  sesgo   +9.9  real  48.0  sim  57.9  mismo lado  67 %
+  cadem-704                    n=6   EAM  14.3  sesgo   -5.5  real  62.5  sim  57.0  mismo lado  83 %
+  cadem-seguridad-2026         n=5   EAM  10.1  sesgo   +1.0  real  69.4  sim  70.4  mismo lado  80 %
+  cadem-tributaria-2022        n=1   EAM  10.1  sesgo  +10.1  real  34.0  sim  44.1  mismo lado 100 %
+  cep-96                       n=10  EAM  10.8  sesgo   +1.4  real  46.5  sim  47.9  mismo lado  70 %
+  ipsos-orgullo-2025           n=3   EAM  14.0  sesgo  -14.0  real  62.3  sim  48.3  mismo lado  33 %
+  mma-2014                     n=2   EAM   6.1  sesgo   -4.8  real  54.0  sim  49.2  mismo lado  50 %
+  mma-2018                     n=4   EAM  33.8  sesgo  -33.8  real  86.0  sim  52.2  mismo lado  50 %
+  uc-2025                      n=9   EAM  13.8  sesgo   -7.0  real  61.1  sim  54.1  mismo lado  56 %
+  uc-2026                      n=7   EAM  16.1  sesgo   +3.1  real  51.7  sim  54.8  mismo lado  14 %
+
+
+====================================================================================================
+1.4 CASO POR CASO (ordenado por diferencia)
+====================================================================================================
+                                    grupo                      area  real  sim   dif  real_d  sim_d  sim_4  p1  p2  p3  p4  p5     n                                                                         enunciado
+caso                                                                                                                                                                                                                  
+c704-bloqueo                   comparable                transporte  64.0  4.4 -59.6    33.0   95.6    0.0 2.3 2.6 3.1 2.8 3.7  1000  Con independencia de las razones del paro, evaluar si los camioneros deberían po
+c505-eleccion-servicios        comparable  instituciones-elecciones  93.0 51.6 -41.4     6.0   48.4    0.0 4.0 3.8 3.0 3.8 5.4  1000  Permitir que cada persona elija si su régimen de salud, su establecimiento educa
+c543-eutanasia                 comparable                     salud  75.0 37.3 -37.7    22.0   62.7    0.0 3.5 3.4 3.1 3.4 3.7  1000                                   Expresar acuerdo o desacuerdo con la eutanasia.
+mma18-bolsas                   comparable            medio-ambiente  95.0 58.7 -36.3     4.0   41.3    0.0 4.4 4.0 3.2 3.8 4.0  1000                      Prohibir las bolsas plásticas para reducir la contaminación.
+mma18-vehiculos                comparable            medio-ambiente  89.0 54.3 -34.7    10.0   45.6    0.1 4.2 3.6 3.2 3.8 3.4  1000         Restringir la circulación de los vehículos que generan más contaminación.
+uc26-derechos-sociales         comparable                 migracion  71.0 37.3 -33.7     NaN   62.7    0.0 3.5 3.5 3.1 3.3 2.8  1000  Dar a inmigrantes con situación regular acceso a beneficios de salud, educación 
+mma18-lena                     comparable            medio-ambiente  81.0 47.6 -33.4    17.0   52.4    0.0 4.0 3.4 3.2 4.0 3.8  1000                   Prohibir el uso de leña para reducir la contaminación del aire.
+c638-ministerios               comparable        economia-impuestos  74.0 42.8 -31.2    23.0   57.2    0.0 3.6 3.4 3.1 3.4 3.8  1000                              Reducir en 3% el gasto de cada ministerio por igual.
+c505-pueblos                   comparable  instituciones-elecciones  86.0 54.9 -31.1    13.0   44.1    1.0 4.3 4.0 3.2 3.6 2.4  1000            Incluir en la Constitución el reconocimiento de los pueblos indígenas.
+c543-gestacion                 comparable          familia-derechos  63.0 32.2 -30.8    34.0   67.8    0.0 3.3 3.3 3.0 3.2 1.5  1000   Expresar acuerdo o desacuerdo con que una tercera persona geste un hijo o hija.
+mma18-parrillas                comparable            medio-ambiente  79.0 48.4 -30.6    19.0   51.4    0.2 3.9 3.5 3.2 3.9 3.2  1000             Prohibir parrilladas y asados durante días con contaminación elevada.
+cep96-educacion                comparable                 migracion  71.0 40.6 -30.4    16.0   59.4    0.0 3.6 3.6 3.2 3.4 2.4  1000  Dar a los inmigrantes con situación regular el mismo acceso a la educación públi
+c543-matrimonio                comparable          familia-derechos  77.0 47.7 -29.3    22.0   52.3    0.0 4.0 3.9 3.3 3.7 1.6  1000                      Reconocer el derecho a casarse a las parejas del mismo sexo.
+uc25-control-parental          comparable        regulacion-digital  89.0 60.0 -29.0     NaN   39.9    0.1 4.3 4.0 3.1 3.8 3.0  1000  Dejar en manos de padres y madres la responsabilidad de controlar y limitar el u
+c505-sala-cuna                 comparable          familia-derechos  93.0 64.0 -29.0     5.0   36.0    0.0 4.6 4.3 3.2 4.1 2.2  1000                    Garantizar sala cuna sin costo a partir del fin del postnatal.
+c511-sala-cuna                 comparable          familia-derechos  91.0 63.9 -27.1     9.0   36.1    0.0 4.6 4.2 3.2 4.1 2.2  1000                                                    Incorporar sala cuna gratuita.
+c505-naturaleza                comparable            medio-ambiente  92.0 65.4 -26.6     7.0   34.5    0.1 4.6 3.8 3.1 3.6 3.1  1000  Establecer como deber del Estado la protección ambiental y la conservación de la
+c629-deportacion               comparable                 migracion  81.0 55.1 -25.9    14.0   44.9    0.0 4.1 3.6 3.1 3.8 2.5  1000     Expulsar a toda persona inmigrante que haya ingresado irregularmente a Chile.
+ipsos25-matrimonio             comparable          familia-derechos  72.0 46.3 -25.7     NaN   53.7    0.0 3.9 3.8 3.2 3.5 1.7  1000  Reconocer el matrimonio o una forma de reconocimiento legal a las parejas del mi
+c505-clandestino               comparable                 migracion  88.0 62.8 -25.2    10.0   37.1    0.1 4.5 3.8 3.2 4.0 3.0  1000         Disponer la expulsión de extranjeros que entren clandestinamente a Chile.
+c543-aborto                    comparable                     salud  79.0 53.8 -25.2    17.0   46.1    0.1 4.2 4.1 3.1 3.8 2.0  1000  Mantener el aborto permitido por inviabilidad fetal, riesgo vital materno o viol
+c511-paridad                   comparable  instituciones-elecciones  77.0 51.9 -25.1    23.0   47.6    0.5 4.1 4.0 3.2 3.6 2.1  1000  Disponer que la ley asegure el acceso igualitario de mujeres y hombres a cargos 
+c543-identidad                 comparable          familia-derechos  67.0 42.4 -24.6    31.0   57.5    0.1 3.7 3.7 3.2 3.4 1.3  1000       Permitir que una persona adulta cambie su identidad de género una sola vez.
+c511-diputados                 comparable  instituciones-elecciones  84.0 60.5 -23.5    16.0   38.9    0.6 4.4 3.9 3.2 3.8 1.9  1000              Reducir la Cámara de Diputadas y Diputados de 155 a 138 integrantes.
+c505-edad                      comparable  instituciones-elecciones  62.0 39.8 -22.2    37.0   59.7    0.5 3.6 3.5 3.2 3.4 1.5  1000             Subir de 35 a 40 años la edad mínima para ser candidato presidencial.
+c594-aborto-discapacidad       comparable                     salud  59.0 37.0 -22.0    39.0   63.0    0.0 3.4 3.5 3.0 3.4 2.5  1000  ¿Aprobaría el aborto en esta situación? Se anticipa que el bebé podría nacer con
+c505-propiedad                 comparable        economia-impuestos  83.0 61.3 -21.7    13.0   38.5    0.2 4.5 4.2 3.2 4.0 3.2  1000  Reconocer el derecho de propiedad en sus distintas formas y sobre todo tipo de b
+uc25-derechos-sociales         comparable                 migracion  59.0 37.6 -21.4     NaN   62.4    0.0 3.5 3.5 3.1 3.3 2.9  1000  Dar a inmigrantes con situación regular acceso a beneficios de salud, educación 
+c543-menores                   comparable          familia-derechos  55.0 34.0 -21.0    43.0   66.0    0.0 3.2 3.4 3.2 3.1 2.3  1000      Permitir a menores cambiar su identidad de género con autorización parental.
+c505-seguridad                 comparable        seguridad-justicia  97.0 76.1 -20.9     1.0   23.9    0.0 5.1 4.1 3.5 4.2 4.5  1000  Establecer como deber estatal la seguridad de la población y el resguardo de la 
+c505-diputados                 comparable  instituciones-elecciones  86.0 67.1 -18.9    12.0   32.2    0.7 4.6 4.1 3.3 3.9 2.1  1000                                      Reducir de 155 a 138 el número de diputados.
+uc25-familia-matrimonio        comparable          familia-derechos  68.0 49.3 -18.7     NaN   50.7    0.0 4.0 4.0 3.2 3.7 1.5  1000                 Reconocer que las personas homosexuales tienen derecho a casarse.
+c543-adopcion                  comparable          familia-derechos  65.0 46.7 -18.3    33.0   53.2    0.1 3.9 3.9 3.3 3.6 1.4  1000                        Reconocer el derecho de adopción a parejas del mismo sexo.
+c505-animales                  comparable            medio-ambiente  92.0 74.0 -18.0     7.0   26.0    0.0 4.8 4.2 3.2 3.8 2.2  1000  Establecer que el Estado y las personas deben promover la protección de los anim
+uc25-familia-identidad         comparable          familia-derechos  60.0 43.6 -16.4     NaN   56.3    0.1 3.7 3.7 3.2 3.5 1.3  1000             Permitir que una persona adulta pueda cambiar su identidad de género.
+cseg26-gendarmeria             comparable        seguridad-justicia  85.0 69.2 -15.8     NaN   30.8    0.0 4.9 4.3 3.4 4.5 3.0  1000  Ampliar las atribuciones de Gendarmería para separar a personas privadas de libe
+c661-registro-incivilidades         extra        seguridad-justicia  67.0 51.4 -15.6    28.0   48.6    0.0 4.0 3.5 3.1 3.8 2.9  1000  El presidente Kast anunció un Registro de Vándalos e Incivilidades para sanciona
+c663-cae-convenio              comparable                 educacion  79.0 64.4 -14.6    16.0   35.3    0.3 4.6 4.3 3.2 3.9 2.7  1000  Ofrecer un acuerdo de pago del CAE a quienes ganen menos de $3,5 millones al mes
+c483-jornada                   comparable                   trabajo  71.0 56.8 -14.2    23.0   43.2    0.0 4.3 4.1 3.1 3.7 3.5  1000                           Reducir de 45 a 40 horas la jornada de trabajo semanal.
+c577-pgu                       comparable                 pensiones  83.0 70.2 -12.8    15.0   29.8    0.0 5.0 4.4 3.1 4.3 4.2  1000                          Elevar la Pensión Garantizada Universal a 250.000 pesos.
+c629-regularizacion-empleo     comparable                 migracion  61.0 48.7 -12.3    33.0   51.3    0.0 3.9 3.9 3.2 3.7 2.3  1000     Regularizar a inmigrantes en situación irregular que acrediten empleo formal.
+ipsos25-adopcion               comparable          familia-derechos  58.0 45.8 -12.2     NaN   54.2    0.0 3.9 3.9 3.2 3.5 1.6  1000  Otorgar a parejas del mismo sexo los mismos derechos de adopción que a parejas h
+c511-estado-social             comparable  instituciones-elecciones  71.0 59.9 -11.1    30.0   39.9    0.2 4.5 3.9 3.2 3.7 4.1  1000                             Establecer un Estado social y democrático de derecho.
+c638-iva                       comparable                  vivienda  75.0 64.0 -11.0    18.0   36.0    0.0 4.5 3.9 3.1 3.9 2.5  1000                        Eximir del IVA por 12 meses la compra de viviendas nuevas.
+mma14-lena-ciudades            comparable            medio-ambiente  51.0 40.1 -10.9     NaN   59.8    0.1 3.7 3.3 3.2 4.0 3.5  1000   Prohibir de forma permanente el uso de leña en ciudades con alta contaminación.
+c629-carcel                    comparable                 migracion  74.0 63.7 -10.3    18.0   36.3    0.0 4.6 3.9 3.3 4.1 3.1  1000       Establecer penas de cárcel por inmigración ilegal mediante una ley chilena.
+uc26-fertilidad-trabajo        comparable                   trabajo  71.0 60.8 -10.2     NaN   39.2    0.0 4.5 4.1 3.1 3.8 3.4  1000                           Evaluar si tener hijos dificulta que una mujer trabaje.
+c543-bloqueadores              comparable                     salud  29.0 20.0  -9.0    64.0   80.0    0.0 2.7 3.0 3.0 2.8 1.7  1000  Usar bloqueadores de la pubertad en menores que buscan realizar una transición d
+c543-marihuana                 comparable                     salud  47.0 38.4  -8.6    52.0   61.5    0.1 3.5 3.4 3.0 3.1 2.7  1000                  Legalizar el uso recreativo de cannabis para mayores de 18 años.
+cep96-burocracia               comparable        economia-impuestos  52.0 44.1  -7.9    20.0   55.9    0.0 3.8 3.4 3.0 3.4 4.6  1000  Evaluar si la intervención estatal genera demasiada burocracia y demasiados prob
+uc25-familia-adopcion          comparable          familia-derechos  53.0 45.2  -7.8     NaN   54.8    0.0 3.8 3.9 3.3 3.6 1.5  1000                     Reconocer que las personas homosexuales pueden adoptar niños.
+cseg26-terrorismo              comparable        seguridad-justicia  70.0 63.0  -7.0     NaN   37.0    0.0 4.5 4.0 3.3 4.1 4.0  1000                   Equiparar jurídicamente el crimen organizado con el terrorismo.
+c629-derechos                  comparable                 migracion  47.0 40.4  -6.6    46.0   59.6    0.0 3.6 3.6 3.2 3.3 2.3  1000  Reconocer a inmigrantes con su situación regularizada los mismos derechos que a 
+cep96-criminalidad             comparable                 migracion  67.0 61.8  -5.2    15.0   38.1    0.1 4.5 3.7 3.2 4.0 3.7  1000  Indicar el grado de acuerdo con la afirmación de que la inmigración eleva las ta
+c638-cae                       comparable                 educacion  70.0 65.0  -5.0    25.0   35.0    0.0 4.5 4.3 3.1 4.0 2.5  1000   Cobrar el CAE a quienes tienen capacidad de pago y mantienen el crédito impago.
+c663-apuestas-menores          comparable        regulacion-digital   5.0  0.6  -4.4    90.0   99.4    0.0 1.5 2.0 3.0 2.2 2.7  1000    Permitir que menores de edad apuesten en plataformas de apuestas por internet.
+c625-contribuciones            comparable                  vivienda  60.0 55.7  -4.3    26.0   44.1    0.2 4.3 3.9 3.2 3.8 3.3  1000  Eliminar gradualmente en cuatro años las contribuciones de la primera vivienda, 
+ipsos25-discriminacion         comparable          familia-derechos  57.0 52.8  -4.2     NaN   47.2    0.0 4.2 4.0 3.3 3.7 1.9  1000  Respaldar leyes contra la discriminación de personas LGBT, incluido el acceso a 
+c663-apuestas-social           comparable        regulacion-digital  27.0 22.9  -4.1    64.0   77.1    0.0 2.8 3.0 3.1 3.1 3.3  1000           Permitir a plataformas de apuestas publicar anuncios en redes sociales.
+c638-contribuciones            comparable                  vivienda  76.0 72.0  -4.0    18.0   27.8    0.2 4.8 4.2 3.1 4.0 2.4  1000      Eximir de contribuciones la primera vivienda de personas mayores de 65 años.
+cep96-gasto                    comparable                 migracion  60.0 56.3  -3.7    20.0   43.7    0.0 4.2 3.6 3.1 3.7 3.2  1000  Indicar el grado de acuerdo con la afirmación de que el Gobierno gasta demasiado
+c663-cae-cobro                 comparable                 educacion  70.0 67.1  -2.9    24.0   32.9    0.0 4.6 4.5 3.2 4.1 2.2  1000  Cobrar el CAE judicial o administrativamente a quienes ganen más de $3,5 millone
+c505-umbral                    comparable  instituciones-elecciones  54.0 51.7  -2.3    41.0   47.2    1.1 4.0 3.8 3.2 3.8 2.4  1000  Dar representación parlamentaria solo a los partidos que obtengan al menos 5% de
+uc26-familia-crianza-en-casa   comparable          familia-derechos  51.0 49.2  -1.8     NaN   50.8    0.0 3.9 3.8 3.1 3.4 2.7  1000  Evaluar si una madre debiera quedarse en casa con sus hijos mientras son pequeño
+c577-cotizacion                comparable                 pensiones  65.0 63.5  -1.5    30.0   36.5    0.0 4.6 4.3 3.1 4.1 4.4  1000  Subir las cotizaciones en 7% durante nueve años, financiadas por los empleadores
+c629-regularizacion-hijos      comparable                 migracion  43.0 42.3  -0.7    49.0   57.7    0.0 3.6 3.7 3.1 3.5 1.7  1000  Regularizar a inmigrantes en situación irregular con hijos nacidos en Chile y de
+c663-apuestas-tv               comparable        regulacion-digital  25.0 24.9  -0.1    67.0   75.1    0.0 2.9 2.9 3.1 3.2 3.2  1000                      Permitir a plataformas de apuestas anunciarse en televisión.
+c663-apuestas-eventos          comparable        regulacion-digital  27.0 27.0   0.0    65.0   73.0    0.0 3.0 3.0 3.1 3.1 3.2  1000                 Permitir a plataformas de apuestas patrocinar eventos deportivos.
+c704-devolucion                comparable                transporte  53.0 53.1   0.1    32.0   46.7    0.2 4.1 3.7 3.0 3.6 2.5  1000         Aumentar la devolución tributaria a camioneros por sus compras de diésel.
+uc25-identidad                 comparable                 migracion  57.0 57.3   0.3     NaN   42.6    0.1 4.4 3.6 3.1 3.8 3.6  1000  Evaluar si la llegada de inmigrantes está provocando que Chile pierda su identid
+c663-apuestas-futbol           comparable        regulacion-digital  26.0 26.5   0.5    65.0   73.5    0.0 2.9 3.0 3.1 3.1 3.1  1000                  Permitir a plataformas de apuestas patrocinar equipos de fútbol.
+c704-congelamiento             comparable                transporte  66.0 67.0   1.0    27.0   33.0    0.0 4.7 4.3 3.2 3.8 4.7  1000             Congelar las alzas de bencinas y diésel hasta el 31 de marzo de 2027.
+mma14-lena-alertas             comparable            medio-ambiente  57.0 58.3   1.3     NaN   41.7    0.0 4.3 3.6 3.2 4.1 3.9  1000  Restringir el uso de leña cuando haya alerta, preemergencia o emergencia ambient
+c629-remesas                   comparable                 migracion  57.0 59.3   2.3    34.0   40.7    0.0 4.3 3.7 3.1 3.8 1.7  1000  Poner un límite al monto de las remesas que pueden enviar al exterior las person
+c638-gratuidad                 comparable                 educacion  41.0 44.6   3.6    54.0   55.2    0.2 3.6 3.5 3.1 3.5 3.1  1000                Limitar la gratuidad universitaria a estudiantes de hasta 30 años.
+c698-tag                       comparable                transporte  55.0 58.8   3.8    40.0   41.0    0.2 4.2 3.8 3.1 3.8 2.3  1000  Bajar entre 10% y 25% las tarifas TAG de Autopista Central desde enero de 2027 a
+uc25-celulares-colegios        comparable        regulacion-digital  78.0 81.9   3.9     NaN   18.1    0.0 5.1 4.5 3.2 4.2 2.9  1000  Prohibir a estudiantes el uso de celulares con acceso a redes sociales en colegi
+cep96-aporte-economico         comparable                 migracion  36.0 40.0   4.0    32.0   59.6    0.4 3.6 3.5 3.0 3.4 3.3  1000  Indicar el grado de acuerdo con que las personas inmigrantes aportan a la econom
+uc26-familia-realizacion       comparable          familia-derechos  48.0 52.1   4.1     NaN   47.8    0.1 4.2 4.1 3.2 3.7 3.4  1000  Evaluar si dedicarse exclusivamente a labores del hogar impide que una mujer se 
+c577-brecha                    comparable                 pensiones  62.0 66.7   4.7    34.0   33.3    0.0 4.7 4.5 3.2 3.9 3.9  1000  Asignar un 0,5% a reparto para compensar la diferencia en las pensiones de hombr
+cseg26-excepcion               comparable        seguridad-justicia  54.0 58.8   4.8     NaN   41.2    0.0 4.4 3.8 3.4 4.2 3.8  1000  Permitir que el presidente declare preventivamente un estado de excepción de eme
+c594-aborto-maternidad         comparable                     salud  38.0 43.1   5.1    62.0   56.9    0.0 3.6 3.6 3.0 3.4 2.3  1000  ¿Aprobaría el aborto en esta situación? La mujer no se siente preparada o no qui
+c505-concesiones               comparable  instituciones-elecciones  45.0 50.3   5.3    45.0   49.6    0.1 4.0 3.7 3.2 3.9 2.7  1000      Permitir que los bienes nacionales de uso público se entreguen en concesión.
+c704-buses                     comparable                transporte  64.0 69.5   5.5    26.0   30.4    0.1 4.7 4.5 3.2 4.0 2.9  1000  Subir del 35% al 70% el reintegro del costo de los peajes que pagan los buses in
+c698-extension-tag             comparable                transporte  56.0 61.5   5.5    34.0   38.2    0.3 4.3 3.8 3.1 3.9 2.6  1000  Buscar el mismo acuerdo de rebaja de tarifas y extensión de concesión para otras
+cep96-tomas                    comparable                 educacion  23.0 29.1   6.1    76.0   70.9    0.0 3.0 3.0 3.2 2.9 3.2  1000  Evaluar que los estudiantes ocupen colegios y universidades como forma de protes
+c704-diesel                    comparable                transporte  66.0 72.2   6.2    26.0   27.8    0.0 4.7 4.0 3.1 3.9 4.3  1000                                   Reducir en $142 el precio por litro del diésel.
+c505-contribuciones            comparable                  vivienda  74.0 80.4   6.4    23.0   19.6    0.0 5.0 4.5 3.2 4.2 3.7  1000           Eximir de contribuciones a la vivienda usada como residencia principal.
+cm26-ciudadania                     extra        economia-impuestos  42.0 48.6   6.6     NaN   51.4    0.0 4.0 3.6 3.2 3.8 4.5  1000          Evaluar el proyecto misceláneo del Ejecutivo discutido en abril de 2026.
+c577-congreso                  comparable                 pensiones  65.0 71.8   6.8    30.0   28.2    0.0 4.7 4.1 3.2 3.8 4.9  1000  Con la información con que se cuenta, evaluar que el Congreso haya aprobado la r
+servel23-constitucion               extra  instituciones-elecciones  44.2 51.3   7.1    55.8   48.7    0.0 4.0 3.7 3.2 3.7 4.0  1000  Voto sobre el texto constitucional propuesto por el Consejo Constitucional en 20
+servel22-constitucion               extra  instituciones-elecciones  38.1 45.8   7.7    61.9   54.2    0.0 3.8 3.7 3.1 3.5 3.9  1000  Voto sobre el texto constitucional propuesto por la Convención Constitucional en
+c638-seia                      comparable            medio-ambiente  54.0 62.0   8.0    35.0   37.9    0.1 4.5 3.8 3.2 4.1 3.0  1000  Acortar el tiempo que lleva obtener permisos ambientales mediante el Sistema de 
+c577-lagunas                   comparable                 pensiones  64.0 72.2   8.2    33.0   27.8    0.0 4.9 4.5 3.2 4.3 4.3  1000  Crear un seguro para períodos sin cotizaciones, financiado por el seguro de cesa
+cseg26-inhabilitacion          comparable        seguridad-justicia  91.0 99.9   8.9     NaN    0.1    0.0 6.2 5.1 3.6 4.8 2.4  1000  Impedir que quienes sean condenados por crimen organizado ocupen cargos de elecc
+c638-acciones                  comparable        economia-impuestos  39.0 48.1   9.1    44.0   51.9    0.0 3.8 3.4 3.1 3.7 1.9  1000                Suprimir el impuesto a las ganancias obtenidas al vender acciones.
+cep96-seleccion-educacion      comparable                 migracion  58.0 67.2   9.2    24.0   32.7    0.1 4.6 3.9 3.1 4.1 2.8  1000   Seleccionar inmigrantes dando preferencia a personas con mayor nivel educativo.
+c638-reconstruccion            comparable                  vivienda  83.0 92.3   9.3    10.0    7.7    0.0 5.4 4.3 3.3 4.1 1.7  1000      Agregar $400.000 millones para reconstruir tras incendios en Biobío y Ñuble.
+ct22-reforma                   comparable        economia-impuestos  34.0 44.1  10.1    45.0   55.9    0.0 3.7 3.7 3.0 3.4 4.0  1000  Evaluar el primer proyecto de reforma tributaria que el gobierno de Gabriel Bori
+uc25-verificacion              comparable        regulacion-digital  73.0 83.3  10.3     NaN   16.6    0.1 5.1 4.4 3.1 3.9 3.0  1000  Prohibir el acceso a redes sociales a menores de 15 años y multar a compañías qu
+c594-aborto-costos             comparable                     salud  33.0 43.4  10.4    66.0   56.6    0.0 3.6 3.5 3.0 3.4 2.4  1000  ¿Aprobaría el aborto en esta situación? El hogar atraviesa dificultades económic
+c594-objecion                  comparable                     salud  47.0 57.4  10.4    52.0   42.5    0.1 4.2 3.9 3.1 3.6 2.1  1000  Permitir que un médico se niegue a realizar un aborto legal invocando objeción d
+cep96-recorte                  comparable        economia-impuestos  34.0 44.4  10.4    41.0   55.5    0.1 3.7 3.3 3.0 3.6 4.5  1000  Reducir el gasto público como estrategia del Gobierno para mejorar las finanzas 
+c663-apuestas-regulacion       comparable        regulacion-digital  51.0 62.7  11.7    49.0   37.3    0.0 4.3 3.7 3.1 3.7 2.9  1000  Regular las casas de apuestas por internet y permitir su funcionamiento legal su
+c638-empresas                  comparable        economia-impuestos  38.0 49.9  11.9    56.0   50.1    0.0 4.0 3.5 3.0 3.8 3.0  1000                                Disminuir el impuesto a las empresas de 27% a 23%.
+c704-bencina                   comparable                transporte  62.0 75.6  13.6    31.0   24.3    0.1 4.9 4.2 3.1 4.0 4.7  1000                               Reducir en $39 el precio por litro de las bencinas.
+cseg26-toque                   comparable        seguridad-justicia  47.0 61.2  14.2    46.0   38.8    0.0 4.4 3.8 3.3 4.1 3.6  1000  Aplicar un toque de queda en el contexto de las medidas de la reforma de segurid
+uc26-fertilidad-carrera        comparable                   trabajo  44.0 58.4  14.4     NaN   41.6    0.0 4.4 4.1 3.2 3.8 3.4  1000  Evaluar si tener hijos dificulta que una mujer ascienda en el trabajo o desarrol
+cep96-estado-economia          comparable        economia-impuestos  24.0 38.6  14.6    48.0   61.4    0.0 3.6 3.5 3.0 3.5 4.5  1000  Evaluar la idea de que el país estaría mejor con menos participación del Estado 
+c663-apuestas-bloqueo          comparable        regulacion-digital  82.0 96.7  14.7    11.0    3.3    0.0 5.8 4.6 3.3 4.2 2.5  1000                     Bloquear páginas de apuestas en línea que operan ilegalmente.
+c663-apuestas-impuestos        comparable        regulacion-digital  70.0 86.1  16.1    25.0   13.7    0.2 5.3 4.9 3.2 4.4 2.6  1000     Exigir que las plataformas de apuestas tributen por sus operaciones en Chile.
+uc25-libertad                  comparable        regulacion-digital  13.0 29.1  16.1     NaN   70.9    0.0 3.2 3.2 3.1 3.1 2.8  1000                     Dar libertad de acceso a redes sociales a menores de 15 años.
+cep96-trabajo                  comparable                 migracion  40.0 56.7  16.7    38.0   43.3    0.0 4.3 3.7 3.1 3.8 3.7  1000  Indicar el grado de acuerdo con la afirmación de que los inmigrantes quitan empl
+c577-prestamo                  comparable                 pensiones  50.0 67.0  17.0    44.0   33.0    0.0 4.5 4.2 3.1 3.9 4.4  1000              Destinar el 1,5% a un préstamo que el Estado reembolsará al jubilar.
+c505-mandato                   comparable  instituciones-elecciones  75.0 93.1  18.1    24.0    6.7    0.2 5.2 4.7 3.4 4.4 2.3  1000  Establecer mandatos presidenciales de cuatro años, sin reelección inmediata y co
+c638-corregir-jornada          comparable                   trabajo  29.0 48.4  19.4    64.0   51.2    0.4 3.8 3.5 3.1 3.7 3.8  1000                                           Corregir la ley de jornada de 40 horas.
+c698-condena                   comparable        seguridad-justicia  33.0 53.4  20.4    59.0   46.6    0.0 4.2 4.1 3.2 3.9 2.0  1000  Permitir que las personas condenadas con enfermedad terminal terminen de cumplir
+c638-empleo                    comparable                   trabajo  48.0 68.8  20.8    42.0   31.0    0.2 4.6 4.1 3.1 4.1 3.2  1000  Crear un subsidio para que las empresas recuperen parte de las cotizaciones prev
+c663-apuestas-prohibicion      comparable        regulacion-digital  56.0 79.3  23.3    36.0   20.6    0.1 5.0 4.1 3.1 3.9 3.1  1000  ¿Debería Chile prohibir las casas de apuestas o casinos que operan por internet?
+uc26-fertilidad-espacio        comparable                  vivienda  45.0 69.2  24.2     NaN   30.7    0.1 4.8 4.4 3.2 3.8 3.2  1000  Indicar si la vivienda donde vive la persona es demasiado pequeña para una famil
+uc26-familia-jornada-completa  comparable          familia-derechos  32.0 56.6  24.6     NaN   43.4    0.0 4.3 4.0 3.1 3.8 3.6  1000  Evaluar si la familia queda desatendida cuando la mujer trabaja a tiempo complet
+c511-objecion                  comparable                     salud  40.0 66.1  26.1    60.0   33.6    0.3 4.6 4.0 3.2 3.8 2.6  1000         Incorporar la objeción de conciencia tanto individual como institucional.
+c577-afp                       comparable                 pensiones  66.0 95.2  29.2    32.0    4.8    0.0 5.4 4.9 3.1 4.5 4.6  1000  Trasladar al afiliado a una administradora con una comisión inferior, permitiénd
+c663-cae-embargo               comparable                 educacion  54.0 91.6  37.6    41.0    8.4    0.0 5.3 5.1 3.1 4.6 1.6  1000  Cobrar el CAE impago mediante embargo bancario a deudores que ganen más de $3,5 
+
+
+====================================================================================================
+1.5 CASOS EXTRA (fuera de los 120): votaciones y paneles
+====================================================================================================
+                             real  sim   dif  real_d  sim_d                                                                                                                                                                                                                         enunciado
+caso                                                                                                                                                                                                                                                                                         
+c661-registro-incivilidades  67.0 51.4 -15.6    28.0   48.6  El presidente Kast anunció un Registro de Vándalos e Incivilidades para sancionar a quienes cometan esos actos, con posibles restricciones para acceder a beneficios del Estado. ¿Está de acuerdo o en desacuerdo con la medida?
+cm26-ciudadania              42.0 48.6   6.6     NaN   51.4                                                                                                                                                          Evaluar el proyecto misceláneo del Ejecutivo discutido en abril de 2026.
+servel22-constitucion        38.1 45.8   7.7    61.9   54.2                                                                                                                                            Voto sobre el texto constitucional propuesto por la Convención Constitucional en 2022.
+servel23-constitucion        44.2 51.3   7.1    55.8   48.7                                                                                                                                               Voto sobre el texto constitucional propuesto por el Consejo Constitucional en 2023.
+
+
+====================================================================================================
+1.6 LAS OTRAS PREGUNTAS (p2 justicia, p3 confianza en el Estado, p4 efectividad, p5 influencia)
+====================================================================================================
+Media por pregunta en los 120 casos: {'p1': 4.18, 'p2': 3.86, 'p3': 3.16, 'p4': 3.75, 'p5': 2.96}
+Desviación entre casos: {'p1': 0.69, 'p2': 0.48, 'p3': 0.1, 'p4': 0.4, 'p5': 0.92}
+Correlación entre casos de cada media con la de p1: {'p2': np.float64(0.92), 'p3': np.float64(0.47), 'p4': np.float64(0.92), 'p5': np.float64(0.12)}
+Correlación del error en acuerdo (sim - real) con la media de cada pregunta: {'p1': np.float64(0.33), 'p2': np.float64(0.3), 'p3': np.float64(-0.04), 'p4': np.float64(0.29), 'p5': np.float64(0.14)}
+Correlación persona a persona de p1 con cada una (todas las respuestas): {'p2': np.float64(0.87), 'p3': np.float64(0.1), 'p4': np.float64(0.82), 'p5': np.float64(0.19)}
+
+
+====================================================================================================
+2. CORTES PUBLICADOS POR SEGMENTO (segmentacion.jsonl)
+====================================================================================================
+  (sin base) mma18-bolsas region Arica y Parinacota n=13
+  (sin base) mma18-bolsas region O’Higgins n=0
+  (sin base) mma18-bolsas region Aysén n=5
+  (sin base) mma18-bolsas region Magallanes n=9
+                             caso     dim       segmento    n  real  sim  d_real  d_sim  error_nivel  error_delta
+0                  uc25-identidad    edad          18–34  330    47 52.1   -10.0   -5.2          5.1          4.8
+1                  uc25-identidad    edad          35–54  360    59 57.2     2.0   -0.1         -1.8         -2.1
+2                  uc25-identidad    edad            55+  310    66 62.9     9.0    5.6         -3.1         -3.4
+3                    mma18-bolsas  region       Tarapacá   19    95 47.4     0.0  -11.3        -47.6        -11.3
+4                    mma18-bolsas  region    Antofagasta   34    95 64.7     0.0    6.0        -30.3          6.0
+5                    mma18-bolsas  region        Atacama   15    92 66.7    -3.0    8.0        -25.3         11.0
+6                    mma18-bolsas  region       Coquimbo   45    95 51.1     0.0   -7.6        -43.9         -7.6
+7                    mma18-bolsas  region     Valparaíso  104    95 59.6     0.0    0.9        -35.4          0.9
+8                    mma18-bolsas  region          Maule   60    97 51.7     2.0   -7.0        -45.3         -9.0
+9                    mma18-bolsas  region          Ñuble   28    92 39.3    -3.0  -19.4        -52.7        -16.4
+10                   mma18-bolsas  region         Biobío   87    94 63.2    -1.0    4.5        -30.8          5.5
+11                   mma18-bolsas  region   La Araucanía   55    95 54.5     0.0   -4.2        -40.5         -4.2
+12                   mma18-bolsas  region       Los Ríos   22    91 59.1    -4.0    0.4        -31.9          4.4
+13                   mma18-bolsas  region      Los Lagos   48    95 64.6     0.0    5.9        -30.4          5.9
+14                   mma18-bolsas  region  Metropolitana  403    95 59.6     0.0    0.9        -35.4          0.9
+15                   mma18-bolsas    zona          Norte  126    94 57.1    -1.0   -1.6        -36.9         -0.6
+16                   mma18-bolsas    zona         Centro  332    95 57.5     0.0   -1.2        -37.5         -1.2
+17                   mma18-bolsas    zona            Sur  139    94 60.4    -1.0    1.7        -33.6          2.7
+18                   mma18-bolsas    zona  Santiago (RM)  403    95 59.6     0.0    0.9        -35.4          0.9
+19                   ct22-reforma    sexo        Mujeres  527    32 49.0    -2.0    4.9         17.0          6.9
+20                   ct22-reforma    sexo        Hombres  473    35 38.7     1.0   -5.4          3.7         -6.4
+21                   ct22-reforma    edad          35–54  360    28 43.6    -6.0   -0.5         15.6          5.5
+22   uc26-familia-crianza-en-casa    edad          18–24  134    40 47.0   -11.0   -2.2          7.0          8.8
+23   uc26-familia-crianza-en-casa    edad          25–34  196    39 39.3   -12.0   -9.9          0.3          2.1
+24   uc26-familia-crianza-en-casa    edad          35–44  201    46 43.8    -5.0   -5.4         -2.2         -0.4
+25   uc26-familia-crianza-en-casa    edad          45–54  159    53 42.1     2.0   -7.1        -10.9         -9.1
+26   uc26-familia-crianza-en-casa    edad            55+  310    64 63.5    13.0   14.3         -0.5          1.3
+27   uc26-familia-crianza-en-casa     gse           Alto  170    38 18.2   -13.0  -31.0        -19.8        -18.0
+28   uc26-familia-crianza-en-casa     gse          Medio  416    42 45.7    -9.0   -3.5          3.7          5.5
+29   uc26-familia-crianza-en-casa     gse           Bajo  414    64 65.5    13.0   16.3          1.5          3.3
+30       uc26-familia-realizacion    edad          18–24  134    48 61.9     0.0    9.8         13.9          9.8
+31       uc26-familia-realizacion    edad          25–34  196    51 53.1     3.0    1.0          2.1         -2.0
+32       uc26-familia-realizacion    edad          35–44  201    41 52.2    -7.0    0.1         11.2          7.1
+33       uc26-familia-realizacion    edad          45–54  159    45 52.2    -3.0    0.1          7.2          3.1
+34       uc26-familia-realizacion    edad            55+  310    50 47.1     2.0   -5.0         -2.9         -7.0
+35       uc26-familia-realizacion     gse           Alto  170    50 48.2     2.0   -3.9         -1.8         -5.9
+36       uc26-familia-realizacion     gse          Medio  416    53 53.4     5.0    1.3          0.4         -3.7
+37       uc26-familia-realizacion     gse           Bajo  414    43 52.4    -5.0    0.3          9.4          5.3
+38  uc26-familia-jornada-completa    edad          18–24  134    16 59.7   -16.0    3.1         43.7         19.1
+39  uc26-familia-jornada-completa    edad          25–34  196    16 60.7   -16.0    4.1         44.7         20.1
+40  uc26-familia-jornada-completa    edad          35–44  201    28 57.7    -4.0    1.1         29.7          5.1
+41  uc26-familia-jornada-completa    edad          45–54  159    40 53.5     8.0   -3.1         13.5        -11.1
+42  uc26-familia-jornada-completa    edad            55+  310    46 53.5    14.0   -3.1          7.5        -17.1
+43  uc26-familia-jornada-completa     gse           Alto  170    20 42.4   -12.0  -14.2         22.4         -2.2
+44  uc26-familia-jornada-completa     gse          Medio  416    31 56.0    -1.0   -0.6         25.0          0.4
+45  uc26-familia-jornada-completa     gse           Bajo  414    40 63.0     8.0    6.4         23.0         -1.6
+  edad       cortes 19  error de nivel medio  11.7  correlación de las diferencias con el total  0.26  misma dirección (cortes a ≥3 pts)  53 % de 15  tamaño medio real 7.5 vs simulado 4.3
+  gse        cortes 9   error de nivel medio  11.9  correlación de las diferencias con el total  0.86  misma dirección (cortes a ≥3 pts)  86 % de 7  tamaño medio real 7.6 vs simulado 8.6
+  region     cortes 12  error de nivel medio  37.5  correlación de las diferencias con el total -0.02  misma dirección (cortes a ≥3 pts)  33 % de 3  tamaño medio real 1.1 vs simulado 6.3
+  sexo       cortes 2   error de nivel medio  10.3  correlación de las diferencias con el total   nan  misma dirección (cortes a ≥3 pts) nan % de 0  tamaño medio real 1.5 vs simulado 5.1
+  zona       cortes 4   error de nivel medio  35.8  correlación de las diferencias con el total -0.09  misma dirección (cortes a ≥3 pts) nan % de 0  tamaño medio real 0.5 vs simulado 1.3
+  todos      cortes 46  error de nivel medio  20.5  correlación de las diferencias con el total  0.41  misma dirección (cortes a ≥3 pts)  60 % de 25  tamaño medio real 5.0 vs simulado 5.4
+  sin región cortes 34  error de nivel medio  14.5  correlación de las diferencias con el total  0.49  misma dirección (cortes a ≥3 pts)  64 % de 22  tamaño medio real 6.4 vs simulado 5.1
+
+
+====================================================================================================
+3. CEP 96: DIEZ PREGUNTAS ABIERTAS POR SEGMENTO CON MICRODATOS REALES
+====================================================================================================
+Total nacional recalculado desde los microdatos (control contra lo publicado):
+  cep96-criminalidad           microdatos  67.1 /  15.0   publicado 67 / 15   simulado  61.8 /  38.1
+  cep96-trabajo                microdatos  40.0 /  37.9   publicado 40 / 38   simulado  56.7 /  43.3
+  cep96-gasto                  microdatos  60.0 /  20.1   publicado 60 / 20   simulado  56.3 /  43.7
+  cep96-educacion              microdatos  70.8 /  16.2   publicado 71 / 16   simulado  40.6 /  59.4
+  cep96-aporte-economico       microdatos  36.3 /  32.0   publicado 36 / 32   simulado  40.0 /  59.6
+  cep96-seleccion-educacion    microdatos  57.9 /  24.5   publicado 58 / 24   simulado  67.2 /  32.7
+  cep96-tomas                  microdatos  23.1 /  76.4   publicado 23 / 76   simulado  29.1 /  70.9
+  cep96-estado-economia        microdatos  24.2 /  47.8   publicado 24 / 48   simulado  38.6 /  61.4
+  cep96-burocracia             microdatos  52.2 /  20.3   publicado 52 / 20   simulado  44.1 /  55.9
+  cep96-recorte                microdatos  34.2 /  41.3   publicado 34 / 41   simulado  44.4 /  55.5
+
+370 cortes (segmento x pregunta). La CEP ofrece «ni de acuerdo ni en desacuerdo» (13 a 31 %) y el sitio casi no deja nota 4, así que se compara sobre quienes toman posición: a/(a+d).
+Diferencia de cada segmento con el total nacional, real contra simulada: correlación 0.69; misma dirección en los cortes que se alejan ≥5 pts: 85 % de 142; tamaño medio real 5.3, simulado 7.7
+
+Por dimensión: cuánto separa cada característica a la gente (diferencia absoluta media del segmento con el total, en puntos de acuerdo neto)
+           cortes  separa_real  separa_sim  razon_sim_real  corr  misma_dir_%
+dim                                                                          
+voto         40.0          6.8        13.8             2.0   0.8         94.7
+gobierno     40.0          7.1        14.0             2.0   0.8         95.2
+politica     40.0          7.7        14.9             1.9   0.8         85.7
+sexo         20.0          2.5         3.2             1.3   0.7        100.0
+zona         20.0          2.5         3.0             1.2   0.6        100.0
+educacion    30.0          5.8         6.8             1.2   0.7         86.7
+trabajo      30.0          3.5         4.1             1.2   0.2        100.0
+religion     40.0          4.8         5.2             1.1   0.1         61.1
+interes      30.0          6.3         6.8             1.1   0.8         91.7
+edad         40.0          5.3         5.1             1.0   0.7         84.2
+macrozona    40.0          3.3         2.1             0.6   0.1         57.1
+
+Por segmento, promedio de las 10 preguntas: error en acuerdo neto (sim - real), error absoluto, y error en la diferencia con el total
+                                    preguntas  n_sim  n_cep  EAM_neto  sesgo_neto  EAM_delta  EAM_acuerdo_bruto
+dim       segmento                                                                                             
+edad      18-29                          10.0  232.0  247.0      15.9       -10.6        4.3               11.5
+          30-44                          10.0  299.0  367.0      14.9       -11.6        3.4               10.3
+          45-59                          10.0  240.0  359.0      16.7       -10.9        3.9               14.5
+          60+                            10.0  229.0  493.0      11.9        -9.8        5.1                9.4
+educacion Básica o menos                 10.0  271.0  476.0      10.4        -7.5        6.7               10.3
+          Media                          10.0  417.0  581.0      16.6       -13.4        2.7               12.5
+          Superior                       10.0  308.0  409.0      15.1       -10.3        4.6               10.7
+gobierno  Aprueba a Kast                 10.0  329.0  488.0      18.0        -7.9       11.4               18.7
+          Desaprueba a Kast              10.0  536.0  772.0      15.5       -12.4        7.9                8.4
+          Ni aprueba ni desaprueba       10.0   80.0  119.0      17.5       -12.8        5.9               15.7
+          No sabe                        10.0   55.0   87.0      16.2        -8.6        8.5               17.5
+interes   Interés alto                   10.0  192.0  228.0      15.9        -8.5        5.6               11.8
+          Interés bajo o nulo            10.0  546.0  907.0      13.3       -11.3        2.8               10.6
+          Interés medio                  10.0  255.0  325.0      16.2       -11.6        2.9               10.6
+macrozona Centro                         10.0  332.0  508.0      14.4       -10.7        2.0                9.9
+          Norte                          10.0  126.0  181.0      14.7       -13.2        5.0               11.4
+          RM                             10.0  403.0  564.0      14.1       -10.6        2.4               11.5
+          Sur                            10.0  139.0  213.0      14.6        -8.6        5.4               14.0
+politica  Centro (5-6)                   10.0  428.0  580.0      14.5       -10.9        3.0               11.2
+          Derecha (7-10)                 10.0  212.0  325.0      20.1        -6.7       14.8               22.6
+          Izquierda (1-4)                10.0  211.0  301.0      16.9       -11.6       16.7               11.8
+          No se ubica                    10.0  149.0  260.0      15.7       -14.3        4.0                8.9
+religion  Católica                       10.0  566.0  717.0      14.2       -12.6        2.4                9.7
+          Evangélica                     10.0  157.0  275.0      15.1       -10.8        3.3               11.1
+          Ninguna                        10.0  235.0  404.0      15.3        -6.8        4.8               12.6
+          Otra                           10.0   42.0   70.0      22.3       -16.2       13.1               13.5
+sexo      Hombres                        10.0  473.0  536.0      14.4       -11.6        2.0               11.1
+          Mujeres                        10.0  527.0  930.0      13.6        -9.9        1.9               10.6
+trabajo   Busca trabajo                  10.0   55.0  140.0      13.8        -8.7        8.0               12.9
+          No trabaja ni busca            10.0  375.0  586.0      13.2       -10.2        3.4               10.2
+          Trabaja                        10.0  566.0  730.0      15.0       -11.5        2.1               11.3
+voto      Blanco o nulo                  10.0  105.0  177.0      16.2       -12.0        5.9               11.4
+          No votó o no responde          10.0  170.0  281.0      13.4       -10.3        3.8                8.3
+          Votó Jara                      10.0  312.0  432.0      17.5       -14.4       14.4                9.4
+          Votó Kast                      10.0  413.0  576.0      18.5        -8.2       12.5               20.6
+zona      Rural                          10.0  133.0  179.0      14.2        -9.0        4.5               11.9
+          Urbana                         10.0  867.0 1287.0      14.0       -11.0        0.6               10.6
+
+Los 25 cortes con mayor error en acuerdo neto:
+                   caso        dim                  segmento  n_sim  real  sim  real_neto  sim_neto  err_neto  d_real  d_sim
+127     cep96-educacion   politica            Derecha (7-10)    212  71.1 12.7       78.9      12.7     -66.2    -2.4  -27.9
+137     cep96-educacion       voto                 Votó Kast    413  70.0 14.3       79.0      14.3     -64.8    -2.3  -26.3
+130     cep96-educacion   gobierno            Aprueba a Kast    329  71.5 17.6       81.9      17.6     -64.2     0.5  -23.0
+120     cep96-educacion       zona                     Rural    133  74.4 32.3       83.0      32.3     -50.7     1.7   -8.3
+132     cep96-educacion   gobierno  Ni aprueba ni desaprueba     80  63.9 25.0       75.1      25.0     -50.1    -6.2  -15.6
+117     cep96-educacion  educacion            Básica o menos    271  66.2 26.6       75.0      26.6     -48.4    -6.3  -14.0
+143     cep96-educacion    trabajo       No trabaja ni busca    375  72.5 34.4       82.8      34.4     -48.4     1.5   -6.2
+125     cep96-educacion  macrozona                       Sur    139  68.6 33.8       81.8      33.8     -48.0     0.5   -6.8
+115     cep96-educacion       edad                     45-59    240  72.9 32.9       80.1      32.9     -47.2    -1.3   -7.7
+116     cep96-educacion       edad                       60+    229  68.4 31.0       76.7      31.0     -45.7    -4.6   -9.6
+146     cep96-educacion    interes       Interés bajo o nulo    546  67.7 33.9       79.3      33.9     -45.4    -2.1   -6.7
+139     cep96-educacion   religion                Evangélica    157  73.0 38.2       83.4      38.2     -45.2     2.1   -2.4
+133     cep96-educacion   gobierno                   No sabe     55  72.9 36.4       80.8      36.4     -44.4    -0.6   -4.2
+129     cep96-educacion   politica               No se ubica    149  64.3 33.6       77.8      33.6     -44.2    -3.6   -7.0
+318    cep96-burocracia   gobierno                   No sabe     55  58.3 41.8       85.6      41.8     -43.8    13.5   -2.3
+112     cep96-educacion       sexo                   Mujeres    527  70.0 37.8       81.4      37.8     -43.6     0.0   -2.8
+122     cep96-educacion  macrozona                    Centro    332  75.7 40.4       83.9      40.4     -43.6     2.6   -0.2
+99          cep96-gasto       voto                 Votó Jara    312  48.7 22.8       66.1      22.8     -43.4    -8.8  -33.5
+303    cep96-burocracia  educacion                     Media    417  52.4 34.8       78.1      34.8     -43.3     6.0   -9.3
+30   cep96-criminalidad   religion                      Otra     42  73.2 45.2       88.0      45.2     -42.8     6.2  -16.6
+317    cep96-burocracia   gobierno  Ni aprueba ni desaprueba     80  49.2 33.8       76.1      33.8     -42.3     4.0  -10.4
+138     cep96-educacion   religion                  Católica    566  71.6 38.3       80.4      38.3     -42.1    -0.9   -2.3
+312    cep96-burocracia   politica            Derecha (7-10)    212  57.3 32.5       74.1      32.5     -41.5     2.0  -11.6
+118     cep96-educacion  educacion                     Media    417  69.5 40.3       81.7      40.3     -41.4     0.3   -0.3
+113     cep96-educacion       edad                     18-29    232  73.3 45.7       86.6      45.7     -40.9     5.3    5.1
+
+Posición política, pregunta por pregunta (acuerdo neto real / simulado):
+                             real_neto                                                sim_neto                                           
+segmento                  Centro (5-6) Derecha (7-10) Izquierda (1-4) No se ubica Centro (5-6) Derecha (7-10) Izquierda (1-4) No se ubica
+caso                                                                                                                                     
+cep96-aporte-economico            54.0           44.0            63.0        49.0         37.0           28.0            62.0        35.0
+cep96-burocracia                  73.0           74.0            65.0        76.0         43.0           33.0            57.0        46.0
+cep96-criminalidad                82.0           86.0            70.0        90.0         63.0           82.0            32.0        71.0
+cep96-educacion                   82.0           79.0            86.0        78.0         41.0           13.0            72.0        34.0
+cep96-estado-economia             33.0           38.0            26.0        41.0         36.0           64.0            19.0        37.0
+cep96-gasto                       75.0           78.0            62.0        87.0         54.0           85.0            25.0        66.0
+cep96-recorte                     41.0           80.0            21.0        46.0         42.0           79.0            18.0        40.0
+cep96-seleccion-educacion         69.0           78.0            59.0        76.0         72.0           92.0            32.0        70.0
+cep96-tomas                       24.0            7.0            47.0        12.0         24.0            2.0            73.0        19.0
+cep96-trabajo                     46.0           58.0            39.0        68.0         57.0           78.0            31.0        62.0
+
+Voto en segunda vuelta 2025, pregunta por pregunta (acuerdo neto real / simulado):
+                              real_neto                                                sim_neto                                          
+segmento                  Blanco o nulo No votó o no responde Votó Jara Votó Kast Blanco o nulo No votó o no responde Votó Jara Votó Kast
+caso                                                                                                                                     
+cep96-aporte-economico             45.0                  57.0      65.0      46.0          38.0                  42.0      56.0      28.0
+cep96-burocracia                   73.0                  71.0      69.0      74.0          41.0                  47.0      52.0      38.0
+cep96-criminalidad                 84.0                  79.0      71.0      89.0          58.0                  61.0      36.0      83.0
+cep96-educacion                    81.0                  82.0      84.0      79.0          47.0                  43.0      72.0      14.0
+cep96-estado-economia              35.0                  35.0      25.0      38.0          24.0                  36.0      20.0      58.0
+cep96-gasto                        76.0                  68.0      66.0      84.0          51.0                  57.0      23.0      83.0
+cep96-recorte                      31.0                  45.0      13.0      77.0          34.0                  34.0      13.0      75.0
+cep96-seleccion-educacion          72.0                  65.0      65.0      76.0          68.0                  67.0      36.0      91.0
+cep96-tomas                        23.0                  18.0      46.0      10.0          37.0                  25.0      62.0       4.0
+cep96-trabajo                      52.0                  47.0      39.0      61.0          56.0                  52.0      31.0      78.0
+
+Edad, pregunta por pregunta (acuerdo neto real / simulado):
+                          real_neto                  sim_neto                 
+segmento                      18-29 30-44 45-59  60+    18-29 30-44 45-59  60+
+caso                                                                          
+cep96-aporte-economico         57.0  64.0  46.0 45.0     41.0  49.0  36.0 32.0
+cep96-burocracia               74.0  74.0  73.0 68.0     48.0  45.0  35.0 49.0
+cep96-criminalidad             82.0  81.0  86.0 79.0     61.0  56.0  68.0 65.0
+cep96-educacion                87.0  83.0  80.0 77.0     46.0  50.0  33.0 31.0
+cep96-estado-economia          26.0  31.0  35.0 40.0     36.0  36.0  45.0 38.0
+cep96-gasto                    67.0  70.0  84.0 78.0     53.0  46.0  63.0 67.0
+cep96-recorte                  39.0  46.0  49.0 45.0     46.0  42.0  46.0 44.0
+cep96-seleccion-educacion      76.0  68.0  69.0 70.0     63.0  64.0  72.0 70.0
+cep96-tomas                    40.0  31.0  15.0  9.0     40.0  32.0  25.0 19.0
+cep96-trabajo                  42.0  40.0  60.0 63.0     52.0  50.0  65.0 61.0
+
+Educación, pregunta por pregunta (acuerdo neto real / simulado):
+                               real_neto                      sim_neto               
+segmento                  Básica o menos Media Superior Básica o menos Media Superior
+caso                                                                                 
+cep96-aporte-economico              40.0  52.0     68.0           30.0  39.0     51.0
+cep96-burocracia                    66.0  78.0     70.0           51.0  35.0     51.0
+cep96-criminalidad                  79.0  86.0     80.0           71.0  64.0     50.0
+cep96-educacion                     75.0  82.0     86.0           27.0  40.0     53.0
+cep96-estado-economia               47.0  34.0     22.0           45.0  39.0     33.0
+cep96-gasto                         77.0  80.0     65.0           72.0  57.0     42.0
+cep96-recorte                       43.0  46.0     46.0           45.0  45.0     43.0
+cep96-seleccion-educacion           71.0  75.0     63.0           72.0  68.0     62.0
+cep96-tomas                         13.0  25.0     30.0           17.0  31.0     37.0
+cep96-trabajo                       64.0  55.0     35.0           70.0  60.0     41.0
+
+
+====================================================================================================
+3.1 PERSONA A PERSONA: cinco preguntas cuya respuesta real (la del donante CEP) viene en la fila del agente
+====================================================================================================
+  cep96-estado-economia      el modelo SÍ leyó ese dato en el perfil | donantes: acuerdo 26.4 %, ni-ni 22.3 %, desacuerdo 51.3 % | simulado: acuerdo 38.8 %, desacuerdo 61.2 % | AUC 0.92 | acierta el lado 89 % | de los «de acuerdo» reales simulan acuerdo 87 %; de los «en desacuerdo» simulan desacuerdo 91 %; los ni-ni simulan acuerdo 50 %
+       acierto del lado por politica: Centro (5-6) 95 % (n=308); Derecha (7-10) 79 % (n=160); Izquierda (1-4) 87 % (n=178); No se ubica 93 % (n=105)
+       acierto del lado por edad: 18-29 92 % (n=158); 30-44 91 % (n=231); 45-59 84 % (n=188); 60+ 91 % (n=174)
+       acierto del lado por educacion: Básica o menos 90 % (n=195); Media 88 % (n=300); Superior 90 % (n=255)
+  cep96-burocracia           el modelo SÍ leyó ese dato en el perfil | donantes: acuerdo 55.6 %, ni-ni 25.8 %, desacuerdo 18.6 % | simulado: acuerdo 43.4 %, desacuerdo 56.6 % | AUC 0.18 | acierta el lado 23 % | de los «de acuerdo» reales simulan acuerdo 24 %; de los «en desacuerdo» simulan desacuerdo 20 %; los ni-ni simulan acuerdo 59 %
+       acierto del lado por politica: Centro (5-6) 21 % (n=290); Derecha (7-10) 25 % (n=163); Izquierda (1-4) 23 % (n=159); No se ubica 24 % (n=115)
+       acierto del lado por edad: 18-29 33 % (n=131); 30-44 19 % (n=221); 45-59 20 % (n=191); 60+ 22 % (n=184)
+       acierto del lado por educacion: Básica o menos 25 % (n=202); Media 21 % (n=292); Superior 23 % (n=230)
+  cep96-recorte              el modelo SÍ leyó ese dato en el perfil | donantes: acuerdo 35.3 %, ni-ni 19.0 %, desacuerdo 45.8 % | simulado: acuerdo 45.0 %, desacuerdo 54.9 % | AUC 1.00 | acierta el lado 100 % | de los «de acuerdo» reales simulan acuerdo 99 %; de los «en desacuerdo» simulan desacuerdo 100 %; los ni-ni simulan acuerdo 52 %
+       acierto del lado por politica: Centro (5-6) 100 % (n=339); Derecha (7-10) 100 % (n=149); Izquierda (1-4) 100 % (n=182); No se ubica 99 % (n=102)
+       acierto del lado por edad: 18-29 99 % (n=161); 30-44 100 % (n=225); 45-59 100 % (n=204); 60+ 100 % (n=182)
+       acierto del lado por educacion: Básica o menos 100 % (n=208); Media 99 % (n=311); Superior 100 % (n=249)
+  cep96-criminalidad         el modelo SÍ leyó ese dato en el perfil | donantes: acuerdo 67.7 %, ni-ni 18.1 %, desacuerdo 14.2 % | simulado: acuerdo 62.2 %, desacuerdo 37.8 % | AUC 0.95 | acierta el lado 86 % | de los «de acuerdo» reales simulan acuerdo 84 %; de los «en desacuerdo» simulan desacuerdo 96 %; los ni-ni simulan acuerdo 28 %
+       acierto del lado por politica: Centro (5-6) 88 % (n=325); Derecha (7-10) 98 % (n=185); Izquierda (1-4) 68 % (n=164); No se ubica 86 % (n=132)
+       acierto del lado por edad: 18-29 82 % (n=179); 30-44 83 % (n=216); 45-59 89 % (n=208); 60+ 89 % (n=203)
+       acierto del lado por educacion: Básica o menos 91 % (n=238); Media 85 % (n=349); Superior 81 % (n=216)
+  cep96-aporte-economico     el modelo SÍ leyó ese dato en el perfil | donantes: acuerdo 34.2 %, ni-ni 32.2 %, desacuerdo 33.5 % | simulado: acuerdo 40.2 %, desacuerdo 59.5 % | AUC 0.92 | acierta el lado 87 % | de los «de acuerdo» reales simulan acuerdo 81 %; de los «en desacuerdo» simulan desacuerdo 93 %; los ni-ni simulan acuerdo 32 %
+       acierto del lado por politica: Centro (5-6) 87 % (n=265); Derecha (7-10) 81 % (n=149); Izquierda (1-4) 91 % (n=135); No se ubica 90 % (n=118)
+       acierto del lado por edad: 18-29 80 % (n=145); 30-44 89 % (n=185); 45-59 90 % (n=168); 60+ 88 % (n=169)
+       acierto del lado por educacion: Básica o menos 89 % (n=220); Media 86 % (n=269); Superior 86 % (n=177)
+
+
+====================================================================================================
+4. QUIÉN SE ALEJA DE LA REALIDAD EN LOS 120 CASOS (sin cortes reales: cotas y contrafactuales)
+====================================================================================================
+4.1 Si el país fuera solo ese grupo de agentes: error de su % de acuerdo contra el % nacional real, y cuánto se separa del total simulado
+(total simulado: EAM 14.9, sesgo -5.0. Casos con apoyo real ≥75 %: 31, simulado medio 65.2; con apoyo real ≤35 %: 15, simulado medio 33.9)
+             dim                  segmento    n  EAM  sesgo   r  lado_%  separa_del_total  dif_con_total  casos_imposibles  error_minimo_medio  rechaza_consensos_%  media_en_consensos  apoya_lo_rechazado_%  media_en_rechazados
+0           sexo                   Hombres  473 16.1   -6.1 0.5    65.0               4.6           -1.1                22                16.6                 25.8                62.5                   6.7                 37.1
+1           sexo                   Mujeres  527 15.1   -4.1 0.6    74.2               4.2            1.0                27                12.6                  9.7                67.6                  13.3                 31.1
+2           edad                     18-29  232 14.2   -2.6 0.5    76.7               5.9            2.5                 4                14.4                  3.2                66.9                  20.0                 39.1
+3           edad                     30-44  299 14.7   -4.4 0.5    75.0               3.4            0.7                 9                10.3                  6.5                65.6                  13.3                 33.8
+4           edad                     45-59  240 16.2   -6.3 0.5    66.7               3.7           -1.3                 7                12.9                 19.4                63.4                  13.3                 33.6
+5           edad                       60+  229 17.9   -7.0 0.5    69.2               6.5           -2.0                 6                10.8                 22.6                64.7                  20.0                 29.3
+6      educacion            Básica o menos  271 20.1   -6.7 0.4    64.2               8.8           -1.7                10                12.6                 29.0                62.9                  20.0                 31.5
+7      educacion                     Media  417 14.7   -4.4 0.6    74.2               1.8            0.6                15                12.3                  6.5                66.4                   6.7                 34.3
+8      educacion                  Superior  308 14.1   -4.4 0.6    75.0               7.0            0.6                 9                12.7                  9.7                65.4                  20.0                 35.5
+9           gse3                 Alto (Q5)  170 15.6   -6.1 0.5    69.2              10.9           -1.1                 3                10.8                 12.9                63.4                  13.3                 39.6
+10          gse3               Bajo (Q1-2)  414 17.8   -4.6 0.5    65.0               5.5            0.4                18                13.1                 25.8                65.4                  20.0                 32.7
+11          gse3              Medio (Q3-4)  416 14.7   -5.0 0.6    73.3               1.8            0.0                16                12.0                  6.5                65.7                  13.3                 32.8
+12          zona                     Rural  133 18.8   -7.0 0.4    64.2               6.7           -2.0                 1                17.3                 25.8                61.4                  20.0                 33.0
+13          zona                    Urbana  867 14.5   -4.7 0.6    74.2               1.0            0.3                78                15.0                  6.5                65.7                  13.3                 34.1
+14     macrozona                    Centro  332 15.6   -5.8 0.5    70.0               1.9           -0.7                10                14.3                 19.4                63.9                  13.3                 33.8
+15     macrozona                     Norte  126 15.8   -4.4 0.5    68.3               3.2            0.6                 1                 3.2                 16.1                65.2                  20.0                 34.6
+16     macrozona                        RM  403 14.3   -4.7 0.6    75.0               2.5            0.3                13                14.8                  3.2                65.8                  13.3                 34.6
+17     macrozona                       Sur  139 15.9   -4.8 0.5    67.5               3.7            0.2                 3                 1.7                 16.1                66.3                  20.0                 31.8
+18      politica              Centro (5-6)  428 14.9   -3.8 0.6    73.3               2.3            1.2                15                12.3                  6.5                67.4                  13.3                 32.4
+19      politica            Derecha (7-10)  212 36.2   -9.9 0.1    48.3              30.6           -4.8                 7                37.3                 48.4                56.9                  53.3                 40.3
+20      politica           Izquierda (1-4)  211 28.4   -2.2 0.3    62.5              30.8            2.8                 8                19.7                 35.5                68.2                  40.0                 35.9
+21      politica               No se ubica  149 17.0   -5.6 0.5    69.2               6.4           -0.6                 2                 7.4                 19.4                66.2                  13.3                 26.6
+22      gobierno            Aprueba a Kast  329 32.0   -6.7 0.2    51.7              25.6           -1.7                18                22.6                 45.2                61.2                  40.0                 37.6
+23      gobierno         Desaprueba a Kast  536 19.0   -3.7 0.5    65.8              18.7            1.3                29                16.7                 29.0                67.8                  33.3                 32.2
+24      gobierno  Ni aprueba ni desaprueba   80 22.5   -7.3 0.3    62.5              13.5           -2.3                 0                 0.0                 35.5                63.5                  20.0                 31.8
+25      gobierno                   No sabe   55 20.8   -4.8 0.4    65.8              10.6            0.2                 0                 0.0                 22.6                65.6                  26.7                 32.0
+26          voto             Blanco o nulo  105 14.8   -4.9 0.6    70.8               8.9            0.2                 0                 0.0                 19.4                65.5                  26.7                 31.4
+27          voto     No votó o no responde  170 14.3   -4.8 0.6    73.3               3.4            0.2                 3                 9.4                  9.7                65.9                  20.0                 31.4
+28          voto                 Votó Jara  312 26.3   -2.2 0.4    65.0              28.1            2.8                10                28.2                 32.3                69.0                  33.3                 33.1
+29          voto                 Votó Kast  413 30.9   -7.2 0.2    52.5              24.4           -2.2                26                24.4                 45.2                61.8                  33.3                 36.3
+30      religion                  Católica  566 15.7   -5.2 0.5    69.2               2.6           -0.2                34                13.9                 12.9                65.2                  20.0                 32.9
+31      religion                Evangélica  157 20.2   -8.0 0.4    68.3               7.9           -2.9                 2                 7.0                 22.6                63.2                   6.7                 27.7
+32      religion                   Ninguna  235 14.6   -2.7 0.5    78.3               9.1            2.4                 6                12.5                  9.7                66.3                  20.0                 40.5
+33       trabajo             Busca trabajo   55 16.0   -3.0 0.5    69.2               5.5            2.0                 0                 0.0                 16.1                66.3                  20.0                 34.8
+34       trabajo       No trabaja ni busca  375 16.6   -5.5 0.5    70.0               4.1           -0.4                12                13.8                 16.1                65.4                  13.3                 32.0
+35       trabajo                   Trabaja  566 14.6   -4.9 0.5    75.0               2.7            0.1                30                14.7                  6.5                64.9                  13.3                 35.1
+36       menores         Con menores de 18  397 15.8   -3.6 0.5    72.5               2.7            1.4                14                10.3                  9.7                67.4                  13.3                 32.7
+37       menores               Sin menores  598 14.6   -5.9 0.5    70.8               1.8           -0.9                32                16.4                 16.1                63.8                  13.3                 34.7
+38         salud              Fonasa A o B  560 16.2   -5.0 0.5    71.7               3.2            0.1                31                15.4                 16.1                65.4                  13.3                 32.5
+39         salud              Fonasa C o D  226 14.3   -4.9 0.6    75.8               3.2            0.2                 4                12.1                  3.2                65.1                  13.3                 34.6
+40         salud                    Isapre  126 16.1   -5.8 0.4    65.8              10.0           -0.8                 1                 5.6                 19.4                63.7                  13.3                 38.9
+41      vivienda                 Arrendada  233 14.0   -4.0 0.6    76.7               4.7            1.0                 3                15.2                  6.5                66.6                  20.0                 34.5
+42      vivienda             Cedida u otra  120 16.3   -5.4 0.5    69.2               3.4           -0.4                 1                 8.3                 19.4                64.2                   6.7                 34.3
+43      vivienda                    Propia  642 15.3   -5.3 0.5    70.8               1.3           -0.3                43                14.3                 12.9                64.9                  13.3                 33.6
+44       interes              Interés alto  192 15.0   -4.8 0.5    69.2              11.1            0.3                 3                17.0                 19.4                65.1                  33.3                 37.5
+45       interes       Interés bajo o nulo  546 16.0   -5.4 0.5    69.2               3.1           -0.4                29                15.3                 19.4                65.0                  13.3                 32.1
+46       interes             Interés medio  255 16.3   -4.3 0.5    69.2               3.3            0.8                 7                 9.5                 12.9                65.7                  20.0                 35.5
+47  nacionalidad                   Chilena  922 14.9   -5.3 0.5    71.7               0.7           -0.3                96                14.9                 12.9                64.9                  13.3                 34.0
+48  nacionalidad                Extranjera   78 16.9   -1.9 0.5    67.5               7.9            3.1                 0                 0.0                 12.9                68.3                  20.0                 33.6
+
+4.2 Cuánto separa cada característica las respuestas simuladas (desviación entre grupos del % de acuerdo, media de los 120 casos)
+             dim  desviacion_entre_grupos  maxima  corr_con_error_abs
+8           voto                     22.6    36.0                -0.0
+7       gobierno                     20.8    36.9                -0.0
+6       politica                     20.6    29.6                -0.0
+2      educacion                      7.0    16.0                 0.0
+9       religion                      6.4    31.3                 0.1
+14       interes                      6.1    11.7                -0.0
+3           gse3                      6.1    17.9                -0.1
+1           edad                      5.5    14.5                 0.1
+12         salud                      5.0    13.5                -0.1
+10       trabajo                      4.6    14.3                -0.1
+0           sexo                      4.4    18.3                -0.1
+5      macrozona                      2.9     8.6                -0.1
+13      vivienda                      2.9    10.6                 0.0
+4           zona                      2.6    11.0                 0.1
+11       menores                      2.5    12.7                 0.0
+15  nacionalidad                      2.3    10.2                -0.0
+
+4.3 Polarización simulada por posición política y error
+Brecha izquierda - derecha simulada: media absoluta 61.3 pts; mediana 65.9; casos con más de 40 pts: 102; con menos de 10: 11
+Correlación entre |brecha| y |error|: 0.00; entre |brecha| y error con signo: -0.31; entre brecha con signo y error con signo: -0.24
+  poco polarizado  n=40 |brecha| media  35.0  EAM  14.3  sesgo  +2.0  real 59.0  sim 60.9
+  medio            n=40 |brecha| media  66.4  EAM  12.9  sesgo  -6.5  real 61.2  sim 54.7
+  muy polarizado   n=40 |brecha| media  82.4  EAM  17.4  sesgo -10.5  real 61.9  sim 51.3
+  la derecha apoya más           n=47  EAM  11.8  sesgo  -2.3  real  57.7  sim  55.4 | izquierda  20.4  centro  56.7  derecha  87.8  no se ubica  55.4
+  la izquierda apoya más         n=60  EAM  16.7  sesgo  -9.8  real  62.4  sim  52.6 | izquierda  86.0  centro  53.9  derecha  17.5  no se ubica  51.5
+  transversal en la simulación   n=13  EAM  17.3  sesgo  +7.2  real  63.3  sim  70.5 | izquierda  69.2  centro  71.1  derecha  70.8  no se ubica  70.4
+
+Casos de consenso real (≥75 %) y cómo respondió cada posición política en la simulación:
+                         real  sim   dif  izq   cen   der   nou                                                               enunciado
+caso                                                                                                                                   
+c505-eleccion-servicios  93.0 51.6 -41.4 13.7  51.9  93.4  45.0  Permitir que cada persona elija si su régimen de salud, su establecimi
+c543-eutanasia           75.0 37.3 -37.7 70.1  34.3  16.5  28.9                         Expresar acuerdo o desacuerdo con la eutanasia.
+mma18-bolsas             95.0 58.7 -36.3 91.9  64.0  14.2  59.7            Prohibir las bolsas plásticas para reducir la contaminación.
+mma18-vehiculos          89.0 54.3 -34.7 90.0  55.8  16.0  53.7  Restringir la circulación de los vehículos que generan más contaminaci
+mma18-lena               81.0 47.6 -33.4 85.3  50.2  10.8  38.9         Prohibir el uso de leña para reducir la contaminación del aire.
+c505-pueblos             86.0 54.9 -31.1 96.2  56.8  13.7  49.7  Incluir en la Constitución el reconocimiento de los pueblos indígenas.
+mma18-parrillas          79.0 48.4 -30.6 88.2  50.7   8.5  42.3   Prohibir parrilladas y asados durante días con contaminación elevada.
+c543-matrimonio          77.0 47.7 -29.3 88.6  49.1   7.1  43.6            Reconocer el derecho a casarse a las parejas del mismo sexo.
+c505-sala-cuna           93.0 64.0 -29.0 94.3  65.9  25.0  71.1          Garantizar sala cuna sin costo a partir del fin del postnatal.
+uc25-control-parental    89.0 60.0 -29.0 23.7  62.1  91.5  60.4  Dejar en manos de padres y madres la responsabilidad de controlar y li
+c511-sala-cuna           91.0 63.9 -27.1 94.3  67.8  20.8  71.1                                          Incorporar sala cuna gratuita.
+c505-naturaleza          92.0 65.4 -26.6 96.2  68.7  23.1  72.5  Establecer como deber del Estado la protección ambiental y la conserva
+c629-deportacion         81.0 55.1 -25.9 21.3  54.7  84.4  62.4  Expulsar a toda persona inmigrante que haya ingresado irregularmente a
+c505-clandestino         88.0 62.8 -25.2 28.0  64.0  89.2  71.1  Disponer la expulsión de extranjeros que entren clandestinamente a Chi
+c543-aborto              79.0 53.8 -25.2 94.3  57.2   9.0  50.3  Mantener el aborto permitido por inviabilidad fetal, riesgo vital mate
+c511-paridad             77.0 51.9 -25.1 96.7  52.1   5.7  53.7  Disponer que la ley asegure el acceso igualitario de mujeres y hombres
+c511-diputados           84.0 60.5 -23.5 19.9  62.9  95.3  61.7    Reducir la Cámara de Diputadas y Diputados de 155 a 138 integrantes.
+c505-propiedad           83.0 61.3 -21.7 18.5  65.2  98.1  58.4  Reconocer el derecho de propiedad en sus distintas formas y sobre todo
+c505-seguridad           97.0 76.1 -20.9 40.3  80.4  97.2  84.6  Establecer como deber estatal la seguridad de la población y el resgua
+c505-diputados           86.0 67.1 -18.9 22.7  72.7  97.2  71.1                            Reducir de 155 a 138 el número de diputados.
+c505-animales            92.0 74.0 -18.0 98.1  81.3  34.0  75.8  Establecer que el Estado y las personas deben promover la protección d
+cseg26-gendarmeria       85.0 69.2 -15.8 25.6  73.6  97.6  77.9  Ampliar las atribuciones de Gendarmería para separar a personas privad
+c663-cae-convenio        79.0 64.4 -14.6 94.3  67.8  22.2  72.5  Ofrecer un acuerdo de pago del CAE a quienes ganen menos de $3,5 millo
+c577-pgu                 83.0 70.2 -12.8 94.8  70.3  36.3  83.2                Elevar la Pensión Garantizada Universal a 250.000 pesos.
+c638-iva                 75.0 64.0 -11.0 25.1  68.9  96.7  58.4              Eximir del IVA por 12 meses la compra de viviendas nuevas.
+c638-contribuciones      76.0 72.0  -4.0 37.9  73.4  94.3  84.6  Eximir de contribuciones la primera vivienda de personas mayores de 65
+uc25-celulares-colegios  78.0 81.9   3.9 72.0  80.6  91.0  86.6  Prohibir a estudiantes el uso de celulares con acceso a redes sociales
+cseg26-inhabilitacion    91.0 99.9   8.9 99.5 100.0 100.0 100.0  Impedir que quienes sean condenados por crimen organizado ocupen cargo
+c638-reconstruccion      83.0 92.3   9.3 97.6  94.9  83.5  89.9  Agregar $400.000 millones para reconstruir tras incendios en Biobío y 
+c663-apuestas-bloqueo    82.0 96.7  14.7 99.1  96.5  94.3  97.3           Bloquear páginas de apuestas en línea que operan ilegalmente.
+c505-mandato             75.0 93.1  18.1 96.2  94.9  97.6  77.2  Establecer mandatos presidenciales de cuatro años, sin reelección inme
+
+Casos de rechazo real (≤35 %):
+                               real  sim  dif  izq  cen  der  nou                                                               enunciado
+caso                                                                                                                                     
+c543-bloqueadores              29.0 20.0 -9.0 62.6 14.0  0.5  4.7  Usar bloqueadores de la pubertad en menores que buscan realizar una tr
+c663-apuestas-menores           5.0  0.6 -4.4  0.0  0.7  0.9  0.7  Permitir que menores de edad apuesten en plataformas de apuestas por i
+c663-apuestas-social           27.0 22.9 -4.1  0.9 19.9 59.4 10.7  Permitir a plataformas de apuestas publicar anuncios en redes sociales
+c663-apuestas-tv               25.0 24.9 -0.1  2.8 21.7 63.7 10.1            Permitir a plataformas de apuestas anunciarse en televisión.
+c663-apuestas-eventos          27.0 27.0  0.0  3.3 22.9 67.9 14.1       Permitir a plataformas de apuestas patrocinar eventos deportivos.
+c663-apuestas-futbol           26.0 26.5  0.5  2.8 24.8 64.6 10.7        Permitir a plataformas de apuestas patrocinar equipos de fútbol.
+cep96-tomas                    23.0 29.1  6.1 73.5 24.1  1.9 19.5  Evaluar que los estudiantes ocupen colegios y universidades como forma
+ct22-reforma                   34.0 44.1 10.1 85.8 44.4  2.4 43.6  Evaluar el primer proyecto de reforma tributaria que el gobierno de Ga
+cep96-recorte                  34.0 44.4 10.4 18.0 41.8 79.2 39.6  Reducir el gasto público como estrategia del Gobierno para mejorar las
+c594-aborto-costos             33.0 43.4 10.4 86.3 41.8  7.1 38.9  ¿Aprobaría el aborto en esta situación? El hogar atraviesa dificultade
+cep96-estado-economia          24.0 38.6 14.6 19.0 36.2 64.2 36.9  Evaluar la idea de que el país estaría mejor con menos participación d
+uc25-libertad                  13.0 29.1 16.1 11.4 27.6 58.0 17.4           Dar libertad de acceso a redes sociales a menores de 15 años.
+c638-corregir-jornada          29.0 48.4 19.4  5.7 48.1 95.3 43.0                                 Corregir la ley de jornada de 40 horas.
+c698-condena                   33.0 53.4 20.4 91.5 55.1 14.2 50.3  Permitir que las personas condenadas con enfermedad terminal terminen 
+uc26-familia-jornada-completa  32.0 56.6 24.6 74.4 62.9 24.5 59.1  Evaluar si la familia queda desatendida cuando la mujer trabaja a tiem
+
+4.4 Todos los casos con cada posición política (para el anexo)
+                                                   area  real  sim   dif  izq   cen   der   nou  brecha
+caso                                                                                                   
+c704-bloqueo                                 transporte  64.0  4.4 -59.6  5.7   4.2   1.4   7.4     4.3
+c505-eleccion-servicios        instituciones-elecciones  93.0 51.6 -41.4 13.7  51.9  93.4  45.0   -79.7
+c543-eutanasia                                    salud  75.0 37.3 -37.7 70.1  34.3  16.5  28.9    53.6
+mma18-bolsas                             medio-ambiente  95.0 58.7 -36.3 91.9  64.0  14.2  59.7    77.8
+mma18-vehiculos                          medio-ambiente  89.0 54.3 -34.7 90.0  55.8  16.0  53.7    74.0
+uc26-derechos-sociales                        migracion  71.0 37.3 -33.7 69.2  36.4  11.3  31.5    57.9
+mma18-lena                               medio-ambiente  81.0 47.6 -33.4 85.3  50.2  10.8  38.9    74.5
+c638-ministerios                     economia-impuestos  74.0 42.8 -31.2 11.8  41.8  80.7  35.6   -68.8
+c505-pueblos                   instituciones-elecciones  86.0 54.9 -31.1 96.2  56.8  13.7  49.7    82.5
+c543-gestacion                         familia-derechos  63.0 32.2 -30.8 65.9  29.4  12.3  20.8    53.6
+mma18-parrillas                          medio-ambiente  79.0 48.4 -30.6 88.2  50.7   8.5  42.3    79.7
+cep96-educacion                               migracion  71.0 40.6 -30.4 72.0  41.4  12.7  33.6    59.3
+c543-matrimonio                        familia-derechos  77.0 47.7 -29.3 88.6  49.1   7.1  43.6    81.6
+uc25-control-parental                regulacion-digital  89.0 60.0 -29.0 23.7  62.1  91.5  60.4   -67.8
+c505-sala-cuna                         familia-derechos  93.0 64.0 -29.0 94.3  65.9  25.0  71.1    69.3
+c511-sala-cuna                         familia-derechos  91.0 63.9 -27.1 94.3  67.8  20.8  71.1    73.6
+c505-naturaleza                          medio-ambiente  92.0 65.4 -26.6 96.2  68.7  23.1  72.5    73.1
+c629-deportacion                              migracion  81.0 55.1 -25.9 21.3  54.7  84.4  62.4   -63.1
+ipsos25-matrimonio                     familia-derechos  72.0 46.3 -25.7 88.6  48.4   5.7  38.3    83.0
+c505-clandestino                              migracion  88.0 62.8 -25.2 28.0  64.0  89.2  71.1   -61.2
+c543-aborto                                       salud  79.0 53.8 -25.2 94.3  57.2   9.0  50.3    85.4
+c511-paridad                   instituciones-elecciones  77.0 51.9 -25.1 96.7  52.1   5.7  53.7    91.0
+c543-identidad                         familia-derechos  67.0 42.4 -24.6 87.7  41.1   2.4  38.9    85.3
+c511-diputados                 instituciones-elecciones  84.0 60.5 -23.5 19.9  62.9  95.3  61.7   -75.4
+c505-edad                      instituciones-elecciones  62.0 39.8 -22.2 10.0  38.1  79.2  30.9   -69.3
+c594-aborto-discapacidad                          salud  59.0 37.0 -22.0 78.7  35.7   3.8  28.9    74.9
+c505-propiedad                       economia-impuestos  83.0 61.3 -21.7 18.5  65.2  98.1  58.4   -79.6
+uc25-derechos-sociales                        migracion  59.0 37.6 -21.4 70.1  35.7  14.2  30.2    56.0
+c543-menores                           familia-derechos  55.0 34.0 -21.0 82.0  31.3   0.9  20.8    81.0
+c505-seguridad                       seguridad-justicia  97.0 76.1 -20.9 40.3  80.4  97.2  84.6   -56.9
+c505-diputados                 instituciones-elecciones  86.0 67.1 -18.9 22.7  72.7  97.2  71.1   -74.4
+uc25-familia-matrimonio                familia-derechos  68.0 49.3 -18.7 90.5  51.9   6.6  44.3    83.9
+c543-adopcion                          familia-derechos  65.0 46.7 -18.3 91.0  48.1   2.4  43.0    88.6
+c505-animales                            medio-ambiente  92.0 74.0 -18.0 98.1  81.3  34.0  75.8    64.1
+uc25-familia-identidad                 familia-derechos  60.0 43.6 -16.4 87.7  44.4   3.8  35.6    83.9
+cseg26-gendarmeria                   seguridad-justicia  85.0 69.2 -15.8 25.6  73.6  97.6  77.9   -72.0
+c663-cae-convenio                             educacion  79.0 64.4 -14.6 94.3  67.8  22.2  72.5    72.1
+c483-jornada                                    trabajo  71.0 56.8 -14.2 91.0  60.3   9.9  65.1    81.1
+c577-pgu                                      pensiones  83.0 70.2 -12.8 94.8  70.3  36.3  83.2    58.5
+c629-regularizacion-empleo                    migracion  61.0 48.7 -12.3 73.0  50.7  26.4  40.3    46.6
+ipsos25-adopcion                       familia-derechos  58.0 45.8 -12.2 90.0  46.3   3.8  41.6    86.3
+c511-estado-social             instituciones-elecciones  71.0 59.9 -11.1 93.8  62.9  16.5  65.1    77.3
+c638-iva                                       vivienda  75.0 64.0 -11.0 25.1  68.9  96.7  58.4   -71.6
+mma14-lena-ciudades                      medio-ambiente  51.0 40.1 -10.9 77.3  41.6   6.1  31.5    71.1
+c629-carcel                                   migracion  74.0 63.7 -10.3 23.2  66.8  89.6  75.2   -66.4
+uc26-fertilidad-trabajo                         trabajo  71.0 60.8 -10.2 88.2  64.7  23.1  64.4    65.0
+c543-bloqueadores                                 salud  29.0 20.0  -9.0 62.6  14.0   0.5   4.7    62.1
+c543-marihuana                                    salud  47.0 38.4  -8.6 82.0  37.1   9.9  20.8    72.1
+cep96-burocracia                     economia-impuestos  52.0 44.1  -7.9 56.9  42.8  32.5  46.3    24.3
+uc25-familia-adopcion                  familia-derechos  53.0 45.2  -7.8 86.7  46.0   4.7  41.6    82.0
+cseg26-terrorismo                    seguridad-justicia  70.0 63.0  -7.0 15.6  65.9  96.7  73.8   -81.1
+c629-derechos                                 migracion  47.0 40.4  -6.6 69.2  41.4  14.2  34.2    55.0
+cep96-criminalidad                            migracion  67.0 61.8  -5.2 32.2  63.1  82.1  71.1   -49.8
+c638-cae                                      educacion  70.0 65.0  -5.0 24.2  67.8  98.1  67.8   -73.9
+c663-apuestas-menores                regulacion-digital   5.0  0.6  -4.4  0.0   0.7   0.9   0.7    -0.9
+c625-contribuciones                            vivienda  60.0 55.7  -4.3  7.6  57.2  97.6  59.7   -90.1
+ipsos25-discriminacion                 familia-derechos  57.0 52.8  -4.2 94.8  54.9   7.1  52.3    87.7
+c663-apuestas-social                 regulacion-digital  27.0 22.9  -4.1  0.9  19.9  59.4  10.7   -58.5
+c638-contribuciones                            vivienda  76.0 72.0  -4.0 37.9  73.4  94.3  84.6   -56.4
+cep96-gasto                                   migracion  60.0 56.3  -3.7 24.6  54.0  85.4  66.4   -60.7
+c663-cae-cobro                                educacion  70.0 67.1  -2.9 91.9  69.4  31.1  76.5    60.8
+c505-umbral                    instituciones-elecciones  54.0 51.7  -2.3 13.7  57.5  85.8  40.3   -72.1
+uc26-familia-crianza-en-casa           familia-derechos  51.0 49.2  -1.8 42.7  47.7  52.4  58.4    -9.7
+c577-cotizacion                               pensiones  65.0 63.5  -1.5 93.4  66.6  20.3  73.8    73.1
+c629-regularizacion-hijos                     migracion  43.0 42.3  -0.7 74.9  41.1  16.5  36.2    58.4
+c663-apuestas-tv                     regulacion-digital  25.0 24.9  -0.1  2.8  21.7  63.7  10.1   -60.8
+c663-apuestas-eventos                regulacion-digital  27.0 27.0   0.0  3.3  22.9  67.9  14.1   -64.6
+c704-devolucion                              transporte  53.0 53.1   0.1 23.2  54.9  79.7  52.3   -56.5
+uc25-identidad                                migracion  57.0 57.3   0.3 27.5  59.3  81.6  59.1   -54.1
+c663-apuestas-futbol                 regulacion-digital  26.0 26.5   0.5  2.8  24.8  64.6  10.7   -61.8
+c704-congelamiento                           transporte  66.0 67.0   1.0 92.4  70.1  29.7  75.2    62.7
+mma14-lena-alertas                       medio-ambiente  57.0 58.3   1.3 91.5  62.1  18.9  56.4    72.6
+c629-remesas                                  migracion  57.0 59.3   2.3 26.1  60.5  84.0  67.8   -57.9
+c638-gratuidad                                educacion  41.0 44.6   3.6  3.8  44.2  92.9  34.9   -89.1
+c698-tag                                     transporte  55.0 58.8   3.8 27.0  58.9  92.5  55.7   -65.4
+uc25-celulares-colegios              regulacion-digital  78.0 81.9   3.9 72.0  80.6  91.0  86.6   -19.0
+cep96-aporte-economico                        migracion  36.0 40.0   4.0 61.6  37.4  27.8  34.2    33.8
+uc26-familia-realizacion               familia-derechos  48.0 52.1   4.1 91.5  53.5   8.0  55.0    83.5
+c577-brecha                                   pensiones  62.0 66.7   4.7 96.2  66.8  25.0  83.9    71.2
+cseg26-excepcion                     seguridad-justicia  54.0 58.8   4.8 14.2  58.6  95.3  70.5   -81.1
+c594-aborto-maternidad                            salud  38.0 43.1   5.1 85.3  41.8   6.6  38.9    78.7
+c505-concesiones               instituciones-elecciones  45.0 50.3   5.3  9.5  51.2  96.2  40.3   -86.7
+c704-buses                                   transporte  64.0 69.5   5.5 95.7  72.4  34.9  73.2    60.8
+c698-extension-tag                           transporte  56.0 61.5   5.5 30.8  63.8  88.7  59.7   -57.9
+cep96-tomas                                   educacion  23.0 29.1   6.1 73.5  24.1   1.9  19.5    71.6
+c704-diesel                                  transporte  66.0 72.2   6.2 65.9  73.1  70.3  81.2    -4.4
+c505-contribuciones                            vivienda  74.0 80.4   6.4 46.0  83.4  99.1  94.0   -53.1
+c577-congreso                                 pensiones  65.0 71.8   6.8 95.7  74.1  44.8  69.8    50.9
+c638-seia                                medio-ambiente  54.0 62.0   8.0 18.0  66.4  97.6  61.1   -79.6
+c577-lagunas                                  pensiones  64.0 72.2   8.2 93.8  74.8  36.8  84.6    57.0
+cseg26-inhabilitacion                seguridad-justicia  91.0 99.9   8.9 99.5 100.0 100.0 100.0    -0.5
+c638-acciones                        economia-impuestos  39.0 48.1   9.1  4.7  48.8  95.3  40.3   -90.5
+cep96-seleccion-educacion                     migracion  58.0 67.2   9.2 31.8  71.7  91.5  69.8   -59.8
+c638-reconstruccion                            vivienda  83.0 92.3   9.3 97.6  94.9  83.5  89.9    14.1
+ct22-reforma                         economia-impuestos  34.0 44.1  10.1 85.8  44.4   2.4  43.6    83.4
+uc25-verificacion                    regulacion-digital  73.0 83.3  10.3 82.0  82.0  85.8  85.2    -3.9
+cep96-recorte                        economia-impuestos  34.0 44.4  10.4 18.0  41.8  79.2  39.6   -61.2
+c594-objecion                                     salud  47.0 57.4  10.4  8.5  60.3  98.1  60.4   -89.6
+c594-aborto-costos                                salud  33.0 43.4  10.4 86.3  41.8   7.1  38.9    79.2
+c663-apuestas-regulacion             regulacion-digital  51.0 62.7  11.7 60.2  64.5  75.0  43.6   -14.8
+c638-empresas                        economia-impuestos  38.0 49.9  11.9  6.6  50.9  94.8  44.3   -88.2
+c704-bencina                                 transporte  62.0 75.6  13.6 67.8  76.2  75.0  85.9    -7.2
+cseg26-toque                         seguridad-justicia  47.0 61.2  14.2 17.1  63.6  93.4  71.1   -76.3
+uc26-fertilidad-carrera                         trabajo  44.0 58.4  14.4 88.6  62.4  17.0  63.1    71.6
+cep96-estado-economia                economia-impuestos  24.0 38.6  14.6 19.0  36.2  64.2  36.9   -45.2
+c663-apuestas-bloqueo                regulacion-digital  82.0 96.7  14.7 99.1  96.5  94.3  97.3     4.7
+c663-apuestas-impuestos              regulacion-digital  70.0 86.1  16.1 99.1  90.9  61.3  89.3    37.7
+uc25-libertad                        regulacion-digital  13.0 29.1  16.1 11.4  27.6  58.0  17.4   -46.6
+cep96-trabajo                                 migracion  40.0 56.7  16.7 30.8  57.0  77.8  62.4   -47.0
+c577-prestamo                                 pensiones  50.0 67.0  17.0 89.1  71.5  34.0  69.8    55.1
+c505-mandato                   instituciones-elecciones  75.0 93.1  18.1 96.2  94.9  97.6  77.2    -1.4
+c638-corregir-jornada                           trabajo  29.0 48.4  19.4  5.7  48.1  95.3  43.0   -89.6
+c698-condena                         seguridad-justicia  33.0 53.4  20.4 91.5  55.1  14.2  50.3    77.3
+c638-empleo                                     trabajo  48.0 68.8  20.8 32.7  74.5  94.3  67.1   -61.6
+c663-apuestas-prohibicion            regulacion-digital  56.0 79.3  23.3 88.6  82.7  59.4  84.6    29.2
+uc26-fertilidad-espacio                        vivienda  45.0 69.2  24.2 94.3  71.5  35.4  75.2    58.9
+uc26-familia-jornada-completa          familia-derechos  32.0 56.6  24.6 74.4  62.9  24.5  59.1    49.9
+c511-objecion                                     salud  40.0 66.1  26.1 25.6  70.1  98.6  65.8   -73.0
+c577-afp                                      pensiones  66.0 95.2  29.2 88.6  97.9  95.8  96.0    -7.1
+c663-cae-embargo                              educacion  54.0 91.6  37.6 94.8  91.4  88.2  92.6     6.6
+
+4.5 Regresión del error nacional sobre rasgos del caso
+error = +9.0 -5.16 x (apoyo real - media)/10 -2.29 x |brecha|/10 ; R² = 0.41
+Solo con el apoyo real: R² = 0.32 (pendiente -0.52 pts de error por punto de apoyo real)

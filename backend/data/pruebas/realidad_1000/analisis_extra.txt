@@ -1,0 +1,82 @@
+brecha izq-der real {'cep96-aporte-economico': 18.0, 'cep96-burocracia': -9.0, 'cep96-criminalidad': -16.0, 'cep96-educacion': 7.0, 'cep96-estado-economia': -12.0, 'cep96-gasto': -16.0, 'cep96-recorte': -60.0, 'cep96-seleccion-educacion': -20.0, 'cep96-tomas': 40.0, 'cep96-trabajo': -19.0}
+sim {'cep96-aporte-economico': 34.0, 'cep96-burocracia': 24.0, 'cep96-criminalidad': -50.0, 'cep96-educacion': 59.0, 'cep96-estado-economia': -45.0, 'cep96-gasto': -61.0, 'cep96-recorte': -61.0, 'cep96-seleccion-educacion': -60.0, 'cep96-tomas': 72.0, 'cep96-trabajo': -47.0}
+media abs real 21.8 sim 51.4
+Jara-Kast media abs real 21.2 sim 46.7
+5 con la respuesta en el perfil: cortes 185 corr 0.69 misma dir 82% de 60 tam real 5.2 sim 6.6 EAM neto 14.6
+5 sin ella: cortes 185 corr 0.72 misma dir 88% de 82 tam real 5.4 sim 8.9 EAM neto 16.2
+sin dims politicas, sin respuesta: cortes 125 corr 0.62 misma dir 83% de 47 tam real 4.7 sim 5.3 EAM neto 15.4
+solo dims politicas, sin respuesta: cortes 60 corr 0.83 misma dir 94% de 35 tam real 6.9 sim 16.3 EAM neto 18.0
+solo demograficas, todas: cortes 220 corr 0.45 misma dir 78% de 69 tam real 4.1 sim 4.3 EAM neto 14.7
+cep96-aporte-economico ['migracion', 'economia-impuestos'] ['apertura_inmigracion', 'estado_burocracia', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'menos_estado', 'reducir_gasto']
+cep96-burocracia ['economia-impuestos'] ['estado_burocracia', 'menos_estado', 'reducir_gasto']
+cep96-criminalidad ['migracion', 'seguridad-justicia'] ['apertura_inmigracion', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'justifica_marchas', 'menos_estado', 'reducir_gasto']
+cep96-educacion ['migracion', 'educacion'] ['apertura_inmigracion', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'menos_estado', 'reducir_gasto']
+cep96-estado-economia ['economia-impuestos'] ['estado_burocracia', 'menos_estado', 'reducir_gasto']
+cep96-gasto ['migracion'] ['apertura_inmigracion', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'menos_estado', 'reducir_gasto']
+cep96-recorte ['economia-impuestos'] ['estado_burocracia', 'menos_estado', 'reducir_gasto']
+cep96-seleccion-educacion ['migracion'] ['apertura_inmigracion', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'menos_estado', 'reducir_gasto']
+cep96-tomas ['educacion', 'seguridad-justicia'] ['justifica_marchas', 'menos_estado', 'reducir_gasto']
+cep96-trabajo ['trabajo', 'migracion'] ['apertura_inmigracion', 'inmigrantes_aporte', 'inmigrantes_criminalidad', 'menos_estado', 'reducir_gasto']
+
+valorico (rasgo): n=23 real 55.3 sim 45.2
+    politica {'Centro': 46.0, 'Der': 17.0, 'Izq': 76.0, 'No se ubica': 40.0}
+    edad {'18-29': 55.0, '30-44': 47.0, '45-59': 41.0, '60+': 36.0}
+    educacion {'Básica o menos': 34.0, 'Media': 47.0, 'Superior': 53.0}
+    religion {'Católica': 41.0, 'Evangélica': 29.0, 'Ninguna': 64.0, 'Otra': 54.0}
+    sexo {'H': 44.0, 'M': 46.0}
+    gse {'Alto': 56.0, 'Bajo': 40.0, 'Medio': 46.0}
+    zona {'Rural': 37.0, 'Urbana': 47.0}
+
+principio: n=11 real 81.6 sim 57.8
+    politica {'Centro': 60.0, 'Der': 45.0, 'Izq': 65.0, 'No se ubica': 58.0}
+    edad {'18-29': 59.0, '30-44': 61.0, '45-59': 56.0, '60+': 55.0}
+    educacion {'Básica o menos': 53.0, 'Media': 58.0, 'Superior': 61.0}
+    religion {'Católica': 58.0, 'Evangélica': 58.0, 'Ninguna': 57.0, 'Otra': 59.0}
+    sexo {'H': 56.0, 'M': 60.0}
+    gse {'Alto': 58.0, 'Bajo': 57.0, 'Medio': 58.0}
+    zona {'Rural': 56.0, 'Urbana': 58.0}
+
+medio-ambiente: n=9 real 76.7 sim 56.5
+    politica {'Centro': 60.0, 'Der': 25.0, 'Izq': 82.0, 'No se ubica': 55.0}
+    edad {'18-29': 60.0, '30-44': 60.0, '45-59': 52.0, '60+': 54.0}
+    educacion {'Básica o menos': 43.0, 'Media': 59.0, 'Superior': 65.0}
+    religion {'Católica': 56.0, 'Evangélica': 53.0, 'Ninguna': 60.0, 'Otra': 59.0}
+    sexo {'H': 50.0, 'M': 62.0}
+    gse {'Alto': 62.0, 'Bajo': 49.0, 'Medio': 62.0}
+    zona {'Rural': 41.0, 'Urbana': 59.0}
+
+consenso real>=80: n=21 real 87.8 sim 66.9
+    politica {'Centro': 70.0, 'Der': 63.0, 'Izq': 64.0, 'No se ubica': 69.0}
+    edad {'18-29': 67.0, '30-44': 67.0, '45-59': 66.0, '60+': 68.0}
+    educacion {'Básica o menos': 67.0, 'Media': 68.0, 'Superior': 66.0}
+    religion {'Católica': 68.0, 'Evangélica': 68.0, 'Ninguna': 65.0, 'Otra': 65.0}
+    sexo {'H': 64.0, 'M': 69.0}
+    gse {'Alto': 64.0, 'Bajo': 68.0, 'Medio': 67.0}
+    zona {'Rural': 65.0, 'Urbana': 67.0}
+
+real 35-50 (sobrestimamos): n=18 real 43.5 sim 53.0
+    politica {'Centro': 54.0, 'Der': 56.0, 'Izq': 49.0, 'No se ubica': 51.0}
+    edad {'18-29': 56.0, '30-44': 54.0, '45-59': 52.0, '60+': 49.0}
+    educacion {'Básica o menos': 52.0, 'Media': 53.0, 'Superior': 54.0}
+    religion {'Católica': 53.0, 'Evangélica': 54.0, 'Ninguna': 53.0, 'Otra': 54.0}
+    sexo {'H': 54.0, 'M': 53.0}
+    gse {'Alto': 52.0, 'Bajo': 54.0, 'Medio': 53.0}
+    zona {'Rural': 53.0, 'Urbana': 53.0}
+
+beneficio: n=30 real 63.7 sim 62.9
+    politica {'Centro': 65.0, 'Der': 57.0, 'Izq': 63.0, 'No se ubica': 66.0}
+    edad {'18-29': 65.0, '30-44': 64.0, '45-59': 60.0, '60+': 63.0}
+    educacion {'Básica o menos': 65.0, 'Media': 63.0, 'Superior': 61.0}
+    religion {'Católica': 63.0, 'Evangélica': 64.0, 'Ninguna': 61.0, 'Otra': 62.0}
+    sexo {'H': 62.0, 'M': 64.0}
+    gse {'Alto': 54.0, 'Bajo': 68.0, 'Medio': 62.0}
+    zona {'Rural': 64.0, 'Urbana': 63.0}
+
+migracion: n=16 real 60.6 sim 51.7
+    politica {'Centro': 52.0, 'Der': 56.0, 'Izq': 46.0, 'No se ubica': 53.0}
+    edad {'18-29': 51.0, '30-44': 52.0, '45-59': 53.0, '60+': 51.0}
+    educacion {'Básica o menos': 53.0, 'Media': 52.0, 'Superior': 50.0}
+    religion {'Católica': 52.0, 'Evangélica': 53.0, 'Ninguna': 50.0, 'Otra': 47.0}
+    sexo {'H': 52.0, 'M': 51.0}
+    gse {'Alto': 50.0, 'Bajo': 53.0, 'Medio': 51.0}
+    zona {'Rural': 53.0, 'Urbana': 52.0}
