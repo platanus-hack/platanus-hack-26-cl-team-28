@@ -39,7 +39,7 @@ Desde 200 agentes el resultado nacional es estable: queda a 2,3 puntos del de 1.
 | Perfil con las opiniones de fondo de la CEP, sin las etiquetas políticas | La distancia entre izquierda y derecha queda en 21 puntos, como los 25 de la CEP, y cada segmento queda a 4,7 puntos de su diferencia real con el total |
 | Ancla nacional: un modelo analista (Opus) estima el total y los agentes lo reparten sin cambiar su orden | El total queda en promedio a 8 puntos de la encuesta |
 
-Alternativas evaluadas para llegar a esa combinación: instrucciones sobre cómo responde la gente, la postura explícita, distintas formas de pedir la indecisión, perfiles con más o menos datos, el pronóstico con otros modelos o promediando repeticiones, referencias reales en el prompt y una pregunta de expectativa a cada agente («¿cuántos de cada 100 chilenos crees que están de acuerdo?»). La combinación de arriba fue la que mejor se sostuvo en las preguntas reservadas.
+Alternativas evaluadas para llegar a esa combinación: instrucciones sobre cómo responde la gente, la postura explícita, distintas formas de pedir la indecisión, perfiles con más o menos datos, el pronóstico con otros modelos o promediando repeticiones, referencias reales en el prompt y una pregunta de expectativa a cada agente («¿cuántos de cada 100 chilenos crees que están de acuerdo?»). Cada pieza se eligió con las preguntas de desarrollo; las reservadas se usaron después para medir el motor integrado y compararlo con sus versiones parciales.
 
 ## Resultados en las 82 preguntas reservadas
 

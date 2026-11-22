@@ -135,6 +135,8 @@ Medidos en 82 preguntas reservadas, que no se usaron para elegir el método:
 | Error medio en el % en desacuerdo | 6,5 puntos |
 | Personas sin postura | 5 a 6 %, como en las encuestas (6,6 %) |
 
+**Sin ventaja por usar la CEP en el perfil:** los agentes llevan opiniones de la CEP 96, pero solo 4 de las 82 preguntas reservadas vienen de esa encuesta, y en ellas el error es mayor (16,3). Sin esas 4, el error medio de las otras 78 es de 7,8 puntos.
+
 **Por grupos de la población**, con los microdatos de la CEP: los segmentos se mueven en la misma dirección que en la realidad, y cada segmento queda en promedio a 4,7 puntos de su diferencia real con el total.
 
 ### Comparado con otras formas de estimar
