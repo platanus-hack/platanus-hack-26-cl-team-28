@@ -1,5 +1,8 @@
 # Despliegue en AWS
 
+La operación del sitio (despliegue, variables, salud e incidentes) está en
+[`docs/backend/08-operacion.md`](../docs/backend/08-operacion.md). Este archivo explica cómo se crea la máquina.
+
 Una sola máquina (EC2 `c7i.4xlarge`, 16 vCPU) con todo: el motor de simulación, el front compilado y
 Caddy con HTTPS. Los agentes responden con Haiku por la CLI de Claude Code, igual que en local, con la
 sesión de una o más cuentas de Claude.
