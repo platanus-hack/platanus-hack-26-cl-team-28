@@ -2,7 +2,6 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { PopupFlotante } from '../../componentes/comunes/Popup';
 import type { EnVivo } from '../../vivo/useEnVivo';
 import { useMenuHistorial } from '../MenuHistorial';
-import { useMenuOpciones } from '../MenuOpciones';
 import estilos from './MenuMas.module.css';
 
 interface Props {
@@ -13,20 +12,21 @@ interface Props {
   conHistorial: boolean;
   alUsarHistorial(textos: string[]): void;
   alVerHistorial(id: string): Promise<string | null>;
+  /** El cajón de la muestra: vive afuera porque también se abre desde la hoja. Recibe a dónde volver el foco. */
+  opciones: { bloqueado: boolean; abrir(origen: HTMLElement | null): void };
 }
 
 /**
  * En el teléfono, las utilidades de la esquina caben en un solo botón: tema, historial, opciones de
  * la muestra y, mientras corre, detener. Los cajones se montan fuera del menú, que se cierra al abrirlos.
  */
-export function MenuMas({ sim, claro, alCambiarTema, conHistorial, alUsarHistorial, alVerHistorial }: Props) {
+export function MenuMas({ sim, claro, alCambiarTema, conHistorial, alUsarHistorial, alVerHistorial, opciones }: Props) {
   const id = useId();
   const [abierto, setAbierto] = useState(false);
   const caja = useRef<HTMLDivElement>(null);
   const boton = useRef<HTMLButtonElement>(null);
   const devolverFoco = useCallback(() => boton.current?.focus(), []);
   const historial = useMenuHistorial({ alUsar: alUsarHistorial, alVer: alVerHistorial, devolverFoco });
-  const opciones = useMenuOpciones(sim, devolverFoco);
   const corriendo = sim.fase === 'corriendo';
 
   useEffect(() => {
@@ -87,14 +87,13 @@ export function MenuMas({ sim, claro, alCambiarTema, conHistorial, alUsarHistori
             </button>
           )}
           {!corriendo && (
-            <button type="button" disabled={opciones.bloqueado} aria-controls="cajon-muestra" onClick={elegir(opciones.abrir)}>
+            <button type="button" disabled={opciones.bloqueado} aria-controls="cajon-muestra" onClick={elegir(() => opciones.abrir(boton.current))}>
               Opciones de la muestra
             </button>
           )}
         </PopupFlotante>
       </div>
       {historial.cajon}
-      {opciones.cajon}
     </>
   );
 }

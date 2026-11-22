@@ -42,6 +42,56 @@
   border-top: 1px solid var(--linea-suave);
 }
 
+/* El título de una sección con su acción a la derecha (la muestra y sus opciones). */
+.cabeceraSeccion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e3);
+  min-width: 0;
+}
+
+.cabeceraSeccion > h2 {
+  margin: 0;
+  font: 650 var(--texto-xs) / 1 var(--fuente-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.opcionesSeccion {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e2);
+  min-height: 40px;
+  padding: 0 var(--e3);
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font: 650 var(--texto-s) / 1 var(--fuente-ui);
+  cursor: pointer;
+}
+
+.opcionesSeccion svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.opcionesSeccion[aria-expanded='true'],
+.opcionesSeccion:active {
+  background: var(--relleno-suave);
+}
+
+.opcionesSeccion:focus-visible {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
 .seccion > h2 {
   margin: 0;
   font: 650 var(--texto-xs) / 1 var(--fuente-ui);

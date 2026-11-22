@@ -26,6 +26,7 @@ import movilEstilos from './movil/DisposicionMovil.module.css';
 import type { Tope } from './movil/hoja';
 import { ListaVoces } from './movil/ListaVoces';
 import { MenuMas } from './movil/MenuMas';
+import { useMenuOpciones } from './MenuOpciones';
 import { PorRegion } from './movil/PorRegion';
 import { Quienes } from './movil/Quienes';
 import { ResumenPostura } from './movil/ResumenPostura';
@@ -454,6 +455,15 @@ export function AppEnjambre() {
     </button>
   );
 
+  // El cajón de la muestra en el teléfono: se abre desde el menú de la barra o junto a «Muestra» en la
+  // hoja, y al cerrarse el foco vuelve a quien lo abrió.
+  const origenOpciones = useRef<HTMLElement | null>(null);
+  const opcionesMovil = useMenuOpciones(sim, useCallback(() => origenOpciones.current?.focus(), []));
+  const abrirOpcionesMovil = (origen: HTMLElement | null) => {
+    origenOpciones.current = origen;
+    opcionesMovil.abrir();
+  };
+
   // ─── Teléfono: el menú de la barra, lo que asoma de la hoja y lo que hay debajo, según la fase ───
   const menuMovil = (
     <MenuMas
@@ -469,6 +479,7 @@ export function AppEnjambre() {
         setFicha(null);
         return sim.reabrir(id);
       }}
+      opciones={{ bloqueado: opcionesMovil.bloqueado, abrir: abrirOpcionesMovil }}
     />
   );
   const borrador = sim.borradores[Math.min(editando, sim.borradores.length - 1)];
@@ -493,7 +504,19 @@ export function AppEnjambre() {
     ) : null;
   const seccionMuestra = (
     <section className={movilEstilos.seccion}>
-      <h2>Muestra</h2>
+      <div className={movilEstilos.cabeceraSeccion}>
+        <h2>Muestra</h2>
+        {!opcionesMovil.bloqueado && (
+          <button type="button" className={movilEstilos.opcionesSeccion} aria-expanded={opcionesMovil.abierto} aria-controls={opcionesMovil.abierto ? 'cajon-muestra' : undefined} onClick={(e) => abrirOpcionesMovil(e.currentTarget)}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M2 4.5h7m4 0h1M2 11.5h2m4 0h6" />
+              <circle cx="11" cy="4.5" r="1.8" />
+              <circle cx="6" cy="11.5" r="1.8" />
+            </svg>
+            Opciones
+          </button>
+        )}
+      </div>
       <Insignia conexion={conexion} agentes={muestra.total} porAgente={sim.personasPorAgente} />
       {caso && sim.filtrada && (
         <p className={estilos.filtro}>
@@ -597,9 +620,13 @@ export function AppEnjambre() {
         aria-label="Chile dibujado con puntos: cada agente es una persona de la muestra del Censo 2024. Al responder, quienes están a favor vuelan a la derecha y quienes están en contra a la izquierda, agrupados por región."
       />
       {movil ? (
+        <>
         <DisposicionMovil fase={fase} caso={caso} menu={menuMovil} asomo={asomoMovil} encima={fase === 'preparar' ? watiSaludando : undefined} etiqueta={fase === 'preparar' ? 'Preparar consulta' : 'Resultados'} alCambiarBordes={alCambiarBordes} alCambiarTope={alCambiarTope} oculta={oculta || proceso || analisis}>
           {cuerpoMovil}
         </DisposicionMovil>
+        {/* Fuera de la barra y de la hoja: así queda sobre las dos (z-index 6 en CajonMuestra). */}
+        {opcionesMovil.cajon}
+        </>
       ) : (
       <>
       {/* Dos columnas: en cada una, cada bloque va debajo del anterior y nada se pisa. */}
