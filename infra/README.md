@@ -34,25 +34,17 @@ Para entrar a la máquina:
 
 ## Lo que no está en el repositorio
 
-Dos archivos en `/etc/ph26` de la máquina, que se crean a mano una vez:
+Un archivo en `/etc/ph26` de la máquina, que se crea a mano una vez:
 
 - `entorno`: `CLAUDE_TOKENS=sk-ant-oat...` con los tokens de `claude setup-token`, separados por coma si
   son de varias cuentas (las llamadas se reparten entre ellas). Después, `sudo systemctl restart ph26-motor`.
-- `acceso.caddy`: usuario y clave para entrar al sitio, porque cada corrida gasta la suscripción de
-  quien puso su token. Sin este archivo el sitio queda abierto.
 
-      basicauth {
-          USUARIO HASH        # el hash sale de: caddy hash-password
-      }
+## Sitio abierto al público
 
-  Después, `sudo systemctl reload caddy`.
-
-## Abrir el sitio al público
-
-Quitar la clave: borrar `/etc/ph26/acceso.caddy` y `sudo systemctl reload caddy`. Antes, conviene
-bajar lo que puede pedir cada persona, porque todas comparten la misma suscripción y la misma
-máquina (unos 90 agentes por segundo entre todos). En `/etc/ph26/entorno`, y después
-`sudo systemctl restart ph26-motor`:
+El sitio no pide usuario ni clave: cualquiera que entre puede correr simulaciones, y cada corrida
+gasta la suscripción de quien puso su token. Conviene bajar lo que puede pedir cada persona, porque
+todas comparten la misma suscripción y la misma máquina (unos 90 agentes por segundo entre todos).
+En `/etc/ph26/entorno`, y después `sudo systemctl restart ph26-motor`:
 
     MAXIMO_MUESTRA=2000          # agentes por corrida (10.000 si no se pone)
     RESPUESTAS_POR_CORRIDA=8000  # agentes × (variantes + iteraciones)

@@ -12,8 +12,6 @@
 }
 
 (sitio) {
-	# /etc/ph26/acceso.caddy pide usuario y clave; si no existe, el sitio queda abierto.
-	import /etc/ph26/*.caddy
 	header {
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options nosniff
@@ -44,8 +42,7 @@
 	import sitio
 }
 
-# Por la IP o por otro nombre, sin certificado: se manda al dominio, para que la clave de acceso
-# nunca viaje sin cifrar.
+# Por la IP o por otro nombre, sin certificado: se manda al dominio, para que nada viaje sin cifrar.
 http:// {
 	redir https://{$DOMINIO:whatif.japs.ing}{uri} permanent
 }

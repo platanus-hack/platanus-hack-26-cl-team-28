@@ -3,7 +3,7 @@
 [Índice](README.md)
 
 Todas las rutas cuelgan de `/api` y responden JSON en UTF-8, salvo el flujo de eventos. No hay
-cuentas ni tokens: el acceso se controla en el servidor web (clave de acceso del sitio) y con los
+cuentas, tokens ni clave de acceso: el sitio está abierto y el uso se controla con los
 cupos de la sección 5.4. El frontend y la API se sirven desde el mismo origen y la API no entrega
 cabeceras de permiso entre orígenes.
 

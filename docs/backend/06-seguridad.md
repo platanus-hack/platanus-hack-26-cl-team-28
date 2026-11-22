@@ -79,7 +79,7 @@ acepta solo si calza con el esquema esperado.
 | A-12 | Que el texto de la propuesta haga decir algo ofensivo a los agentes | Las frases se limitan a 160 caracteres y la interfaz las muestra como texto, sin interpretar | `motor.leer_voces`, frontend | Aceptado como riesgo, ver 6.6 |
 | A-13 | Que otra página lance simulaciones desde el navegador de un visitante | C-14 sin permiso entre orígenes; política de contenido y prohibición de marcos | `__main__.py`, `infra/Caddyfile` | Cubierto |
 | A-14 | Que un error revele detalles internos | C-15 mensajes genéricos hacia afuera, detalle solo en el registro | `__main__.py`, `corridas.py` | Cubierto |
-| A-15 | Capturar la clave de acceso en tránsito | C-16 TLS; por la dirección numérica se redirige al dominio; cabecera de transporte estricto | `infra/Caddyfile` | Cubierto |
+| A-15 | Capturar el tráfico en tránsito | C-16 TLS; por la dirección numérica se redirige al dominio; cabecera de transporte estricto | `infra/Caddyfile` | Cubierto |
 | A-16 | Que una falla en el lector de PDF o en el motor dé control de la máquina | C-17 el servicio no puede obtener privilegios nuevos ni escribir en el sistema | `infra/ph26-motor.service` | Mitigado |
 | A-17 | Robo de las credenciales del modelo | Viven en un archivo de la máquina legible solo por el administrador, fuera del repositorio | `/etc/ph26/entorno` | Cubierto |
 | A-18 | Acceso por SSH | Solo con llave; el acceso por contraseña está deshabilitado | Configuración de la máquina | Cubierto; el puerto está abierto a internet |
@@ -92,8 +92,7 @@ acepta solo si calza con el esquema esperado.
 
 - TLS con certificado automático. Lo que llega por la dirección numérica o por HTTP se redirige al
   dominio con HTTPS.
-- Clave de acceso opcional (`/etc/ph26/acceso.caddy`). Si el archivo no existe, el sitio queda
-  abierto.
+- Sin clave de acceso: el sitio está abierto a cualquiera.
 - Cabeceras: transporte estricto por un año, sin detección de tipo, sin marcos, sin referente, y
   política de contenido que solo permite recursos del propio sitio.
 - Cuerpo de hasta 26 MB; 15 segundos para enviar las cabeceras; conexiones ociosas hasta 3 minutos.
@@ -174,13 +173,11 @@ No se hicieron pruebas de carga ni de fuerza contra producción.
 | RS-08 | No hay respaldo de la caché ni del historial | Fuera del plazo del proyecto | Copia nocturna a almacenamiento externo |
 | RS-09 | Un pedido JSON de más de 1,5 MB se rechaza cortando la conexión | El servidor no lee cuerpos grandes que va a rechazar | El borde responde con error; el mensaje al usuario es genérico |
 
-## 6.7 Lista para abrir el sitio al público
+## 6.7 Lista para el sitio abierto al público
 
 1. Decidir los topes para ese rato y ponerlos en `/etc/ph26/entorno`
    ([documento 8](08-operacion.md), sección 8.5).
 2. Poner `HISTORIAL_OCULTO=1` si no se quiere que el público vea lo que escriben otros.
 3. Reiniciar el motor y comprobar `/api/estado`.
-4. Quitar la clave de acceso y recargar el servidor web.
-5. Tener a mano el comando para volver a poner la clave.
-6. No desplegar cambios del backend mientras esté abierto: cada reinicio corta las simulaciones en
+4. No desplegar cambios del backend mientras esté abierto: cada reinicio corta las simulaciones en
    curso.

@@ -136,7 +136,6 @@ Todo se ajusta con variables de entorno. En producción, los valores fijos está
 | Archivo | Contenido | Permisos |
 |---|---|---|
 | `/etc/ph26/entorno` | `CLAUDE_TOKENS` y los topes que se quieran cambiar | Solo el administrador |
-| `/etc/ph26/acceso.caddy` | Usuario y clave de acceso al sitio. Si no existe, el sitio queda abierto | |
 
 ## 8.4 Salud y registros
 
@@ -160,24 +159,13 @@ abandono o que falla. No registra el contenido de las propuestas.
 
 ## 8.5 Tareas frecuentes
 
-**Abrir el sitio al público.**
+**Ajustar los topes del sitio abierto.** El sitio no pide usuario ni clave. Para bajar lo que puede
+pedir cada persona o, si se quiere, ocultar el historial:
 
 ```sh
-# 1. Topes para ese rato (opcional) y, si se quiere, ocultar el historial
 sudo nano /etc/ph26/entorno
 sudo systemctl restart ph26-motor
 curl -s localhost:8787/api/estado | head -c 200
-
-# 2. Quitar la clave
-sudo mv /etc/ph26/acceso.caddy /etc/ph26/acceso.caddy.guardado
-sudo systemctl reload caddy
-```
-
-**Volver a cerrarlo.**
-
-```sh
-sudo mv /etc/ph26/acceso.caddy.guardado /etc/ph26/acceso.caddy
-sudo systemctl reload caddy
 ```
 
 **Agregar una cuenta del modelo.** Agregar su sesión a `CLAUDE_TOKENS` en `/etc/ph26/entorno`,

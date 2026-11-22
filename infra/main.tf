@@ -2,7 +2,7 @@
 #
 #     cd infra && terraform init && terraform apply
 #
-# La sesión de Claude y la clave de acceso no están aquí ni en el repositorio: viven en /etc/ph26
+# La sesión de Claude no está aquí ni en el repositorio: vive en /etc/ph26
 # dentro de la máquina (ver infra/README.md).
 
 terraform {

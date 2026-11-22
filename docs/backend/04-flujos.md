@@ -19,7 +19,7 @@ algo falla. Los números de paso son estables: se pueden citar como "F3, paso 5"
 
 Actor: cualquier persona. Disparador: abre la dirección del sitio.
 
-1. Caddy pide la clave de acceso si está configurada y entrega el frontend.
+1. Caddy entrega el frontend, sin pedir usuario ni clave.
 2. El navegador pide `GET /api/estado`. Recibe el motor y el modelo que responden, cuántos agentes y
    personas hay, los niveles de reducción, los parámetros de filtro con sus opciones, la encuesta
    con sus escalas y el máximo de agentes por simulación.

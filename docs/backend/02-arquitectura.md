@@ -73,7 +73,7 @@ el modelo de lenguaje.
 flowchart TB
     nav["Navegador<br/>React, TypeScript, canvas"]
     subgraph maquina ["Una máquina: 16 núcleos, 30 GB"]
-        caddy["Caddy 2.6<br/>TLS, clave de acceso, cabeceras,<br/>archivos del frontend"]
+        caddy["Caddy 2.6<br/>TLS, cabeceras,<br/>archivos del frontend"]
         subgraph servicio ["Servicio ph26-motor, tope de 27 GB"]
             motor["Motor<br/>Python 3.14, biblioteca estándar"]
             duck[("DuckDB en memoria<br/>resumen de 1,5 M de agentes")]
@@ -97,7 +97,7 @@ flowchart TB
     motor -->|agrega y lee| hist
 ```
 
-- **Caddy** es la única puerta: termina TLS, pide la clave de acceso si está configurada, agrega las
+- **Caddy** es la única puerta: termina TLS, agrega las
   cabeceras de seguridad, limita el tamaño de lo que se sube y manda `/api/*` al motor. Lo demás lo
   responde con el frontend compilado.
 - **El motor** escucha solo en la interfaz local. No hay base de datos aparte: los agentes se
