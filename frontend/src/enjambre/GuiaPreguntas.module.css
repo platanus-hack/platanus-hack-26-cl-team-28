@@ -25,10 +25,6 @@
 .pie small { color: var(--tinta-suave); line-height: 1.4; }
 .acciones { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
 .acciones button, .pie button { white-space: normal; padding-block: .7rem; }
-.propuestas { margin-block: 1.25rem; padding: 0; list-style: none; }
-.propuestas li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: baseline; gap: .75rem; padding-block: .75rem; border-bottom: 1px solid var(--linea-suave); }
-.propuestas li > span { color: var(--favor-texto); font-size: 1.4rem; font-weight: 650; }
-.propuestas p { margin: 0; color: var(--tinta); overflow-wrap: anywhere; }
 @media (max-width: 480px) {
   .acciones { flex-direction: column-reverse; }
   .watis { margin: 0 0 .5rem; }
@@ -36,4 +32,83 @@
   .panel p { margin-block: .75rem; line-height: 1.45; }
   .ejemplo { margin-block: 1rem; }
   .pie { margin-top: 1rem; gap: .75rem; }
+}
+
+.avisoWhati {
+  width: min(39rem, calc(100% - 1rem));
+  max-height: calc(100dvh - 1rem);
+  margin: auto;
+  padding: 1rem .5rem;
+  overflow-y: auto;
+  border: 0;
+  background: transparent;
+  color: var(--tinta);
+}
+.avisoWhati::backdrop { background: rgb(8 11 16 / .78); }
+.conversacion { display: grid; grid-template-columns: 35% 1fr; align-items: start; }
+.conversacion canvas { grid-area: 1 / 1; margin-top: 4.3rem; max-width: 125%; height: auto !important; }
+.globo {
+  position: relative;
+  grid-area: 1 / 2;
+  padding: 1.2rem 1.35rem;
+  border-radius: 2rem 2.5rem 2.1rem 2.6rem;
+  background: var(--tinta);
+  color: var(--papel);
+  font: 550 clamp(1rem, 3vw, 1.3rem)/1.35 var(--fuente-ui);
+  transform-origin: left bottom;
+}
+.globo::before, .globo::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  background: var(--tinta);
+}
+.globo::before { width: .9rem; height: .8rem; left: .8rem; bottom: -1rem; }
+.globo::after { width: .45rem; height: .43rem; left: .1rem; bottom: -1.55rem; }
+.accionesWhati { display: flex; justify-content: center; flex-wrap: wrap; gap: .8rem; margin-top: 1.4rem; }
+.accionesWhati button { white-space: normal; }
+@media (prefers-reduced-motion: no-preference) {
+  .avisoWhati[data-visible] .globo { animation: hablar 320ms ease-out both; }
+  @keyframes hablar { from { opacity: 0; transform: scale(.9) translateY(.4rem); } }
+}
+@media (max-width: 430px) {
+  .accionesWhati { display: grid; justify-content: stretch; padding-inline: .75rem; }
+  .conversacion { grid-template-columns: 22% 1fr; }
+  .conversacion canvas { grid-row: 2; width: 8.9rem !important; max-width: none; margin-top: -1rem; }
+  .globo { padding: 1rem; }
+}
+
+.comparacion {
+  width: min(48rem, calc(100% - 1rem));
+  max-height: calc(100dvh - 1rem);
+  margin: auto;
+  padding: clamp(.85rem, 3vw, 2rem);
+  background: transparent;
+  border: 0;
+  overflow-y: auto;
+}
+.comparacion::backdrop { background: rgb(8 11 16 / .92); }
+.encabezadoComparacion { margin: 0 auto 1.5rem; max-width: 47ch; text-align: center; color: #fff9ec; }
+.encabezadoComparacion h2 { font-size: clamp(1.6rem, 4vw, 2.5rem); line-height: 1.1; letter-spacing: -.035em; text-wrap: balance; }
+.encabezadoComparacion p, .notaComparacion { margin-top: .65rem; line-height: 1.4; color: #e2ddd4; }
+.ronda { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; gap: 1.25rem; list-style: none; padding: 0; }
+.ronda li { display: grid; min-width: 0; }
+.voz { position: relative; margin: 0 .3rem .25rem; padding: 1rem 1.25rem; border-radius: 1.5rem 1.5rem 1.5rem .5rem; background: var(--papel); color: var(--tinta); }
+.voz::after { content: ''; position: absolute; left: 2.8rem; bottom: -.75rem; width: 1rem; height: .85rem; background: inherit; clip-path: polygon(0 0,100% 0,0 100%); }
+.voz span { display: block; font-weight: 650; color: var(--tinta-suave); font-size: .83rem; margin-bottom: .45rem; }
+.voz p { font-size: clamp(1rem, 2vw, 1.22rem); line-height: 1.4; overflow-wrap: anywhere; }
+.ronda li:nth-child(even) canvas { justify-self: end; transform: scaleX(-1); }
+.ronda li:nth-child(even) .voz { border-radius: 1.5rem 1.5rem .5rem 1.5rem; }
+.ronda li:nth-child(even) .voz::after { left: auto; right: 2.8rem; transform: scaleX(-1); }
+.comparacion .accionesWhati { margin-top: .9rem; color: var(--tinta); }
+@media (max-width: 560px) {
+  .ronda { grid-template-columns: minmax(0, 1fr); gap: .6rem; }
+  .ronda li { grid-template-columns: 3.75rem minmax(0, 1fr); align-items: end; }
+  .ronda canvas { grid-area: 1 / 1; width: 3.75rem !important; height: auto !important; }
+  .ronda .voz { grid-area: 1 / 2; margin: 0 0 1.1rem; }
+  .ronda li:nth-child(even) { grid-template-columns: minmax(0, 1fr) 3.75rem; }
+  .ronda li:nth-child(even) canvas { grid-column: 2; }
+  .ronda li:nth-child(even) .voz { grid-column: 1; }
+  .ronda .voz::after { left: -.65rem; bottom: .55rem; clip-path: polygon(100% 0,100% 65%,0 100%); }
+  .ronda li:nth-child(even) .voz::after { right: -.65rem; }
 }

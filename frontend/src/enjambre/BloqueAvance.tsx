@@ -3,10 +3,11 @@ import type { Metricas, MotorInfo } from '../vivo/api';
 import type { CasoVivo } from '../vivo/useEnVivo';
 import estilos from './BloqueAvance.module.css';
 import { FiguraWati } from './FiguraWati';
-import { useConteo } from './useConteo';
+import { useEffect, useState } from 'react';
 import { rasgosDe } from './wati';
 
 interface Props {
+  inicio: number;
   caso: CasoVivo;
   total: number;
   metricas: Metricas;
@@ -15,19 +16,21 @@ interface Props {
 
 const RASGOS_ESPERA = rasgosDe('contactando-entrevistados');
 
-export function nombreModelo(modelo: string): string {
-  return modelo.replace(/^claude-/, 'Claude ').replace(/-/g, ' ').replace(/\b(haiku|sonnet|opus)\b/, (m) => m[0].toUpperCase() + m.slice(1));
-}
-
 export function dinero(usd: number): string {
   return `US$ ${usd < 0.01 && usd > 0 ? '0,01' : usd.toFixed(2).replace('.', ',')}`;
 }
 
 /** Mientras los agentes corren: cuántos ya respondieron y lo que costó, medido por el motor. */
-export function BloqueAvance({ caso, total, metricas, motor }: Props) {
-  const contado = useConteo(caso.respondidas);
+export function BloqueAvance({ inicio, caso, total, metricas, motor }: Props) {
+  const [segundos, setSegundos] = useState(() => Math.floor((performance.now() - inicio) / 1000));
+  useEffect(() => {
+    const actualizar = () => setSegundos(Math.floor((performance.now() - inicio) / 1000));
+    actualizar();
+    const intervalo = window.setInterval(actualizar, 200);
+    return () => window.clearInterval(intervalo);
+  }, [inicio]);
   const esperando = caso.respondidas === 0;
-  const mostrado = Math.max(1, Math.round(contado));
+  const mostrado = caso.respondidas;
   return (
     <section className={estilos.bloque} aria-live="off">
       {esperando ? (
@@ -49,10 +52,9 @@ export function BloqueAvance({ caso, total, metricas, motor }: Props) {
       {motor && !motor.grabado && caso.desdeCache > 0 && caso.desdeCache === caso.respondidas && (
         <p className={estilos.detalle}>Esta pregunta ya se hizo hoy: se muestran las respuestas que dieron los agentes en esa corrida</p>
       )}
-      {motor && !motor.grabado && caso.desdeCache < caso.respondidas && (
+      {motor && !motor.grabado && (
         <p className={estilos.detalle}>
-          {formatear(metricas.llamadas)} {metricas.llamadas === 1 ? 'llamada' : 'llamadas'} al modelo · {formatear(Math.round(metricas.segundos))} s ·{' '}
-          {dinero(metricas.costo_usd)}
+          {formatear(segundos)} s{caso.desdeCache < caso.respondidas && ` · ${dinero(metricas.costo_usd)}`}
         </p>
       )}
       {(!motor || motor.grabado) && <p className={estilos.detalle}>Demostración: sin motor conectado</p>}

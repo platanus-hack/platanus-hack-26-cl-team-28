@@ -173,6 +173,8 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const [encuesta, setEncuesta] = useState<readonly string[]>([]);
   const [fase, setFase] = useState<FaseVivo>('cargando');
   const [viendo, setViendo] = useState(0);
+  const inicioCorrida = useRef(0);
+  const [seleccionManual, setSeleccionManual] = useState(false);
   const [version, setVersion] = useState(0);
   const [metricas, setMetricas] = useState<Metricas>(METRICAS_CERO);
   const [redactando, setRedactando] = useState<number | null>(null);
@@ -389,6 +391,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
           setAviso(evento.mensaje);
           break;
         case 'fin':
+          setFase('resultados');
           setMetricas(evento.metricas);
           setRedactando(null);
           setTerminada(true);
@@ -416,6 +419,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const filasEnCola = useRef(0);
   const lotesVistos = useRef<number[]>([]);
   const bomba = useRef(0);
+  const ritmo = useRef({ ultimo: 0, filasPorMs: 0, fraccion: 0 });
   const vaciarCola = useCallback(() => {
     cancelAnimationFrame(bomba.current);
     bomba.current = 0;
@@ -425,8 +429,12 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   }, []);
   const bombear = useCallback(() => {
     bomba.current = 0;
-    // Lo que haya en cola se termina de mostrar en menos de medio segundo; con la pestaña oculta, de una vez.
-    let presupuesto = document.hidden ? Infinity : Math.max(3, Math.ceil(filasEnCola.current / 24));
+    const ahora = performance.now();
+    const reloj = ritmo.current;
+    const credito = reloj.fraccion + Math.min(100, ahora - reloj.ultimo) * reloj.filasPorMs;
+    reloj.ultimo = ahora;
+    reloj.fraccion = credito % 1;
+    let presupuesto = document.hidden ? Infinity : Math.floor(credito);
     while (cola.current.length) {
       const { evento, lote } = cola.current[0];
       const esFila = evento.tipo === 'respuestas';
@@ -443,10 +451,20 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const alEvento = useCallback(
     (evento: Evento) => {
       if (evento.tipo === 'respuestas') {
+        if (!filasEnCola.current) {
+          ritmo.current = { ultimo: performance.now(), filasPorMs: 0, fraccion: 1 };
+        }
         const lote = (lotesVistos.current[evento.caso] = (lotesVistos.current[evento.caso] ?? 0) + 1);
         for (const fila of evento.r) cola.current.push({ evento: { ...evento, r: [fila] }, lote });
         filasEnCola.current += evento.r.length;
-      } else cola.current.push({ evento });
+        // Repartir ráfagas según tiempo real, independientemente de los Hz de la pantalla.
+        ritmo.current.filasPorMs = Math.max(0.003, filasEnCola.current / 2000);
+      } else {
+        cola.current.push({ evento });
+        if (evento.tipo === 'fin' || evento.tipo === 'error') {
+          ritmo.current.filasPorMs = Math.max(ritmo.current.filasPorMs, filasEnCola.current / 450);
+        }
+      }
       if (document.hidden) bombear();
       else if (!bomba.current) bomba.current = requestAnimationFrame(bombear);
     },
@@ -473,6 +491,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     turnoReabrir.current += 1;
     vaciarCola();
     setMetricas(METRICAS_CERO);
+    setSeleccionManual(false);
     setTerminada(false);
     setAviso(null);
     setRedactando(null);
@@ -480,6 +499,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     setCorrida(muestra);
     setEncuesta(PREGUNTAS);
     setCorridaId(null);
+    inicioCorrida.current = performance.now();
     setFase('corriendo');
     const pedido = {
       casos: pedidos,
@@ -574,14 +594,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const actualListo = casoActual?.listo ?? false;
   const cantidad = casos.current.length;
   useEffect(() => {
-    if (fase !== 'corriendo' || !actualListo) return;
-    const hayOtra = viendo + 1 < cantidad;
-    if (!hayOtra && !terminada) return;
-    // La primera variante con encuesta real se queda más: ahí se muestra la comparación con Cadem.
-    const segundos = RETENCION + 1;
-    const espera = window.setTimeout(() => (hayOtra ? setViendo(viendo + 1) : setFase('resultados')), segundos * 1000);
+    if (fase !== 'corriendo' || seleccionManual || !actualListo || viendo + 1 >= cantidad) return;
+    const espera = window.setTimeout(() => setViendo(viendo + 1), RETENCION * 1000);
     return () => window.clearTimeout(espera);
-  }, [fase, actualListo, viendo, cantidad, terminada]);
+  }, [fase, actualListo, viendo, cantidad, seleccionManual]);
 
   const adjuntarArchivo = useCallback(
     async (id: number, archivo: File | undefined) => {
@@ -623,7 +639,10 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     encuesta,
     fase,
     viendo,
-    setViendo,
+    setViendo: (indice: number) => {
+      setSeleccionManual(true);
+      setViendo(indice);
+    },
     version,
     casos: casos.current,
     voces,
@@ -635,6 +654,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
     muestra: vista,
     /** Agentes de la corrida en pantalla (sin filtrar). */
     totalCorrida: corrida?.total ?? 0,
+    inicioCorrida: inicioCorrida.current,
     /** A cuántas personas de la población equivale cada agente que se mira; nulo sin motor. */
     personasPorAgente,
     filtrada,

@@ -66,13 +66,6 @@ export function VistaProceso({ sim, conexion, abierta, claro, origen, alElegir, 
   useEffect(() => {
     if (!caso) return;
     const estado = conexion.estado;
-    const izquierda = [
-      estado ? `${estado.motor.nombre} · ${estado.motor.modelo}` : 'Demostración sin motor',
-      metricas.llamadas ? `${formatear(metricas.llamadas)} llamadas` : '',
-      metricas.tokens ? `${(metricas.tokens / 1e6).toLocaleString('es-CL', { maximumFractionDigits: 1 })} M de tokens` : '',
-    ];
-    const derecha = [metricas.segundos ? `${Math.round(metricas.segundos)} s` : '', estado ? `grupos de ${estado.lote} personas, hasta ${estado.concurrencia} grupos a la vez` : ''];
-    const unir = (partes: string[]) => partes.filter(Boolean).join('  ·  ');
     const datos: DatosProceso = {
       agentes: muestra.agentes,
       acuerdo: caso.acuerdo,
@@ -83,7 +76,7 @@ export function VistaProceso({ sim, conexion, abierta, claro, origen, alElegir, 
       redactando: sim.redactando !== null && viendo === casos.length - 1,
       embudo,
       ejes: CORTAS,
-      pie: [unir(izquierda), unir(derecha)],
+      duracion: metricas.segundos ? `${Math.round(metricas.segundos)} s` : '',
       tamLote: estado?.lote ?? 20,
       deCache: caso.desdeCache,
       describir: (i) => {

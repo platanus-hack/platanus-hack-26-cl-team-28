@@ -9,11 +9,20 @@ import { FiguraWati } from './FiguraWati';
 import { separarPropuestas } from './orientacion';
 import estilos from './GuiaPreguntas.module.css';
 
-export const EJEMPLO_PROPUESTA = 'Implementar una ley que subsidie el transporte público para estudiantes de zonas rurales.';
+const EJEMPLO_PROPUESTA = 'Para terminar el paro de camioneros, el Gobierno se comprometió a rebajar el diésel en $142 por litro y congelar alzas de combustibles hasta marzo de 2027.';
 
 export function Bienvenida() {
   const popup = useRef<PopupHandle>(null);
-  useEffect(() => { popup.current?.showModal(); }, []);
+  useEffect(() => {
+    const clave = 'whatif-chile:bienvenida-vista';
+    try {
+      if (localStorage.getItem(clave)) return;
+    } catch { /* El navegador puede restringir el almacenamiento. */ }
+    popup.current?.showModal();
+    try {
+      localStorage.setItem(clave, '1');
+    } catch { /* La bienvenida también funciona sin persistencia. */ }
+  }, []);
   return (
     <PopupDialogo ref={popup} className={estilos.panel} aria-labelledby="titulo-bienvenida" aria-describedby="descripcion-bienvenida">
       <div className={estilos.marca}>
@@ -28,8 +37,8 @@ export function Bienvenida() {
       <h2 id="titulo-bienvenida">Una propuesta.<br />Muchas posturas.</h2>
       <p id="descripcion-bienvenida">What If Chile simula el apoyo y rechazo a una <strong>política pública</strong>: qué porcentaje de los agentes la apoya, la rechaza o queda indeciso.</p>
       <div className={estilos.ejemplo}>
-        <span>Prueba con algo así</span>
-        <blockquote>“¿Qué apoyo tendría una ley de transporte gratuito para estudiantes rurales?”</blockquote>
+        <span>Describe la medida y a quién afecta</span>
+        <blockquote>{EJEMPLO_PROPUESTA}</blockquote>
       </div>
       <p>Para comparar dos políticas, medimos el apoyo a cada una por separado, con las mismas personas simuladas.</p>
       <p className={estilos.limite}>Los gustos y los “¿qué pasaría si…?” históricos se alejan de este uso. Puedes explorarlos, pero el sistema no está diseñado para predecir hechos ni elegir un ganador.</p>
@@ -46,6 +55,7 @@ interface Revision {
   separadas: Borrador[] | null;
   motivos: string[];
   fallo?: boolean;
+  excedeLimite?: boolean;
 }
 
 export function useGuiaPreguntas(sim: EnVivo, alElegir: (indice: number) => void) {
@@ -90,7 +100,7 @@ export function useGuiaPreguntas(sim: EnVivo, alElegir: (indice: number) => void
         motivos.push(`Separar esta consulta supera las ${MAXIMO_VARIANTES} variantes disponibles. Divide las comparaciones en consultas distintas o continúa con el texto original.`);
       }
       if (!motivos.length && !comparacion) { void sim.preguntar(originales); return; }
-      setRevision({ originales, separadas: comparacion && separadas.length <= MAXIMO_VARIANTES ? separadas : null, motivos });
+      setRevision({ originales, excedeLimite: separadas.length > MAXIMO_VARIANTES, separadas: comparacion && separadas.length <= MAXIMO_VARIANTES ? separadas : null, motivos });
     } catch {
       if (firmaActual.current === firma && peticion.current === controller) {
         setRevision({ originales, separadas: null, motivos: [], fallo: true });
@@ -105,30 +115,49 @@ export function useGuiaPreguntas(sim: EnVivo, alElegir: (indice: number) => void
     popup.current?.close();
     void sim.preguntar(revision.separadas ?? revision.originales, !!revision.separadas);
   };
+  const avisoWhati = revision && !revision.fallo && !revision.separadas && !revision.excedeLimite;
   return {
     revisar, revisando,
     dialogo: (
-      <PopupDialogo ref={popup} className={estilos.panel} aria-labelledby="titulo-orientacion" aria-describedby="descripcion-orientacion" onClose={() => {
+      <PopupDialogo ref={popup} className={revision?.separadas ? estilos.comparacion : avisoWhati ? estilos.avisoWhati : estilos.panel} aria-labelledby="titulo-orientacion" aria-describedby="descripcion-orientacion" onClose={() => {
         if (devolverFoco.current) { devolverFoco.current = false; document.querySelector<HTMLTextAreaElement>('textarea')?.focus(); }
+        setRevision(null);
       }}>
         {revision && <>
-          <div className={estilos.marca}><span>Antes de consultar a los agentes</span></div>
-          <h2 id="titulo-orientacion">{revision.separadas ? 'Dos políticas, dos consultas.' : revision.fallo ? 'La revisión no está disponible.' : 'Esta pregunta necesita otro enfoque.'}</h2>
-          <p id="descripcion-orientacion">{revision.separadas
-            ? 'Primero consultaremos A y luego B, por separado y con la misma muestra. Revisa que las propuestas conserven lo que quieres preguntar.'
-            : revision.fallo ? 'Puedes continuar con tu pregunta o reformularla como una propuesta de política pública.'
-            : 'El sistema responde mejor al apoyo y rechazo a políticas públicas. Esta pregunta se aleja de ese uso; sus resultados pueden ser menos útiles.'}</p>
-          {revision.motivos.map((motivo, i) => <p key={i} className={estilos.limite}>{motivo}</p>)}
-          {revision.separadas ? <ol className={estilos.propuestas}>
-            {revision.separadas.map((b, i) => <li key={b.id}><span>{letraDe(i)}</span><p>{b.texto}</p></li>)}
-          </ol> : <div className={estilos.ejemplo}><span>Una forma de preguntar</span><blockquote>¿Qué apoyo tendría esta propuesta? {EJEMPLO_PROPUESTA}</blockquote></div>}
-          {revision.separadas && <p className={estilos.limite}>Comparar apoyo no equivale a preguntar por una preferencia directa: una persona puede apoyar ambas propuestas.</p>}
-          <footer className={estilos.acciones}>
-            <Boton variante="secundario" onClick={() => {
+          {avisoWhati ? <div className={estilos.conversacion}>
+            <FiguraWati estado="indecisa" animo="pensativa" rasgos={{ semilla: 6, variante: 0, tono: 0 }} alto={228} />
+            <div className={estilos.globo}>
+              <h2 id="titulo-orientacion" className="solo-lectores">Un consejo de Whati</h2>
+              <p id="descripcion-orientacion">Respondo mejor cuando me propones una medida concreta. ¿Cuál te gustaría probar para ver cuánto apoyo tendría en Chile?</p>
+            </div>
+          </div> : revision.separadas ? <>
+            <header className={estilos.encabezadoComparacion}>
+              <h2 id="titulo-orientacion">Así lo preguntaremos en Chile</h2>
+              <p id="descripcion-orientacion">La misma muestra evaluará cada propuesta por turno. Una persona puede apoyar más de una.</p>
+            </header>
+            <ol className={estilos.ronda} aria-label="Propuestas en orden de consulta">
+              {revision.separadas.map((b, i) => <li key={b.id}>
+                <div className={estilos.voz}>
+                  <span>Propuesta {letraDe(i)}</span>
+                  <p>{b.texto}</p>
+                </div>
+                <FiguraWati estado={i % 2 === 0 ? 'indecisa' : 'neutra'} animo="alegre" rasgos={{ semilla: i + 5, variante: i + 1, tono: 0 }} alto={96} />
+              </li>)}
+            </ol>
+            {revision.motivos.map((motivo, i) => <p key={i} className={estilos.notaComparacion}>{motivo}</p>)}
+          </> : <>
+            <div className={estilos.marca}><span>Antes de consultar a los agentes</span></div>
+            <h2 id="titulo-orientacion">{revision.fallo ? 'La revisión no está disponible.' : 'Esta pregunta necesita otro enfoque.'}</h2>
+            <p id="descripcion-orientacion">{revision.fallo ? 'Puedes continuar con tu pregunta o reformularla como una propuesta de política pública.' : 'Divide la consulta en menos variantes o continúa con tu pregunta original.'}</p>
+            {revision.motivos.map((motivo, i) => <p key={i} className={estilos.limite}>{motivo}</p>)}
+            <div className={estilos.ejemplo}><span>Ejemplo de una medida concreta</span><blockquote>{EJEMPLO_PROPUESTA}</blockquote></div>
+          </>}
+          <footer className={avisoWhati || revision.separadas ? estilos.accionesWhati : estilos.acciones}>
+            <Boton variante={avisoWhati ? "primario" : "secundario"} onClick={() => {
               if (revision.separadas) { sim.cargar(revision.separadas.map((b) => b.texto)); alElegir(0); }
               reformular();
             }}>{revision.separadas ? 'Editar propuestas' : 'Reformular'}</Boton>
-            <Boton variante="primario" disabled={!sim.puedePreguntar} onClick={continuar}>{revision.separadas ? 'Consultar A/B' : 'Continuar de todos modos'}</Boton>
+            <Boton variante={avisoWhati ? "secundario" : "primario"} disabled={!sim.puedePreguntar} onClick={continuar}>{revision.separadas ? (revision.separadas.length === 2 ? 'Consultar A/B' : 'Consultar propuestas') : 'Continuar de todos modos'}</Boton>
           </footer>
         </>}
       </PopupDialogo>

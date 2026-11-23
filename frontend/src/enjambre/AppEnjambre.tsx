@@ -501,7 +501,7 @@ export function AppEnjambre() {
         {mostrarRedactando && base && <Redactando base={base} numero={sim.redactando!} />}
       </div>
     ) : caso ? (
-      <BloqueAvance key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
+      <BloqueAvance inicio={sim.inicioCorrida} key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
     ) : null;
   const seccionMuestra = (
     <section className={movilEstilos.seccion}>
@@ -648,7 +648,7 @@ export function AppEnjambre() {
         )}
         {fase === 'corriendo' && caso && !listo && (
           <div className={estilos.avance}>
-            <BloqueAvance key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
+            <BloqueAvance inicio={sim.inicioCorrida} key={caso.id} caso={caso} total={sim.totalCorrida} metricas={sim.metricas} motor={motor} />
           </div>
         )}
       </header>

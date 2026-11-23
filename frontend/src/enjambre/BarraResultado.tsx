@@ -41,7 +41,7 @@ export function BarraResultado({ casos, viendo, corriendo, alElegir, alVolver, a
               aria-selected={i === viendo}
               aria-description={detalle}
               title={detalle}
-              disabled={corriendo || !caso.listo}
+              disabled={!caso.listo}
               data-iteracion={caso.iteracion ? true : undefined}
               onClick={() => alElegir(i)}
             >

@@ -23,7 +23,7 @@ export interface DatosProceso {
   /** Nombre corto de cada pregunta, en el orden de las notas. */
   ejes: string[];
   /** Resumen de lo que costó la corrida: a la izquierda y a la derecha del botón central. */
-  pie: [string, string];
+  duracion: string;
   tamLote: number;
   /** Respuestas que no se preguntaron ahora: el motor las tenía guardadas de una corrida anterior. */
   deCache: number;
@@ -577,8 +577,7 @@ export class EscenaProceso {
     if (this.sobre >= 0 && this.t === 1) this.senalar(d, this.sobre);
     if (visible > 0) {
       ctx.globalAlpha = visible;
-      this.texto(d.pie[0], geo.embudo[0], this.alto - 30, 13, 500, colores.suave);
-      this.texto(d.pie[1], this.ancho - geo.embudo[0], this.alto - 30, 13, 500, colores.suave, 'right');
+      this.texto(d.duracion, this.ancho - geo.embudo[0], this.alto - 30, 13, 500, colores.suave, 'right');
       ctx.globalAlpha = 1;
     }
   }

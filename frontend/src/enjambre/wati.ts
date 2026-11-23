@@ -281,7 +281,7 @@ function cara(ctx: CanvasRenderingContext2D, medio: number, y: number, cuadro: n
 }
 
 /** Gesto en reposo: sonríe, está triste (en contra) o serio (no se decide). */
-export type Animo = 'alegre' | 'triste' | 'seria';
+export type Animo = 'alegre' | 'triste' | 'seria' | 'pensativa';
 
 export interface OpcionesWati {
   cuerpo: string;
@@ -360,6 +360,7 @@ function bananaDeMono(ctx: CanvasRenderingContext2D): void {
 
 /** Dibuja un wati en el origen del contexto, en unidades de celda. */
 export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, cuadro, animo = 'alegre', mono = false, saludo = 0 }: OpcionesWati): void {
+  const pensando = animo === 'pensativa';
   const medio = 14;
   const arriba = 15;
   const abajo = 40;
@@ -379,6 +380,7 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
     ctx.stroke();
   }
   for (const lado of [-1, 1]) {
+    if (pensando && lado === 1) continue;
     ctx.save();
     if (lado === 1 && saludo) {
       ctx.translate(CX + medio - 1, centro - 1);
@@ -423,7 +425,29 @@ export function dibujarWati(ctx: CanvasRenderingContext2D, { cuerpo, variante, c
   ctx.lineWidth = LW;
   ctx.stroke(p);
   if (mono) caraDeMono(ctx, arriba + 9);
-  cara(ctx, medio, arriba + 9, cuadro, animo);
+  ctx.save();
+  if (pensando) {
+    // Un leve giro hacia el globo conserva los ojos y la sonrisa del personaje.
+    ctx.translate(CX + 2.4, arriba + 8);
+    ctx.rotate(-0.09);
+    ctx.scale(0.91, 1);
+    ctx.translate(-CX, -(arriba + 9));
+  }
+  cara(ctx, medio, arriba + 9, pensando ? 0 : cuadro, animo);
+  ctx.restore();
+  if (pensando) {
+    ctx.beginPath();
+    ctx.moveTo(CX + 12, centro + 3);
+    ctx.quadraticCurveTo(CX + 14, centro + 10, CX + 8, centro + 8);
+    ctx.quadraticCurveTo(CX + 3, centro + 5, CX + 2, centro + 2);
+    ctx.bezierCurveTo(CX, centro - 1, CX + 4, centro - 2, CX + 6, centro);
+    ctx.quadraticCurveTo(CX + 8, centro + 2, CX + 10, centro + 3);
+    ctx.fillStyle = pelaje;
+    ctx.fill();
+    ctx.strokeStyle = BORDE;
+    ctx.lineWidth = LW;
+    ctx.stroke();
+  }
   if (mono) bananaDeMono(ctx);
   ctx.restore();
 }
