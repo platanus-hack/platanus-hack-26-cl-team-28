@@ -9,8 +9,9 @@ Rutas:
     POST /api/muestra                 {filtros, tamano}: filtra la población y sortea hasta `tamano` agentes
     GET  /api/agentes                 la muestra por defecto (sin filtros), como lista
     POST /api/documentos              cuerpo: el archivo; cabecera X-Nombre. Devuelve texto o resumen
+    POST /api/orientacion             {textos:[...]}: adecuada, fuera o comparacion con dos propuestas; no bloquea corridas
     POST /api/corridas                {casos:[{id,letra,texto,documento?}], muestra:id, agentes?:[i], iteraciones,
-                                       filtros?: los de la interfaz, que se guardan con la corrida y vuelven al reabrirla}
+                                       filtros?: los de la interfaz, secuencial?: consulta las variantes en orden}
     GET  /api/historial               las últimas simulaciones: hora, propuestas y resultado de cada variante
     GET  /api/historial/<id>          una simulación guardada, para volver a verla: {muestra, agentes, filtros, eventos}
     GET  /api/corridas/<id>/eventos   eventos de la corrida (text/event-stream)
@@ -35,6 +36,7 @@ from .historial import Historial
 from .documentos import DocumentoIlegible, extraer_texto, nombre_limpio
 from .limites import Cupo, Ocupado, Tasa
 from .motor import elegir_motor
+from .orientacion import orientar
 from .poblacion import Muestra, elegir_poblacion, identificador, limpiar
 
 LETRAS = "ABCDEFGH"
@@ -292,6 +294,8 @@ class Manejador(BaseHTTPRequestHandler):
             self._frenar(TASA_TODO, "Demasiados pedidos seguidos. Espera un momento.")
             if ruta == "/api/documentos":
                 return self._documento()
+            if ruta == "/api/orientacion":
+                return self._orientacion()
             if ruta == "/api/muestra":
                 self._frenar(TASA_MUESTRAS, "Demasiados cambios de filtros seguidos. Espera un momento.")
                 pedido = self._pedido()
@@ -323,6 +327,22 @@ class Manejador(BaseHTTPRequestHandler):
             traceback.print_exc()
             return self._json(500, {"error": "El servidor tuvo un problema. Intenta de nuevo."})
         self._json(404, {"error": "No existe"})
+
+    def _orientacion(self):
+        self._frenar(TASA_DOCUMENTOS, "Demasiadas consultas seguidas. Espera un momento.")
+        textos = self._pedido().get("textos")
+        if (not isinstance(textos, list) or not 1 <= len(textos) <= 4
+                or any(not isinstance(t, str) or not t.strip() or len(t) > LARGO_PROPUESTA for t in textos)):
+            raise Invalido("Escribe entre una y cuatro propuestas de hasta 8.000 caracteres")
+        if not CUPO_DOCUMENTOS.tomar(espera=0.05):
+            raise Ocupado("Se están revisando otras consultas. Puedes continuar sin revisión.")
+        try:
+            resultados = orientar(MOTOR, [t.strip() for t in textos])
+        except Exception:
+            return self._json(503, {"error": "No pudimos revisar la pregunta. Puedes reformularla o continuar."})
+        finally:
+            CUPO_DOCUMENTOS.soltar()
+        self._json(200, {"orientaciones": resultados})
 
     def _documento(self):
         self._frenar(TASA_DOCUMENTOS, "Demasiados documentos seguidos. Espera un momento.")
@@ -393,7 +413,8 @@ class Manejador(BaseHTTPRequestHandler):
             raise Invalido("Son demasiados agentes para tantas variantes. Baja la cantidad de agentes o de variantes.")
         olvidar_corridas()
         # La encuesta es fija: si el pedido trae preguntas, no se usan.
-        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS)
+        corrida = Corrida(MOTOR, CACHE, elegidos, casos, iteraciones, lote, CONCURRENCIA, LETRAS,
+                          secuencial=pedido.get("secuencial") is True)
         # Todas las comprobaciones de cupo y el alta van bajo el mismo cerrojo: dos pedidos a la vez no pasan juntos.
         with CERROJO_CORRIDAS:
             if respuestas_pendientes() + pedidas > limites.RESPUESTAS_EN_COLA:

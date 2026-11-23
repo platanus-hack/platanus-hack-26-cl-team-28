@@ -1,4 +1,4 @@
-"""Una corrida: varias variantes de una política preguntadas a los mismos agentes, en paralelo.
+"""Una corrida: variantes preguntadas a los mismos agentes, en paralelo o por etapas.
 
 Los lotes de agentes se reparten en un grupo de hilos; cada lote que termina se publica como
 evento para que la interfaz encienda esos puntos en el mapa. Si se piden iteraciones, al
@@ -180,7 +180,7 @@ class Cache:
 
 class Corrida:
     def __init__(self, motor: Motor, cache: Cache, agentes: list[Agente], casos: list[Caso],
-                 iteraciones: int, lote: int, concurrencia: int, letras: str):
+                 iteraciones: int, lote: int, concurrencia: int, letras: str, secuencial: bool = False):
         self.id = uuid.uuid4().hex[:12]
         self.motor = motor
         #: La encuesta, fija: cada agente pone una nota de 1 a 7 a cada pregunta, con su escala.
@@ -195,6 +195,7 @@ class Corrida:
         self.lote = lote
         self.concurrencia = concurrencia
         self.letras = letras
+        self.secuencial = secuencial
         self.consumo = Consumo()
         self.inicio = time.time()
         self.eventos: list[tuple[str, dict]] = []
@@ -471,9 +472,13 @@ class Corrida:
             # Las llamadas van al reparto común: esta corrida se turna con las demás que estén en curso.
             grupo = Cola(REPARTO, self.id)
             self._grupo = grupo
-            # Las variantes escritas van todas juntas; la A primero en la cola.
-            por_caso = [self._preguntar(grupo, k) for k in range(len(self.casos))]
-            for k, tareas in enumerate(por_caso):
+            # Una comparación separada por la guía evalúa A antes de iniciar B.
+            # Las demás corridas conservan la cola paralela de variantes.
+            por_caso = None if self.secuencial else [self._preguntar(grupo, k) for k in range(len(self.casos))]
+            for k in range(len(self.casos)):
+                if self.cancelada:
+                    break
+                tareas = self._preguntar(grupo, k) if por_caso is None else por_caso[k]
                 for tarea in tareas:
                     tarea.result()
                 self._cerrar_caso(k)

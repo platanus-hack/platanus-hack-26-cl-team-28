@@ -19,6 +19,21 @@ comando ni la dirección.
 
 ## Cómo se conecta
 
+Al entrar se muestra una bienvenida con el uso esperado: simular apoyo y rechazo a políticas públicas.
+Antes de iniciar una consulta, `/api/orientacion` revisa los textos. Las preguntas fuera de ese uso
+ofrecen **Reformular** o **Continuar de todos modos**, conservando el texto original. Si la revisión
+falla o tarda más de 35 segundos, también se puede continuar.
+
+Una preferencia entre dos políticas se prepara como dos variantes editables. Tras confirmar,
+se evalúa A y luego B con la misma muestra (`secuencial: true`), sin mezclar las propuestas en
+las instrucciones de los agentes. La comparación muestra apoyo independiente; no equivale a
+una elección forzada entre A y B. Si la separación supera las cuatro variantes disponibles,
+se pide dividir la consulta o continuar con el original, sin descartar alternativas.
+
+La orientación usa el motor de redacción existente. Su clasificación puede equivocarse:
+la persona puede revisar las propuestas separadas antes de consultar. Esta guía vive en
+`enjambre/GuiaPreguntas.tsx`; la bienvenida usa los tokens y personajes de la interfaz vigente.
+
 `src/vivo/` es todo lo que habla con el motor:
 
 - `api.ts`: `GET /api/estado`, `POST /api/muestra` (el motor filtra la población y sortea a quiénes preguntar; cada cambio de filtros o de

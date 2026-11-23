@@ -15,6 +15,7 @@ import { ConexionMcp } from './ConexionMcp';
 import { EscenaEnjambre, PUNTO, ZOOM_MAXIMO, type Bordes, type ModoVuelo } from './EscenaEnjambre';
 import { FichaAgente } from './FichaAgente';
 import { FiguraWati } from './FiguraWati';
+import { Bienvenida } from './GuiaPreguntas';
 import { Insignia } from './Insignia';
 import { MenuHistorial } from './MenuHistorial';
 import { MenuOpciones } from './MenuOpciones';
@@ -612,6 +613,7 @@ export function AppEnjambre() {
 
   return (
     <div className={estilos.app} data-movil={movil || undefined} data-fase={fase} data-oculta={oculta || undefined} data-acercado={zoom > 1 || undefined} data-proceso={proceso || analisis || undefined} data-encuesta={conEncuesta || undefined}>
+      <Bienvenida />
       <canvas
         ref={lienzo}
         className={estilos.lienzo}

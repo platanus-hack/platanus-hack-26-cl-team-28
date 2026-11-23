@@ -5,6 +5,7 @@ import { formatear, letraDe } from '../dominio/textos';
 import { MAXIMO_ITERACIONES, MAXIMO_VARIANTES, type EnVivo } from '../vivo/useEnVivo';
 import { CASOS_VALIDACION } from '../vivo/validacion';
 import { Adjunto } from './Adjunto';
+import { useGuiaPreguntas } from './GuiaPreguntas';
 import estilos from './BarraMando.module.css';
 
 /** Subir un documento (botón y arrastrar sobre el formulario). Desactivado en la interfaz publicada; el motor lo admite. */
@@ -21,6 +22,7 @@ interface Props {
 
 /** Donde se arma la pregunta: la propuesta escrita o subida, sus variantes y si el agente itera. */
 export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
+  const guia = useGuiaPreguntas(sim, alElegir);
   const { borradores } = sim;
   const actual = borradores[Math.min(elegida, borradores.length - 1)];
   const [sobre, setSobre] = useState(false);
@@ -69,7 +71,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
       onDrop={soltar}
       onSubmit={(e) => {
         e.preventDefault();
-        void sim.preguntar();
+        void guia.revisar();
       }}
     >
       <div className={estilos.cabecera} data-con-documento={!!actual.documento || undefined}>
@@ -137,6 +139,7 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           }}
         />
       </label>
+      {guia.dialogo}
       <PopupDialogo
         ref={infoProyecto}
         id="info-proyecto"
@@ -267,8 +270,8 @@ export function BarraMando({ sim, elegida, alElegir, alAbrirEncuesta }: Props) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" /><circle cx="12" cy="12" r="2.8" /></svg>
           Ver
         </button>
-        <Boton type="submit" variante="primario" aria-keyshortcuts="Control+Enter" disabled={!sim.puedePreguntar}>
-          {leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}
+        <Boton type="submit" variante="primario" aria-keyshortcuts="Control+Enter" disabled={!sim.puedePreguntar || guia.revisando}>
+          {guia.revisando ? 'Revisando la pregunta…' : leyendo ? 'Leyendo el documento' : `Preguntar a ${formatear(sim.muestra.total)} agentes`}
         </Boton>
       </div>
     </form>

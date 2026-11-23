@@ -200,10 +200,31 @@ export async function subirDocumento(archivo: File): Promise<DocumentoLeido> {
   return leer<DocumentoLeido>(respuesta);
 }
 
+export interface Orientacion {
+  tipo: 'adecuada' | 'fuera' | 'comparacion';
+  motivo: string;
+  propuestas: string[];
+}
+
+export async function orientarPreguntas(textos: string[], signal: AbortSignal): Promise<Orientacion[]> {
+  const respuesta = await fetch(`${BASE}/orientacion`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ textos }), signal,
+  });
+  const datos = await leer<{ orientaciones: Orientacion[] }>(respuesta);
+  if (!Array.isArray(datos.orientaciones) || datos.orientaciones.length !== textos.length || datos.orientaciones.some((o) =>
+    !o || !['adecuada', 'fuera', 'comparacion'].includes(o.tipo) || typeof o.motivo !== 'string' ||
+    !Array.isArray(o.propuestas) || o.propuestas.length !== (o.tipo === 'comparacion' ? 2 : 0) ||
+    o.propuestas.some((p) => typeof p !== 'string' || !p.trim() || p.length > 8000))) {
+    throw new Error('La revisión de la pregunta llegó incompleta.');
+  }
+  return datos.orientaciones;
+}
+
 /** Lanza una corrida y entrega sus eventos. Devuelve una función que la cancela. */
 export async function correrRemoto(
   /** `filtros`: los de la interfaz. El motor los guarda con la corrida y los devuelve al reabrirla. */
-  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; filtros?: FiltrosVivo },
+  pedido: { casos: CasoPedido[]; muestra?: string; agentes: number[]; iteraciones: number; filtros?: FiltrosVivo; secuencial?: boolean },
   alEvento: (evento: Evento) => void,
   /** Avisa el identificador de la corrida apenas el motor lo da: es el mismo con que queda en el historial. */
   alIniciar?: (id: string) => void,

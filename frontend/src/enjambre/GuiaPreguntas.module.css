@@ -1,0 +1,39 @@
+.panel {
+  width: min(38rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  overflow-y: auto;
+  border: 1px solid var(--linea-suave);
+  border-radius: var(--radio);
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-ui);
+}
+.panel::backdrop { background: rgb(8 11 16 / .76); }
+.marca { display: flex; justify-content: space-between; align-items: center; gap: 1rem; color: var(--tinta-suave); font-size: .8rem; }
+.cerrar { min-width: 44px; min-height: 44px; border: 0; background: transparent; color: var(--tinta); font-size: 1.7rem; }
+.watis { display: flex; align-items: end; gap: .25rem; margin: .5rem 0 1rem; }
+.panel h2 { margin: 1rem 0; font-size: clamp(1.9rem, 6vw, 3rem); font-weight: 650; line-height: 1.04; letter-spacing: -.04em; text-wrap: balance; }
+.panel p { margin-block: 1rem; line-height: 1.5; color: var(--tinta-suave); text-wrap: pretty; }
+.panel strong { color: var(--tinta); font-weight: 650; }
+.ejemplo { margin-block: 1.5rem; padding: 1.1rem 1.25rem; border-left: 3px solid var(--favor); background: var(--relleno-suave); }
+.ejemplo > span { color: var(--favor-texto); font-size: .8rem; }
+.ejemplo blockquote { margin: .5rem 0 0; font-size: 1.12rem; line-height: 1.4; text-wrap: pretty; }
+.panel .limite { font-size: .87rem; }
+.pie { display: grid; gap: 1rem; margin-top: 1.5rem; }
+.pie small { color: var(--tinta-suave); line-height: 1.4; }
+.acciones { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+.acciones button, .pie button { white-space: normal; padding-block: .7rem; }
+.propuestas { margin-block: 1.25rem; padding: 0; list-style: none; }
+.propuestas li { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: baseline; gap: .75rem; padding-block: .75rem; border-bottom: 1px solid var(--linea-suave); }
+.propuestas li > span { color: var(--favor-texto); font-size: 1.4rem; font-weight: 650; }
+.propuestas p { margin: 0; color: var(--tinta); overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+  .acciones { flex-direction: column-reverse; }
+  .watis { margin: 0 0 .5rem; }
+  .panel h2 { margin-block: .75rem; }
+  .panel p { margin-block: .75rem; line-height: 1.45; }
+  .ejemplo { margin-block: 1rem; }
+  .pie { margin-top: 1rem; gap: .75rem; }
+}

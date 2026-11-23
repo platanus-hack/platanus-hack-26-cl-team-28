@@ -5,7 +5,7 @@ import { porcentajes, type Conteo, type Porcentajes } from '../dominio/metricas'
 import { repartirPorRegion } from '../dominio/muestra';
 import { letraDe } from '../dominio/textos';
 import type { Persona, Postura } from '../dominio/tipos';
-import { useBorradores } from '../estado/useBorradores';
+import { useBorradores, type Borrador } from '../estado/useBorradores';
 import { cargarComunas, comunasCargadas } from '../mapa/geografia';
 import {
   correrRemoto,
@@ -457,16 +457,17 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
   const leyendo = borradores.some((b) => b.leyendo);
   const puedePreguntar = !!conexion && fase === 'preparar' && listos.length > 0 && !leyendo && !buscando && muestra.total > 0;
 
-  const preguntar = useCallback(async () => {
+  const preguntar = useCallback(async (variantes?: Borrador[], secuencial = false) => {
     if (!puedePreguntar || !conexion) return;
-    const pedidos: CasoPedido[] = listos.slice(0, MAXIMO_VARIANTES).map((b, k) => ({
+    const elegidos = variantes ?? listos;
+    const pedidos: CasoPedido[] = elegidos.slice(0, MAXIMO_VARIANTES).map((b, k) => ({
       id: String(b.id),
       letra: letraDe(k),
       texto: b.texto.trim(),
       documento: b.leido,
     }));
     casos.current = pedidos.map((p, k) =>
-      nuevoCaso({ id: p.id, letra: p.letra, texto: p.texto, titulo: p.texto || p.documento?.titulo, referencia: listos[k].referencia }),
+      nuevoCaso({ id: p.id, letra: p.letra, texto: p.texto, titulo: p.texto || p.documento?.titulo, referencia: elegidos[k].referencia }),
     );
     voces.current = [];
     turnoReabrir.current += 1;
@@ -485,6 +486,7 @@ export function useEnVivo(regiones: Anillo[][], puntosDeseados: number) {
       muestra: conexion.muestra?.id,
       agentes: muestra.agentes,
       iteraciones,
+      secuencial,
       // Quedan guardados con la corrida: al reabrirla desde el historial vuelven a ser los filtros en pantalla.
       filtros,
     };
